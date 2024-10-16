@@ -1,0 +1,45 @@
+<?php
+
+/* Nombre del Archivo: guardar_ciudad1.php
+   Descripción: MODIFICA una CIUDAD en la base de datos, para ser utilizado posteriormente
+*/
+
+include("../../lib/jfunciones.php");
+sesion();
+
+$estado = $_REQUEST['estado'];
+$ciudad = $_REQUEST['ciudad'];
+
+$fecha_creado = date("Y-m-d");
+$hora_creado = date("h:m:s");
+
+$ciudad = strtoupper($ciudad);
+
+
+/*echo "******************* <br>";
+echo $estado."<br>"; 
+echo "******************* <br>";
+echo $id_pais."<br>";
+echo "******************* <br>";
+echo $ciudad."<br>";*/
+
+$q_ciudad = "insert into ciudad (id_estado,ciudad,fecha_creado,hora_creado,fecha_modificado,hora_modificado) values('$estado','$ciudad','$fecha_creado','$hora_creado','$fecha_creado','$hora_creado')";
+$r_ciudad = ejecutar($q_ciudad);
+
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera4"  cellpadding=0 cellspacing=0>
+
+<tr>		<td colspan=4 class="titulo_seccion"> Se Registro con Exito la Ciudad <?php echo $ciudad;?></td>	
+</tr>	
+
+	<tr>
+		<td colspan=2 class="tdcamposcc"><a href="#" OnClick="reg_ciudad();" class="boton">Insertar otra Ciudad</a>
+		
+		<td colspan=2 class="tdcampos"><a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>	
+	</tr>
+<br>
+</table>

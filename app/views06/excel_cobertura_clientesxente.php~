@@ -1,0 +1,241 @@
+<?php
+
+include ("../../lib/jfunciones.php");
+sesion();
+header('Content-type: application/vnd.ms-excel');//poner cabezera de excel
+$numealeatorio=rand(2,99);//crea un numero aleatorio para el nombre del archivo
+header("Content-Disposition: attachment; filename=archivo$numealeatorio.xls");//Esta ya es la hoja excel con el numero aleatorio.xls
+header("Pragma: no-cache");//Para que no utili la cahce
+header("Expires: 0");
+
+/* Nombre del Archivo: excel_cobertura_clientesxente.php
+   Descripción: Realiza el Reporte de Impresión en excel con los datos seleccionados: Relación de Cobertura de los Clientes Totales, de un determinado Ente
+*/  
+
+   list($estadot)=explode("@",$_REQUEST['estadot']);
+	if($estadot=="0")	        $condicion_estadot="";
+	else
+   $condicion_estadot="	and estados_t_b.id_estado_cliente=$estadot";
+
+   list($estadob)=explode("@",$_REQUEST['estadob']);
+	if($estadob=="0")	        $condicion_estadob="";
+	else
+   $condicion_estadob="	and estados_t_b.id_estado_cliente=$estadob";
+
+   list($tipo_ente,$nom_tipo_ente)=explode("@",$_REQUEST['tipo_ente']);
+
+list($id_ente,$ente)=explode("@",$_REQUEST['ente']);
+
+
+if($id_ente==0)	        $condicion_ente="and entes.id_tipo_ente>0";
+	
+	else
+	$condicion_ente="and entes.id_ente='$id_ente'";
+
+if  ($tipo_ente==0){
+	$tipo_entes="and entes.id_tipo_ente>0";
+	}
+	else
+	{
+		$tipo_entes="and entes.id_tipo_ente=$tipo_ente";
+	}
+
+
+$q_estadot=("select estados_clientes.estado_cliente from estados_clientes where estados_clientes.id_estado_cliente=$estadot");
+$r_estadot=ejecutar($q_estadot);
+$f_estadot=asignar_a($r_estadot);
+
+$q_estadob=("select estados_clientes.estado_cliente from estados_clientes where estados_clientes.id_estado_cliente=$estadob");
+$r_estadob=ejecutar($q_estadob);
+$f_estadob=asignar_a($r_estadob);
+
+
+
+?>
+<LINK REL="StyleSheet" HREF="../../public/stylesheets/impresiones.css">
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 >
+ 
+	<tr>
+		<td class="descrip_main"> <img src="../../public/images/head.png" alt="logo"><br>RIF J-31180863-9</td>
+		<td class="descrip_main" colspan="12">Reporte Relaci&oacute;n Clientes Titulares <?php 
+if($estadot=="0") echo "Todos los Estados"; else echo "en Estado "."$f_estadot[estado_cliente]";?> y Beneficiarios <?php 
+if($estadob=="0") echo "Todos los Estados"; else if($estadob=="-01") echo "NINGUNO"; else echo "en Estado "."$f_estadob[estado_cliente]";?>,  <?php 
+if($tipo_ente=="0") echo "TODOS LOS TIPOS DE ENTES";
+ 
+else echo "del Tipo de Ente "."$nom_tipo_ente";  ?>, <?php 
+if($id_ente=="0") echo "TODOS LOS ENTES";
+ 
+else echo "del Ente "."$ente ";?> </td>     
+        </tr>
+	
+<br>	
+	<tr> 
+	   	<td class="descrip_main">CLIENTE</td>   	   
+		<td class="descrip_main">TITULAR</td>
+	        <td class="descrip_main">CEDULA TITULAR</td> 
+		<td class="descrip_main">ESTADO</td>
+		<td class="descrip_main">FECHA NAC.</td>        
+		<td class="descrip_main">CLIENTE</td>        
+		<td class="descrip_main">BENEFICIARIO</td>
+	        <td class="descrip_main">CEDULA BENEFICIARIO</td>
+		<td class="descrip_main">ESTADO</td>
+	        <td class="descrip_main">FECHA NAC.</td>
+		<td class="descrip_main">PARENTESCO</td> 
+		<td class="descrip_main">EDAD</td>   
+		<td class="descrip_main">ENTE</td>        	           	      
+	</tr>
+	
+<?php 
+$q_titular=("select 
+	clientes.id_cliente,
+	clientes.apellidos,
+	clientes.nombres,
+	clientes.cedula,
+	clientes.fecha_nacimiento,
+	estados_clientes.estado_cliente,
+	titulares.id_titular,
+	titulares.id_ente,
+	coberturas_t_b.monto_actual,
+	propiedades_poliza.cualidad,entes.id_tipo_ente, entes.nombre
+	from 
+	clientes,entes,estados_clientes, estados_t_b, titulares, coberturas_t_b, propiedades_poliza 
+	where 
+	clientes.id_cliente=titulares.id_cliente
+	$condicion_ente $tipo_entes and
+	titulares.id_ente=entes.id_ente and 
+	titulares.id_titular=estados_t_b.id_titular and 
+	estados_t_b.id_beneficiario='0' 
+	$condicion_estadot and  
+	estados_t_b.id_estado_cliente=estados_clientes.id_estado_cliente and
+	coberturas_t_b.id_titular=titulares.id_titular and
+	coberturas_t_b.id_propiedad_poliza=propiedades_poliza.id_propiedad_poliza and 
+	(propiedades_poliza.cualidad='MATERNIDAD' or propiedades_poliza.cualidad='GASTOS AMBULATORIOS') and
+	coberturas_t_b.id_beneficiario=0
+	group by 
+	clientes.id_cliente,	
+	clientes.apellidos,
+	clientes.nombres,
+	clientes.cedula,
+	clientes.fecha_nacimiento,
+	estados_clientes.estado_cliente,
+	estados_t_b.id_estado_cliente,
+	titulares.id_titular,
+	titulares.id_ente,
+	coberturas_t_b.monto_actual,
+	propiedades_poliza.cualidad,entes.id_tipo_ente,entes.nombre  
+	order by estados_clientes.estado_cliente,clientes.id_cliente,clientes.apellidos,propiedades_poliza.cualidad");
+$r_titular=ejecutar($q_titular);
+
+$t=0;
+$b=0;
+	while($f_titular=asignar_a($r_titular)){
+	$t=$t+1;
+		
+	echo"
+		<tr> 	        
+		<td class=\"tdtituloss\">$f_titular[id_cliente]</td>
+		<td class=\"tdtituloss\">$f_titular[nombres] $f_titular[apellidos]</td>   
+		<td class=\"tdtituloss\">$f_titular[cedula]</td>
+		<td class=\"tdtituloss\">$f_titular[estado_cliente]</td>
+		<td class=\"tdtituloss\">$f_titular[fecha_nacimiento]</td>
+		<td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+
+		<td class=\"tdtituloss\"> ";?><?php echo calcular_edad($f_titular['fecha_nacimiento']);
+echo "		<td class=\"tdtituloss\">$f_titular[nombre]</td>";
+?>	              
+	        </tr>
+<?php
+	echo"
+		<tr>
+		<td class=\"tdtitulos\" colspan=5>&nbsp;&nbsp;&nbsp; Le queda   				$f_titular[cualidad] &nbsp;";?> <?php echo montos_print($f_titular['monto_actual'])." Bs.S.";?></td>
+		<td colspan=1>&nbsp;</td>
+                <td colspan=1>&nbsp;</td>
+                <td colspan=1>&nbsp;</td>
+                <td colspan=1>&nbsp;</td>
+                <td colspan=1>&nbsp;</td>
+                <td colspan=1>&nbsp;</td>
+                <td colspan=1>&nbsp;</td>
+		
+		</tr>
+
+	<?php
+
+		$q_beneficiario=("
+		select 
+		beneficiarios.id_cliente,
+		beneficiarios.id_parentesco,
+		beneficiarios.id_beneficiario,
+		parentesco.parentesco,
+		clientes.apellidos,
+		clientes.nombres,
+		clientes.cedula,
+		clientes.fecha_nacimiento,
+		estados_clientes.estado_cliente,
+		coberturas_t_b.monto_actual,
+		propiedades_poliza.cualidad,entes.id_tipo_ente  
+		from clientes,entes, estados_clientes, beneficiarios, estados_t_b,coberturas_t_b, propiedades_poliza,titulares,parentesco 
+		where 
+		clientes.id_cliente=beneficiarios.id_cliente and 
+		titulares.id_titular=beneficiarios.id_titular and 
+		titulares.id_titular=$f_titular[id_titular] 
+		$condicion_ente $tipo_entes and
+		titulares.id_ente=entes.id_ente and
+		beneficiarios.id_beneficiario=estados_t_b.id_beneficiario  
+	        $condicion_estadob and
+		estados_t_b.id_estado_cliente=estados_clientes.id_estado_cliente and 					 parentesco.id_parentesco=beneficiarios.id_parentesco and
+		coberturas_t_b.id_beneficiario=beneficiarios.id_beneficiario and  coberturas_t_b.id_propiedad_poliza=propiedades_poliza.id_propiedad_poliza and 
+	(propiedades_poliza.cualidad='MATERNIDAD' or propiedades_poliza.cualidad='GASTOS AMBULATORIOS') and
+	coberturas_t_b.id_beneficiario>0   
+order by estados_clientes.estado_cliente,clientes.id_cliente,clientes.apellidos,propiedades_poliza.cualidad");
+		$r_beneficiario=ejecutar($q_beneficiario);
+
+if ($f_titular['cualidad']=='MATERNIDAD') {
+$t=$t-1;}
+	else
+	{
+		while($f_beneficiario=asignar_a($r_beneficiario)){
+		$b=$b+1;	
+	echo"
+		<tr> 
+	        
+		<td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+
+		<td class=\"tdtituloss\">$f_beneficiario[id_cliente]</td>
+		<td class=\"tdtituloss\">$f_beneficiario[nombres] $f_beneficiario[apellidos]</td>   
+		<td class=\"tdtituloss\">$f_beneficiario[cedula]</td>
+		<td class=\"tdtituloss\">$f_beneficiario[estado_cliente]</td>
+		<td class=\"tdtituloss\">$f_beneficiario[fecha_nacimiento]</td>
+		<td class=\"tdtituloss\">$f_beneficiario[parentesco]</td>
+		<td class=\"tdtituloss\"> ";?><?php echo calcular_edad($f_beneficiario['fecha_nacimiento']);
+echo "		<td class=\"tdtituloss\">$f_titular[nombre]</td>";
+?></td>
+	        </tr>
+
+	<?php echo"
+		<tr>	
+		<td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+                <td class=\"tdtituloss\" colspan=1 >&nbsp;</td>
+
+			<td class=\"tdtitulos\" colspan=7>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Le queda en $f_beneficiario[cualidad] &nbsp;";?> <?php echo montos_print($f_beneficiario['monto_actual'])." Bs.";?></td>
+		</tr>
+
+<?php if ($f_beneficiario['cualidad']=='MATERNIDAD') {
+	$b=$b-1;}}}?>
+<tr>
+		<td class=\"tdtituloss\" colspan=12 >&nbsp;</td>
+	</tr><?php }
+?>			
+    
+</table>

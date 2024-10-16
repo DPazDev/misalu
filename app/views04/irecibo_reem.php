@@ -1,0 +1,335 @@
+<?php
+include ("../../lib/jfunciones.php");
+$codigo=$_REQUEST[c];
+
+
+
+
+
+$r_datos=pg_query("select entes.id_ente, 
+			    entes.nombre, 
+			    polizas.id_poliza, 
+			    polizas.nombre_poliza, 
+			    titulares.id_titular,
+			    titulares.fecha_creado,
+			    titulares.fecha_inclusion,
+			    clientes.nombres,
+			    clientes.apellidos,
+			    clientes.direccion_hab,
+			    clientes.telefono_hab,
+			    clientes.telefono_otro,
+			    clientes.celular,
+			    ciudad.ciudad,
+			    clientes.sexo
+			from entes, 
+			     polizas, 
+			     titulares,
+			     clientes,
+			     ciudad
+			where clientes.cedula='$_SESSION[cedula]' and
+			      titulares.id_cliente=clientes.id_cliente and
+			      entes.id_ente=titulares.id_ente and
+			      polizas.id_poliza=polizas_entes.id_poliza and
+			      titulares_polizas.id_titular=titulares.id_titular and
+			      titulares_polizas.id_poliza=polizas.id_poliza and
+			      entes.id_ente=polizas_entes.id_ente and
+			      clientes.id_ciudad=ciudad.id_ciudad and titulares.id_titular=estados_t_b.id_titular and estados_t_b.id_estado_cliente=4 and estados_t_b.id_beneficiario=0
+			      ORDER BY entes.nombre asc;");
+if(num_filas($r_datos)==0){
+	//es solo beneficiario.
+	$r_datos=pg_query("select entes.id_ente, 
+			    entes.nombre, 
+			    polizas.id_poliza, 
+			    polizas.nombre_poliza, 
+			    clientes.nombres,
+			    clientes.apellidos,
+			    clientes.direccion_hab,
+			    clientes.telefono_hab,
+			    clientes.telefono_otro,
+			    clientes.celular,
+			    ciudad.ciudad,
+			    clientes.sexo
+			from entes, 
+			     polizas, 
+			     titulares,
+			     clientes,
+			     ciudad
+			where clientes.cedula='$_SESSION[cedula]' and
+			      beneficiarios.id_cliente=clientes.id_cliente and
+			      titulares.id_titular=beneficiarios.id_titular and
+			      entes.id_ente=titulares.id_ente and
+			      polizas.id_poliza=polizas_entes.id_poliza and
+			      titulares_polizas.id_titular=titulares.id_titular and
+			      titulares_polizas.id_poliza=polizas.id_poliza and
+			      entes.id_ente=polizas_entes.id_ente and
+			      clientes.id_ciudad=ciudad.id_ciudad
+			      ORDER BY entes.nombre asc;");
+}
+$f_datos=pg_fetch_array($r_datos, NULL, PGSQL_ASSOC);
+
+
+
+
+$fecha=date("Y-m-d");
+$hora=date("h:i:s");
+
+//actualizo los campos de no_cheque y comprobantes de facturas_procesos
+$r_campos_nuevos=pg_query("
+		update facturas_procesos set numero_cheque='$cheque', 
+					     comprobante='$comprobante',
+					     fecha_modificado='$fecha',
+					     hora_modificado='$hora',
+					     id_banco=$banco
+		where codigo='$codigo';
+		");
+
+
+
+
+//busco las facturas
+$r_facturas=pg_query("select * from facturas_procesos where codigo='$codigo'");
+$total_procesos=num_filas($r_facturas);
+$r_no=pg_query("select facturas_pagos.id_factura_pago,bancos.nombre_banco,bancos.numero_cuenta from facturas_pagos,bancos where facturas_procesos.codigo='$codigo' and facturas_procesos.id_factura_proceso=facturas_pagos.id_factura_proceso and facturas_pagos.id_pago_externo=0 and bancos.id_banco=$banco order by facturas_pagos.id_factura_pago desc limit 1");
+$f_no=pg_fetch_array($r_no, NULL, PGSQL_ASSOC);
+
+$q_reporte = "select sucursales.sucursal,sucursales.direccion_suc,sucursales.telefonos_suc,sucursales.fax_suc from sucursales where id_sucursal=$_SESSION[sucursal_admin_cs];";
+$r_reporte = ejecutar($q_reporte);
+$f_reporte = asignar_a($r_reporte);
+$q_recibo = "select * from facturas_procesos where codigo='$codigo';";
+$r_recibo = ejecutar($q_recibo);
+$f_recibo = asignar_a($r_recibo);
+
+
+$dia=date("d");
+$mes=date("m");
+$ano=date("Y");
+if($mes == '01')
+	$mes = "Enero";
+elseif($mes == '02')
+	$mes = "Febrero";
+elseif($mes == '03')
+	$mes = "Marzo";
+elseif($mes == '04')
+	$mes = "Abril";
+elseif($mes == '05')
+	$mes = "Mayo";
+elseif($mes == '06')
+	$mes = "Junio";
+elseif($mes == '07')
+	$mes = "Julio";
+elseif($mes == '08')
+	$mes = "Agosto";
+elseif($mes == '09')
+	$mes = "Septiembre";
+elseif($mes == '10')
+	$mes = "Octubre";
+elseif($mes == '11')
+	$mes = "Noviembre";
+elseif($mes == '12')
+	$mes = "Diciembre";
+
+//$fecha=fecha_espanol(date("Y-M-d"));
+
+echo "
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
+<html>
+	<head>
+	<title></title>
+	<script language=\"JavaScript\" type=\"text/javascript\">
+	function imprimir(){
+		
+		
+	}
+	</script> 	
+
+	<style type=\"text/css\">
+	<!--
+	body,td,th {
+	margin-top: 0px;
+	font-size: 9px;
+	color: #000000;
+	}
+	-->
+	</style>	
+	</head>
+	<body onload=\"imprimir()\">";
+
+echo "
+<br><br><br>
+	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">
+	<tr valign=\"bottom\">
+
+		<td align=\"left\" valign=\"top\" style=\"font-size: 10pt;\">&nbsp;&nbsp;
+		CliniSalud Medicina Prepagada S.A. RIF: J-31180863-9<br>
+		&nbsp;&nbsp;&nbsp; 
+		</td>
+<td ></td>
+	</tr>
+	<tr>
+	<td align=\"right\" colspan=2>
+	<table border=0 cellpadding=0 cellspacing=0>
+<br><br><br>
+	<tr>
+		<td  class=\"fecha\"  align=\"right\">".strtoupper($f_reporte['sucursal']).",".date("d")." DE ".strtoupper($mes)." DE ".date("Y")."</td>
+	</tr>
+
+	</table>
+<br><br><br><br><br><br><br><br>
+	</td>
+	</tr>
+
+<tr>
+<td colspan=2 style=\"width: 3.5in;font-size: 14pt;text-align: center ;\" > <br> <b>RECIBO DE PAGO DE REEMBOLSO Numero ".$f_recibo[num_recibo]." </b></td>
+</tr>
+
+
+	<tr>
+	<td colspan=2 style=\"width: 3.5in;font-size: 14pt;text-align: center ;\"><br><b> Por Bs.S.  " .montos_print($monto_final)."</b></td></tr>
+
+<tr>
+	<td colspan=2 style=\"width: 3.5in;font-size: 14pt;text-align: left ;\"><br><b> He recibido de CliniSalud Medicina Prepagda S.A., la cantidad de $monto_escrito</b></td></tr>
+<tr>
+	<td colspan=2 style=\"width: 3.5in;font-size: 14pt;text-align: left ;\"><br>Por concepto de la cancelacion del o los Reembolsos</td></tr>
+
+
+	<br>	
+	
+	
+	<table border=0 cellpadding=0 cellspacing=0 width=\"100%\">
+		<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\"><b>No. Proceso</b></td>
+			<td align=\"center\" class=\"datos_cliente2\"><b></b></td>
+			<td align=\"center\" class=\"datos_cliente2\"><b></b></td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\"><b>Monto</b></td>
+			<td align=\"center\" class=\"datos_cliente2\"><b></b></td>
+		</tr>";
+	while($f_proceso=pg_fetch_array($r_facturas, NULL, PGSQL_ASSOC)){
+	$retencion=$f_proceso[retencion];
+	$iva=$f_proceso[iva];
+	$descuento=$f_proceso[descuento];
+	$tmp_monto_sin = str_replace(',','.',$f_proceso[monto_sin_retencion]);
+	$tmp_monto_con = str_replace(',','.',$f_proceso[monto_con_retencion]);
+
+	//busco los datos del proceso
+	$r_proceso_tmp=pg_query("
+				select * from procesos where id_proceso='$f_proceso[id_proceso]';
+				");
+	$f_proceso_tmp=pg_fetch_array($r_proceso_tmp,NULL,PGSQL_ASSOC);
+	if($f_proceso_tmp[id_beneficiario]!=0){
+		$campos="			  
+			  bene.nombres as n_b, 
+			  bene.apellidos as a_b,
+			  bene.cedula as c_b,";
+		$tablas="
+			  clientes as bene,
+			  beneficiarios,
+			";
+		$condiciones="
+			  beneficiarios.id_beneficiario=procesos.id_beneficiario and
+			  bene.id_cliente=beneficiarios.id_cliente and		
+		";
+	}else{
+		$tablas="";
+		$campos="";
+		$condiciones="";
+	}
+
+	
+	//busco los datos de los clientes y los gastos del proceso
+	$r_datos=pg_query("select 
+			  $campos
+			  titu.nombres as n_t,
+			  titu.apellidos as a_t,
+			  titu.cedula as c_t,
+			  procesos.id_titular as proc_id_titu, 
+			  procesos.id_beneficiario as proc_id_bene, 
+			  gastos_t_b.*,
+			  entes.nombre as ente
+			from 
+			     clientes as titu,
+			     titulares,
+			     $tablas
+			     procesos,
+			     gastos_t_b,
+			     entes
+			where procesos.id_proceso=$f_proceso[id_proceso] and
+			      titulares.id_titular=procesos.id_titular and
+			      titu.id_cliente=titulares.id_cliente and
+			      $condiciones
+			      gastos_t_b.id_proceso=$f_proceso[id_proceso] and
+			      titulares.id_ente=entes.id_ente;");
+
+
+	$f_datos1=pg_fetch_array($r_datos, NULL, PGSQL_ASSOC);
+	echo "
+		<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\">$f_proceso[id_proceso]</td>
+			<td align=\"center\" class=\"datos_cliente2\"></td>
+	                <td align=\"center\" class=\"datos_cliente2\"></td>";                   
+			echo "<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\">".montos_print($tmp_monto_con+$tmp_monto_sin)."</td>
+			<td align=\"center\" class=\"datos_cliente2\"></td>
+		</tr>	
+	";
+	
+	}
+	echo "
+	</table>
+
+
+	<table cellpadding=2 cellspacing=0 width=\"100%\">
+		<tr>	
+			<td colspan=2 style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">
+			<br>a Favor de: $f_datos[nombres] $f_datos[apellidos]	
+			</td>
+			
+		</tr>
+<tr>	
+			<td colspan=2 style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">
+			<br>C.I.: $cedula 
+			</td>
+			
+		</tr>
+<tr>	
+			<td colspan=2 style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">
+			<br> Titular del
+			Ente: $f_datos[nombre]
+			</td>
+			
+		</tr>
+<tr>	
+			<td colspan=2 style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">
+			<br> Recibi conforme en efectivo.
+			</td>
+			
+		</tr>
+		
+	</table>
+	
+	<br> <br><br><br><br><br><br><br><br>
+	
+<table width=\"70%\"  align=\"right\">
+		<tr>
+			<td <td>
+			<td </td>
+		</tr>
+<br><br><br><br>
+	<br><br><br><br>
+
+		<tr>
+		<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">________________ <br>FIRMA:</td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">________________ <br>C:I/RIF:</td>
+		</tr>
+	</table>
+	
+	
+
+
+		</td>
+
+	</tr>	
+
+	</table>	
+	</body>
+	</html>
+";
+?>

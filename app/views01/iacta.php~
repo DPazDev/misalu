@@ -1,0 +1,259 @@
+<?php
+header("Content-Type: text/html;charset=utf-8");
+include ("../../lib/jfunciones.php");
+sesion();
+$proceso=$_REQUEST['proceso'];
+$si=$_REQUEST['si'];
+$fechaimpreso=date("d-m-Y");
+$dia=date("d");
+$mes=date("m");
+$ano=date("Y");
+if($mes == '01')
+	$mes = "Enero";
+elseif($mes == '02')
+	$mes = "Febrero";
+elseif($mes == '03')
+	$mes = "Marzo";
+elseif($mes == '04')
+	$mes = "Abril";
+elseif($mes == '05')
+	$mes = "Mayo";
+elseif($mes == '06')
+	$mes = "Junio";
+elseif($mes == '07')
+	$mes = "Julio";
+elseif($mes == '08')
+	$mes = "Agosto";
+elseif($mes == '09')
+	$mes = "Septiembre";
+elseif($mes == '10')
+	$mes = "Octubre";
+elseif($mes == '11')
+	$mes = "Noviembre";
+elseif($mes == '12')
+	$mes = "Diciembre";
+	
+	//echo numeros_a_letras($monto);
+                                $cantidad=explode(".",$ano);
+                                $cadenas=count($cantidad);
+								 if ($cantidad[1]<=9) {
+									$cero=0;}
+									else
+									{$cero="";}
+								$cantidad[1]=substr($cantidad[1],0,2);
+								$cantida[1]=substr($cantidad[1],0,1);
+								if ($cantida[1]==0){
+									$cero="";
+									}
+                                if($cadenas==2){
+                                        $monto_escrito= ucwords(numtolet($cantidad[0],"os"))." con ".$cantidad[1]."$cero/100 ";
+                                }else{
+                                       $monto_escrito= ucwords(numtolet($cantidad[0],"os"))."  ";
+				$cero="";
+                                }
+
+                                //echo numeros_a_letras($total);
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$id_admin' and admin.id_sucursal=sucursales.id_sucursal");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+/* *** busco el monto a comparar *** */
+$q_monto=("select * from variables_globales where variables_globales.id_variable_global='33'");
+$r_monto=ejecutar($q_monto);
+$f_monto=asignar_a($r_monto);
+
+/* **** busco las citas medicas *** */
+
+$q_proceso=("select entes.nombre as ente,clientes.*,procesos.*,servicios.*,gastos_t_b.*,admin.nombres as adnom, admin.apellidos as adapell,procesos.comentarios as comen from entes,procesos,gastos_t_b,servicios,admin,clientes,titulares where procesos.id_proceso=$proceso and gastos_t_b.id_proceso=procesos.id_proceso and gastos_t_b.id_servicio=servicios.id_servicio  and titulares.id_titular=procesos.id_titular and titulares.id_cliente=clientes.id_cliente and titulares.id_ente=entes.id_ente and procesos.id_admin=admin.id_admin");
+$r_proceso=ejecutar($q_proceso);
+$f_proceso=asignar_a($r_proceso);
+$nombre_cliente="$f_proceso[nombres]";
+$apellido_cliente="$f_proceso[apellidos]";
+$cedula="$f_proceso[cedula]";
+$nombre_clienteb="$f_proceso[nombres]";
+$apellido_clienteb="$f_proceso[apellidos]";
+$cedulab="$f_proceso[cedula]";
+$fechaemi=split("-",$f_proceso[fecha_cita]);
+
+$q_gastos=("select * from gastos_t_b where gastos_t_b.id_proceso=$proceso");
+$r_gastos=ejecutar($q_gastos);
+$q_gastos1=("select * from gastos_t_b where gastos_t_b.id_proceso=$proceso");
+$r_gastos1=ejecutar($q_gastos1);
+?>
+<link HREF="../../public/stylesheets/impresiones.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+
+<table   border=0 class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="titulo3"> ACTA DE ENTREGA <?php echo $ano?>
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<?php 
+if ($f_proceso[id_beneficiario]>0 )
+{
+	$q_beneficiario=("select * from clientes,beneficiarios where clientes.id_cliente=beneficiarios.id_cliente and beneficiarios.id_beneficiario=$f_proceso[id_beneficiario]");
+$r_beneficiario=ejecutar($q_beneficiario);
+$f_beneficiario=asignar_a($r_beneficiario);
+$nombre_clienteb="$f_beneficiario[nombres]";
+$apellido_clienteb="$f_beneficiario[apellidos]";
+$cedulab="$f_beneficiario[cedula]";
+}	
+?>
+<tr>
+<td colspan=4 class="datos_cliente">
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente">
+
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente">
+
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente">
+
+</td>
+</tr>
+
+
+<?php
+ while($f_gastos=asignar_a($r_gastos,NULL,PGSQL_ASSOC)){
+$monto=$monto + $f_gastos[monto_reserva];
+}
+
+$monto_letra=numeros_a_letras($monto);
+/* **** modificar el procesos y gastos de este proceso si es donativo **** */ 
+$mod_prodon="update procesos set id_estado_proceso=7 where 
+procesos.id_proceso=$proceso"; 
+$fmod_prodon=ejecutar($mod_prodon);
+/* **** modificar el procesos  si es donativo **** */ 
+?>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+
+En el d&iacute;a de hoy, <?php echo $fechaemi[2];?> de <?php echo $fechaemi[1]?> del <?php echo "$monto_escrito ($fechaemi[2]-$fechaemi[1]-$fechaemi[0])"?>, la Empresa Sociedad Mercantil <b> C.A DE SEGUROS LA INTERNACIONAL.</b>, debidamente inscrita por ante el Registro <b>MERCANTIL PRIMERO de la Circunscripci&oacute;n Judicial del Distrito Capital y Estado Miranda, Bajo el Num21, Tomo: 44-A PRO, de fecha 02 de Noviembre de 1990, siendo su &uacute;ltima modificaci&oacute;n protocolizada en el Registro Mercantil antes indicado en fecha 09 de Junio del 2010, bajo el Num 27, del A&ntilde;o 2010 Tomo 122-A, numero de RIF: J-00338202-7</b>, representada en este Acto por el Ciudadano ALVARO TRIANA, Venezolano, mayor de edad, Titular de la Cedula de Identidad Num V-3.793.590, actuando en su condici&oacute;n de Apoderado seg&uacute;n consta en PODER ESPECIAL, amplio y suficiente conferido en fecha 29 de Noviembre de 2010 y debidamente notariado, ante la Notaria publica S&eacute;ptima del Municipio Libertador del Distrito Capital, bajo el numero 42, Tomo 201, de fecha 09 de Diciembre de 2010 y el Ciudadano (a):  <b> <?php echo "$nombre_cliente $apellido_cliente" ?></b> Venezolano (a), mayor de edad, Titular de la Cedula de Identidad Num <b> V-<?php echo cedula($cedula);?></b> domiciliados en M&eacute;rida, se hace entrega formal:<b> <?php echo "$f_proceso[nombre] para $nombre_clienteb $apellido_clienteb" ?>  </b>valorado por un monto de <b><?php echo "$monto_letra BOLIVARES"; ?> (Bs.S. <?php echo formato_montos($monto);?>)</b>  seg&uacute;n vigencia del contrato. 
+</td>
+</tr>
+<tr>
+<td colspan=4  class="datos_cliente">
+
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+
+Dicha entrega se realiza a fin de dar cumplimiento al Compromiso de Responsabilidad Social, estipulado en el art&iacute;culo 6, numeral 19 de la Ley de Contrataciones P&uacute;blicas, en concordancia con los Art&iacute;culos 34 y 91 del Reglamento de la Ley de Contrataciones, correspondiente a la Contrataci&oacute;n Num <b>GOB.MERIDA-DDPPRH-CA-NRO.002-2012,</b> Servicio de Hospitalizaci&oacute;n, Cirug&iacute;a y Maternidad para los Trabajadores de la Gobernaci&oacute;n de Estado M&eacute;rida, por un monto de (Bs.S. <?php echo formato_montos($f_monto[cantidad]);?>), determinado en un porcentaje de: 5% seg&uacute;n lo estipulado en el Decreto Num 059, publicado en la Gaceta Oficial del Estado M&eacute;rida Num 2063, de fecha 09 de Marzo de 2010.
+A su vez, se solicita ante la Direcci&oacute;n Estadal del Poder Popular de Administraci&oacute;n, el correspondiente Certificado de Compromiso de Responsabilidad Social.
+ 
+</td>
+</tr>
+<tr>
+<td colspan=4  class="datos_cliente">
+
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+Es todo, se ley&oacute; y conformes firman.
+</td>
+</tr>
+<tr>
+<td colspan=4  class="datos_cliente">
+
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+REPRESENTANTE      LEGAL DE LA EMPRESA
+
+</td>
+</tr>
+<tr>
+<td colspan=4  class="datos_cliente">
+
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+RECIBE CONFORME: 
+
+</td>
+</tr>
+
+<tr>
+<td colspan=4  class="datos_cliente">
+
+
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+NOMBRE Y APELLIDO: <?php echo "$nombre_cliente $apellido_cliente" ?>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+C.I: <?php echo cedula($cedula);?>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+CANTIDAD: (Bs. <?php echo formato_montos($monto);?>)
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+FECHA: <?php echo $fechaimpreso?> 
+</td>
+</tr>
+<tr>
+<td colspan=4  class="datos_cliente">
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente2" style="text-align: justify">
+<b>COLOCAR HUELLA.</b>
+</td>
+</tr>
+<tr>
+<td colspan=4  class="datos_cliente">
+<br>
+</br>
+</br>
+<br>
+</br>
+</td>
+</tr>
+</table>
+
+

@@ -1,0 +1,88 @@
+<?php
+
+include("../lib/jfunciones.php");
+echo cabecera(sistema);
+
+?>
+
+<link href="../public/stylesheets/navegador.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../public/stylesheets/animate.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../public/stylesheets/auth.css" rel="stylesheet" type="text/css" media="screen" />
+
+<script LANGUAGE="JavaScript">
+  function entrar() {
+    if (document.login.clave.value.length == 0 || document.login.usuario.value.length == 0 || document.login.clave.value == 1) {
+      alert("TODOS LOS CAMPOS SON OBLIGATORIOS ...");
+    } else {
+      document.login.clave.value = calcMD5(document.login.clave.value);
+      document.login.procedimiento.value = "0";
+      document.login.submit();
+    }
+  }
+
+  function olvidar() {
+    if (document.login.usuario.value.length == 0) {
+      alert("ES OBLIGATORIO COLOCAR SU USUARIO ...");
+    } else {
+      document.login.clave.value = calcMD5(document.login.clave.value);
+      document.login.procedimiento.value = "1";
+      document.login.submit();
+    }
+  }
+
+  //-->
+</script>
+
+
+           <!-- Modales con informacion de la empresa -->
+           <nav>
+    <ul>
+      <li><a href="#" onClick='Modalbox.show("misiones.php", {title: "CliniSalud Medicina Prepagada S.A.", width: 600}); return false;'>MISIÓN</a></li>
+      <li><a href="#" onClick='Modalbox.show("visiones.php", {title: "CliniSalud Medicina Prepagada S.A.", width: 600}); return false;'>VISIÓN</a></li>
+      <li><a href="#" onClick='Modalbox.show("valores.php", {title: "CliniSalud Medicina Prepagada S.A.", width: 600}); return false;'>VALORES</a></li>
+    </ul>
+  </nav>
+
+
+<section id="loginPage">
+
+  <!-- formulario de inicio de sesion -->
+  <section class="centrar">
+ 
+    <form method="POST" action="login.php" name="login" onSubmit="return entrar()">
+
+      <!-- imagen portada -->
+      <section class="contenedor_imagen">
+        <img src="../public/images/login_portada_cancer-mama.png">
+      </section>
+
+      <!-- inputs para insertar las credenciales -->
+      <section class="formulario_campos">
+        <div class="container_campos">
+          <label for="usuario">Nombre de Usuario</label>
+          <input type="text" name="usuario" id="usuario" maxlength=16 size=20 placeholder="Ingrese su usuario">
+        </div>
+
+        <div class="container_campos">
+          <label for="clave">Contraseña</label>
+          <input type="password" id="clave" name="clave" maxlength=64 size=20  placeholder="Ingrese su contraseña">
+        </div>
+        <input class="campos" type="hidden" name="procedimiento" id="procedimiento" maxlength=64 size=20 value="">
+      </section>
+
+      <!-- botones de accion -->
+      <section class="formulario_botones">
+        <a href="#" OnClick="olvidar(1);" class="recuperar">Olvidó Contraseña</a>
+        <a href="#" onClick='entrar(this);' class="entrar">Entrar</a>
+      </section>
+
+      <INPUT type="Submit" value="" class="boton_invisible">
+    </form>
+  </section>
+
+</section>
+
+
+<?php
+echo pie();
+?>

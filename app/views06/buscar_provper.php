@@ -1,0 +1,32 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+
+/* Nombre del Archivo: buscar_provper.php
+   Descripción: Realiza la busqueda para el PROVEEDOR PERSONA: Relación PARAMETROS PARA ENTES
+*/
+
+$q_propersona=("select proveedores.id_proveedor,personas_proveedores.id_persona_proveedor, personas_proveedores.nombres_prov, personas_proveedores.apellidos_prov, s_p_proveedores.id_s_p_proveedor, s_p_proveedores.direccion_prov from proveedores,personas_proveedores, s_p_proveedores where s_p_proveedores.id_persona_proveedor=personas_proveedores.id_persona_proveedor and proveedores.id_s_p_proveedor=s_p_proveedores.id_s_p_proveedor order by nombres_prov");
+$r_propersona=ejecutar($q_propersona);
+
+?>
+	<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+	<tr>
+
+		<td colspan=4 class="tdcamposcc" ><select id="proveedor" name="proveedor" class="campos"  style="width: 300px;" >
+	                              <option value="/@TODOS LOS DOCTORES">Todos los Doctores.</option>
+<option>INTRAMURAL</option>
+<option>EXTRAMURAL</option>
+				      <?php  while($f_propersona=asignar_a($r_propersona,NULL,PGSQL_ASSOC)){?>
+		                      <option value="<?php echo $f_propersona[id_proveedor]?>"> <?php echo "$f_propersona[nombres_prov] $f_propersona[apellidos_prov]: $f_propersona[direccion_prov]"?></option>
+				     <?php }?> 
+		</td>	
+	</tr>
+
+
+</table>            
+
+
+

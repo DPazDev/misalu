@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Crear Pedido Dependencia<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para crear un pedido dependencia el usuario deberá acceder al módulo <I>Compras</I> luego seleccionar <I>Crear Pedido Dependencia</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/cpdepen1.jpg" WIDTH=461 HEIGHT=215 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">En la siguiente pantalla deberá dar clic en <I>Crear pedido dependencia</I> (ver figura 2), luego aparecerá un formulario donde se deberá llenar los siguientes datos: Seleccionar la Dependencia Saliente (Dependencia a la que pertenece el usuario quien emite el pedido), Seleccionar Dependencia Entrante (Dependencia que recibe el pedido), Selección de tipo de insumos (se podrá seleccionar uno o mas tipo de insumos). (ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen2.jpg" WIDTH=617 HEIGHT=61 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/cdepen3.jpg" WIDTH=615 HEIGHT=468 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Realizando un pedido dependencia</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de haber seleccionado las dependencias salientes y entrantes explicadas anteriorment, debe seleccionarse los tipos de insumo que conformarán el pedido, vale destacar que puede hacer la selección uno o mas tipos de insumo y dar clic en <I>Buscar</I> para realizar la carga de los artículos.  Si el usuario da un clic en <I>Buscar</I> sin antes haber seleccionado un tipo de insumo el sistema mostrará un mensaje indicando que debe seleccionarse al menos un tipo de insumo. (ver figura 4).  .</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen4.jpg" WIDTH=397 HEIGHT=138 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de seleccionar las dependencias y tipos de insumo correctamente (ver figura 5), podrá visulizarse en la siguiente pantalla un formulario para la carga de los artículos. (ver figura 6).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen5.jpg" WIDTH=554 HEIGHT=368 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 5</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/cdepen6.jpg" WIDTH=617 HEIGHT=163 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 6</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al realizar la carga de los artículos hay que tener claro el nombre del artículo y la cantidad a pedir del mismo, podrán ocurrir los siguientes casos: 
+<UL> 
+<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se ha cargado menos de la cantidad necesaria, podrá realizarse otra carga, seleccionando el mismo nombre del artículo y colocando en cantidad a pedir el número de artículos faltantes para completar la cantidad a pedir.</P></LI>  
+<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se ha cargado un artículo por equivocación, se procede a eliminarlo, para ello se vuelve a cargar como si fuese otro articulo, se escoge nombre del artículo y en la cantidad a pedir se coloca cero (0) y luego un clic en <I>Procesar</I>.</P></LI>
+<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se ha cargado una cantidad mayor a la necesaria, el usuario deberá eliminar el artículo tal como en el anterior caso, y luego volver a cargar el artículo con la cantidad a correcta a pedir.</P></LI>  
+</UL>
+</P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al final se tendrá una lista de los artículos cargados, en el recuadro de comentario, se podrán pedirse aquellos artículos que no se encuentren en el listado, después se da un clic en  <I>Guardar</I> (ver figura 7).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen7.jpg" WIDTH=617 HEIGHT=315 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 7</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">El sistema preguntara si se deesea agregar otro artículo al pedido, si es asi se da un clic en <I>Aceptar</I>, de lo contrario se da un clic en <I>Cancelar</I> (ver figura 8).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen11.jpg" WIDTH=391 HEIGHT=135 BORDER=0></div></P>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="compras.html">Volver al Módulo Compras</A></U></FONT></div></P>
+</BODY>
+</HTML>

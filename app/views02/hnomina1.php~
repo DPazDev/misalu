@@ -1,0 +1,154 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+$fecha=date("Y-m-d");
+$hora=date("H:i:s");
+$enteid=$_REQUEST['elente'];
+/* **** modificar comentario nomina carlos ivan**** */
+$cmodificar=$_REQUEST['modificar'];
+$celiminar=$_REQUEST['eliminar'];
+$ccomentario=$_REQUEST['comentario'];
+$cid_nomina=$_REQUEST['id_nomina'];
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+if ($cmodificar==1)
+{
+
+/* **** Actualizo la tabla nomina su comentario  **** */
+$mod_comentario="update nomina set comentario='$ccomentario' where id_nomina='$cid_nomina'";
+$fmod_comentario=ejecutar($mod_comentario);
+
+ /* **** Se registra lo que hizo el usuario****  */
+$log="Se modifico el comentario de la nomina $id_nomina nomina de fecha $fecha";
+logs($log,$ip,$id_admin);
+
+ /* **** Fin de lo que hizo el usuario **** */
+    }
+
+/* **** fin de modificar comentario nomina carlos ivan**** */
+/* **** Elimino  la  nomina   **** */
+if ($celiminar==1)
+{
+    echo "paso";
+    
+
+
+/* **** Fin de lo que hizo el usuario **** */
+ }
+ /* **** fin de Eliminar  la  nomina   **** */
+
+if($enteid==0){
+     $queryente="";
+}else{
+      $queryente="and nomina.id_ente=$enteid";
+    }
+$nomente=$_REQUEST['nomente'];
+$depurarnomina=("select nomina.id_nomina from nomina order by id_nomina");
+$repdpurarnomina=ejecutar($depurarnomina);
+while($losidnomina=asignar_a($repdpurarnomina,NULL,PGSQL_ASSOC)){
+       $iddnomina=$losidnomina['id_nomina'];
+       $bussihay=("select nomina_tb.id_nominatb from nomina_tb");
+       $repsihay=ejecutar($bussihay);
+       $cuansihay=num_filas($repsihay);
+       if($cuansihay==0){
+           $elinomina=("delete from nomina where nomina.id_nomina=$iddnomina;");
+           $repelinomina=ejecutar($elinomina);
+           }
+    }
+ $haynomina=("select nomina.id_nomina from nomina;");   
+ $rephaynom=ejecutar($haynomina);
+ $cahaynom=num_filas($rephaynom);
+ if($cahaynom==0){?>
+         <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+           <tr> 
+             <td colspan=3 class="titulo_seccion">No hay nominas registradas!!</td>          
+	     </tr>
+          </table>
+     <?}else{
+         
+         $nominact=("select 
+entes.nombre,nomina.id_nomina,nomina.id_subdivision,nomina.estatus,
+nomina.codigo,nomina.formpago,nomina.fechaini,nomina.fechafin,nomina.comentario 
+                                from nomina,entes
+                            where 
+                                 nomina.id_ente=entes.id_ente $queryente;");
+         $renominact=ejecutar($nominact);
+         $siexnomina=num_filas($renominact);
+         if($siexnomina==0){?>
+           <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+              <tr> 
+                  <td colspan=3 class="titulo_seccion">No existe una nomina para el ente <?echo $nomente?></td>          
+	         </tr>
+          </table>
+         <?}
+         ?>
+         <table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+		<tr>
+            <td class="tdtitulos">Ente.</td>
+			<td class="tdtitulos">Fecha Ini.</td>
+			<td class="tdtitulos">Fecha Fin.</td>
+			<td class="tdtitulos">Estatus.</td>
+            <td class="tdtitulos">Sub-divisi&oacute;n.</td>
+            <td class="tdtitulos">Con c&oacute;digo.</td>
+            <td class="tdtitulos">Prima titular.</td>
+            <td class="tdtitulos">Opci&oacute;n.</td>
+        </tr>
+          <? while($nomida=asignar_a($renominact,NULL,PGSQL_ASSOC)){
+             $subivis=$nomida['id_subdivision'];
+             $i++;
+                if($subivis==0){
+                     $nomsubd="-TODAS-";
+                 }else{
+                       $buscarsub=("select subdivisiones.subdivision from subdivisiones where subdivisiones.id_subdivision=$subivis");
+                       $repbuscarsub=ejecutar($buscarsub);
+                       $datbuscarsub=assoc_a($repbuscarsub);
+                       $nomsubd="-$datbuscarsub[subdivision]-";
+                  
+                     }
+             $estnomi=$nomida['estatus'];
+               if($estnomi==100){
+                   $elestnomina="ACTIVO Y LAPSO DE ESPERA";
+                   $queryestau="(estados_t_b.id_estado_cliente=4 or estados_t_b.id_estado_cliente=1)";
+                }else{
+                       $buscestacli=("select estados_clientes.estado_cliente from estados_clientes where estados_clientes.id_estado_cliente=$estnomi");
+                       $rerbusestacli=ejecutar($buscestacli);
+                       $datbusescli=assoc_a($rerbusestacli);
+                       $elestnomina=$datbusescli['estado_cliente'];
+                       $queryestau="estados_t_b.id_estado_cliente=$estatu";
+                    }
+             $concodi=$nomida['codigo'];
+             if($concodi==1){
+                  $impcodi='Si';
+                 }else{
+                     $impcodi='No';
+                     }
+             $forpago=$nomida['formpago'];?>
+               <tr>  
+                    <td class="tdcampos"><?echo $nomida['nombre']?></td>
+                    <td class="tdcampos"><?echo $nomida['fechaini']?></td>
+                    <td class="tdcampos"><?echo $nomida['fechafin']?></td>
+                    <td class="tdcampos"><?echo $elestnomina?></td>
+                    <td class="tdcampos"><?echo $nomsubd?></td>
+                    <td class="tdcampos"><?echo $impcodi?></td>
+                    <td class="tdcampos">
+                      <input type="radio" name="groupt1" id="cobprn" value="1" checked> No
+                      <input type="radio" name="groupt1" id="cobprs" value="2"> Si<br>
+                    </td>
+                    
+                    <td><label title="Calcular Nomina" id="enteguardado1" class="boton" style="cursor:pointer" onclick="RepNomina('<?echo $nomida[id_nomina]?>','<?echo $nomente?>','<?echo $nomida[formpago]?>','<?echo $nomida[codigo]?>','<?echo $nomida[comentario]?>')" >N</label></td>  
+                    <td><label title="Calcular Nomina Especial" id="enteguardado1" class="boton" style="cursor:pointer" onclick="RepNomina1('<?echo $nomida[id_nomina]?>','<?echo $nomente?>','<?echo $nomida[formpago]?>','<?echo $nomida[codigo]?>','<?echo $nomida[comentario]?>')" >NE</label></td>  
+               </tr>
+                <tr>  
+                    <td class="tdcampos">Comentario</td>
+                    <td colspan=6 class="tdcampos"><textarea name="comenope" id="comenope_<?php echo $i?>" cols=50 rows=5 class="campos"><?php echo $nomida[comentario]?></textarea></td>
+                    <td class="tdcampos"><a href="#" OnClick="mod_com_nom('<?echo $nomida[id_nomina]?>','<?php echo $i?>','<?php echo $enteid?>');" class="boton" title="Modificar Comentario de la Nomina">M</a></td>
+                    <td class="tdcampos"><a href="#" OnClick="eli_nom('<?echo $nomida[id_nomina]?>','<?php echo $i?>','<?php echo $enteid?>');" class="boton" title="Eliminar la Nomina Para Volver a Calcular">Eli</a></td>
+                </tr>
+                <tr> 
+                <td colspan=9 ><hr></hr></td>          
+                </tr>
+          <? }  
+         
+         }
+?>
+<img alt="spinner" id="spinnerP1" src="../public/images/esperar.gif" style="display:none;" />  

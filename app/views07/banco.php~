@@ -1,0 +1,57 @@
+<?php
+/* Nombre del Archivo: banco.php
+   Descripción:FORMULARIO PARA INSERTAR un BANCO en la base de datos, para ser utilizado posteriormente 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+$q_banc = "select tbl_bancos.id_ban, tbl_bancos.nombanco from tbl_bancos order by tbl_bancos.nombanco";
+$r_banc = ejecutar($q_banc);
+
+?>
+<link HREF="../../public/stylesheets/estilos1.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js">
+
+</script>
+
+<form action="POST" method="POST" name="banca1" id="formp">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+	<tr> <td colspan=4 class="titulo_seccion"><b>Bancos</b></td>	
+	</tr>
+<br>
+	<tr>
+	<td colspan=1 class="tdtitulos">Nombre del Banco</td>
+	<td colspan=1><select name="nombre1" class="campos">
+		<option value="0">-- Seleccione un Banco --</option>
+		<?php
+		while($f_banc = asignar_a($r_banc)){
+			echo "<option value=".$f_banc['id_ban'].">".$f_banc['nombanco']."</option>";
+		}
+		?>
+		</select>
+		</td>
+
+		<td colspan=2 class="tdcamposcc"><a href="#" OnClick="r_banco1();" class="boton">Siguiente</a> <a href="#" OnClick="modificar_banco();" class="boton">Modificar</a> </td>
+        </tr>
+<br>
+
+<tr>		<td colspan=4 class="titulo_seccion">Insertar Banco</td>
+</tr>
+<br>		
+	<tr>
+		<td colspan=1 class="tdtitulos">* Nombre Banco</td>
+		<td colspan=1 class="tdcampos"><input type="text" size="30" class="campos" name="nombre"></td>
+
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="guardar_banco();" class="boton">Guardar</a> <a href="#" OnClick="var_globales();" class="boton">Insertar o Modificar otra Variable Global</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+<br>
+
+
+
+
+
+
+
+
+

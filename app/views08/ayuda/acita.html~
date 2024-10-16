@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Actualizar Cita<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para la actualización de una cita, se debe buscar en el Módulo <I>Clientes</I>, y de allí escoger <I>Act Citas</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/acita1.jpg" WIDTH=600 HEIGHT=414 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se deberá introducir el número de proceso con el que se registro la cita a actualizar, si no se posee el número de proceso, este debe ser consultado, para ello debe buscarse en el Módulo <I>Reportes</I> y dar un clic en <I>Gastos del Cliente</I>. (ver figura 2)</P>
+<P><div align="center"><IMG SRC="imagenes/acita2.jpg" WIDTH=600 HEIGHT=292 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se requerirá el número de Cédula de la persona a la que se le actualizará la cita y se da un clic en <I>Buscar</I>. (ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/acita3.jpg" WIDTH=769 HEIGHT=105 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Se selecciona la cobertura donde se cargó el proceso, y se selecciona un rango de fecha donde se realizó el registro de la cita y se da un clic en <I>Buscar</I>. (ver figura 4)</P>
+<P><div align="center"><IMG SRC="imagenes/acita4.jpg" WIDTH=772 HEIGHT=361 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se visualizará la relación de gastos de este cliente con la cobertura seleccionada, de allí podrá tomarse el número de proceso necesario para la actulización de la cita. (ver figura 5)</P>
+<P><div align="center"><IMG SRC="imagenes/acita5.jpg" WIDTH=770 HEIGHT=568 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 5</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Teniendo ya el número de proceso, se consulta en el Módulo <I>Clientes</I>, se escoge: <I>Act Cita</I>, se introduce el número de proceso y se da Clic en <I>Buscar</I> (ver figura 6)
+<P><div align="center"><IMG SRC="imagenes/acita6.jpg" WIDTH=771 HEIGHT=72 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 6</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se visualiza el medico tratante, si va a actualizar la cita cambiando el medico tratante, se escoge de nuevo el medico tratante y se da un clic en <I>Consultar Citas Médicos</I> (ver figura 7)</P>
+<P><div align="center"><IMG SRC="imagenes/acita7.jpg" WIDTH=773 HEIGHT=354 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 7</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se escoge la fecha según el horario del médico, y se da un clic en <I>Actualizar Citas</I> (ver figura 8)</P>
+<P><div align="center"><IMG SRC="imagenes/acita8.jpg" WIDTH=772 HEIGHT=488 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 8</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si solo se desea cambiar el día de la cita, no se toca el cambio del nombre del medico, se da un clic en <I>Consultar Citas Médicos</I>, se selecciona nuevamente la fecha y se da un clic en <I>Actualizar Citas</I>. (ver figura 9).  Cuando la Cita ya ha sido procesada, en la actualización debe indicarse el diagnóstico, esto para efecto de la morbilidad.</P>
+<P><div align="center"><IMG SRC="imagenes/acita9.jpg" WIDTH=770 HEIGHT=742 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 9</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Finalmente aparecerá en pantalla que la cita se ha actualizado exitosamente bajo el mismo número de proceso. (ver figura 10)</P>
+<P><div align="center"><IMG SRC="imagenes/acita10.jpg" WIDTH=771 HEIGHT=105 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 10</I></div></FONT>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="clientes.html">Volver al Módulo Clientes</A></U></FONT></div></P>
+</BODY>
+</HTML>

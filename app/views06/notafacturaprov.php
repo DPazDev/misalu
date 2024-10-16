@@ -1,0 +1,159 @@
+<?
+include ("../../lib/jfunciones.php");
+sesion();
+$idorfac=$_REQUEST['numfactu'];
+$datosfactura=("select tbl_ordenes_compras.fecha_compra,tbl_ordenes_compras.no_factura,proveedores.id_proveedor,
+proveedores.id_clinica_proveedor,proveedores.id_s_p_proveedor
+from proveedores,tbl_ordenes_compras
+where
+tbl_ordenes_compras.id_orden_compra=$idorfac and
+tbl_ordenes_compras.id_proveedor_insumo=proveedores.id_proveedor;");
+$repdatfactura=ejecutar($datosfactura);
+$montoiva=("select variables_globales.cantidad,variables_globales.comprasconfig from 
+                            variables_globales where variables_globales.nombre_var='iva';");
+$repmintiva=ejecutar($montoiva);
+$datrpiva=assoc_a($repmintiva);
+$ivaes=$datrpiva['cantidad'];
+$poriva=$datrpiva['comprasconfig'];
+$dadafactu=assoc_a($repdatfactura);
+$numfactura=$dadafactu['no_factura'];
+$fechfactura=$dadafactu['fecha_compra'];
+$idsp=$dadafactu['id_s_p_proveedor'];
+$idcli=$dadafactu['id_clinica_proveedor'];
+$acumuladoriva=0;
+if($idsp>=1){
+         $elprove=("select personas_proveedores.nombres_prov,personas_proveedores.apellidos_prov from
+  personas_proveedores,s_p_proveedores
+  where
+  s_p_proveedores.id_s_p_proveedor=$idsp and
+  s_p_proveedores.id_persona_proveedor=personas_proveedores.id_persona_proveedor;");
+        $reelprove=ejecutar($elprove);
+         $nopro=assoc_a($reelprove);
+         $proves="$nopro[nombres_prov] $nopro[apellidos_prov]";
+    }else{
+         $elprove=("select clinicas_proveedores.nombre from clinicas_proveedores where id_clinica_proveedor=$idcli;");
+         $reelprove=ejecutar($elprove);
+         $nopro=assoc_a($reelprove);
+         $proves=$nopro['nombre'];
+        }
+$buscolafa=("select tbl_insumos.id_insumo,tbl_insumos.insumo,tbl_laboratorios.laboratorio,tbl_tipos_insumos.tipo_insumo,tbl_insumos_ordenes_compras.cantidad,tbl_insumos_ordenes_compras.monto_producto,tbl_insumos_ordenes_compras.monto_unidad,tbl_insumos_ordenes_compras.iva,tbl_insumos_ordenes_compras.aumento from
+  tbl_insumos_ordenes_compras,tbl_insumos,tbl_laboratorios,tbl_tipos_insumos
+where
+  tbl_insumos_ordenes_compras.id_orden_compra=$idorfac and
+  tbl_insumos_ordenes_compras.id_insumo=tbl_insumos.id_insumo and
+  tbl_insumos.id_laboratorio=tbl_laboratorios.id_laboratorio and
+  tbl_insumos.id_tipo_insumo=tbl_tipos_insumos.id_tipo_insumo 
+order by tbl_insumos.insumo");
+$repbuscolafa=ejecutar($buscolafa);
+?>
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+      <tr>  
+         <td colspan=8 class="titulo_seccion">Factura No. <?echo $numfactura?> fecha factura <?echo $fechfactura?> del proveedor <?echo $proves?></td>   
+       </tr> 
+     </table>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+ <tr>
+    <td class="tdtitulos">Insumo</td>
+    <td class="tdtitulos">Tip. Insumo</td>
+    <td class="tdtitulos">Marca</td>
+    <td class="tdtitulos">Cantidad</td>
+    <td class="tdtitulos">Descontar</td>
+	<td class="tdtitulos">Mon. Uni</td>
+    <td class="tdtitulos">Mon. Total</td>
+    <td class="tdtitulos">Iva</td>
+    <td class="tdtitulos">Aumento</td>
+  </tr>
+      <?
+         $totafactura=0;
+         $campo=1;
+         $otrcam=1;
+         while($losartfactu=asignar_a($repbuscolafa,NULL,PGSQL_ASSOC)){
+             $paso="caja$campo";
+             $pacj="vali$otrcam";
+             ?>
+          <tr>
+                <td class="tdcamposcc"><?php echo $losartfactu['insumo']?></td>
+                <td class="tdcamposcc"><?php echo $losartfactu['tipo_insumo']?></td>
+                <td class="tdcamposcc"><?php echo $losartfactu['laboratorio']?></td>
+                <td class="tdcamposcc"><?php echo $losartfactu['cantidad']?></td>
+                <td class="tdcamposcc"><input type="text" id="<?echo $paso?>" class="campos" size="4"></td>
+                <input type="hidden" id="<?echo $pacj?>" value="<?echo $losartfactu[id_insumo]?>">
+                <td class="tdcamposcc"><?php echo $losartfactu['monto_unidad']?></td>
+                <td class="tdcamposcc"><?php 
+                   $totafactura=$totafactura+$losartfactu['monto_producto']; 
+                echo $losartfactu['monto_producto']?></td>
+                <td class="tdcamposcc"><?php 
+                                                  if($losartfactu['iva']==1){
+                                                       $caracte1="√"; 
+                                                       $multipliva=$losartfactu['monto_producto']*$ivaes;
+                                                       $acumuladoriva=$acumuladoriva+$multipliva;
+                                                      }else{$caracte1="";}
+                                                  echo $caracte1;?></td>
+                <td class="tdcamposcc"><?php 
+                                               if($losartfactu['aumento']==1){
+                                                    $caracte="√";
+                                                 }else{
+                                                       $caracte="";
+                                                     }
+                                                     echo $caracte;
+                                               ?></td>
+          </tr>
+       <?$campo++;
+           $otrcam++;
+          }?>
+          <input type="hidden" id="totcajaentre" value="<?echo $campo-1?>">
+          <input type="hidden" id="totcajvalid" value="<?echo $otrcam-1?>">
+          <input type="hidden" id="ordcompra" value="<?echo $idorfac?>">
+       <tr>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+       </tr>
+       <tr>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc">Total factura:</td>
+             <td class="tdcamposcc"><?php echo $totafactura ?>Bs.S</td>
+       </tr>
+       <tr>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc">Total impuesto <?echo "$poriva %"?>:</td>
+             <td class="tdcamposcc"><?php echo  number_format($acumuladoriva, 2, ',', ' '); ?>Bs.S</td>
+       </tr>
+       <tr>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc"></td>
+             <td class="tdcamposcc">Total general:</td>
+             <td class="tdcamposcc"><?php $togen=$totafactura+$acumuladoriva;
+                                                         echo $togen ?>Bs.S</td>
+       </tr>
+  </table>
+  <table class="tabla_citas"  cellpadding=0 cellspacing=0>
+    <tr>
+        <td class="tdtitulos">Num. Nota Credito:</td>
+        <td class="tdcampos"><input type="text" id="notaentregas" class="campos" size="10"></td>
+     </tr>
+     <tr>
+        <td class="tdtitulos">Num. Contro Credito:</td>
+        <td class="tdcampos"><input type="text" id="notacontrol" class="campos" size="10"></td>
+     </tr>
+     <tr>
+        <td class="tdtitulos">Comentario:</td>
+        <td class="tdcampos"><TEXTAREA COLS=65 ROWS=3 id="comentpedi" class="campos"></TEXTAREA></td>
+     </tr>
+     <tr>
+       <td  title="Guardar nota de credito"><label class="boton" style="cursor:pointer" onclick="GuardNomMarca(); return false;" >Guardar</label></td>
+     </tr>
+</table>
+<img alt="spinner" id="spinnerP1" src="../public/images/esperar.gif" style="display:none;" /> 
+<div id='repnotacre'></div>

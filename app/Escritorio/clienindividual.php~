@@ -1,0 +1,404 @@
+<?
+include ("../../lib/jfunciones.php");
+sesion();
+$elid=$_SESSION['id_usuario_'.empresa];
+$elus=$_SESSION['nombre_usuario_'.empresa];
+$tablatemp="nusuar$elid";
+$tablatemp1="caranusuar$elid";
+$eli1="DROP TABLE IF EXISTS $tablatemp";
+$reli1=ejecutar($eli1);
+$eli2="DROP TABLE IF EXISTS $tablatemp1";
+$reli1=ejecutar($eli2);
+$tipousu=("select tipos_admin.id_tipo_admin from tipos_admin,admin 
+where
+admin.id_tipo_admin=tipos_admin.id_tipo_admin and
+admin.id_admin=$elid");
+$reptipousu=ejecutar($tipousu);
+$datatipousu=assoc_a($reptipousu);
+$elusues=$datatipousu[id_tipo_admin];
+$quepoli="";
+if($elusues==18){
+	$quepoli="and polizas.intermediario=1";
+}
+$buspoliza=("select polizas.id_poliza,polizas.nombre_poliza from polizas where polizas.particular=1 and 
+                      polizas.maternidad=0 and polizas.activar=1 $quepoli order by nombre_poliza;");
+$repbupoliza=ejecutar($buspoliza);
+$buspolizamater=("select polizas.id_poliza,polizas.nombre_poliza from polizas where polizas.particular=1 
+                                and polizas.maternidad=1 and polizas.activar=1 $quepoli order by nombre_poliza;");
+$reppolimater=ejecutar($buspolizamater);
+$cedulaclien=$_REQUEST[lacedula];
+$buscaclien=("select clientes.nombres,clientes.apellidos,clientes.cedula,clientes.telefono_hab,clientes.edad,
+clientes.email,clientes.fecha_nacimiento from clientes where clientes.cedula='$cedulaclien' and clientes.cedula<>'';");
+ $repbusclien=ejecutar($buscaclien);
+ $databusclien=assoc_a($repbusclien);
+ $laceduclien=$databusclien[cedula];
+ $lanomclien=$databusclien[nombres];
+ $laapellclien=$databusclien[apellidos];
+ $laedaclien=calcular_edad($databusclien[fecha_nacimiento]);
+ if($laedaclien>100){
+	 $laedaclien=0;
+ }
+ $latelefclien=$databusclien[telefono_hab];
+ $lacorreoclien=$databusclien[email];
+?>
+ <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr> 
+         <td colspan=4 class="titulo_seccion">Cotizaci&oacute;n de planes</td>  
+     </tr>
+</table>	
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+     <tr>
+       <td class="tdtitulos">RIF/C&eacute;dula:</td>
+       <td class="tdcampos" ><input type="text" id="cliencedula" class="campos"  onblur="Quepaso(this.value)" value="<?echo $laceduclien?>"> <div id="siexiste"></div> </td>
+     </tr>
+	 <tr>
+	     <td class="tdtitulos">Nombre:</td>
+       <td class="tdcampos" ><input type="text" id="cliennombre" class="campos" size="30" value="<?echo $lanomclien?>">  </td>
+       <td class="tdtitulos">Apellido:</td>
+       <td class="tdcampos" ><input type="text" id="clienapellido" class="campos" size="30" value="<?echo $laapellclien?>">  </td>
+	 </tr>
+     <tr>
+       <td class="tdtitulos">Genero:</td>
+       <td class="tdcampos" >
+          <select id="cliengenero" class="campos" style="width: 160px;">
+                              <option value=""></option>
+                              <option value="0">Femenino</option>
+                              <option value="1">Masculino</option>
+         </select> 
+       </td>
+	   <td class="tdtitulos">Edad:</td>
+       <td class="tdcampos" ><input type="text" id="clienedad" class="campos"   onkeypress="return isNumberKey(event)"  size="10" value="<?echo $laedaclien?>">  </td>
+       
+	 </tr>
+     <tr>
+        <td class="tdtitulos">Tel&eacute;fono:</td>
+       <td class="tdcampos" ><input type="text" id="clientelefono" class="campos" size="25" value="<?echo $latelefclien?>">  </td>
+       <td class="tdtitulos">Correo:</td>
+       <td class="tdcampos" ><input type="text" id="cliencorreo" class="campos"  size="30" value="<?echo $lacorreoclien?>">  </td>
+       
+    </tr>
+     <tr>
+       <td class="tdtitulos">Tipo p&oacute;liza:</td>
+       <td class="tdcampos" >
+          <select id="clienpoliza" class="campos" style="width: 160px;" onchange="CaractPoliza(this.value)">
+                              <option value=""></option>
+			   <?php  while($verpoli=asignar_a($repbupoliza,NULL,PGSQL_ASSOC)){
+                                  $sumcarpoli=("select sum(cast(propiedades_poliza.monto as double precision)) from propiedades_poliza where id_poliza=$verpoli[id_poliza]");
+				  $repsumcarpoli=ejecutar($sumcarpoli);
+				  $datasumpoli=assoc_a($repsumcarpoli); 
+                           ?>
+                              <option value="<?php echo $verpoli[id_poliza]?>"> <?php echo "$verpoli[nombre_poliza]---(Bs.S.$datasumpoli[sum])"?></option>
+			   <?php
+			  }
+			  ?>
+			 </select>
+       <br>
+      <div id="caractpoliza"></div> 
+       </td>
+        <td class="tdtitulos">Maternidad:</td>
+       <td class="tdcampos" >
+          <select id="clienmaterni" class="campos" style="width: 160px;">
+                              <option value=""></option>
+			   <?php  while($verpolimate=asignar_a($reppolimater,NULL,PGSQL_ASSOC)){
+                                  $sumcarpoli1=("select sum(cast(propiedades_poliza.monto as double precision)) from propiedades_poliza where id_poliza=$verpolimate[id_poliza]");
+				   $repsumcarpoli1=ejecutar($sumcarpoli1);
+				   $datasumpoli1=assoc_a($repsumcarpoli1);
+                               ?>
+                              <option value="<?php echo $verpolimate[id_poliza]?>"> <?php echo "$verpolimate[nombre_poliza]---(Bs.$datasumpoli1[sum])"?></option>
+			   <?php
+			  }
+			  ?>
+			 </select> 
+       </td>
+     </tr>
+     <tr>
+         <td class="tdtitulos">% Inicial:</td>
+        <td class="tdcampos" ><input type="text" id="clieninicial" class="campos" size="8" value="40">  </td>
+        <td class="tdtitulos">No. Cuotas:</td>
+        <td class="tdcampos" ><input type="text" id="clienincuotas" class="campos"   size="8" value="6">  </td>
+     </tr>
+      <tr>
+         <td class="tdtitulos">Tipo de cliente:</td>
+         <td class="tdcampos" >
+           <input type="radio" name="group1" id="clititula" value="1"> Titular<br>
+           <input type="radio" name="group1" id="clittoma"  value="0">Tomador</td>
+     </tr>
+     </table>
+      <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr> 
+         <td colspan=4 class="titulo_seccion">Carga familiar</td>  
+     </tr>
+    </table>	
+    <table class="tabla_citas"  cellpadding=0 cellspacing=0>
+              <tr>
+			     <th class="tdtitulos">Edades.</th>  
+                 <th class="tdtitulos">Hombre.</th>
+                 <th class="tdtitulos">Mujer.</th>
+             </tr>
+              <tr>
+                   <td class="tdcampos" >0 - 9</td>
+                   <td class="tdcampos" >
+                          <select id="edadh1" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@0-9"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm1" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@0-9"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >10 - 19</td>
+                   <td class="tdcampos" >
+                          <select id="edadh2" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@10-19"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm2" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@10-19"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >20 - 29</td>
+                   <td class="tdcampos" >
+                          <select id="edadh3" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@20-29"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm3" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@20-29"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >30 - 39</td>
+                   <td class="tdcampos" >
+                          <select id="edadh4" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@30-39"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm4" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@30-39"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >40 - 49</td>
+                   <td class="tdcampos" >
+                          <select id="edadh5" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@40-49"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm5" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@40-49"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >50 - 54</td>
+                   <td class="tdcampos" >
+                          <select id="edadh6" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@50-54"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm6" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@50-54"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >55 - 59</td>
+                   <td class="tdcampos" >
+                          <select id="edadh7" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@55-59"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm7" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@55-59"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >60 - 69</td>
+                   <td class="tdcampos" >
+                          <select id="edadh8" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@60-69"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm8" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@60-69"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >70 - 79</td>
+                   <td class="tdcampos" >
+                          <select id="edadh9" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@70-79"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm9" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@70-79"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+              </tr>
+              <tr>
+                 <td class="tdcampos" colspan="3"><HR></td>
+              </tr>
+              <tr>
+                   <td class="tdcampos" >80 y mayores</td>
+                   <td class="tdcampos" >
+                          <select id="edadh10" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@80-120"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             <td class="tdcampos" >
+                          <select id="edadm10" class="campos" style="width: 70px;" >
+                              <option value=""></option>
+			             <?php  for($i=1;$i<21;$i++){?>
+                              <option value="<?php echo "$i@80-120"?>"> <?php echo "$i"?></option>
+			          <?php
+			            }
+			             ?>
+			 </select>  
+             </td>
+             
+              </tr>
+              <tr>
+              <br>
+                <td title="Calcular cotizaci&oacute;n individual"><br><label class="boton" style="cursor:pointer" onclick="recalcotizindi()" >Calcular</label></td>
+                <td title="Guardar cotizaci&oacute;n individual"><br><label class="boton" style="cursor:pointer" onclick="guarcotizindi()" >Guardar</label></td>
+                <td title="Guardar cotizaci&oacute;n individual"><br><label class="boton" style="cursor:pointer" onclick="cliente_individuales()" >Nueva Cotizaci&oacute;n</label></td>
+           </tr>
+   </table>           
+   <img alt="spinner" id="spinnerP1" src="../public/images/esperar.gif" style="display:none;" />  
+   <div id="cotiindi"></div>

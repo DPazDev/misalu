@@ -1,0 +1,69 @@
+<?php
+/* Nombre del Archivo: reg_tarjeta.php
+   Descripción: Solicita los datos para REGISTRAR o MODIFICAR un NUMERO de TARJETA en la base de datos
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+$q_tarj = "select tbl_nombre_tarjetas.id_nom_tarjeta,tbl_nombre_tarjetas.nombre_tar from tbl_nombre_tarjetas";
+$r_tarj = ejecutar($q_tarj);
+
+$q_pago = "select tbl_tipos_pagos.id_tipo_pago, tbl_tipos_pagos.tipo_pago from tbl_tipos_pagos";
+$r_pago = ejecutar($q_pago);
+
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+
+
+<form action="reg_tarjeta.php" method="post" name="tar">
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+	<tr>	<td colspan=4 class="titulo_seccion">Registrar o Modificar Nombre de Tarjetas</td>	</tr>
+<tr><td>&nbsp;</td></tr>
+	<tr>
+                <td colspan=1 class="tdtitulos">* Verificar Nombre de Tarjeta</td>
+                <td colspan=1><select name="tar1" class="campos">
+		<option value="">-- Seleccione Tarjeta --</option>
+		<?php
+		while($f_tarj = asignar_a($r_tarj)){
+			echo "<option value=".$f_tarj['id_nom_tarjeta'].">".$f_tarj['nombre_tar']."</option>";
+		}
+		?>
+		</select>
+		</td>
+
+		<td colspan=2 class="tdcamposcc"><a href="#" OnClick="mod_tarjeta();" class="boton">Modificar</a></td>
+        </tr>
+
+	<tr><td>&nbsp;</td></tr>
+	<tr>
+                <td colspan=1 class="tdtitulos">* Nombre de Tarjeta</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="tar2" maxlength=128 size=30 value=""></td>
+
+<td colspan=1 class="tdtitulos">* Tipo de Pago</td>
+                <td colspan=1><select name="pago" class="campos">
+		<option value="">-- Seleccionar Tipo de Pago --</option>
+		<?php
+		while($f_pago = asignar_a($r_pago)){
+			echo "<option value=".$f_pago['id_tipo_pago'].">".$f_pago['tipo_pago']."</option>";
+		}
+		?>
+		</select>
+		</td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="guardar_tarjeta();" class="boton">Guardar</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+
+	</tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+
+</form>

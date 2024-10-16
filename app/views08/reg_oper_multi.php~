@@ -1,0 +1,8 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+$forma_pago = $_REQUEST['forma_pago'];
+$q_forma_pago="select * from tbl_nombre_tarjetas where tbl_nombre_tarjetas.id_tipo_pago=$forma_pago order by tbl_nombre_tarjetas.nombre_tar";
+                $r_forma_pago=ejecutar($q_forma_pago);
+?>
+

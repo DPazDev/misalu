@@ -1,0 +1,69 @@
+<?
+    include ("../../lib/jfunciones.php");
+    sesion();
+    $lentes=("select entes.id_ente,entes.nombre from entes order by entes.nombre;");
+    $replentes=ejecutar($lentes);
+    $lestados=("select estados_clientes.id_estado_cliente,estados_clientes.estado_cliente 
+                        from estados_clientes order by estados_clientes.estado_cliente;");
+    $replestados=ejecutar($lestados);                   
+?>
+ <form method="get" onsubmit="return false;" name="rproper" id="rproper">
+    <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+        <tr>
+	  <td colspan=4 class="titulo_seccion">Relaci&oacute;n de estados de clientes  </td>
+	</tr>
+        <br>
+   <tr>
+      <td colspan=2 class="tdtitulos">* Seleccione fecha inicio:
+	<input readonly type="text" size="10" id="Fini" class="campos" maxlength="10">
+	<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'Fini', 'yyyy-mm-dd')" title="Ver calendario">
+	<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+	<td colspan=2 class="tdtitulos">* Seleccione fecha final:
+	<input readonly type="text" size="10" id="Fifi" class="campos" maxlength="10">
+	<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'Fifi', 'yyyy-mm-dd')" title="Ver calendario">
+	<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+     </td>
+   </tr>
+   <tr>
+       <td class="tdtitulos" colspan="1">Seleccione tipo de cliente:</td>
+       <td class="tdcampos"  colspan="1"><select id="tipcliente" class="campos"  style="width: 210px;" >
+                                     <option value="0"></option>
+				     <option value="1">Titulares</option> 
+                                     <option value="2">Beneficiarios</option>
+				      </select>
+        </td>
+        <td class="tdtitulos" colspan="1">Seleccione el ente:</td>
+        <td class="tdcampos"  colspan="1"> <select id="elente" class="campos"  style="width: 210px;" >
+	                                   <option value="0">Todos</option>
+				                        
+				      <?php  while($muentes=asignar_a($replentes,NULL,PGSQL_ASSOC)){?>
+		                      <option value="<?php echo $muentes[id_ente]?>"> <?php echo "$muentes[nombre]"?></option>
+				     <?php                                                                                                   
+				     }?>
+       </select> </td> 
+   </tr>
+   <tr>				
+         <td class="tdtitulos" colspan="1">Seleccione estado del cliente:</td>
+        <td class="tdcampos"  colspan="1"><select id="estacliente" class="campos"  style="width: 210px;" >
+	                              <option value=""></option>
+				      <?php  while($estcliem=asignar_a($replestados,NULL,PGSQL_ASSOC)){?>
+		                      <option value="<?php echo $estcliem[id_estado_cliente]?>"> <?php echo "$estcliem[estado_cliente]"?></option>
+				     <?php                                                                                                   
+				     }?></select> </td>
+    </td>                        	
+	</tr>     
+  </table>      
+             
+  
+ <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+  <br>
+   <tr>
+     <td class="tdcampos" title="Generar el reporte"><label class="boton" style="cursor:pointer" onclick="titubenestado()" >Buscar</label></td>
+     <td class="tdcampos"> <label title="Salir del Proceso"class="boton" style="cursor:pointer" onclick="ira()" >Salir</label></td>
+    <td></td>
+   </tr>
+   <br>
+</table>
+  
+  <div id="mostatitubene" ><img alt="spinner" id="spinner1" src="../public/images/esperar.gif" style="display:none;" /><label style="color: #0000FF"></label></div>
+</form>

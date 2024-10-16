@@ -1,0 +1,312 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+header( 'Content-Type: text/html;charset=utf-8' ); 
+$nombre=$_REQUEST[nombre];
+$rif=$_REQUEST[rif];
+$numero_contrato=$_REQUEST[numero_contrato];
+$numero_rec_prima=$_REQUEST[numero_rec_prima];
+$concepto=$_REQUEST[concepto];
+$monto=$_REQUEST[monto];
+$saldo_favor=$_REQUEST[saldo_favor];
+$saldo_deudor=$_REQUEST[saldo_deudor];
+$fecha_pago=$_REQUEST[fecha_pago];
+$fecha_proxima_pago=$_REQUEST[fecha_proxima_pago];
+$serie=$_REQUEST[serie];
+$numero_recibo=$_REQUEST[numero_recibo];
+$total_prima=$_REQUEST[total_prima];
+$cuota=$_REQUEST[cuota];
+$id_recibo_pago=$_REQUEST[id_recibo_contrato];
+
+$fechaimpreso=date("d-m-Y");
+
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$id_admin' and admin.id_sucursal=sucursales.id_sucursal");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+    $q_bus_rec_pagos= "select 
+                                        *
+                                from 
+                                        tbl_recibo_pago,tbl_series
+                                where 
+                                       tbl_recibo_pago.id_recibo_pago=$id_recibo_pago  and tbl_recibo_pago.id_serie=tbl_series.id_serie";
+    $r_bus_rec_pagos = ejecutar($q_bus_rec_pagos);
+    $f_bus_rec_pagos=asignar_a($r_bus_rec_pagos);
+    
+
+$fecha=date("Y-m-d");
+$hora=date("h:i:s");
+
+$dia=date("d");
+$mes=date("m");
+$ano=date("Y");
+if($mes == '01')
+	$mes = "Enero";
+elseif($mes == '02')
+	$mes = "Febrero";
+elseif($mes == '03')
+	$mes = "Marzo";
+elseif($mes == '04')
+	$mes = "Abril";
+elseif($mes == '05')
+	$mes = "Mayo";
+elseif($mes == '06')
+	$mes = "Junio";
+elseif($mes == '07')
+	$mes = "Julio";
+elseif($mes == '08')
+	$mes = "Agosto";
+elseif($mes == '09')
+	$mes = "Septiembre";
+elseif($mes == '10')
+	$mes = "Octubre";
+elseif($mes == '11')
+	$mes = "Noviembre";
+elseif($mes == '12')
+	$mes = "Diciembre";
+?>
+<html>
+<head>
+<title></title>
+<link HREF="../../public/stylesheets/impresiones.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+</head>
+<body>
+<br><br>
+
+<div align="center">
+<table width="100%" cellspacing=0 cellpadding=0 border=0>
+	<tr>
+<td colspan=1 class="logo">
+<img src="../../public/images/head.png">
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo">
+
+</td>
+</tr>
+<tr>
+<td colspan=1 class="titulo2">
+Rif: J-31180863-9
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo1">
+
+</td>
+</tr>
+    <tr>
+		<td width="70%" valign="top"></td>
+		<td width="30%" style="padding-top: 15px;height: 30px;text-align: right;" valign="top"><b>Serie <?php echo $serie; ?></b> <b>Recibo de Pago No.  <?php echo $numero_recibo; ?></b></td>
+	</tr>
+</table>
+<br><br>
+<table width="100%" cellspacing=0 cellpadding=0 border=0>
+	<tr>
+		<td align="right">Fecha de Emision:<?php  
+		                        echo $fecha_pago;
+								
+								                ?></td>
+	</tr>
+</table>
+
+	
+	<table width="100%" cellspacing=0 cellpadding=0 border=0>
+        <tr>
+	         <td width="80%" align="left">Usuario Contratante<?php echo $nombre;?>
+			</tr>
+		 <tr>
+		 <td align="left">Cedula / RIF: <?php echo $rif; ?></td>
+	 </tr>
+
+   	<tr>
+   		<td width="80%" align="left">Num de Contrato: <?php echo $numero_contrato;?></td>
+                 
+	 </tr>
+<tr>
+   		<td width="80%" align="left">Recibo Prima <?php echo $numero_rec_prima;?> por un Monto de <?php echo $total_prima?></td>
+                 
+	 </tr>
+ 	
+	</table> 
+	
+	
+ 	
+</table>
+
+<br><br>
+<table width="100%" cellspacing=0 cellpadding=0 border=0 style="border: thin solid black;">
+	<tr>
+	<td width="70%" align="left">Concepto o Descripcion</td>
+	<td width="10%" align="left"></td>
+	<td width="20%" align="right">Total Bs.S.</td>
+	</tr>
+	
+	
+	
+			<tr>
+		<td width="70%" align="left"><?php echo $concepto;  ?></td>
+			<td width="10%" align="left"></td>
+			
+			<td width="20%" align="right"><?php echo  number_format($monto  ,2,',','');?></td>
+		</tr>
+
+	
+<tr>
+		<td colspan=3>
+		<br><br><br>
+		
+		</td>
+	</tr>
+	
+</table>
+				
+		<table width="100%" cellspacing=0 cellpadding=0 border=0>
+			<tr>
+				<td rowspan=2 valign="top" align="left">Son: <?php 
+    				
+				$cantidad=explode(".",$monto);
+				$cadenas=count($cantidad);
+                                                                 if ($cantidad[1]<=9) {
+                                                                        $cero=0;}
+                                                                        else
+                                                                        {$cero="";}
+                                                                $cantidad[1]=substr($cantidad[1],0,2);
+                                                                $cantida[1]=substr($cantidad[1],0,1);
+                                                                if ($cantida[1]==0){
+                                                                        $cero="";
+                                                                        }    
+
+
+
+
+				if($cadenas==2){
+				        echo ucwords(numtolet($cantidad[0],"os"))." con ".$cantidad[1]."$cero/100 Bolivares.";
+			    	}else{
+					echo ucwords(numtolet($cantidad[0],"os"))." Bolivares. ";
+				$cero="";
+			    	} 
+				//echo numeros_a_letras($total);
+	/* **** Se registra lo que hizo el usuario**** */
+
+$log="Imprimio el recibo de pago numero $numero_recibo";
+logs($log,$ip,$id_admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+				?></td>
+			</tr>
+			
+			
+		</table>	
+          <br><br><br><br>
+     <?php if ($saldo_deudor>0){?>
+     <table width="100%" cellspacing=0 cellpadding=0 border=0>
+     
+        <tr>
+	         <td  align="left"> 
+            <?php echo  $f_bus_rec_pagos[descripcion]?></td>
+                 
+	 </tr>
+ 	
+	</table> 
+		<table width="100%" cellspacing=0 cellpadding=0 border=0>   
+		<tr>
+	<td >Pago Realizado por</td>
+	<td >Tipo</td>
+	<td >Numero</td>
+	<td >Monto</td>
+	</tr>
+    <?php
+    }
+    else
+    {
+    ?>
+    <table width="100%" cellspacing=0 cellpadding=0 border=0>
+     
+        <tr>
+	         <td  align="left"> 
+            <?php echo  "Queda pendiente 0 Cuotas";?></td>
+                 
+	 </tr>
+ 	
+	</table> 
+	 <br><br><br><br>
+	<table width="100%" cellspacing=0 cellpadding=0 border=0>   
+    <?php
+    }
+    
+	
+	$q_opermul=("select 
+								tbl_bancos.nombanco,
+								tbl_tipos_pagos.tipo_pago,
+								tbl_oper_multi.numero_cheque,
+								tbl_oper_multi.monto 
+						from  
+								tbl_oper_multi,
+								tbl_bancos,
+								tbl_recibo_pago,
+								tbl_tipos_pagos 
+						where 
+								tbl_oper_multi.id_recibo_pago=tbl_recibo_pago.id_recibo_pago and 
+								tbl_oper_multi.id_banco=tbl_bancos.id_ban and
+								tbl_oper_multi.condicion_pago=tbl_tipos_pagos.id_tipo_pago and
+								tbl_recibo_pago.id_recibo_pago=$id_recibo_pago");
+	$r_opermul=ejecutar($q_opermul);
+     while($f_opermul=asignar_a($r_opermul,NULL,PGSQL_ASSOC))
+                {
+    ?>
+       
+	<tr>
+	<td ><?php echo $f_opermul[nombanco]?></td>
+	<td ><?php echo $f_opermul[tipo_pago] ?></td>
+	<td ><?php echo $f_opermul[numero_cheque] ?></td>
+	<td ><?php echo $f_opermul[monto] ?></td>
+	</tr>
+
+		<?php
+		}
+		?>
+			</table>
+		<br>
+        <table width="100%" cellspacing=0 cellpadding=0 border=0>
+        
+        <tr>
+	         <td colspan=2 class="datos_cliente" >Yo <?php echo $nombre;?> obrando en nombre propio y de manera voluntaria declaro bajo fé de juramento que el dinero utilizado para el pago del plan de salud No tienen relación alguna con dinero, capitales, bienes, haberes o títulos valores producto de las actividades o acciones a que se refiere el artículo 35 de la Ley Orgánica Contra la Delincuencia Organizada y Financiamiento al Terrorismo y el artículo 209 de la Ley Orgánica Contra el Tráfico Ilícito y el Consumo de Sustancias Estupefacientes y Psicotrópicas; todo ello de conformidad con lo establecido en el articulo 40 de la Providencia Administrativa Num 514 de fecha 18 de febrero de 2011 emanada por la Superintendencia de la Actividad Aseguradora  , publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 39.621 de fecha 22 de febrero de 2011, reformada a través de la Providencia Administrativa N° SAA-001495 de fecha 27 de mayo de 2011, publicada en la Gaceta Oficial de la República Bolivariana de Venezuela Nº 39.694 de fecha 13 de junio de 2011</td>
+	 </tr>
+  
+     </table>	
+			<br>
+		        <table width="100%" cellspacing=0 cellpadding=0 border=0>
+        
+        <tr>
+	         <td colspan=2 class="datos_cliente" >La empresa de medicina prepagada podrá terminar en cualquier tiempo la relación contractual con sus afiliados cuando incurran, como mínimo, en la falta de pago de tres (3) cuotas continuas. SI dentro del plazo de diez (10) días continuos, el contratante no paga la totalidad de lo adeudado, operará de pleno derecho la resolución del contrato.”</td>
+	 </tr>
+  
+     </table>	 
+       <br><br><br><br>
+     <table width="100%" cellspacing=0 cellpadding=0 border=0>
+        <tr>
+	         <td width="80%" align="left">______________________________</td>
+			
+		 <td align="left">______________________________</td>
+	 </tr>
+
+   	<tr>
+   		<td width="80%" align="left">Realizado Por: <?php echo "$f_admin[nombres] $f_admin[apellidos]"?></td>
+                 
+	
+   		<td width="80%" align="left">Firma del Usuario</td>
+                 
+	 </tr>
+ 	
+	</table> 
+
+
+</div>
+</body>
+</html>

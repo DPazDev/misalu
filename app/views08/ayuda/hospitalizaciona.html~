@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Emergencia<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Una vez que el usuario coloca el número de Cédula del cliente que y se selecciona el servicio <I>EMERGENCIA</I>, luego pueden seleccionar otros tipos de servicios como son: CURATIVAS Y/O EXAMENES ESPECIALES, DISPONIBILIAD, GASTOS DE EMERGENCIA, HONORARIOS MEDICOS.  Se escoge alguno de los tipos de servicio y se da un Clic en <I>Buscar</I>. (ver figura 1 y 2)</P>
+<P><div align="center"><IMG SRC="imagenes/emer1.jpg" WIDTH=773 HEIGHT=276 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/emer2.jpg" WIDTH=772 HEIGHT=183 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para realizar el registro de la Emergencia, se debe seleccionar la cobertura donde se registrará dicha orden, se colocan las fechas de recepción y egreso, hora de ingreso, se selecciona los servicios y luego se da un Clic en <I>Calcular Monto</I> y en <I>Guardar</I>. (ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/emer3.jpg" WIDTH=772 HEIGHT=1512 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">El sistema mostrará en pantalla el número de proceso con el cual se ha registrado exitosamente la orden. (ver figura 4)</P>
+<P><div align="center"><IMG SRC="imagenes/emerg4.jpg" WIDTH=772 HEIGHT=87 BORDER=0></div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Por último se podrá seleccionar alguno de los formatos de impresión de dicha orden. (ver figura 5)</P>
+<P><div align="center"><IMG SRC="imagenes/emerg5.jpg" WIDTH=736 HEIGHT=510 BORDER=0></div></P>
+
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="rorden.html">Volver Registrar Orden</A></U></FONT></div></P>
+</BODY>
+</HTML>

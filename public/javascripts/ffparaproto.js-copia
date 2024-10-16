@@ -1,0 +1,1011 @@
+function fenter(key,funci)
+{
+	/*//funcion para ejecutar una funcion al precionar enter
+//parametros key =funcion 'event' muestra que tecla se ha precionado, sin comillas
+//paramtro funci: funcion a ejeutra ejemp 'buscarprov()' en comillas
+*/
+	//alert(key);
+       var unicode;
+    if (key.charCode)
+    {unicode=key.charCode;}
+    else
+    {unicode=key.keyCode;}
+    //alert(unicode); // Para saber que codigo de tecla presiono , descomentar
+
+    if (unicode == 13){
+        var a=funci;
+        eval(a);//ejecuta una variable como codigo jS
+    }
+  /*  if (unicode == 27){
+        alert('Presiono escape');
+    }  */
+
+}
+
+
+/*funcion para busqueda de insumos para mostrar todos los provedores del mismo
+datos recibidos: binsumos:datos de busquedad
+*/
+function fbuscarprov(cedula){
+	var insumo=$F('binsumo');
+ if(Field.present('binsumo')==false){
+ 	alert("Debe ingresar un valor para la busquedad");
+ 	}else{
+  new Ajax.Updater('resinsumos', 'views05/vprv_xinsumos1.php', {
+	          parameters: {binsumo:insumo},
+	          onCreate: function(response) {
+                  a= Ajax.activeRequestCount;
+                   if(a>=0)
+	                  $('spinnerARTI' ).show();
+                  },
+	             onComplete: GuarArtidepe
+                  });
+       }
+
+}
+
+
+
+//********************************************************************************************
+//comprobar fechas mayor y menor que
+
+function fmayorfecha(fi,ff){
+if(fi > ff)
+return false;
+else
+if(fi < ff)
+return true;
+else
+return true;
+
+}
+// convertor a hora militar segun hora
+function horario(H,Ho){
+	//H= hora
+	//Ho= horario
+
+	if(Ho=='PM' || Ho=='pm')
+	{		var Hr={1:'13',2:'14',3:'15',4:'16',5:'17',6:'18',7:'19',8:'20',9:'21',10:'22',11:'23',12:'24'};
+		hor=Hr[H];
+return (hor);
+}
+else
+{
+	return (H); }
+
+	}
+// */
+
+/*funcion para busqueda de total de informenes realizaos por fecha
+*/
+function frepormedico(){
+//fecha recepcion
+	var fechainicio=$F('fechainicio');
+	var fechafin=$F('fechafin');
+
+//Hora recepcion
+	var hini=$F('horai');//hora de inicio
+	var hfin=$F('horaf');//hora Fin
+//horario inicio y fin AM y PM
+	//inicio
+	var AM1=$F('AM1');//horario inico AM
+	var PM1=$F('PM1');//horario inico FM
+	//fin
+	var AM2=$F('AM2');//horario FIN AM
+	var PM2=$F('PM2');//horario FIN FM
+
+
+//evaluar fecha VACIA
+	var ms='';
+	if(Field.present('fechainicio')==false)
+	{ms=ms+' * Fecha inicial vacio\n';
+	var fei=false;
+	}
+	else
+	var fei=true;
+
+
+//evaluar fecha fin vacia
+if(Field.present('fechafin')==false)
+	{//alert("debe indicar una fecha de Final");
+	ms=ms+' * Fecha final vacio\n';
+	var fef=false;
+	}
+	else
+	var fef=true;
+
+//Hora de inicio evaluar
+if(hini=='null')
+	{//alert("Seleccione una Hora de Inicio");
+	ms=ms+' * Hora inicial no selecionada\n';
+	var ehi=false;
+	}
+	else
+	var ehi=true;
+
+//Hora de inicio evaluar
+if(hfin=='null')
+	{ms=ms+' * Hora Final no selecionada\n';
+		//alert("Seleccione una Hora de Fin");
+	var ehf=false;
+	}
+	else
+	var ehf=true;
+
+
+//hora conversion segun horario	fecha inicio de 12 a 24 horas
+	if(PM1=='PM'){
+		var hini=horario(hini,PM1);//horario de conversion
+	}else
+	{var hini=hini;}
+
+//horario de conversion de la fecha Final
+	if(PM2=='PM'){
+	var hfin=horario(hfin,PM2);
+		}
+		else
+		{hfin=hfin;}
+
+	 var comp=fmayorfecha(fechainicio,fechafin);
+
+///MENSAJES
+if(fei==false || fef==false	|| ehi==false || ehf==false || comp==false)
+{
+	if(fei==false && fef==false && ehi==false && ehf==false)
+	{
+		alert("Debe de Llenar todos los campos");
+	}
+	else
+	if(fei==false || fef==false || ehi==false || ehf==false)
+	{ms='Error\n'+ms;
+		alert(ms);
+	}
+	else if(comp==false)
+	{
+		alert("La fecha de inicio es mayor a la fecha final,\n ¡debe cambiar el rango!");
+		}
+	activo=false;
+}
+else{
+	activo=true;
+	}
+
+
+if (activo==true)
+	{
+		 new Ajax.Updater('reportinforme', 'views06/resumen_informes.php', {
+          parameters: {finicio:fechainicio,ffin:fechafin,hini:hini,hfin:hfin},
+          onCreate: function(response) {
+                  a= Ajax.activeRequestCount;
+                   if(a>=0)
+	                  $('spinnerARTI' ).show();
+                  },
+	             onComplete: GuarArtidepe
+                  });
+	}
+}/*Fin de la Funcion*/
+
+/*funcion para ver los detalles del infoeme medico
+*/
+function frepormedicodetalles(ID,fi,ff,hi,hf,e){
+
+	new Ajax.Updater('reportinforme', 'views06/resumen_informes2.php', {
+	          parameters: {id:ID,fchi:fi,ffin:ff,hoi:hi,hof:hf,n:e},
+	          onCreate: function(response) {
+                  a= Ajax.activeRequestCount;
+                   if(a>=0)
+	                  $('spinnerARTI' ).show();
+                  },
+	             onComplete: GuarArtidepe
+                  });
+
+}/*Fin de la Funcion*/
+
+
+/***********************************************************************************************/
+/*FUNCION PARA BUSCAR INSUMO Y MEDICAMENTOS VENCIDOS*/
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function fvencimiento_buscar(){
+		var dep=$F('dependencia');
+		var tpins=$F('tipo_insumo');
+		var rang=$F('rango');
+		var fz1=$F('fz1');
+		var fz2=$F('fz2');
+
+		if(fz1=='true')
+		frz='true'
+		else
+		frz='false'
+
+	//VALIDADCION Y MENSAJES
+
+	if(dep=='null' || tpins=='null' || rang=='null'){
+		//mensajes
+		var ms='ERROR:\n';
+			if(dep=='null' && tpins=='null' && rang=='null')//ninguno
+				ms='No a selecionado ningun parametro de busqueda';
+				else//alguno de los tres
+					{
+						if(dep=='null')
+							ms=ms+'* Selecione una dependencia \n';
+						if(tpins=='null')
+							ms=ms+'* Selecione un Tipo de insumo \n';
+						if(rang=='null')
+							ms=ms+'* Selecione la catidad de meses \n';
+					}
+		alert(ms);
+		var activo=false;
+		}
+		else
+		{var activo=true;}
+if(activo==true)	//Mostrar resultados
+{
+	new Ajax.Updater('vencidos', 'views06/reporte_vencidos1.php', {
+	          parameters: {dependencia:dep,tipo_insumo:tpins,catidadmes:rang,forzar:frz},
+	          onCreate: function(response) {
+                  a= Ajax.activeRequestCount;
+                   if(a>=0)
+	                  $('spinnerARTI' ).show();
+                  },
+	             onComplete: GuarArtidepe
+                  });
+	}
+}
+
+
+/****************************************************************************************/
+/* //Funcion para visualizar os gasotos que se hacen por depacho a cada Dependencia//*/
+
+function fgastosdepachos(){
+
+	var dep=$F('dependencia');
+	var est=$F('estadopedi');
+	var fei=$F('fechainicio');
+	var fef=$F('fechafin');
+
+var ms='';
+var ficrt=true;
+var ffcrt=true;
+var estcrt=true;
+var depcrt=true;
+
+if(dep=='null')
+{ms=ms+'* Seleccione una dependencia \n';
+depcrt=false;
+}
+if(est=='0')
+{ms=ms+'* Seleccione el estado \n';
+ estcrt=false;}
+
+if(Field.present('fechainicio')==false)
+	{ms=ms+'* seleccione fecha de Inicio \n';
+	ficrt=false;
+		}
+if(Field.present('fechafin')==false)
+	{ms=ms+'* Seleccione fecha de Fin \n';
+		ffcrt=false;
+		}
+var comp=true;
+if(ficrt==true && ffcrt==true)
+ {	comp=fmayorfecha(fei,fef);
+	}
+
+if(ficrt==false || ffcrt==false || estcrt==false || depcrt==false || comp==false)
+{
+	if(ficrt==false && ffcrt==false && estcrt==false && depcrt==false)
+	{ ms='No a selecionado ningun parametro de busqueda';
+	}
+	else
+	{
+		if(comp==false)
+			ms=ms+'* La fecha de inicio es mayor a la fecha final';
+			ms='Errores:\n'+ms;
+		}
+alert(ms);
+}
+else
+{
+	 new Ajax.Updater('despachos', 'views06/gastos_x_despachos1.php', {
+	          parameters: {id_dep:dep,estadop:est,fechainicio:fei,fechafin:fef},
+	          onCreate: function(response) {
+                  a= Ajax.activeRequestCount;
+                   if(a>=0)
+	                  $('spinnerARTI' ).show();
+                  },
+	             onComplete: GuarArtidepe
+                  });
+
+	}
+}
+//Detalles  fgastosdepachos: detalla los un despacho mostrando los insumos y detalles sobre ellos al igual que su precio total//
+function fdetallxpedidos(id,stat){
+	//parametros de entrada: id del despacho y estatus del mismo
+ new Ajax.Updater('despachos', 'views06/gastos_x_despachos2.php', {
+	          parameters: {idped:id,stat:stat},
+	          onCreate: function(response) {
+                  a= Ajax.activeRequestCount;
+                   if(a>=0)
+	                  $('spinnerARTI' ).show();
+                  },
+	             onComplete: GuarArtidepe
+                  });
+	}
+
+
+/// Funciones procesar pedido medicamentos
+function agregarfila(idtbl,nunRow,nunCel){
+ var nunRow=nunRow;
+ var nunCel=nunCel;
+var table = idtbl;
+ms=''
+for(i=0;i< nunRow; i++)
+{ ms=ms+'new row\n';
+
+	lastRow = table.rows.length
+var row = table.insertRow(lastRow);
+	for(j=0;j< nunCel; j++)
+   { var lastCellIndex =row.cells.length;
+   var cellnew = row.insertCell(lastCellIndex);
+   cellnew.innerHTML=''+lastCellIndex+'-'+lastRow;
+    }
+}
+//regresar el ultimo numero de cel y row
+rowYcell= new Array();
+rowYcell[0]= table.rows.length-1;
+rowYcell[1]= table.rows[rowYcell[0]].cells.length-1;
+return rowYcell;
+}
+/*funcion para eliminar una fila de una tabla*/
+function delfila(tbl,fila){
+  tbl=document.getElementById(tbl.id);
+  var lastRow = tbl.rows.length;
+  tbl.deleteRow(fila);
+}
+/*determina el padre de la fila buscar el numero de fila */
+function EstaRowElimina(x,tbl) {
+		t=x.parentNode.parentNode.rowIndex;
+	   delfila(tbl,t);
+}
+/*agrega un lote a un insumo */
+function agregarlote(str,idacja,idbcja,idccja){
+	tabla=document.getElementById(str);
+	cajcel1=idacja.split('-');
+	cajcel2=idbcja.split('-');
+	cajcel3=idccja.split('-');
+	//alert(cajcel[0])
+	numrowYcell=agregarfila(tabla,1,4);//insertamos una fila
+row = tabla.rows.length-1;
+idrow=tabla.rows[row].id='row'+row;
+
+		var tbl=tabla.rows[row].cells[0].innerHTML='<input type="text" id="'+cajcel1[0]+'-'+row+'" onkeyup="contenidocampo(this)" size="4">';
+		var tbl=tabla.rows[row].cells[1].innerHTML='<input type="text" id="'+cajcel2[0]+'-'+row+'" onkeyup="contenidocampo(this)" onKeyPress="return fechasformato(event,this);" maxlength="10" size="4">';
+		var tbl=tabla.rows[row].cells[2].innerHTML='<input type="text" id="'+cajcel3[0]+'-'+row+'" onkeyup="contenidocampo(this)" onKeyPress="return soloNumeros(event)" size="2">';
+		var tbl=tabla.rows[row].cells[3].innerHTML="<span id='del' style='cursor:pointer' onclick='EstaRowElimina(this,"+str+")'><img id='dl2' src='../public/images/del_16.png' /></span>";
+
+	}
+	/*determa el numero de lotes despachados como maximo de lotes a agregar*/
+function agregarmaximo(str,idacja,idbcja,idccja,cantArt){
+	tabla=$(''+str+'');
+	row = tabla.rows.length;
+	cantidad=$(''+cantArt+'').value;
+	if(cantidad>row)
+	agregarlote(str,idacja,idbcja,idccja);
+	else
+	alert("No puede haber mas lotes que insumos despachados");
+	}
+
+/*calcular el año bisciesto*/
+function calcularbisiesto(an)
+{//funcion determina el año bisiesto
+rb=an% 4;
+rb2=an%100;//resto o modal entre 100
+rb3=an% 400;//divicible entre 400
+if(rb==0 && rb2!=0)
+{bisiesto=true;//es biciesto
+}else if(rb3==0 && rb2==0)
+{bisiesto=true;//es bisiesto
+}
+else{bisiesto=false;}
+return bisiesto;
+	}
+
+/*valida la fecha formato aaaa/nn/dd*/
+function validarMesAn(fecha){
+if(fecha.length<10 || fecha.length>10)
+{alert('Fecha mal definida!!! \n Fromato AAAA/MM/DD');return false;}
+
+spdf='';
+//buscar separador
+separador=fecha.indexOf('/');
+	if(separador<0)
+		{separador=fecha.indexOf('-');
+			if(separador<0)
+				{estatusep=false;}else{spdf=fecha[separador];}
+		}else{spdf=fecha[separador];}
+
+fec=fecha.split(spdf);
+if(fec[0].length==4)
+{ano=fec[0];dia=fec[2];mes=fec[1];
+}else{ano=fec[2];dia=fec[0];mes=fec[1];}
+
+var maxDias = 31;
+	if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+ 		{maxDias = 30;}
+		if (mes == 2)
+		{
+			if (bsto=calcularbisiesto(ano)==true)
+			{maxDias = 29;}
+			else{
+			maxDias = 28;}
+
+		}
+if (mes>12 || mes<1){
+  alert('MAL')
+	return false;//mes mal
+	}
+else
+if (dia>maxDias || dia<1)
+		{
+				return false;
+		}else return true;
+}
+
+function alertaelemento(str){
+	idelementomecreaste=str.id+1;
+	idnovo=idelementomecreaste+1;
+	if(!document.getElementById(''+idelementomecreaste+''))//exite el nodo
+	{	contenedor= crearElemento(str);
+		document.getElementById(''+contenedor+'').className="estaconte";
+
+		document.getElementById(str.id).addEventListener("blur", function(){EliminaLista(contenedor)});
+		cod=document.getElementById(''+contenedor+'').id;
+		DivContenedor=document.getElementById(''+contenedor+'');
+		idnovo=cod+1;
+		document.getElementById(''+contenedor+'').innerHTML=" <div id='"+idnovo+"'><a href='#' ><span class='spanX' onclick=\"EliminaLista('"+contenedor+"')\">X</span></a>"
+	document.getElementById(''+idnovo+'').className="esta";
+	}
+	return idnovo;
+}
+
+	//funcion para incorporar un / en la fecha o un formato aceptable de forma aaaa/nn/dd
+function fechasformato(elEvento,str,formato=2){
+
+	//var evento = elEvento || window.event;
+	//var key=evento.which:evento.keyCode;
+	var key = window.Event ? elEvento.which : elEvento.keyCode;
+		retor='';
+if((key== 8) || (key== 46) || (key== 40) || (key== 39) || (key== 38) || (key== 37) || (key== 116) || (key== 0)){
+
+		}
+else {
+	camp=str.id
+	var fecha = document.getElementById(""+camp+"");
+  tec=String.fromCharCode(key);
+    if (isNaN(tec)==false) {
+      fecha2=fecha.value+tec;
+    }else {
+      fecha2=fecha.value;
+    }
+  var ncaract=fecha2.length;
+	if(ncaract>=10)
+	{
+
+   	fec=validarMesAn(fecha2);
+    if(ncaract>10){
+  		if(fec==false)
+  		{errorcampo(camp);
+        if(formato==1)
+          {fomafecha1='AAAA-MM-DD';}
+        else
+          {fomafecha1='DD-MM-AAAA';}
+          alert('Fecha mal definida!!! \n Fromato '+fomafecha1);
+  		}else{$(camp).style.border='';}
+    }else if(fec==true){$(camp).style.border='';}
+	}
+
+
+  ncaract=fecha.value.length;
+  if (formato==1) {
+      ;
+      if( ncaract== 4 || ncaract == 7){
+          fecha.value += "-";
+      }
+  }else {
+      formato=2;//DD/MM/AAAA
+      if(ncaract== 2 || ncaract == 5){
+  			  fecha.value += "-";
+  	     }
+  }
+
+
+
+  /*else {
+
+  }*/
+
+//2021/05/05
+//27/02/2021
+
+	retor=(key >= 48 && key <= 57 );
+	return retor;
+	}
+
+}
+//fechasformato fin
+//Fruncion para mostrar un dialogo en un campo
+function contenidocampo(str){
+	valor=str.value;
+ideleme=alertaelemento(str);
+document.getElementById(''+ideleme+'').innerHTML=""+valor+""
+	}//fin contenidocampo
+
+
+//funcion para no permitir el uso de numero
+function soloNumeros(e){
+	var key = window.Event ? e.which : e.keyCode
+retor=((key >= 48 && key <= 57 )||(key==8));
+	return retor;
+
+}//fin soloNumero
+
+
+function Portapapeles(e) {
+    var clipboardData, pastedData;
+
+    // Stop data actually being pasted into div
+    e.stopPropagation();
+    e.preventDefault();
+
+    // Get pasted data via clipboard API
+    clipboardData = e.clipboardData || window.clipboardData;
+    pastedData = clipboardData.getData('Text');
+
+    // Do whatever with pasteddata
+    return pastedData;
+}
+
+
+
+
+//funcion para no permitir el uso de  solo Moneda acepta solo numeros y un punto
+function soloMoneda(e,str){
+valor=str.value;
+//e.value = e.value.replace(/[^0-9]/g,"");
+ var ele = str;
+
+  ele.onkeypress = function(e) {
+     if(isNaN(this.value+String.fromCharCode(e.charCode)))
+        return false;
+  }
+ CAMPO=str.id;
+ //AGREGAR EVENTO PASTE y la Funcion
+//Datos=document.getElementById(CAMPO).addEventListener('paste', Portapapeles);
+
+
+  ele.onpaste = function(e){
+
+     paste=(e.clipboardData || window.clipboardData).getData('text');
+     if(isNaN(paste))
+      e.preventDefault();
+  }
+} //fin soloMonedas
+
+/////////Funcion para calcular el porcentaje de aumento entre dos numeros
+function PorcentajeAumento(n1,n2){
+	//alert('n1 '+n1+' n2'+n2);
+	if (n1==null || n1=='' || n1==0 || n1=='0' || isNaN(n1) ) {return 0;}
+	else if (n1<0 && n2==0 ) { return 15}
+	else {
+diferencia=n1-n2;
+porcentajeAumento= (diferencia/n1)*100;
+Porcentaje=porcentajeAumento.toFixed(2);
+return Porcentaje;}
+} //fin Porcentaje Aumento
+
+//funciones para tomar una orden de compra y convertirla en factura y agregar sus insumos al un almacen
+
+//visualizacion de la convercion
+function convercion_orden_datos(pedido){//mostrar datos de la factura
+var idpedido=pedido;
+$('clientes').hide();
+$('clientes').show();
+
+ new Ajax.Updater('clientes', 'views05/ordenes_compras2.php', {
+			parameters: { nunpedido: idpedido},
+			});
+}
+
+function selecion_almacen_oden_compra(idpedido){//selecion de almacen
+var almacene=$F(almacenes);
+if (almacene=='') {
+	$(almacenes).style='border: 2px solid #800000;';
+	$(almacenes).style.borderColor='#800000';
+alert('Debe seleccionar una de sus dependencia');
+}else {
+ new Ajax.Updater('clientes', 'views05/ordenes_compras2.php', {
+			parameters: { nunpedido: idpedido,dependecia: almacene },
+			});
+ }
+}
+/////////////////////////////////////////////////////////////////////////
+//franklin monsalve
+function convercion_orden_factura(idpedido,dependencia) {
+//funcion para actualizar y gardar en almacen articulos con sus lotes
+ArrayLotes=new Array();
+ArrayCrtlote=new Array();
+CantArticulos=$F('NumArticulos');//cantidad de articulos
+for (i=0;i<CantArticulos;i++) {
+	if (i==0) {serp='';}else {serp=',';}//incorporar separador por articulo
+ArrayLotes=ArrayLotes+serp+$F('idarcticulo'+i);//control de estus de  lote
+ArrayCrtlote=ArrayCrtlote+serp+$F('crtlotes'+i);
+
+}
+
+$('listaOrdenes').hide();
+$('listaOrdenes').show();
+new Ajax.Updater('clientes', 'views05/ordenes_compras3_tranformar.php', {
+			parameters: { pedido: idpedido,almacen: dependencia,arrlotes: ArrayLotes,arrcrtlote: ArrayCrtlote},
+			});
+
+}
+
+
+//////////////////
+//lotes de ordenes
+/*agrega un lote a un insumo */
+function maslotes(str,idacja,idbcja,idccja){
+	tabla=document.getElementById(str);//idtabla
+	cajcel1=idacja.split('-');//explotar
+	cajcel2=idbcja.split('-');
+	cajcel3=idccja.split('-');
+
+	numrowYcell=agregarfila(tabla,1,4);//insertamos una fila
+	nrow=numrowYcell[0];
+	row = tabla.rows.length-1;
+	idrow=tabla.rows[row].id='row'+row;
+	lotcantidad=parseInt($F('tdcantidad'));
+	lotcantidad=(lotcantidad+1);
+	$('tdcantidad').value=''+lotcantidad+'';//cantidad en tabla+1
+	tabla.rows[nrow].style='text-align:center; ';
+	 separardor='-';//separador de fecha
+		var tbl=tabla.rows[row].cells[0].innerHTML='<input type="text" name="lot" id="'+cajcel1[0]+'-'+lotcantidad+'-lot" onkeyup="contenidocampo(this)" size="15">';
+		var tbl=tabla.rows[row].cells[1].innerHTML='<input type="text" name="cant" id="'+cajcel3[0]+'-'+lotcantidad+'-cant" onkeyup="contenidocampo(this)" onKeyPress="return soloNumeros(event)" size="11">';
+		var tbl=tabla.rows[row].cells[2].innerHTML='<input type="text" name="fech" id="'+cajcel2[0]+'-'+lotcantidad+'-fech" onkeyup="contenidocampo(this)" onKeyPress="return fechasformato(event,this,\''+separardor+'\');" maxlength="10" size="11">';
+		var tbl=tabla.rows[row].cells[3].innerHTML="<input type='hidden' name='statu' id='"+cajcel2[0]+"-"+lotcantidad+"-statu' value='1'><span id='del' style='cursor:pointer' onclick='QuitarLotes(this,"+str+"),actualizaridlotes(str);'><img id='dl2' src='../public/images/del_16.png' /></span>";
+		actualizaridlotes(str);
+ 	}
+	/*determa el numero de lotes despachados como maximo de lotes a agregar de una ORDEN DE COMPRAS*/
+function lotesmaximo(str,idacja,idbcja,idccja,cantArt){
+	tabla=$(''+str+'');//idtabla
+	row = tabla.rows.length-1;//numero de filas
+	cantidad=$(''+cantArt+'').value;//consultar la cantidad de articulos maximo de lotes
+	if(cantidad>row)
+	maslotes(str,idacja,idbcja,idccja);//funcion para agregar lote
+	else
+	alert("No puede haber mas lotes que insumos despachados");
+	}
+
+function actualizaridlotes(tbl){
+///reordenar los id
+tabla=$(''+tbl+'');
+	row = tabla.rows.length-1;//numero de filas
+if (row>0) {//existen campos
+elemen= document.getElementById(tbl).rows[1].cells[0];
+primercampo=elemen.getElementsByTagName("input")[0].id;
+clote=primercampo.split('-');
+insmo=clote[0];
+fila=clote[1];
+tcamp=clote[2];
+for(i=1;i<=row;i++){
+nuevoidcomp=insmo+'-'+i+'-'+tcamp;//idcompuesto por numlote + fila+denominacion del campo
+nuevoidcant=insmo+'-'+i+'-cant';//cantidad
+nuevoidfech=insmo+'-'+i+'-fech';//fecha
+nuevosta=insmo+'-'+i+'-statu';//fecha
+elemen= document.getElementById(tbl).rows[i].cells[0];
+inp=elemen.getElementsByTagName("input")[0].id;
+cap=inp.split('-');
+insmo=cap[0];
+fila=cap[1];
+tcamp=cap[2];
+campcant=insmo+'-'+fila+'-cant';
+campfech=insmo+'-'+fila+'-fech';
+campstatu=insmo+'-'+fila+'-statu';
+//cambio de id
+document.getElementById(inp).id=nuevoidcomp;
+document.getElementById(campcant).id=nuevoidcant;
+document.getElementById(campfech).id=nuevoidfech;
+document.getElementById(campstatu).id=nuevosta;
+}
+}//fin if control
+
+}
+
+function QuitarLotes(fila,tbl){
+//funcion para eliminar lotes de una orden de compras
+//y reordenar y actualizar lotes
+EstaRowElimina(fila,tbl);//eliminar la fila
+actualizaridlotes(tbl.id);//actualizar los campos
+}
+
+///cargar lotes en la orden de compras
+function CargConfirmacionLotes(tbl,idord,num){
+	//variables
+	vacios=false; vaciosl=false;	vaciosf=false;//contorl vacios
+	tabla=$(''+tbl+'');//tabla de lotes
+	CantidadArti=$F('artcantidad');//cantidad pedida/maxima de lotes
+	IdOrden=$F('idorden');//iddelaorden
+	Num=$F('num');//numero de lista de articulo
+
+	lotesPrecargados=$F('lotesdefault');//lotes inicial control de cambios
+	lotescargados=$F('lotecargados');//lotes que estan cargados ya sea precargaos o ya modificados
+	crtlote=$F('crteliminacionlot');//lostes precargados eliminados
+	loteagregados=$F('agregarlote');//lostes precargados eliminados
+	crtstatus=$F('crtstatus');//status de los lostes 0,1,2,3,4
+	CantFilasTabla=tabla.rows.length-1;
+	//CONTROL DE MODIFICACIONES EN LOTES
+	//elimino un lote precargado
+	crtcambios=0;
+
+	lotemas=0;//lotes agregados
+	if (crtlote==lotesPrecargados && loteagregados==0) {crtcambios=0; }//lotes sin cambios
+	if (crtlote <lotesPrecargados && loteagregados==0) {crtcambios=1;}//se elimino un lote precargado
+	if (crtlote==lotesPrecargados && loteagregados>0) {crtcambios=2;}//solo se agrego lotes
+	if (crtlote <lotesPrecargados && loteagregados>0) {crtcambios=3;}//se elimino y se agrego lotes
+	if (crtstatus==2 ||lotescargados>0) {crtcambios=4;}//lostes vacio
+	if (crtcambios==1 || crtcambios==2 || crtcambios==3 || crtcambios==4){//lotes modificados se agrego o elimino
+
+	if(confirm('esta seguro de modificar los lotes'))
+		{
+			confirmar=true;
+		}else {
+			confirmar=false;
+		}
+	}
+	else {confirmar=false; alert('Se manendran los lotes cargados, pulse [Esc] para salir '); }
+
+	row = tabla.rows.length-1;//numero de filas
+	var t=0;//contol 1 lotes array
+	reglon='';//todos los lotes
+	sumacantidad=0;
+	for(i=1;i<=row;i++){
+
+		camplot=idord+'-'+i+'-lot';
+	 	campcant=idord+'-'+i+'-cant';
+		campfech=idord+'-'+i+'-fech';
+		campstatu=idord+'-'+i+'-statu';
+
+	lote=$F(''+camplot+'')
+	cantlot=$F(''+campcant+'')
+	fechlot=$F(''+campfech+'')
+	statu=$F(''+campstatu+'')
+
+	///verificar si hay cantidad
+
+
+//validar el campo esta vacio vacio es true esta vacio no dejar pasar este campo se asigan un0
+if (cantlot=='' || cantlot==0) { vacios=true; errorcampo(campcant); $(''+campcant+'').value=0;cantlot=0; }
+if (lote=='') { vacios=true;errorcampo(camplot); }
+if (fechlot=='') { vacios=true; errorcampo(campfech); }
+if (vacios!=true && crtcambios==4) {statu=1;}//lotes vacio que se acaba de llenar
+	fechlot=$F(''+campfech+'')
+	sumacantidad=parseInt(sumacantidad)+parseInt(cantlot);
+//validacion de cantidad de lotes en funcon de canidad de articulos
+if(sumacantidad > CantidadArti){
+alert('la suma de cantidad de lostes no debe exceder la cantidad de articulos, \n No se confirmaran ')
+confirmar=false;
+}
+
+datoslotes=lote+'::'+cantlot+'::'+fechlot+'::'+statu;
+if (i==1) {
+spr='';//separador de reglones
+}
+else
+{spr='***';//separador de reglones
+}
+reglon=reglon+spr+datoslotes;
+
+	}
+
+if (vacios==true) { alert('EXISTE UN CAMPO DE VACIO O EN "0", NO SE CONFIRMARAN LOTES')}
+else {
+if (confirmar==true) {
+
+	link='<a href="views05/ordenes_compras2_lotes.php?numfactu='+IdOrden+'&cantidad='+CantidadArti+'&num='+Num+'&nunlote='+lotesPrecargados+'&list='+reglon+'" title="lostes de insumos" class="boton" onclick="Modalbox.show(this.href, {title: this.title, width:900,height:400, overlayClose: false}); return false;">Detalles Lotes</a>';
+	document.getElementById('idarcticulo'+num+'').value = reglon;
+ 	document.getElementById('modlotes'+num+'').innerHTML= link;
+	document.getElementById('confirmar'+num+'').innerHTML='√';
+	document.getElementById('crtlotes'+num+'').value= crtcambios;
+
+		}
+	}
+}
+
+
+function lotesprecargados(stat) {
+
+if (stat=='0' || stat==0) {
+	//control de lotes predeterminados eliminados en ordenes_compras2_lotes.php
+loteprecargado=$F('crteliminacionlot');
+if (loteprecargado<1) {actualizarloteprecargado=0;}else {
+actualizarloteprecargado=parseInt(loteprecargado)-1;}
+$('crteliminacionlot').value=actualizarloteprecargado;
+ldel=$('crteliminacionlot').value;
+}
+}
+
+function clotesagregados(){//control de lotes agregados en ordenes_compras2_lotes.php
+loteprecargado=$F('agregarlote');
+sumalote=parseInt(loteprecargado)+1;
+$('agregarlote').value=sumalote;
+
+ }
+
+////////////////////////////////////////////lotes FIN///////////////////////////////////////////
+
+///////////////////////////////////////////ACTUALIZAR MONEDA/////////////////////////////////////////
+function ActualizarTazaMoneda(idmoneda){//Actualiza el la taza de cambio de la moneda
+
+$('clientes').hide();
+$('clientes').show();
+
+ new Ajax.Updater('clientes', 'views07/ActTazaCambioMonedaModificar.php', {
+			parameters: { idmoneda: idmoneda},
+			});
+
+}
+
+////Mostrar porcentaje
+
+function MostrarPocentajeTazaMoneda(str) {
+	NuevoCambioMoneda=str.value;
+	CambioActualMoneda=$F('CambioActual');
+	aumento=PorcentajeAumento(NuevoCambioMoneda,CambioActualMoneda);
+	IdMostrarCAmbio=alertaelemento(str);
+	//estilo de letra
+	estylo="font-family: Arial,Verdana,sans-serif;font-size: 10pt;";
+	document.getElementById(''+IdMostrarCAmbio+'').style=estylo;
+	if (isNaN(aumento)) {aumento='error'}
+	document.getElementById(''+IdMostrarCAmbio+'').innerHTML="Porcentaje "+aumento+"%";
+}
+
+function ModificarTazaMoneda(idmoneda,act){//Actualiza el la taza de cambio de la moneda
+
+if (act==1) {modificar=true;}
+NuevoCambioMoneda=$F('NuevoCambio');
+CambioActualMoneda=$F('CambioActual');
+///Compara si el aumento entre es muy grande
+
+aumento=PorcentajeAumento(NuevoCambioMoneda,CambioActualMoneda);
+console.log(aumento);
+id_moneda=idmoneda;
+$('clientes').hide();
+$('clientes').show();
+
+ new Ajax.Updater('clientes', 'views07/ActTazaCambioMonedaModificar.php', {
+			parameters: { idmoneda: idmoneda,modificar: modificar,NuevoCambioMoneda: NuevoCambioMoneda
+			},
+			});
+
+}
+///////////////////////////////////////////FIN ACTUALIZAR MONEDA/////////////////////////////////////
+function CrearTickeras(){
+  var contenedor;
+  contenedor = document.getElementById('clientes');
+  ajax=nuevoAjax();
+  ajax.open("GET", "views07/registro_ticket.php",true);
+  ajax.onreadystatechange=function() {
+  if (ajax.readyState==4) {
+    contenedor.innerHTML = ajax.responseText
+    }
+  }
+ ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+ ajax.send(null)
+
+}
+
+function CrearTickeras2(){
+  TikeraTitulo=$F('TikeraTitulo');
+  CantidadTikeras=$F('CantidadTikeras');
+  //RANGOS DE TIKERAS
+  CodTickeraInicio=$F('CodTickeraInicio');
+  CodTickeraFin=$F('CodTickeraFin');
+  InicialSerie=$F('InicialSerie');
+
+  NotaTicket=$F('NotaTicket');
+  cantTicket=$F('cantTicket');
+    new Ajax.Updater('RegistroTickeras', 'views07/gestionar_ticket2.php', {
+ 			parameters: { TikeraTitulo: TikeraTitulo, CantidadTikeras: CantidadTikeras, CodTickeraInicio: CodTickeraInicio, CodTickeraFin: CodTickeraFin,
+       InicialSerie: InicialSerie,NotaTicket: NotaTicket,cantTicket:cantTicket},
+ 			});
+
+}
+
+function Tickerasbuscar(){
+    cliente=0;
+      new Ajax.Updater('clientes', 'views07/gestionar_ticket_buscar.php', {
+ 			parameters: { cliente: cliente},
+ 			});
+
+}
+
+function ActivarTickeras(){
+  CodTickera=$F('CodTickera');
+  todo_correcto=true;
+  cant=CodTickera.length;
+  if(CodTickera=='' || CodTickera.length == 1){
+    alert('Debe llenar los campo con codigos validos');
+    todo_correcto=false;
+  }
+  ///eliminar espacios en blanco
+    CodTickera=CodTickera.split(" ").join("");
+  expresion =/^[a-zA-Z]+[\-]+[0-9]/i;
+    if (expresion.test(CodTickera)){
+        }else{
+        todo_correcto = false;
+        alert('El codigo debe tener tener dos letras al inicio y numeros CC-000000n');
+      }
+
+  if(todo_correcto==true){
+    new Ajax.Updater('resultadotikera', 'views07/gestionar_ticket_activar.php', {
+ 			parameters: { CodTickera: CodTickera},
+ 			});
+    }
+
+}
+
+function regClientetikera(){
+  //registrar clientes atraves del modulo tikeras
+   lacedulaclien=$F('cedulacliente');
+   alert(lacedulaclien)
+   new Ajax.Updater('RegistroDatosCliente', 'views07/gestionar_ticket_regcliente.php', {
+           parameters:{lacedulaclien: lacedulaclien },
+        });
+}
+
+function ActivarTickeras2(){
+  idtickera=$F('idtickera');
+  vendedorid=$F('comisionado');
+  todo_correcto=true;
+  if(vendedorid=='' || vendedorid==0){  todo_correct=false; }
+  //Vendedor
+  cedula=$F('cedulacliente');
+  //datos del cliente
+  nombrecliente=$F('cliennombre');
+  apellidocliente=$F('clienapellido');
+  generocliente=$F('cliengenero');
+  correocliente=$F('cliencorre');
+  clientf1=$F('clientf1');
+  clientf2=$F('clientf2');
+  edocivil=$F('clienestcivil');
+  fechanaci=$F('fechanaci');
+
+  paiscli=$F('paicli');
+  if($('estclin')){estado=$F('estclin');}else{estado=$F('estado');}
+  if($('ciuclin')){ciudad=$F('ciuclin');}else{ciudad=$F('ciudad');}
+  cliendir=$F('cliendir');
+  cliencoment=$F('cliencoment');
+
+  if(todo_correcto==true){
+    new Ajax.Updater('RegistroDatosCliente', 'views07/gestionar_ticket_activar2.php', {
+ 			parameters: { idtickera: idtickera, vendedorid: vendedorid,cedula:cedula,nombrecliente:nombrecliente,fechanaci:fechanaci,
+        apellidocliente:apellidocliente,generocliente:generocliente,correocliente:correocliente,clientf1:clientf1,
+        clientf2:clientf2,edocivil:edocivil,paiscli:paiscli,estado:estado,ciudad:ciudad,cliendir:cliendir,cliencoment:cliencoment},
+ 			});
+    }
+
+}
+
+
+function AgregarServicioPoliza(){
+contenedor=$('listaServicioPolizas');
+itenCantidad=parseInt($F('numeroServicios'))+1;
+itenCantidadNuevo=itenCantidad+1;
+alert(itenCantidadNuevo)
+$('numeroServicios').value=itenCantidadNuevo;
+
+contenido=contenedor.innerHTML+='<div id="ContServicio2"><input list="lista-programacion" type="text" name="CONSULTAS" id="" value=""></div>';
+contenido=contenedor.innerHTML+='<div id="ContCantidad"><input type="numero" id="cantidadServicios" size="2" ></div>';
+contenido=contenedor.innerHTML+='<div id="ContAcciones"><div class="acciones"><span class="BotonQuitar" id="QuitarElemento" onclick="QuitarServicioPoliza()"></span></div></div>';
+
+}

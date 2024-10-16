@@ -1,0 +1,316 @@
+<?php
+header("Content-Type: text/html;charset=utf-8");
+include ("../../lib/jfunciones.php");
+sesion();
+$elid=$_SESSION['id_usuario_'.empresa];
+$elus=$_SESSION['nombre_usuario_'.empresa];
+$tablatemp="nusuar$elid";
+$tablatemp1="caranusuar$elid";
+$elcotizacio=$_REQUEST['lacotizac'];
+$otrog=0;
+$datospricotiza=("select $tablatemp.id_cliente_cotizacion,$tablatemp.no_cotizacion,$tablatemp.nombres as n1,
+       $tablatemp.apellidos as n2,$tablatemp.rif_cedula,
+       $tablatemp.email,$tablatemp.celular,
+       admin.nombres,admin.apellidos,sucursales.sucursal,$tablatemp.inicial,$tablatemp.cuotas,
+      $tablatemp.edad
+from
+       $tablatemp,admin,sucursales
+where
+       $tablatemp.id_cliente_cotizacion=$elcotizacio and
+       $tablatemp.id_admin=admin.id_admin and
+       admin.id_sucursal=sucursales.id_sucursal;");
+
+
+$repdatocotiza=ejecutar($datospricotiza);
+$datacotiza=assoc_a($repdatocotiza);
+
+$nomcliente="$datacotiza[n1] $datacotiza[n2]";
+$nomoperador="$datacotiza[nombres] $datacotiza[apellidos]";
+$numcotiza=$datacotiza[no_cotizacion];
+$cedulacli=$datacotiza[rif_cedula];
+$correcli=$datacotiza[email];
+$teleclien=$datacotiza[celular];
+$sucursala=$datacotiza[sucursal];
+$idclientcotiza=$datacotiza[id_cliente_cotizacion];
+$lainiciacontra=$datacotiza[inicial];
+$numcuotas=$datacotiza[cuotas];
+$clienedad=$datacotiza[edad];
+//buscamos los datos de la carga familiar
+$datocargafami=("select $tablatemp1.cantidad,$tablatemp1.montoprima,
+                                 $tablatemp1.sexo,primas.edad_inicio ,primas.edad_fin,
+                                  primas.id_prima,parentesco.parentesco,$tablatemp1.id_poliza
+                      from
+                               $tablatemp1,primas,parentesco where $tablatemp1.id_cliente_cotizacion=$elcotizacio and
+                               $tablatemp1.id_prima=primas.id_prima and
+                               primas.id_parentesco=parentesco.id_parentesco order by parentesco;");
+$repdatcargafami=ejecutar($datocargafami);
+//elmontotalprima
+$montoprimatota=("select sum(montoprima) as totalprima from $tablatemp1 where id_cliente_cotizacion=$elcotizacio;");
+$repmontoprima=ejecutar($montoprimatota);
+$datmotprima=assoc_a($repmontoprima);
+$elmotesprima=$datmotprima['totalprima'];
+//findelaprima
+$anos=date("Y");
+$mes=date("m");
+$eldia=date("d");
+$lafechacoti="$eldia-$mes-$anos";
+$queplan=("select polizas.nombre_poliza,polizas.deducible,polizas.id_moneda,ramos.ramo,polizas.id_poliza
+from polizas,$tablatemp1,ramos where
+$tablatemp1.id_cliente_cotizacion=$elcotizacio and
+$tablatemp1.id_poliza=polizas.id_poliza and
+polizas.id_ramo=ramos.id_ramo
+group by polizas.nombre_poliza,polizas.deducible,ramos.ramo,polizas.id_poliza order by polizas.nombre_poliza ;");
+$repqplan=ejecutar($queplan);
+$repqplan1=ejecutar($queplan);
+$datqplan=assoc_a($repqplan);
+$elplanes=$datqplan['nombre_poliza'];
+$tiededuci=$datqplan['deducible'];
+$elramopoli=$datqplan['ramo'];
+$lapolizaes=$datqplan['id_poliza'];
+
+//////////MONEDA EXPRESIONES////
+$SqlMoneda=("select tbl_monedas.id_moneda, tbl_monedas.moneda , tbl_monedas.simbolo  from polizas,tbl_monedas where polizas.id_moneda=tbl_monedas.id_moneda and id_poliza='$lapolizaes';");
+$MonedaEJ=ejecutar($SqlMoneda);
+$Moneda=asignar_a($MonedaEJ,NULL,PGSQL_ASSOC);
+$moneda=$Moneda['moneda'];
+
+//para ver si tiene maternidad
+      while($tendmatern=asignar_a($repqplan,NULL,PGSQL_ASSOC)){
+          $idtiprima=$tendmatern[id_poliza];
+          $vermaterni=("select $tablatemp1.id_prima,$tablatemp1.id_poliza,propiedades_poliza.monto
+from $tablatemp1,primas,propiedades_poliza
+where
+       $tablatemp1.id_cliente_cotizacion=$elcotizacio and
+       $tablatemp1.id_prima=primas.id_prima and
+       primas.id_poliza=$idtiprima and
+       primas.id_parentesco=9 and
+       primas.id_poliza=propiedades_poliza.id_poliza;");
+       $repvermate=ejecutar($vermaterni);
+        $sihaymater=num_filas($repvermate);
+        if($sihaymater>=1){
+        $infmater=assoc_a($repvermate);
+        $montomate=$infmater[monto];
+        $caracterimate=("select tbl_caract_poliza.caracteristica,tbl_tipo_caract.tipo_caract
+  from
+         tbl_caract_poliza,tbl_tipo_caract
+  where
+       tbl_caract_poliza.id_poliza=$idtiprima and
+       tbl_caract_poliza.id_tipo_caract=tbl_tipo_caract.id_tipo_caract order by
+       tbl_tipo_caract.id_tipo_caract;");
+       $repcaratmate=ejecutar($caracterimate);
+      }
+}
+
+   //fin de la maternidad
+$propiedpoliza=("select propiedades_poliza.cualidad,propiedades_poliza.descripcion,propiedades_poliza.monto
+  from propiedades_poliza
+where id_poliza=$lapolizaes");
+$repdapoliza=ejecutar($propiedpoliza);
+?>
+<link HREF="../../public/stylesheets/impresiones.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table   border=0 class="tabla_citas"  cellpadding=0 cellspacing=0>
+<tr>
+<td colspan=1 class="logo">
+<img src="../../public/images/head.png">
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo">
+</td>
+<td colspan=1 class="titulo2">
+Fecha: <?echo $lafechacoti?>
+</td>
+</tr>
+<tr>
+<td colspan=1 class="titulo2">
+Rif: J-31180863-9
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+</tr>
+<tr>
+	<tr>
+  		<td colspan=4 align="center" class="titulo3"><strong>Calculo de Cotizaci&oacute;n <?echo $elplanes?></strong></td>
+	</tr>
+	<tr>
+		<td colspan=4 class="tdcamposc">&nbsp;</td>
+	</tr>
+</table>
+<table   class="tabla_citas"  cellpadding=0 cellspacing=0 border=1>
+          </tr>
+		   <td colspan=12 align="center" class="titulo3"><strong>DATOS PERSONALES</strong></td>
+	 </tr>
+         <tr>
+                  <td class="tdtituloss"><label style="font-size: 8pt">SOLICITANTE/TITULAR</label></td>
+                  <td class="tdtituloss"><label style="font-size: 8pt">PLAN DE SALUD</label></td>
+                  <td class="tdtituloss" colspan=3><label style="font-size: 8pt">OFICINA EMISORA</label></td>
+                  <td class="tdtituloss"><label style="font-size: 8pt">INTERMEDIARIO</label></td>
+                  <td class="tdtituloss" colspan=6><label style="font-size: 8pt">EMITIDO POR</label></td>
+         </tr>
+         <tr>
+                  <td rowspan=1><?echo $nomcliente?></td>
+                  <td rowspan=1><?echo $elplanes?></td>
+                  <td rowspan=1 colspan=3><?echo $sucursala?></td>
+                   <td rowspan=1><?echo $nomoperador?></td>
+                  <td rowspan=1 colspan=6><?echo $nomoperador?></td>
+         </tr>
+         </tr>
+		   <td colspan=12 align="center" class="titulo3"><strong>COBERTURAS</strong></td>
+	  </tr>
+         <tr>
+                  <td class="tdtituloss" colspan=1><label style="font-size: 8pt">Ramo</label></td>
+                  <td class="tdtituloss" colspan=5><label style="font-size: 8pt">Cobertura</label></td>
+                  <td class="tdtituloss" colspan=2><label style="font-size: 8pt">COBERTURA AMPARADA </label></td>
+          </tr>
+           <?php
+                     $linea=1;
+                    while($ppoli=asignar_a($repdapoliza,NULL,PGSQL_ASSOC)){?>
+         <tr>
+                  <?if($linea==1){?>
+                        <td rowspan=1 colspan=1><?echo $ppoli[cualidad]?></td>
+                   <?}else{?>
+                         <td rowspan=1 colspan=1> <?echo $ppoli[cualidad]?></td>
+                   <?}?>
+                  <td rowspan=1 colspan=5><?echo $ppoli[descripcion]?></td>
+                  <td rowspan=1 colspan=2><?echo $ppoli[monto]?></td>
+
+         <?$linea++;
+         }?>
+         </tr>
+         <tr>
+                  <td rowspan=1></td>
+                  <td rowspan=1 colspan=5>Deducible</td>
+                  <td rowspan=1 colspan=2><?echo $tiededuci?></td>
+         </tr>
+         <tr>
+                  <?php if($sihaymater>=1){?>
+                   <td rowspan=1></td>
+                  <td rowspan=1 colspan=5>Maternidad</td>
+                  <td rowspan=1 colspan=2><?echo $montomate?></td>
+                  <?}?>
+        </tr>
+         </tr>
+		   <td colspan=12 align="center" class="titulo3" colspan=4><strong>Usuarios</strong></td>
+	     </tr>
+         </table>
+         <table   class="tabla_citas"  cellpadding=0 cellspacing=0 border=1>
+         <tr>
+                  <td class="tdtituloss" colspan=1><label style="font-size: 8pt">Edad/Rango&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label></td>
+                  <td class="tdtituloss" colspan=1><label style="font-size: 8pt">Cantidad</label></td>
+                  <td class="tdtituloss" colspan=3><label style="font-size: 8pt">Genero</label></td>
+                  <td class="tdtituloss" colspan=3><label style="font-size: 8pt">Monto</label></td>
+        </tr>
+         <?
+               while($datcarac=asignar_a($repdatcargafami,NULL,PGSQL_ASSOC)){
+               $tipoparentesco=$datcarac[parentesco];
+
+                   if($tipoparentesco=='CONYUGUE FEMENINO CON MATERNIDAD'){
+                       $datcarac[edad_inicio]='';
+                       $datcarac[edad_fin]='';
+                       $estim="MATERNIDAD";
+                       $otrog=8;
+                   }
+                   if($tipoparentesco=='TITULAR MASCULINO'){
+                       $datcarac[edad_inicio]='';
+                       $datcarac[edad_fin]='';
+                       if($datcarac[montoprima]==0){
+                        $estim="TITULAR MASCULINO (TOMADOR)";
+                       }else{
+						   $estim="TITULAR MASCULINO";
+						   }
+                         $otrog=8;
+                   }
+                   if($tipoparentesco=='TITULAR FEMENINO'){
+                        $datcarac[edad_inicio]='';
+                       $datcarac[edad_fin]='';
+                       if($datcarac[montoprima]==0){
+                        $estim="TITULAR FEMENINO (TOMADOR)";
+                       }else{
+						   $estim="TITULAR FEMENINO";
+						   }
+                         $otrog=8;
+                   }
+         ?>
+        <tr>
+                  <td rowspan=1><label style="font-size: 8pt"><?echo "$datcarac[edad_inicio] - $datcarac[edad_fin]"?></label></td>
+                  <td rowspan=1><label style="font-size: 8pt"><?echo "$datcarac[cantidad]"?></label></td>
+                 <td rowspan=1 colspan=3><label style="font-size: 8pt"><?    if($otrog==8){
+                                                                                echo $estim;
+                                                                            }else{
+                                                                                      if($datcarac['sexo']=='1'){
+                                                                                                        echo "Masculino";
+                                                                                                    }else{
+                                                                                                        echo "Femenino";
+                                                                                                        }
+                                                                                   }?></label></td>
+                  <td rowspan=1 colspan=3><label style="font-size: 8pt"><?echo "$datcarac[montoprima]"?></label></td>
+          </tr>
+          <? $otrog=0;
+             } ?>
+
+          <tr>
+              <td class="tdtituloss" colspan=1><label style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label></td>
+              <td class="tdtituloss" colspan=1><label style="font-size: 8pt"></label></td>
+              <td class="tdtituloss" colspan=3><label style="font-size: 8pt">Monto Total:</label></td>
+             <td class="tdtituloss" colspan=3><label style="font-size: 8pt"><?echo $elmotesprima?></label></td>
+	     </tr>
+         </table>
+         <table   class="tabla_citas"  cellpadding=0 cellspacing=0 border=1>
+         <tr>
+              <td class="tdtituloss" colspan=1><label style="font-size: 8pt"><br></label></td>
+              <td class="tdtituloss" colspan=1><label style="font-size: 8pt"></label></td>
+              <td class="tdtituloss" colspan=3><label style="font-size: 8pt"></label></td>
+             <td class="tdtituloss" colspan=3><label style="font-size: 8pt"></label></td>
+	     </tr>
+         <tr>
+              <td class="tdtituloss" colspan=1><label style="font-size: 8pt">PLAN</label></td>
+              <td class="tdtituloss" colspan=1><label style="font-size: 8pt">COSTO INICIAL</label></td>
+              <td class="tdtituloss" colspan=3><label style="font-size: 8pt">Nro. DE CUOTAS</label></td>
+             <td class="tdtituloss" colspan=3><label style="font-size: 8pt">MONTO C/CUOTA</label></td>
+	     </tr>
+         <tr>
+              <td class="tdtituloss" colspan=1><label style="font-size: 8pt"><?echo "$lainiciacontra% INICIAL Y $numcuotas CTAS MENSUALES"?></label></td>
+              <td class="tdtituloss" colspan=1 align='center'><label style="font-size: 8pt"><?$multi=$elmotesprima*($lainiciacontra/100);
+                                                                                                                         echo number_format($multi, 2, ',', '.');
+                                                                                                                         echo $moneda;?></label></td>
+              <td class="tdtituloss" colspan=3 align='center'><label style="font-size: 8pt"><?echo $numcuotas?></label></td>
+             <td class="tdtituloss" colspan=3 align='center'><label style="font-size: 8pt"><?$resto=(($elmotesprima-$multi)/$numcuotas);
+                                                                                                                        echo number_format($resto, 2, ',', '.');
+                                                                                                                        echo $moneda;?></label></td>
+	     </tr>
+          </table>
+          <table   class="tabla_citas"  cellpadding=0 cellspacing=0 border=1>
+          <?php while($polizas=asignar_a($repqplan1,NULL,PGSQL_ASSOC)){
+               $mipoli=$polizas[id_poliza];
+               $caractpoliza=("select tbl_caract_poliza.caracteristica,tbl_caract_poliza.orden,tbl_tipo_caract.tipo_caract,tbl_caract_poliza.id_tipo_caract
+  from
+         tbl_caract_poliza,tbl_tipo_caract
+  where
+       tbl_caract_poliza.id_poliza=$mipoli and
+       tbl_caract_poliza.id_tipo_caract=tbl_tipo_caract.id_tipo_caract order by
+       tbl_tipo_caract.id_tipo_caract,tbl_caract_poliza.orden;");
+                $repcaractpoliza=ejecutar($caractpoliza);
+               while($caracpoliza=asignar_a($repcaractpoliza,NULL,PGSQL_ASSOC)){
+            ?>
+                <tr>
+                       <td class="tdtituloss" colspan=1><label style="font-size: 8pt"><?php echo $caracpoliza[caracteristica]?></label></td>
+                </tr>
+
+         <?php }
+         } ?>
+          </table>
+          <? if($sihaymater>=1 or $sihaymater>=0){?>
+                 <table   class="tabla_citas"  name="caracateristicas" cellpadding=0 cellspacing=0 border=1>
+          <?
+               while($caracpolizamate=asignar_a($repvermate,NULL,PGSQL_ASSOC)){
+            ?>
+                <tr>
+                       <td class="tdtituloss" colspan=1><label style="font-size: 8pt"> gfgsdfg <?php echo $caracpolizamate[caracteristica]?></label></td>
+                </tr>
+
+         <?php }?>
+          <?php }?>

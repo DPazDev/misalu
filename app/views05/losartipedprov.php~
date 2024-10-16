@@ -1,0 +1,308 @@
+<style type="text/css">
+.spanX {
+width: 10px;
+height: 10px;
+font-size: 80%;
+border:2px solid red;
+border-color: #000;
+padding-bottom: 1px;
+padding-left:1px;
+padding-right:1px;
+padding-top: 1px;
+display: block;
+color: #000;
+float: right;
+z-index: 999;
+	}
+
+
+.tooltips {
+  position: relative;
+  display: inline;
+}
+.tooltips span {
+  position: absolute;
+  width:140px;
+  color: #000000;
+  text-shadow: 0px 0px 1px #050504;
+  background: #ABFFAB;
+  height: 31px;
+  line-height: 31px;
+  text-align: center;
+  visibility: hidden;
+  border-radius: 7px;
+  box-shadow: 1px 2px 3px #8C7A7A;
+}
+.tooltips span:after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -8px;
+  width: 0; height: 0;
+  border-bottom: 35px solid #ABFFAB;
+  border-right: 89px solid transparent;
+  border-left: 8px solid transparent;
+}
+a:hover.tooltips span {
+  visibility: visible;
+  opacity: 0.7;
+  top: 30px;
+  left: 50%;
+  margin-left: -80px;
+  z-index: 999;
+}
+.estaconte{
+	position: relative;
+display: inline;}
+
+.esta{  position: absolute;
+  width:140px;
+  color: #000000;
+  text-shadow: 0px 0px 1px #050504;
+  background: #ABFFAB;
+  height: 31px;
+  line-height: 31px;
+  text-align: center;
+  visibility: visible;
+  border-radius: 7px;
+  box-shadow: 1px 2px 3px #8C7A7A;
+ 	 margin-left: -50px;
+ 	 opacity: 0.9;
+ 	  top: 30px;
+  z-index: 999;}
+.esta::after
+{  content: '';
+display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%; 
+  margin-left: -8px;
+  width: 0; height: 0;
+  border-bottom: 10px solid #ABFFAB;
+  border-right: 10px solid transparent;
+  border-left: 8px solid transparent;
+  }
+  
+ 
+</style>
+<?php
+//control de pedido: Procesar pedido
+include ("../../lib/jfunciones.php");
+sesion();
+$idpedido=$_POST['elidpedido'];
+$depenid=$_POST['depend'];
+$quiespro=("select clinicas_proveedores.nombre,tbl_ordenes_pedidos.no_orden_pedido 
+from 
+clinicas_proveedores,tbl_ordenes_pedidos,proveedores
+where 
+tbl_ordenes_pedidos.id_orden_pedido=$idpedido and tbl_ordenes_pedidos.id_proveedor=proveedores.id_proveedor and
+proveedores.id_clinica_proveedor=clinicas_proveedores.id_clinica_proveedor ;");
+$requiespro=ejecutar($quiespro);
+$dataquienespro=assoc_a($requiespro);
+$buscarpedido=("select tbl_insumos_ordenes_pedidos.id_insumo_orden_pedido,tbl_insumos_ordenes_pedidos.id_orden_pedido,tbl_ordenes_pedidos.id_dependencia,tbl_insumos_ordenes_pedidos.id_insumo,tbl_insumos_ordenes_pedidos.cantidad,tbl_insumos.insumo,tbl_laboratorios.laboratorio  from 
+tbl_insumos_ordenes_pedidos,tbl_ordenes_pedidos,tbl_insumos,tbl_laboratorios where
+tbl_ordenes_pedidos.id_orden_pedido=tbl_insumos_ordenes_pedidos.id_orden_pedido and
+tbl_ordenes_pedidos.id_orden_pedido=$idpedido and tbl_insumos_ordenes_pedidos.id_insumo=tbl_insumos.id_insumo and tbl_insumos.id_laboratorio=tbl_laboratorios.id_laboratorio order by tbl_insumos.insumo;");
+
+$repbuspedido=ejecutar($buscarpedido);
+$cometpedido=("select tbl_ordenes_pedidos.comentarios from tbl_ordenes_pedidos where id_orden_pedido=$idpedido");
+$repcometpedido=ejecutar($cometpedido);
+$datacoment=assoc_a($repcometpedido);
+$busconficompra=("select variables_globales.comprasconfig,variables_globales.iva  from variables_globales where variables_globales.nombre_var='porcaumento';");
+$repbusconficompra=ejecutar($busconficompra);
+$datacofcompra=assoc_a($repbusconficompra);
+//$eliva=$datacofcompra['iva'];
+$elaumento=$datacofcompra['comprasconfig'];
+?>
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr>
+         <td colspan=7 class="titulo_seccion">Al&iacute;cuota a utilizar:  <input type="text" id='ivacomp' size=1 onKeypress="return SoloNumeros(event)">%</td>
+     </tr>
+</table>
+<table class="tabla_cabecera3" border='0' cellpadding=0 cellspacing=0>
+     <tr>
+         <td colspan=7 class="titulo_seccion">Carga de art&iacute;culos del proveedor1 <?echo $dataquienespro['nombre']?> No. de orden <?echo $dataquienespro['no_orden_pedido']?></td>
+     </tr>
+</table>	 
+<table class="tabla_cabecera5"   border='0' cellpadding=0 cellspacing=0>    
+             <tr>
+                 <th class="tdtitulos">Art&iacute;culo.</th>
+                 <th class="tdtitulos">Lab.</th>
+        	 		  <th class="tdtitulos">Cant. pedida.</th> 
+		     		  <th class="tdtitulos">Cant. despachada.</th>
+                 <th class="tdtitulos">Pre. proveedor Uni.</th>
+                 <th class="tdtitulos"><table width="100%" id="titulo-lote"><tr>
+                 <th class="tdtitulos" width="40%">Lote</td>
+                 <th class="tdtitulos" width="30%">Fecha Ven.</td>
+                 <th class="tdtitulos" width="30%" colspan="2">Cant. lote</td>
+                  </tr></table></th> 				 
+                 <th class="tdtitulos">IVA.</th>  
+                 <th class="tdtitulos">% Aumento.</th>  
+				<th class="tdtitulos">Pre. Uni.</th>      
+                <th class="tdtitulos">Pre. Final.</th>    
+            </tr>
+			 <?php 
+				$i=1; 
+			    while($articulos=asignar_a($repbuspedido,NULL,PGSQL_ASSOC)){
+				$caja="caja".$i;
+				$caja1="caja1".$i;
+				$caja2="caja2".$i;
+				$caja3="caja3".$i; 
+				$caja4="caja4".$i;
+				$caja5="caja5".$i;
+				$caja6="caja6".$i;
+				$caja7="caja7".$i;
+            $caja8="caja8a".$i;
+ 				$caja9="caja8b".$i;
+ 			   $caja10="caja8c".$i;
+			
+				$elartpabus=$articulos['id_insumo'];
+				$ladearticul=$articulos['id_dependencia'];
+				$buscarcanti=("select tbl_insumos_almacen.cantidad from tbl_insumos_almacen where tbl_insumos_almacen.id_insumo=$elartpabus and tbl_insumos_almacen.id_dependencia=$ladearticul;");
+				$repbuscarcanti=ejecutar($buscarcanti);
+				$datadebusque=assoc_a($repbuscarcanti);
+				$existencia=$datadebusque['cantidad'];
+				?>
+			    <tr valign="TOP">
+				   <td class="tdcampos"><?php echo $articulos['insumo'];?></td>
+				   <td class="tdcampos"><?php echo $articulos['laboratorio'];?></td> 
+				   <td class="tdcampos"><input readonly type="text"  value='<?echo $articulos[cantidad]?>' size=1 ></td>
+				   <td class="tdcampos"><input type="text" id='<?echo $caja1?>' size=2 onblur="Ponerprecio();VerCantidades(this.value)"></td>            
+				   <td class="tdcampos"><input type="text" id='<?echo $caja3?>' size=4 value="<?echo $articulos['monto_unidad'];?>"></td>
+                    <td class="tdcampos"><?php 
+			$tbl='tbl'.$i;     
+			$img='img'.$i;     
+     ?> 
+     <fieldset style="margin-top: 0px; padding:0em 0em 1em 0em;" >        
+<table width="100%" id='<?php echo $tbl; ?>' border="0" id="2"> 
+
+	<tr valign="top">
+		<td id="lot<?php echo $i;?>" width="40%"><input  type="text" id='<?php echo $caja8."-0"?>' onkeyup="contenidocampo(this)" size='4'> </td>
+		<td id="fec<?php echo $i;?>" width="35%"><input type="text" id='<?php echo $caja9."-0"?>' onkeyup="contenidocampo(this)" onKeyPress='return fechasformato(event,this);' maxlength='10' size='4'></td>
+		<td id="can<?php echo $i;?>" width="25%"><input type="text" id='<?php echo $caja10."-0"?>'onkeyup="contenidocampo(this)" onKeyPress="return soloNumeros(event)"size='2'></td>
+		<td id="mas<?php echo $i;?>" width="10%"><span id='<?php echo $img; ?>' style='cursor:pointer' onclick="agregarmaximo('<?php echo $tbl; ?>','<?php echo $caja8.'-0';?>','<?php echo $caja9.'-0';?>','<?php echo $caja10.'-0';?>','<?echo $caja1?>')" title="Agregar otro lote"><img id="add" src="../public/images/add_16.png" /></span> </td>
+	<!-- onclick="agregarlote('<?php echo $tbl; ?>','<?php echo $caja8.'-0';?>','<?php echo $caja9.'-0';?>','<?php echo $caja10.'-0';?>')"-- -->
+	</tr>
+</table>               
+ 	</fieldset>    
+
+</td> 
+                   <td class="tdcampos"><input type="checkbox" name="option1" id='<?echo $caja5?>' ></td>
+  				   <td class="tdcampos"><input type="checkbox" name="option1" id='<?echo $caja6?>' ></td>
+				   <td class="tdcampos"><input readonly type="text" id='<?echo $caja4?>' size=4>  </td>
+				   <td class="tdcampos"><input readonly type="text" id='<?echo $caja7?>' size=4></td>
+				    <input type=hidden id='<?php echo $caja2?>' value='<?echo $articulos[id_insumo];?>'>   
+				    
+				   <td class="tdcampos"><?php echo $existencia;?></td>      
+				 	   
+				</tr>
+			<?
+			$i++;
+			}?>	
+			<input type=hidden id='totalcaja' value='<?echo $i-1?>'>
+			<input type=hidden id='elidpedido' value='<?echo $idpedido?>'>
+                        <!--<input type=hidden id='ivacomp' value='<?echo $eliva?>'>!-->
+			<input type=hidden id='aumentcomp' value='<?echo $elaumento?>'>
+			<input type=hidden id='depdencia' value='<?echo $depenid?>'>
+			
+			<tr>
+			   <td  title="Calcular el monto total de la factura" colspan="3">
+			     <label class="boton" style="cursor:pointer" onclick="montofactura()" >Calcular Monto Total.</label>
+			  </td>
+
+			 <td class="tdcampos"></td>  
+			 <td class="tdcampos"></td>   
+			 <td class="tdcampos"></td>
+              <td class="tdcampos"></td>       
+			 <td class="tdcampos">TOTAL Bs.f</td>  
+			 <td class="tdcampos"><input readonly type="text" id='montogeneral' size=10></td> 
+			</tr>
+            <tr>
+                 <td class="tdtitulos" colspan="1">% Descuento:</td>
+                 <td class="tdcampos"><input type="text" id="montdescuent" class="campos" size="5"></td>  
+                 <td class="tdcampos"><label class="boton" style="cursor:pointer" onclick="montodescuento()" >Calcular</label></td>
+           </tr>
+           <tr>
+			   <td  title="tdcampos"></td>
+			 <td class="tdcampos"></td>  
+			 <td class="tdcampos"></td>  
+			 <td class="tdcampos"></td>  
+			 <td class="tdcampos"></td>
+			 <td class="tdcampos"></td>
+              <td class="tdcampos"></td>       
+			 <td class="tdcampos">TOTAL Descuento Bs.</td>  
+			 <td class="tdcampos"><input readonly type="text" id='tdescuento' size=10></td> 
+			</tr>
+            <tr>
+			   <td  title="tdcampos"></td>
+			 <td class="tdcampos"></td>  
+			 <td class="tdcampos"></td>  
+			 <td class="tdcampos"></td>  
+			 <td class="tdcampos"></td>
+			 <td class="tdcampos"></td>
+              <td class="tdcampos"></td>       
+			 <td class="tdcampos">TOTAL General Bs.</td>  
+			 <td class="tdcampos"><input readonly type="text" id='montoglobal' size=10></td> 
+			</tr>
+</table>	
+<input type=hidden id="elmosinada">
+<input type=hidden id="montodelosiva">
+<input type=hidden id="desclosiva">
+<input type=hidden id="totaldesconiva">
+<br>
+<input type=hidden id="montosiniva">
+<input type=hidden id="desclosiniva">
+<input type=hidden id="totaldessiniva">
+<br>
+<br>
+
+<hr>
+<div id='modifpedido'></div>
+<table class="tabla_citas" border='0' cellpadding=0 cellspacing=0>  
+<tr>
+   <td class="tdtitulos" colspan="2"><h3>&iquest; Desea crear como orden de compra &#63;</h3><br>
+
+   <input type="radio" name="esordcompra" id='ordcomprasi' value="si" > SI
+	<input type="radio" name="esordcompra" id='ordcomprano' value="no" checked='checked'> NO<hr>
+  </td> 
+</tr>
+
+<tr>
+   <td class="tdtitulos" colspan="1">N&uacute;mero de Factura:</td>
+   <td class="tdcampos"><input type="text" id="numfactu" class="campos" size="10"></td>  
+</tr>
+<tr>
+   <td class="tdtitulos" colspan="1">N&uacute;mero de control:</td>
+   <td class="tdcampos"><input type="text" id="numcontrol" class="campos" size="10"></td>  
+</tr>
+<tr>
+   <td class="tdtitulos" colspan="1">Fecha emisi&oacute;n factura:</td>
+   <td class="tdcampos"><input type="text" id="fechemifactura" class="campos" onkeyup="contenidocampo(this)" onKeyPress="return fechasformato(event,this);" size="10" maxlength="10"></td>  
+</tr>
+<tr>
+    <td class="tdtitulos" colspan="1">Comentario de pedido:</td>
+	<td class="tdcampos"  colspan="1"><TEXTAREA COLS=65 ROWS=3 id="comentpedi" class="campos" disabled="yes"=><?echo $datacoment['comentarios']?></TEXTAREA></td>
+</tr>
+<tr>
+			   <td colspan=6><label style="color: #ff0000"> Nota: Si el pedido tiene alg&uacute;n comentario, cargarlo al finalizar el despacho.</label> </td>  
+			</tr>
+			
+</table>
+<hr>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>    
+<tr>
+<br>
+   <td><label title="Guardar factura" class="boton" style="cursor:pointer" onclick="GuardarFactrua()" >Guardar</label>
+   </td>
+      
+  <td><label title="Salir del proceso" class="boton" style="cursor:pointer" onclick="ira()" >Salir</label>
+   </td>   
+
+   <td>
+      <?  $url="'views05/reportpediprov3.php?idordepe=$idpedido'";?>
+      <a href="javascript: imprimir(<?echo $url;?>)" class="boton">Imprimir </a>
+   </td>
+
+</tr>
+<br>   

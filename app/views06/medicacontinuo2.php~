@@ -1,0 +1,216 @@
+<?
+include ("../../lib/jfunciones.php");
+sesion();
+$fecha1=$_REQUEST['fechaini'];
+$fecha2=$_REQUEST['fechafin'];
+$proveedor=$_REQUEST['elproveedor'];
+$servicio=$_REQUEST['elservicio'];
+$ente=$_REQUEST['elente'];
+$estproceso=$_REQUEST['estproceso'];
+$tipocliente=$_REQUEST['tipcliente'];
+$mediconti=$_REQUEST['tipmedi'];
+$buscarinfoad=("select entes.nombre,estados_procesos.estado_proceso from entes,estados_procesos where 
+                entes.id_ente=$ente and estados_procesos.id_estado_proceso=$estproceso;");
+$repbusinfo=ejecutar($buscarinfoad);
+$datainfo=assoc_a($repbusinfo);
+$nomente=$datainfo['nombre'];
+$nomestproc=$datainfo['estado_proceso'];
+      if($tipocliente==3){
+           $querytipoclien="and procesos.id_beneficiario<> 0";
+           $nomcliente='Beneficiarios';
+        }else{
+              if($tipocliente==2){
+                $querytipoclien="and procesos.id_beneficiario=0";
+                $nomcliente='Titulares';
+              }else{ 
+                    $querytipoclien=""; 
+                    $nomcliente='Todos';
+                   }
+             }
+     if($ente==1){
+        $queryente="";
+      }else{
+             $queryente="and titulares.id_ente=$ente";
+            }
+     if($estproceso==0){
+       $queryestproce="";  
+     }else{
+          $queryestproce="and procesos.id_estado_proceso=$estproceso";  
+       }
+	  if($mediconti==1){
+		    $queryconti="";  
+		  }else{
+			   if($mediconti==2){
+				  $queryconti="and gastos_t_b.continuo='on'";
+				}else{  
+			       $queryconti="and gastos_t_b.continuo<>'on'";  
+				}   
+			}   
+	
+   $buscarmedi=("select procesos.id_proceso,procesos.id_titular,procesos.id_beneficiario, 
+                            procesos.id_admin,estados_procesos.estado_proceso,count(gastos_t_b.id_proceso),
+                           admin.nombres,admin.apellidos 
+from 
+gastos_t_b,procesos,titulares,estados_procesos,admin
+where
+gastos_t_b.id_proceso=procesos.id_proceso and
+gastos_t_b.id_servicio=$servicio 
+$queryestproce and
+gastos_t_b.fecha_creado between '$fecha1' and '$fecha2' and
+gastos_t_b.id_proveedor=$proveedor 
+$querytipoclien and
+procesos.id_titular=titulares.id_titular 
+$queryente and
+procesos.id_estado_proceso=estados_procesos.id_estado_proceso and
+procesos.id_admin=admin.id_admin $queryconti
+group by procesos.id_proceso,procesos.id_titular,procesos.id_beneficiario,procesos.id_admin,estados_procesos.estado_proceso,
+admin.nombres,admin.apellidos ;");
+$repbuscarmedi=ejecutar($buscarmedi);
+$cuantosmedi=num_filas($repbuscarmedi);
+  if($cuantosmedi==0){
+     echo"<table class=\"tabla_cabecera3\"  cellpadding=0 cellspacing=0>
+         <tr>
+          <td colspan=4 class=\"titulo_seccion\">No hay informaci&oacute;n en el rango seleccionado!!</td>
+         </tr>
+        </table>";
+ }else{
+	  
+?>
+    <LINK REL="StyleSheet" HREF="../../public/stylesheets/impresiones.css" >
+<body><img src="../../public/images/head.png">&nbsp;<span class="datos_cliente33"> RIF: J-31180863-9<br>
+&nbsp;&nbsp;&nbsp; </span>
+    <table class="tabla_citas"  cellpadding=0 cellspacing=0>
+         <tr>
+          <td colspan=4 class="datos_cliente3"><? echo"Medicamentos entregados al  ente/s $nomente en el rango del $fecha1 al $fecha2 dirigido a los $nomcliente, cuyo estado proceso es $nomestproc";?> </td>
+         </tr>
+        </table>
+    <table class="tabla_citas"  cellpadding=0 cellspacing=0>
+     <tr>
+        <th class="datos_cliente3">No.</th>
+        <th class="datos_cliente3">No. Proceso</th>
+        <th class="datos_cliente3">Operador.</th>
+        <th class="datos_cliente3">Estatus.</th>
+	    <th class="datos_cliente3">Titular.</th>
+        <th class="datos_cliente3">Beneficiario.</th>
+        <th class="datos_cliente3">Medicamento.</th>
+		<th class="datos_cliente3">Cantidad.</th> 
+        <th class="datos_cliente3">Monto.</th>
+        <th class="datos_cliente3">Tratm Cont.</th>
+		<th class="datos_cliente3">Fecha Cont.</th>
+	</tr>
+	
+	    <?php  
+		        $i=1;
+				$totalgme=0;
+				$totalgcost=0;
+		        while($datosconti=asignar_a($repbuscarmedi,NULL,PGSQL_ASSOC)){
+					$elproceso=$datosconti[id_proceso];
+				  	$eltitular=$datosconti[id_titular];
+					$elbenefi=$datosconti[id_beneficiario];
+					$datatitular=("select clientes.nombres,clientes.apellidos from clientes,titulares where
+                                           clientes.id_cliente=titulares.id_cliente and
+                                            titulares.id_titular=$eltitular;");
+					$repdatatitu=ejecutar($datatitular);		
+					$infotitu=assoc_a($repdatatitu);
+					$nombreti=$infotitu['nombres'];
+					$apelliti=$infotitu['apellidos']; 
+					$nomcpltitu="$nombreti $apelliti";
+					if($elbenefi>0){
+						 $databeni=("select clientes.nombres,clientes.apellidos from clientes,beneficiarios 
+                                             where
+                                            clientes.id_cliente=beneficiarios.id_cliente and
+                                            beneficiarios.id_beneficiario=$elbenefi;");
+						 $repdatabeni=ejecutar($databeni);					
+						 $infobeni=assoc_a($repdatabeni); 
+						 $nombrebeni=$infobeni['nombres'];
+						 $apellibeni=$infobeni['apellidos']; 
+						 $nomcplbeni="$nombrebeni $apellibeni"; 
+						}
+					$buscaringastb=("select gastos_t_b.descripcion,gastos_t_b.monto_reserva,
+                                                 gastos_t_b.continuo,gastos_t_b.unidades,gastos_t_b.fecha_continuo 
+                                                 from gastos_t_b 
+                                                where gastos_t_b.id_proceso=$elproceso;");	
+					$repbuscagastb=ejecutar($buscaringastb);
+					$totalme=0;
+					$totalcost=0;
+				?>
+					<tr>
+	                <td class="cantidades"><label style="color: #000000">[<?echo $i;?>]</label></td>
+	                <td class="cantidades"><?echo $elproceso;?></td> 
+	                <td class="cantidades"><?echo "$datosconti[nombres]  $datosconti[apellidos]";?></td> 
+					<td class="cantidades"><?echo "$datosconti[estado_proceso]";?></td>  
+					<td class="cantidades"><?echo $nomcpltitu;?></td>  
+					<td class="cantidades"><?echo $nomcplbeni;?></td>  
+                   </tr>
+					<?
+					while($datosgstb=asignar_a($repbuscagastb,NULL,PGSQL_ASSOC)){
+						if($datosgstb[descripcion]<>''){
+						$totalme=$totalme+$datosgstb[unidades];
+						$totalmet= $totalmet +$datosgstb[unidades];
+						$totalcost=$totalcost+$datosgstb[monto_reserva]; 
+						}
+						if($datosgstb['continuo']=='on'){
+							 $estcon='Si';
+							}else{
+								  $estcon='No';
+								}
+		?>
+		           
+				   <tr>
+				         <td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						 <td class="cantidades"><? if($datosgstb[descripcion]<>''){
+						                                    
+															echo $datosgstb[descripcion];?></td>
+						 <td class="cantidades"><?echo $datosgstb[unidades];?></td> 
+						 <td class="cantidades"><?echo $datosgstb[monto_reserva];?></td>  
+						 <td class="cantidades"><?echo $estcon;?></td>  
+						<td class="cantidades"><?echo $datosgstb[fecha_continuo ];
+						  }
+						 ?></td>   
+					</tr>
+					
+		<?        }  
+		            $totalgme=$totalgme+$totalme;
+					$totalgcost=$totalgcost+$totalcost;
+		?>
+		            <tr>
+					    <td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td> 
+						<td class="cantidades"><label style="color: #000000">Total medicamentos</label></td> 
+						<td class="cantidades"><label style="color: #000000"><?echo $totalme;?></label></td>  
+						 <td class="cantidades"><label style="color: #000000">Total Bs.S.f</label></td> 
+						 <td class="cantidades"><label style="color: #000000"><?echo $totalcost;?></label></td>
+						 
+					 </tr>
+					 <tr>
+					     <td class="tdcampos" colspan="12"><HR></td> 
+					 </tr> 
+		           <? $totalme=0;
+					$totalcost=0;
+					$i++;
+					$nomcpltitu='';
+					$nomcplbeni=''; 
+		     }?>
+	          <tr>
+					    <td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td>
+						<td class="cantidades"></td> 
+						<td class="cantidades"><label style="color: #000000">Total general medicamentos</label></td> 
+						<td class="cantidades"><label style="color: #000000"><?echo $totalgme;?></label></td>  
+						 <td class="cantidades"><label style="color: #000000">Total general Bs.f</label></td> 
+						 <td class="cantidades"><label style="color: #000000"><?echo $totalgcost;?></label></td>
+					 </tr>  
+	 </table> 
+<?}?>

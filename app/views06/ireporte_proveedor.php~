@@ -1,0 +1,68 @@
+<?
+/* *** Nombre del Archivo: ireporte_proveedor.php 
+       Descripción: Realiza la busqueda en la Base de Datos, para el Reporte de Proveedores *** */
+
+	include ("../../lib/jfunciones.php");
+	sesion();
+	$provee=$_REQUEST['provee'];
+$provee = strtoupper($provee);
+
+if($provee==" ")	        $condicion_provee="";
+else
+$condicion_provee="personas_proveedores.nombres_prov like(upper('%$provee%'))";
+
+
+$q_cliente=("select personas_proveedores.* from personas_proveedores where $condicion_provee ORDER BY nombres_prov ASC");
+$r_cliente=ejecutar($q_cliente);
+
+
+?>
+<LINK REL="StyleSheet" HREF="../../public/stylesheets/impresiones.css">
+
+<table class="tabla_citas"   cellpadding=0 cellspacing=0 rules=none> 
+	<tr>
+		<td  class="descrip_main">  <img src="../../public/images/head" alt=logo> <br>RIF J-31180863-9  </td>
+		<td  class="descrip_main"  >REPORTE PROVEEDORES</td>     
+</tr>
+</table>
+
+<br>
+<table class=tabla_citas" cellpadding=0 cellspacing=0 rules="rows">
+<tr>
+	<td class="descrip_main">NOMBRE</td>
+	<td class="descrip_main">APELLIDO</td>
+	<td class="descrip_main">ESPECIALIDAD</td>
+	<td class="descrip_main">TELEFONOS</td>
+	<td class="descrip_main">DIRECCION</td>
+	<td class="descrip_main">HORARIO</td>
+</tr>
+
+<?
+ while($f_cliente=asignar_a($r_cliente,NULL,PGSQL_ASSOC)){
+	
+$q_infor=("select s_p_proveedores.*,especialidades_medicas.especialidad_medica from s_p_proveedores,especialidades_medicas where s_p_proveedores.id_persona_proveedor=$f_cliente[id_persona_proveedor] and s_p_proveedores.id_especialidad=especialidades_medicas.id_especialidad_medica and s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor");
+	$r_infor=ejecutar($q_infor);
+ while($f_infor=asignar_a($r_infor,NULL,PGSQL_ASSOC)){
+echo"
+	<tr> 
+		<td class=\"tdtituloss\">$f_cliente[nombres_prov]</td> 
+		<td class=\"tdtituloss\">$f_cliente[apellidos_prov]</td>
+		<td class=\"tdtituloss\">$f_infor[especialidad_medica]</td>
+		<td class=\"tdtituloss\">$f_cliente[celular_prov] -- $f_infor[telefonos_prov]</td>
+		<td class=\"tdtituloss\">$f_infor[direccion_prov]</td>
+		<td class=\"tdtituloss\">$f_infor[horario]</td>
+  
+	</tr>"; }}?>
+</table>
+<br>
+
+<table>
+<br>
+	<tr>
+	        <td  class="descrip_main" >&nbsp;  Elaborado Por: _______________________  </td>
+	        <td  class="descrip_main" >&nbsp;  Aprobado Por: _______________________  </td>
+		<td  class="descrip_main" >&nbsp;  Recibido Por: _______________________  </td>		
+     	</tr>
+	<tr><td >&nbsp; </td></tr>
+
+</table>

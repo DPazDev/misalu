@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>MANUAL DE AYUDA SISTEMA CLINISALUD</title>
+  <meta name="GENERATOR" content="Quanta Plus" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<table border="1"  width="100%" height="200px">
+<tr id="cabecera">
+    <td colspan="2" height="100px" bgcolor="#FFFFFF">
+	<CENTER><IMG SRC="Imagenes/logoCliniSalud.jpg"></CENTER>
+     <br align="center"><h2 align="center"><i>Manual de Usuario</i></h2></br>
+     </td></tr>
+<tr id="contenido"><td width="20%" height="500px" bgcolor="#E3F6CE"><ul>
+	<h3><li><i><a target="contenido" href="acceso.html">Accesar al Sistema</i></a></li>
+	<li><i><a target="contenido" href="estudios.html">Registrar Una Cita</i></a></li>
+	<li><i><a target="contenido" href="otros.html">Registrar Clientes</i></a></li>
+	<li><i><a target="contenido" href="aprendizaje.html">Registrar Reembolso</i></a></li>
+	<li><i><a target="contenido" href="experiencia.html">HCM</i></a></li>
+	</h3></ul></td>
+    <td background="imagen1.jpg"><iframe name="contenido" width="100%" height="300px"></iframe></td></tr>
+<tr id="pie"><td colspan="2" height="20px" bgcolor="#FFFFFF" align="center">raysaguerrero@gmail.com</td></tr>
+</table>
+</body>
+</html>

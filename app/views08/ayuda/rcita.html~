@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Registrar Cita<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para realizar el registro de una cita, se debe buscar en el Módulo <I>Clientes</I>, y de allí escoger <I>Reg Citas</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita1.jpg" WIDTH=591 HEIGHT=405 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se deberá introducir el número de cédula del cliente (ya consultado previamente), se selecciona la especialidad de la consulta que socilicita el cliente o simplemte se da un Clic en <I>Buscar</I>. (ver figura 2)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita2.jpg" WIDTH=769 HEIGHT=84 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se selecciono la especialidad, se da un clic en buscar y luego se deberá escoger la cobertura donde se cargará la orden y se deberá seleccionar los médicos según la especialidad. (ver figuras 3, 4 y 5)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita3a.jpg" WIDTH=768 HEIGHT=356 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/rcita3b.jpg" WIDTH=769 HEIGHT=51 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/rcita3c.jpg" WIDTH=768 HEIGHT=377 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 5</I></div></FONT>
+
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si no se seleccionó la especialidad para registrar la cita, y se dejo seleccionada <I>TODAS</I>, en la siguiente pantalla se seleccionará la cobertura y seguidamente se buscará por el nombre del médico tratante. Para continuar se verifican los datos del solicitante,  se da un Clic en: <I>Consultar Citas Médicos</I>, para de esta manera conocer los días de atención, tipo de consulta (lectura de exámenes, consulta de primera, consulta de control) y cantidad de pacientes que podrán ser atendidos. Los números en azul serán las consultas generales (Entes particulares, entes gubernamentales y sindicatos) y los números en rojo representan las citas para los clientes privados (Banesco Seguros, Seguros Venezuela...). (ver figura 6)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita4.jpg" WIDTH=773 HEIGHT=924 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 6</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Antes de escoger la cita se sugiere dar un Clic en <I>Consultar Citas Paciente</I>, de manera que no se escoja un día en el que el paciente ya tenga una cita (ver figura 7)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita5.jpg" WIDTH=769 HEIGHT=450 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 7</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">De igual forma se debe dar un Clic en <I>Ver Citas del Paciente con medico Seleccionado</I>, para cerciorase si es una cita de primera o de control, así como también verificar que para algunos entes solo se dan dos citas preventivas por especialidad.  (ver figura 8)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita6.jpg" WIDTH=773 HEIGHT=103 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 8</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego que se escoge el día de la cita, se selecciona, en el cuadro de comentario se escribe si es de Primera o de Control y se da un Clic en guardar cita. (ver figura 9)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita7.jpg" WIDTH=770 HEIGHT=723 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 9</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se selecciona un día feriado o un día en el cual el médico no pasa consulta, el sistema lo indicará. (ver figuras 10 y 11)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita9.jpg" WIDTH=768 HEIGHT=93 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 10</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/rcita10.jpg" WIDTH=771 HEIGHT=122 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 11</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Finalmente aparecerá en pantalla que la cita se ha registrado exitosamente bajo un número de proceso. (ver figura 8)</P>
+<P><div align="center"><IMG SRC="imagenes/rcita8.jpg" WIDTH=771 HEIGHT=103 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 8</I></div></FONT>
+
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="clientes.html">Volver al Módulo Clientes</A></U></FONT></div></P>
+</BODY>
+</HTML>

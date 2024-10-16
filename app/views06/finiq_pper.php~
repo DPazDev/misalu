@@ -1,0 +1,82 @@
+<?
+    include ("../../lib/jfunciones.php");
+    sesion();
+    $busucur=("select id_sucursal,sucursal from sucursales order by sucursal");
+    $cualsucu=ejecutar($busucur);
+    $buservi=("select servicios.id_servicio,servicios.servicio from servicios where id_servicio=3 or servicios.id_servicio=6 or servicios.id_servicio=4 or servicios.id_servicio=11 or servicios.id_servicio=8 or servicios.id_servicio=2 or servicios.id_servicio=13 or servicios.id_servicio=1 or servicios.id_servicio=10 or servicios.id_servicio=9 or servicios.id_servicio=14 order by servicios.servicio");
+    $cualserv=ejecutar($buservi);
+    $busestpro=("select id_estado_proceso,estado_proceso from estados_procesos where id_estado_proceso=4 or id_estado_proceso=2 or id_estado_proceso=7 or id_estado_proceso=6 or id_estado_proceso=1  order by estado_proceso;");
+    $cualestpro=ejecutar($busestpro);		  
+?>
+ <form method="get" onsubmit="return false;" name="rproper" id="rproper">
+    <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+        <tr>
+	  <td colspan=4 class="titulo_seccion">Relaci&oacute;n Ordenes de Atenci&oacute;n Proveedor Persona/Cl&iacute;nica </td>
+	</tr>
+        <br>
+   <tr>
+      <td colspan=2 class="tdtitulos">* Seleccione fecha inicio:
+	<input readonly type="text" size="10" id="Fini" class="campos" maxlength="10">
+	<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'Fini', 'yyyy-mm-dd')" title="Ver calendario">
+	<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+	<td colspan=2 class="tdtitulos">* Seleccione fecha final:
+	<input readonly type="text" size="10" id="Fifi" class="campos" maxlength="10">
+	<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'Fifi', 'yyyy-mm-dd')" title="Ver calendario">
+	<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+     </td>
+   </tr>
+   <tr>
+       <td class="tdtitulos" colspan="1">Seleccione la sucursal:</td>
+       <td class="tdcampos"  colspan="1"><select id="sucur" class="campos"  style="width: 210px;" >
+                                     <option value="0"></option>
+                                     <option value="100">Todas</option>
+				     <?php  while($sucur=asignar_a($cualsucu,NULL,PGSQL_ASSOC)){?>
+				     <option value="<?php echo $sucur[id_sucursal]?>"> <?php echo "$sucur[sucursal]"?></option>
+				    <?php
+				    }?> </select></td>
+        <td class="tdtitulos" colspan="1">Seleccione el servicio:</td>
+        <td class="tdcampos"  colspan="1"> <select id="servic" class="campos"  style="width: 210px;" >
+	                              <option value="0"></option>
+								  <option value="100">Todas las carta</option>  
+				      <?php  while($servicios=asignar_a($cualserv,NULL,PGSQL_ASSOC)){?>
+		                      <option value="<?php echo $servicios[id_servicio]?>"> <?php echo "$servicios[servicio]"?></option>
+				     <?php                                                                                                   
+				     }?>
+       </select> </td> 
+   </tr>
+   <tr>				
+         <td class="tdtitulos" colspan="1">Seleccione estado del proceso:</td>
+        <td class="tdcampos"  colspan="1"><select id="estarpro" class="campos"  style="width: 210px;" >
+	                              <option value="0"></option>
+				      <?php  while($estproceso=asignar_a($cualestpro,NULL,PGSQL_ASSOC)){?>
+		                      <option value="<?php echo $estproceso[id_estado_proceso]?>"> <?php echo "$estproceso[estado_proceso]"?></option>
+				     <?php                                                                                                   
+				     }?></select> </td>
+         <td class="tdtitulos" colspan="1">Con logo nuevo:</td>
+         <td class="tdcampos"  colspan="1"><select id="lgnue" class="campos" >
+                                <option value="1">Si</option>
+                                <option value="2">No</option>
+        </select></td>                        	
+	</tr>
+        <tr>			
+          <td class="tdtitulos" colspan="1">Tipo de proveedor:</td>
+          <td class="tdcampos"  colspan="1"><input type="radio" id="group1" name="group1" value="1" onclick="tipproved()"> Persona  
+                                            <input type="radio" id="group2" name="group1" value="2" onclick="tipproved()"> Clinica</td> 
+        </tr>
+  </table>      
+              <div id="tipprove"></div>
+      
+  
+ <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+  <br>
+   <tr>
+     <td class="tdcampos" title="Buscar orden de atenci&oacute;n"><label class="boton" style="cursor:pointer" onclick="valirepo()" >Buscasr</label></td>
+     <td class="tdcampos"> <label title="Salir del Proceso"class="boton" style="cursor:pointer" onclick="ira()" >Salir</label></td>
+    <td></td>
+   </tr>
+   <br>
+</table>
+  
+  <div id="repp" style="display:none" ><img src="../public/images/spinner.gif" /><label style="color: #0000FF">Cargando…</label></div>
+</form>
+

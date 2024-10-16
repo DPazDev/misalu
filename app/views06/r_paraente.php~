@@ -1,0 +1,131 @@
+<?
+/* Nombre del Archivo: r_paraente.php
+   Descripción: Solicitar los datos para Reporte de Impresión: por Parámetros (para Entes)
+*/
+
+	include ("../../lib/jfunciones.php");
+	sesion();
+
+	$q_sucursal=("select sucursales.id_sucursal,sucursales.sucursal from sucursales order by sucursal");
+	$r_sucursal=ejecutar($q_sucursal);
+	$q_servicio=("select servicios.id_servicio,servicios.servicio from servicios order by servicio");
+	$r_servicio=ejecutar($q_servicio);
+	$q_estpro=("select estados_procesos.id_estado_proceso,estados_procesos.estado_proceso from estados_procesos order by estado_proceso");
+	$r_estpro=ejecutar($q_estpro);
+	$q_entes=("select entes.id_ente,entes.nombre,entes.id_tipo_ente from entes order by nombre;");
+	$r_entes=ejecutar($q_entes);
+	
+	
+    		  
+?>
+
+<form method="POST" name="r_paraente" id="r_paraente">
+	<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+        <tr>
+		<td colspan=4 class="titulo_seccion">Relaci&oacute;n por Par&aacute;metros (para Entes)</td>
+	</tr>
+        <br>
+	<tr>
+		<td colspan=2 class="tdtitulos">* Seleccione Fecha Inicio:
+		<input readonly type="text" size="10" id="dateField1" name="fecha1" class="campos" maxlength="10" >
+		<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'dateField1', 'yyyy-mm-dd')" title="Show popup calendar">
+		<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a></td>
+
+		<td colspan=2 class="tdtitulos">* Seleccione Fecha Final:
+		<input readonly type="text" size="10" id="dateField2" name="fecha2" class="campos" maxlength="10">
+		<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'dateField2', 'yyyy-mm-dd')" title="Show popup calendar">
+		<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+		</td>
+	</tr>
+	
+	<tr>
+	       <td class="tdtitulos" colspan="1">* Seleccione la Sucursal:</td>
+	       <td class="tdcampos"  colspan="1"><select name="sucur" id="sucur"class="campos"  style="width: 210px;" >
+                                     <option value="0">Todas las Sucursales</option>
+				     <?php  while($sucur=asignar_a($r_sucursal,NULL,PGSQL_ASSOC)){?>
+				     <option value="<?php echo $sucur[id_sucursal]?>"> <?php echo "$sucur[sucursal]"?></option>
+				    <?php
+				    }?> 
+		</td>
+	        <td class="tdtitulos" colspan="1">* Seleccione el Servicio:</td>
+	        <td class="tdcampos"  colspan="1"><select id="servic" class="campos"  style="width: 210px;" >
+	                              <option value="0">Todos los Servicios</option>
+				      <?php  while($servicios=asignar_a($r_servicio,NULL,PGSQL_ASSOC)){?>
+		                      <option value="<?php echo $servicios[id_servicio]?>"> <?php echo "$servicios[servicio]"?></option>
+				     <?php                                                                                                   
+				     }?> 
+		</td>
+	</tr>
+		
+	<tr>
+	        <td class="tdtitulos" colspan="1">* Seleccione el Ente:</td>
+		<td class="tdcampos"  colspan="1"><select id="ente" class="campos"  style="width: 210px;" >
+				     <option value="0">Todos los Entes</option>
+                                     <option value="-01@NATURAL">NATURAL</option>
+                                     <option value="-02@JURIDICA">JURIDICA</option>
+                                     <option value="-03@GUBERNAMENTAL">GUBERNAMENTAL</option>
+                                     <option value="-04@PRIVADO">PRIVADO</option>
+                                     <option value="-05@SINDICATOS">SINDICATOS</option>
+				<?php  while($entes=asignar_a($r_entes,NULL,PGSQL_ASSOC)){?>
+		                <option value="<?php echo $entes[id_ente]?>"> <?php echo "$entes[nombre]"?></option>
+				<?php                                                                                                    
+				}?> 
+		</td>
+				
+	        <td class="tdtitulos" colspan="1">* Seleccione Estado del Proceso:</td>
+		<td class="tdcampos"  colspan="1"><select id="estapro" class="campos"  style="width: 210px;" >
+	                              <option value="0">Todos los Estados del Proceso</option>
+				      <?php  while($estproceso=asignar_a($r_estpro,NULL,PGSQL_ASSOC)){?>
+		                      <option value="<?php echo $estproceso[id_estado_proceso]?>"> <?php echo "$estproceso[estado_proceso]"?></option>
+				     <?php                                                                                                   
+				     }?> 
+		</td>	
+
+	</tr>			
+
+	<tr>
+		<td class="tdtitulos" colspan="1">* Seleccione el Tipo de Cliente:</td>
+		<td class="tdcampos"  colspan="1"><select id="tipcliente" class="campos"  style="width: 210px;" >
+                        	      <option>TODOS</option>
+				      <option>TITULAR</option>
+	                              <option>BENEFICIARIO</option>
+		</td>
+
+
+		<td class="tdtitulos" colspan="1">* Con logo Nuevo:</td>
+		<td class="tdcampos"  colspan="1"><select id="lgnue" class="campos" >
+	                        <option value="1">Si</option>
+				<option value="2">No</option>
+		</td>
+	</tr>
+
+	<br>
+
+	<tr>
+	<td colspan=4 class="tdcamposcc"><a href="#" OnClick="buscar_provper();" class="boton">* Proveedor Persona</a> <a href="#" OnClick="buscar_provcli();" class="boton">* Proveedor Clinica</a> <a href="#" OnClick="buscar_provtotal();" class="boton">* Todos o Ningun Proveedor</a></td>
+	</tr>
+
+<br>
+<tr>
+<td colspan=4>
+<div id="buscar_provper"></div>
+</td>
+</tr>
+	<br>
+	<tr>
+     
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="reporte_paraente();" class="boton">Buscar</a> 
+<a href="#" OnClick="imp_paraente();" class="boton">Imprimir</a> 
+<a href="#" OnClick="exc_paraente();" ><img border="0" src="../public/images/excel.jpg"></a> 
+<a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+
+	</tr>
+
+	<br>
+</table>
+
+<div id="reporte_paraente"></div>
+
+
+</form>
+

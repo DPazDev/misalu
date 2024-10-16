@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Registrar Cita<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Una vez que se haya consultado el cliente en el sistema, para realizar el registro de una cita se siguen estos pasos:</P>
+<UL>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Escoger el módulo de <I>Clientes</I> (Ver figura 1)</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Seleccionar <I>Registrar Citas</I></P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Ingresar la Cédula de Identidad del solicitante de la cita médica y presionar el botón <I>Buscar</I>(Ver figura 2)</P>	
+</UL>
+<P><div align="center"><IMG SRC="imagenes/rclita1.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 1</div></P>
+<P><div align="center"><IMG SRC="imagenes/rclita2.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 2</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego que se ha introducido el número de cédula de la persona
+solicitante de la cita,  aparecerá en pantalla la siguiente imagen:</P>
+<P><div align="center"><IMG SRC="imagenes/rclita3.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 3</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Se verifican los datos del solicitante, se selecciona la cobertura a la cual se va a cargar la cita, y se selecciona el médico tratante.  Luego se le da un click en: <I>Consultar Citas Médicos</I>, para de esta manera conocer los días de atención y cantidad de pacientes que podrán ser antendidos. (ver figua 4)</P>
+<P><div align="center"><IMG SRC="imagenes/rclita4.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 4</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego que se escoge el día de la cita, se selecciona y se da un click en guardar cita. (ver figura 5)</P>
+<P><div align="center"><IMG SRC="imagenes/rclita5.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 5</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Finalmente aparecerá en pantalla que la cita se ha registrado exitosamente bajo un número de proceso. (ver figura 6)</P>
+<P><div align="center"><IMG SRC="imagenes/rclita6.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 6</div></P>
+
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="inicio.html">Volver al menú inicial</A></U></FONT></div></P>
+</BODY>
+</HTML>

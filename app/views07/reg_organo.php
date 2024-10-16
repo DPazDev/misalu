@@ -1,0 +1,62 @@
+<?php
+/* Nombre del Archivo: reg_organo.php
+   Descripción: Solicita los datos para REGISTRAR o MODIFICAR un ORGANO en la base de datos
+*/
+
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+$q_organo0 = "select id_organo,organo from organos";
+$r_organo0 = ejecutar($q_organo0);
+
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+
+
+<form action="guardar_organo.php" method="post" name="organo">
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+	<tr>	<td colspan=4 class="titulo_seccion">Registrar o Modificar un Organo</td>	</tr>	
+
+	<tr>
+                <td colspan=1 class="tdtitulos">* Verificar Nombre del Organo</td>
+                <td colspan=1><select name="organo0" class="campos">
+		<option value="">-- Seleccione un Organo --</option>
+		<?php
+		while($f_organo0 = asignar_a($r_organo0)){
+			echo "<option value=".$f_organo0['id_organo'].">".$f_organo0['organo']."</option>";
+		}
+		?>
+		</select>
+		<td colspan=1 class="tdcampos"><a href="#" OnClick="modificar_organo();" class="boton">Modificar</a></td>
+
+		</td>
+	</tr>
+
+
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+
+
+	<tr>
+                <td colspan=1 class="tdtitulos">* Nombre del Organo</td>
+
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="organo" maxlength=128 size=20 value=""></td>
+	
+		<td colspan=1 class="tdcampos"><a href="#" OnClick="guardar_organo();" class="boton">Guardar</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+
+		</tr>
+
+</table>
+
+<div id="guardar_organo"></div>
+<div id="modificar_organo"></div>
+</form>

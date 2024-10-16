@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><B><div align="center">Manual de Ayuda para Usuarios<div></B></FONT></P>
+<BR>
+
+
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">El presente Manual de Usuario, tiene como finalidad dar a conocer de una manera detallada
+y sencilla, el proceso que se lleva a cabo a través del uso del Sistema de CliniSalud, con
+el propósito de que los usuarios (Empleadores), se familiaricen con la aplicación y se logre
+recabar y actualizar la información que se tiene en la actualidad, concerniente a la empresa.</P>
+<BR><BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Con el uso de esta aplicación, se busca establecer un ambiente basado en información
+confiable, real y al día de la empresa, con el fin de que el manejo del Sistema sea fácil
+y sencillo, permitiendo con ello reducir errores en los procesos y en los tiempos de respuesta,
+ya que todos los servicios serán provistos por el Sistema.</P>
+<BR><BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">El principal paso que debe tener claro el usuario es: <FONT COLOR="#7da647" SIZE=4 STYLE="font-size: 16pt"><A HREF="acceso.html">Acceso al Sistema CliniSalud</A></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Es importante también que los Usuarios conozcan el prodecimiento de Consultar un Cliente<FONT COLOR="#7da647" SIZE=4 STYLE="font-size: 16pt"><A HREF="ccliente.html">Consultar Clientes en Sistema CliniSalud</A></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de que se ha accedido a la pantalla de Inicio al Sistema, el usuario visualizará los modulos por los que esta conformado el mismo.  Estos módulos son:<BR>
+<UL>
+	<LI><P ALIGN=JUSTIFY><A HREF="clientes.html"><I>Módulo Clientes</A></P>
+	<LI><P ALIGN=JUSTIFY><A HREF="construccion.html">Módulo Entes</A></P>
+	<LI><P ALIGN=JUSTIFY><A HREF="proveedor.html">Módulo Proveedores</A></P>
+	<LI><P ALIGN=JUSTIFY><A HREF="construccion.html">Módulo Administrativo</A></P>
+	<LI><P ALIGN=JUSTIFY><A HREF="reportes.html">Módulo Reportes</A></P>
+	<LI><P ALIGN=JUSTIFY><A HREF="compras.html">Módulo Compras</A></P>
+	<LI><P ALIGN=JUSTIFY><A HREF="seguridad.html">Módulo Seguridad</A></P>
+	<LI><P ALIGN=JUSTIFY><A HREF="ayuda.html">Módulo Ayuda</A></P>
+</UL>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Cada uno de ellos despliega un menú con las diferentes opciones con las que se puede trabajar en cada módulo. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/intro1.jpg" WIDTH=765 HEIGHT=382 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>

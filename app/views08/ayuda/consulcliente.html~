@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Consultar Cliente<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Una vez que el usuario se ha registrado en el sistema, para realizar la consulta de un cliente se siguen estos pasos:</P>
+<UL>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Tomar el número de Cédula o Nombre del cliente</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Escribirlo en la caja de texto ubicada en la parte superior derecha.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Dar click al icono en forma de lupa, al lado del 
+cuadro de texto donde se ha introducido nombre o cédula del cliente.</P>	
+</UL>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Véase en la figura 1, los elementos descritos</P>
+<P><div align="center"><IMG SRC="imagenes/ccliente1.jpg" WIDTH=769 HEIGHT=222 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 1</div></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si dicho icono (lupa) es presionado sin llenar la caja de texto, saldrá un aviso diciendo que el campo Cédula o Nombre son necesarios. (ver figura 2)</P>
+<P><div align="center"><IMG SRC="imagenes/ccliente2.jpg" WIDTH=447 HEIGHT=179 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 2</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se hace la búsqueda por número de cédula y ésta no corresponde a ninguno número asociado a alguna persona en la base de datos, aparecerá la siguiente pantalla (suponiendo en este caso que el número erróneo de la cédula sea 1111111. (ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/6.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 3</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se introduce un número de cédula válido, se visualizará los datos de la persona asociada a ese número de cédula: Nombre y Apellidos, Fecha de Nacimiento, Edad, Sexo, Teléfono, Celular, Dirección, Comentarios, Ente al cual pertenece, y en el caso de poseer algún beneficiario asignado; aparecerán los mismos, con sus respectivos números de Cédula, Nombre y Apellidos, Parentesco, Ente, y Estatus. (ver figura 4)</P>
+<P><div align="center"><IMG SRC="imagenes/7.jpg" WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 4</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Consultando
+la cobertura del cliente</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Es
+necesario realizar la consulta de la cobertura pues con ello se
+verifica si la persona cliente puede solicitar algun servicio.  
+Para realizar al consulta basta con hacer un clic sobre la figura circular al lado de: <I>Ver
+cobertura, </I><SPAN STYLE="font-style: normal"> justo debajo del
+ente al cual pertenece la persona que solicita la cita.</SPAN></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><SPAN STYLE="font-style: normal">Luego
+de haber cliqueando en </SPAN><I>Ver cobertura</I><SPAN STYLE="font-style: normal">,
+ la misma se visualizará debajo de los datos de los beneficiarios en
+el caso de haberlos, si no se visualizará bajo los datos de la
+persona solicitante de la cita médica. (ver figura 5).</SPAN></P>
+<P><div align="center"><IMG SRC="imagenes/8.jpg" ALIGN=BOTTOM WIDTH=665 HEIGHT=499 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 5</div></P>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="inicio.html">Volver al menú inicial</A></U></FONT></div></P>
+</BODY>
+</HTML>

@@ -1,0 +1,59 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+$q_ente=("select * from entes  order by entes.nombre");
+$r_ente=ejecutar($q_ente);
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<form action="POST" method="post" name="oa" id="oa">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+<tr>		<td colspan=5 class="titulo_seccion">Buscar Cheques o Recibos</td>	</tr>	
+	<tr>
+		<td colspan=1 class="tdtitulos">* Num Cheque o Recibo</td>
+       
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" id="cheque" name="cheque" maxlength=128 size=10 value=""   onkeypress="return event.keyCode!=13"></td>
+		<td colspan=1 class="tdtitulos">Del Banco </td>
+                <td colspan=1 class="tdtitulos"><select id="banco" name="banco" class="campos" style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php 
+}
+?>
+</select></td>
+<td colspan=1 class="tdtitulos"></td>
+        </tr>
+        <tr>
+<td colspan=1 class="tdtitulos">Seleccione</td>
+<td  colspan=1 class="tdtitulos"> <select id="prov" name="prov" class="campos" style="width: 100px;" OnChange="bus_provp(2);">
+            <option value="*">Un Tipo de Proveedor</option>
+            <option value="0">Reembolso</option>
+			<option value="1">Medico</option>
+			<option value="2">Clinica, Laboratorios, opticas </option>
+			<option value="3">Compras</option>
+			<option value="4">Otros</option>
+
+</select></td>
+<td colspan=1 class="tdtitulos">Seleccione </td>
+                <td colspan=1 class="tdtitulos">
+                 <input  type="hidden" size="30" id="codigomas" name="codigomas" class="campos" maxlength="50" value="0">                
+                <div id="bus_che_pro"></div>
+                </td>
+                <td colspan=1 class="tdtitulos">
+                <a href="#" OnClick="bus_che_rec();" class="boton" title="Buscar Cheques o Recibos">Buscar</a>
+                <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+        
+		
+		</tr>
+</table>
+<div id="bus_che_rec"></div>
+
+</form>

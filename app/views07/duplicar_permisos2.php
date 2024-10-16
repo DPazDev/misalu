@@ -1,0 +1,43 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+$usuario1=$_REQUEST['usuario1'];
+$usuario2=$_REQUEST['usuario2'];
+$fechacreado=date("Y-m-d");
+$hora=date("H:i:s");
+/* **** busco el usuario admin **** */
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+/* **** fin de buscar el usuario admin **** */
+/* **** busco los permisos que tiene el usuario1 para ser asignados al usuario2  **** */
+$q_tbl_003=("select * from tbl_003  where tbl_003.id_usuario=$usuario1");
+$r_tbl_003=ejecutar($q_tbl_003);
+/* **** elimino los permisos que tenia el usuario2 al cual le voy asignar permisos del usuario1 **** */
+$r_eliminar="delete from tbl_003 where tbl_003.id_usuario='$usuario2' ";
+$f_eliminar=ejecutar($r_eliminar);
+/* **** fin de eliminar los permisos que tenia el usuario **** */
+while($f_tbl_003=asignar_a($r_tbl_003,NULL,PGSQL_ASSOC)){
+$procesot .=$f_tbl_003[id_modulo] .",";
+$r_permiso="insert into tbl_003 (id_usuario, id_modulo) values ('$usuario2','$f_tbl_003[id_modulo]');";
+$f_permiso=ejecutar($r_permiso);
+    
+    }
+    
+    /* **** fin  de buscar los permisos que tiene el usuario1 y asignarlos al usuario2  **** */
+    
+ /* **** Se registra lo que hizo el usuario**** */
+
+$log="REGISTRO lOS MODULOS CON ID ($procesot) AL USUARIO ID $usuario2 DEL USUARIO ID $usuario1 ";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+
+?>
+<table border="0" class="tabla_citas"  cellpadding=0 cellspacing=0>
+			<tr>		
+<td align="right" colspan=4 class="titulo_seccion"><b>Se duplico la Permisologia con Exito</b>
+ 
+</td>	
+</tr>

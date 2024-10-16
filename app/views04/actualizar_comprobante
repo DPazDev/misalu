@@ -1,0 +1,14 @@
+<?php 
+include ("../../lib/jfunciones.php");
+
+$q_comprobante="select facturas_procesos.comprobante,count(facturas_procesos.comprobante) 
+from facturas_procesos where fecha_creado>='2012-05-14' and hora_creado>='10:00:00' and comprobante='441'
+group by facturas_procesos.comprobante order by comprobante
+";
+$r_comprobante=ejecutar($q_comprobante);
+
+while($f_comprobante=asignar_a($r_comprobante,NULL,PGSQL_ASSOC)){
+echo "$f_comprobante[comprobante]";
+
+}
+?>

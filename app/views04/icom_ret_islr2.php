@@ -1,0 +1,541 @@
+<?php
+header("Content-Type: text/html;charset=utf-8");
+include ("../../lib/jfunciones.php");
+sesion();
+
+$numcheque=$_REQUEST[numcheque];
+$banco=$_REQUEST[banco];
+$codigo=$_REQUEST[codigo];
+$cedula=$_REQUEST[cedula];
+$nombreprov=$_REQUEST[nombreprov];
+$prov=$_REQUEST[prov];;
+$ente=$_REQUEST[ente];
+$fecha_emision=$_REQUEST[fecha_emision];
+$direccionpro=$_REQUEST[direccionpro];
+$id_proveedor=$_REQUEST[id_proveedor];;
+$compro_retiva_islr=$_REQUEST[compro_retiva_islr];
+$periodo=split("-",$compro_retiva_seniat);
+$personaprov=$_REQUEST['personaprov'];
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$ret_indi=$_REQUEST['ret_indi'];
+
+/* busco el admin*/
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+/* **** Se registra lo que hizo el usuario**** */
+
+$log="Imprimo o vio el cheque o recibo   con codigo numero $codigo";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+/* busco el banco */
+$q_banco=("select tbl_bancos.*,bancos.*,facturas_procesos.* from tbl_bancos,bancos,facturas_procesos  where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=$banco and bancos.id_banco=facturas_procesos.id_banco and facturas_procesos.codigo='$codigo'");
+
+$r_banco=ejecutar($q_banco);
+$f_banco=asignar_a($r_banco);
+if($banco<>'13' && $banco<>'15' ){
+$NombreBanco=$f_banco[nombre_banco];
+$NumCheque=$f_banco[numero_cheque];
+}else{
+$NombreBanco='______________';
+$NumCheque='______________';
+}
+
+
+/* **** compraro si busco proveedor persona o proveedor clinica **** */
+if ($prov==6){
+    $q_proveedor=("select
+                                        comisionados.nombres,
+                                        comisionados.apellidos,
+                                        comisionados.cedula,
+                                        actividades_pro.codigo,
+                                        actividades_pro.porcentaje,
+                                        actividades_pro.actividad,
+                                        actividades_pro.sustraendo,
+                                        actividades_pro.cantidad
+                            from
+                                        comisionados,actividades_pro,facturas_procesos
+                            where
+                                        comisionados.id_comisionado='$id_proveedor' and
+                                        comisionados.id_comisionado=facturas_procesos.id_proveedor and
+                                        facturas_procesos.codigo='$codigo' and
+                                        facturas_procesos.id_act_pro=actividades_pro.id_act_pro
+");
+$r_proveedor=ejecutar($q_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nombres] $f_proveedor[apellidos] ";
+$rifpro=$f_proveedor['cedula'];
+$direccionpro=$f_proveedor['direccioncheque'];
+$telefonospro=$f_proveedor['celular_pro'];
+$objetoretencion=$f_proveedor['actividad'];
+$porcentaje=100 * $f_proveedor['porcentaje'];
+$sustraendo=$f_proveedor['sustraendo'];
+$CantMinimaSustraendo=$f_proveedor['cantidad'];
+
+
+    }
+    else
+    {
+if ($prov==1){
+
+/* **** BUSCO EL PROVEEDOR  persona**** */
+
+$q_proveedor=("select
+                            personas_proveedores.nomcheque,personas_proveedores.rifcheque,
+                            personas_proveedores.direccioncheque,personas_proveedores.celular_prov,
+                            actividades_pro.codigo,actividades_pro.porcentaje,actividades_pro.actividad,
+                            actividades_pro.sustraendo,actividades_pro.cantidad
+                            from
+                            personas_proveedores,actividades_pro,facturas_procesos
+                            where
+                            personas_proveedores.id_persona_proveedor='$id_proveedor' and
+                            personas_proveedores.id_persona_proveedor=facturas_procesos.id_proveedor and
+                            facturas_procesos.codigo='$codigo' and
+                            facturas_procesos.id_act_pro=actividades_pro.id_act_pro");
+$r_proveedor=ejecutar($q_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nomcheque]";
+$rifpro=$f_proveedor['rifcheque'];
+$direccionpro=$f_proveedor['direccioncheque'];
+$telefonospro=$f_proveedor['celular_prov'];
+$objetoretencion=$f_proveedor['actividad'];
+$porcentaje=100 * $f_proveedor['porcentaje'];
+$sustraendo=$f_proveedor['sustraendo'];
+$CantMinimaSustraendo=$f_proveedor['cantidad'];
+
+
+}
+else
+{
+
+/* **** BUSCO EL PROVEEDOR  clinica**** */
+
+$q_proveedor="select
+                            clinicas_proveedores.nombre,clinicas_proveedores.direccion,
+                            clinicas_proveedores.telefonos,clinicas_proveedores.rif,actividades_pro.codigo,
+                            actividades_pro.actividad,actividades_pro.porcentaje,actividades_pro.sustraendo,actividades_pro.cantidad
+                         from
+                            clinicas_proveedores,proveedores,actividades_pro,facturas_procesos
+                         where
+                            clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor and
+                            proveedores.id_proveedor='$id_proveedor' and
+                            proveedores.id_proveedor=facturas_procesos.id_proveedor and
+                            facturas_procesos.codigo='$codigo' and
+                            facturas_procesos.id_act_pro=actividades_pro.id_act_pro";
+$r_proveedor=ejecutar($q_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nombre]";
+$rifpro=$f_proveedor['rif'];
+$direccionpro=$f_proveedor['direccion'];
+$telefonospro=$f_proveedor['telefonos'];
+$objetoretencion=$f_proveedor['actividad'];
+$sustraendo=$f_proveedor['sustraendo'];
+$CantMinimaSustraendo=$f_proveedor['cantidad'];
+$porcentaje=100 * $f_proveedor['porcentaje'];
+/* **** FIN DE BUSCAR PROVEEDOR **** */
+}
+}
+/* **** busco las facturas**** */
+	$q_numfacturas=("select facturas_procesos.factura,facturas_procesos.no_control_fact,
+count(facturas_procesos.factura) from facturas_procesos where facturas_procesos.codigo='$codigo'
+group by facturas_procesos.factura,facturas_procesos.no_control_fact  order by facturas_procesos.factura
+");
+$r_numfacturas=ejecutar($q_numfacturas);
+$num_filas=num_filas($r_numfacturas);
+if ($num_filas==0){
+?>
+
+
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+
+<tr>
+<td colspan=16 class="titulo3">No hay Facturas en esta Fecha</td>
+</tr>
+</table>
+<?
+		}
+		else
+		{
+	?>
+	<link HREF="../../public/stylesheets/impresiones.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+			<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+<tr>
+<td colspan=1 class="logo">
+<img src="../../public/images/head.png">
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo">
+
+</td>
+</tr>
+<tr>
+<td colspan=1 class="titulo2">
+Rif: J-31180863-9
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo1">
+</td>
+</tr>
+
+			<tr>
+<td colspan=16 class="titulo3">Comprobante de Retenci&oacute;n I.S.L.R</td>
+</tr>
+<tr>
+<td colspan=16 class="tdtitulos"><hr></hr></td>
+</tr>
+
+	<tr>
+		<td colspan=1 class="factura">Fecha </td>
+		<td colspan=1 class="datos_cliente"><?php echo $f_banco[fecha_imp_che] ?></td>
+		<td colspan=1 class="factura">Banco</td>
+		<td colspan=3 class="datos_cliente"><?php echo $NombreBanco;?></td>
+		<td colspan=1 class="factura">Cheque/Ref.</td>
+		<td colspan=1 class="datos_cliente"><?php echo $NumCheque;?></td>
+		<td colspan=3 class="factura">Nro. de Comprobante</td>
+		<td colspan=1 class="datos_cliente"><?php echo $compro_retiva_islr?></td>
+		<td colspan=3 class="factura">Codigo de Retencion</td>
+		<td colspan=1 class="datos_cliente"><?php echo $f_proveedor[codigo]?></td>
+	</tr>
+
+
+	<tr>
+<td colspan=16 class="titulo3"><hr></hr></td>
+</tr>
+	<tr>
+<td colspan=16 class="titulo3">Datos del Agente de Retenci&oacute;n</td>
+</tr>
+	<tr>
+		<td colspan=2 class="factura">Nombre o Raz&oacute;n Social </td>
+		<td colspan=12 class="tdcampos">CLINISALUD MEDICINA PREPAGADA S.A.</td>
+		<td colspan=1 class="factura">Rif </td>
+		<td colspan=1 class="tdcampos">J-31180863-9</td>
+
+	</tr>
+	<tr>
+		<td colspan=2 class="factura">Domicilio Fiscal </td>
+		<td colspan=14 class="tdcampos">AV ANDRES BELLO EDIF LAS TAPIAS PISO 3 LOCAL 44 URB LAS TAPIAS MERIDA MÉRIDA ZONA POSTAL 5101</td>
+
+	</tr>
+	<tr>
+<td colspan=16 class="titulo3"><hr></hr></td>
+</tr>
+	<tr>
+<td colspan=16 class="titulo3">Datos Del Proveedor</td>
+</tr>
+	<tr>
+		<td colspan=2 class="factura">Nombre o Raz&oacute;n Social </td>
+		<td colspan=12 class="tdcampos"><?php echo $nombrepro?></td>
+		<td colspan=1 class="factura">Rif </td>
+		<td colspan=1 class="tdcampos"><?php echo $rifpro?></td>
+
+	</tr>
+	<tr>
+		<td colspan=2 class="factura">Domicilio Fiscal  </td>
+		<td colspan=12 class="tdcampos"><?php echo  $direccionpro?></td>
+		<td colspan=1 class="factura">Telefono  </td>
+		<td colspan=1 class="tdcampos"><?php echo  $telefonospro?></td>
+	</tr>
+
+
+	<tr>
+		<td colspan=18 class="tdtitulos"><hr></hr></td>
+
+	</tr>
+	</table>
+	<table class="tabla_citas"  border=1 cellpadding=0 cellspacing=0>
+	<tr>
+<td colspan=16 class="titulo3">Datos De las Facturas</td>
+</tr>
+		<tr>
+		<td colspan=1 class="factura">Num </td>
+		<td colspan=1 class="factura">Fecha Emision</td>
+		<td colspan=1 class="factura">Num Factura</td>
+		<td colspan=3 class="factura">Num Control Factura</td>
+        <td colspan=3 class="factura">Concepto de la Retencion</td>
+		<td colspan=1 class="factura">Monto Objeto de Retencion</td>
+		<td colspan=1 class="factura">Monto Total Factura</td>
+		<td colspan=2 class="factura">% Retencion</td>
+		 <td colspan=1 class="factura">Monto Retenido</td>
+		</tr>
+
+<?php
+while($f_numfacturas=asignar_a($r_numfacturas,NULL,PGSQL_ASSOC)){
+$i++;
+$q_facturas=("select * from facturas_procesos where facturas_procesos.codigo='$codigo'
+and facturas_procesos.factura='$f_numfacturas[factura]' ;
+");
+$r_facturas=ejecutar($q_facturas);
+
+	$totalgc=0;
+	$totalhm=0;
+	$iva=0;
+	$retiva=0;
+	$montoexento=0;
+    $totalgcsin=0;
+    $totalgcr=0;
+   $ret=0;
+   $fac=0;
+   $montofactura_afectada=0;
+while($f_facturas=asignar_a($r_facturas,NULL,PGSQL_ASSOC)){
+
+    $fac++;
+   /* if ($fac>1){
+        $totalfact2=0;
+
+        }*/
+
+
+      if ($f_facturas[id_banco]==9){
+
+        $sustraendo=0;
+        }
+if ($prov==4 and $f_facturas[iva]==0 and $f_facturas[retencion==0])
+{
+$montoexento= $montoexento + $f_facturas[monto_sin_retencion];
+$montoexentot= $montoexentot + $f_facturas[monto_sin_retencion];
+}
+if ($prov==4 and $f_facturas[retencion]==0)
+{
+    $totalgcsin=$totalgcsin +($f_facturas[monto_sin_retencion] - $f_facturas[iva]);
+$ret++;
+}
+else
+{
+    $totalgcr=$totalgcr +$f_facturas[monto_sin_retencion];
+    }
+	$totalgc=$totalgc +$f_facturas[monto_sin_retencion];
+
+	$totalhm=$totalhm + $f_facturas[monto_con_retencion];
+
+	$iva= $iva + $f_facturas[iva];
+	$retiva= $retiva + $f_facturas[iva_retenido];
+	$total_ret=	$total_ret + $f_facturas[retencion];
+
+	$total_iva_ret= 	$total_iva_ret + $f_facturas[iva_retenido];
+	$total_neto=($total_neto +  (($f_facturas[monto_sin_retencion] + $f_facturas[monto_con_retencion] + 	$f_facturas[iva]) - $f_facturas[iva_retenido]));
+$fecha_emisio="$f_facturas[fecha_emision_fact]";
+//verifico si es una nota de credito
+if ($f_facturas[tipo_documento]==0){
+                                                                    $tipo_documento= "F";
+                                                                    $factura_afectada="";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        $tipo_documento= "NC";
+                                                                        $montofactura_afectada=$montofactura_afectada+$f_facturas[monto_sin_retencion];
+                                                                        $montofactura_afectadat=$montofactura_afectadat+$f_facturas[monto_sin_retencion];
+                                                                        $factura_afectada=$f_facturas[factura_afectada];
+                                                                        }
+
+//fin de verificar si es una nota de credito
+}
+
+if ($prov==4 and $f_facturas[iva]==0)
+{
+	$totalfact1= 	$totalfact1 + $totalgc + $totalhm;
+
+}
+/*if ($prov==4 and $f_facturas[retencion]>0)
+{
+	$totalfact2= 	$totalfact2 + $totalgc + $totalhm;
+
+}*/
+if ($prov==4 )
+{
+	$totalfact2= 	$totalfact2 + $totalgc + $totalhm;
+
+}
+
+ /*if ($fac>1){
+       $totalfact3= 	$totalfact3 + $totalgc + $totalhm;
+       }*/
+
+
+if ($ret_indi==1){
+    $totalfact1= 	$totalgc + $totalhm;
+       }
+
+if ($prov<>4)
+{
+	$totalfact= 	$totalfact + $totalgc + $totalhm;
+}
+
+if ($ret_indi==1){
+    $totalfact= 	$totalfact + $totalfact1;
+       }
+if ($ret==0){
+	$mobjret= (((($totalgc + $totalhm) - $iva) - $montoexento) );
+    }
+    else
+    {
+        $mobjret= (((($totalgc + $totalhm) - $iva) -0) - $totalgcsin)-$montofactura_afectada;
+        $mobjret;
+
+     }
+
+	if ($mobjret==0){
+	$mobjret=$montoexento;
+    $mobjret=0;
+	}
+
+	if ($mobjret<0){
+	$mobjret= (((($totalgc + $totalhm) - $iva) - $montoexento) );
+
+	}
+  ///Aplicar sustraendo solo si la cantidad de unidades es menor de la base imponible de lo contrario sustraendo a 0
+   if($CantMinimaSustraendo>=$mobjret){$sustraendo=0;}
+
+	$mobjret1= 	$mobjret1 + 	$mobjret;
+	$montoret= ($mobjret * ($f_proveedor[porcentaje])) - $sustraendo;
+
+	$montototret= 	$montototret +	$montoret;
+	if (($prov==4 and $ret_indi==0)  || $prov==1 || $prov==3)
+	{
+      $total1=(($totalfact)-$montoret);
+  	}
+    if (($prov==4 and $ret_indi==0))
+	{
+      $total1=(($total_ret- $sustraendo));
+
+  	}
+
+    if (($prov==4 and $ret_indi==1) || $prov==2)
+	{
+	$total1=($montototret);
+    }
+
+	?>
+
+	<?php
+  ///se elimina el agregar 00- al numero de control
+	$buscarseparador=strpos($f_numfacturas[no_control_fact],'-');
+if($buscarseparador==false) {	//no hay resultados
+$NumeroControl=''.$f_numfacturas[no_control_fact];
+}else {
+$NumeroControl=$f_numfacturas[no_control_fact];
+}
+
+?>
+	<tr>
+		<td colspan=1 class="datos_cliente"><?php echo $i?></td>
+		<td colspan=1 class="datos_cliente"><?php echo $fecha_emisio ?></td>
+		<td colspan=1 class="datos_cliente"><?php echo $f_numfacturas[factura] ?></td>
+		<td colspan=3 class="datos_cliente"><?php echo "$NumeroControl"?></td>
+		<td colspan=3 class="datos_cliente"><?php echo $objetoretencion?></td>
+		<td colspan=1 class="datos_cliente"><?php
+        echo montos_print($mobjret)?></td>
+		<td colspan=1 class="datos_cliente"><?php echo montos_print($totalgc + $totalhm)?></td>
+		<td colspan=2 class="datos_cliente"><?php if ($mobjret==0 || $tipo_documento=="NC"){
+            }
+            else
+            {
+                echo "$porcentaje %";
+
+                }?></td>
+		<td colspan=1 class="datos_cliente"><?php
+							if ($prov==1 || ($prov==4 and $ret_indi==0))
+							{
+							$montoret="";
+							}
+								else
+								{
+								 echo montos_print($montoret);
+								}
+							?></td>
+
+	</tr>
+
+	<?php
+	}
+    if ($prov==4)
+    {
+        $totalfact=$totalfact2  ;
+
+        /* if ($fac>1){
+       $totalfact=$totalfact3 ;
+       }*/
+
+
+        }
+?>
+		<tr>
+		<td colspan=8 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos">Total</td>
+
+		<td colspan=1 class="factura"><?php echo montos_print($mobjret1)?></td>
+		<td colspan=1 class="factura"><?php if ($prov==1)
+							{
+							echo montos_print($mobjret1);
+							}
+								else
+								{
+								 echo montos_print($totalfact);
+
+								} ?></td>
+		<td colspan=2 class="datos_cliente"></td>
+		<td colspan=1 class="factura"><?php
+							if ($prov==1)
+							{
+
+								$retencion=(($mobjret1 * ($porcentaje / 100)) - $sustraendo);
+							echo montos_print($retencion);
+							}
+								else
+								{
+								 echo montos_print($total1);
+
+								}
+							?></td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+		<tr>
+		<td colspan=8 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos">Total  Neto a Pagar</td>
+
+		<td colspan=1 class="factura"><?php
+							if ($prov==1)
+							{
+
+								$retencion=(($mobjret1 * ($porcentaje / 100)) - $sustraendo);
+							echo montos_print( $mobjret1 - $retencion);
+							}
+								else
+								{
+								 echo montos_print($totalfact - $total1);
+								}
+?></td>
+		<td colspan=1 class="factura"></td>
+		<td colspan=2 class="datos_cliente"></td>
+		<td colspan=1 class="factura"></td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+<tr>
+<td colspan=16 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=16 class="tdtitulos"><br></br></td>
+
+</tr>
+<tr>
+<td colspan=5 class="titulo3">_______________________</td>
+<td colspan=5 class="titulo3">_______________________</td>
+<td colspan=6 class="titulo3">_______________________</td>
+
+</tr>
+<tr>
+<td colspan=5 class="titulo3">Firma del Agente Retencion</td>
+<td colspan=5 class="titulo3">Fecha Recibido</td>
+<td colspan=6 class="titulo3">Firma del Sujeto Retenido</td>
+
+</tr>
+</table>
+<?php
+}
+?>

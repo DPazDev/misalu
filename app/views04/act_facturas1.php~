@@ -1,0 +1,51 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+header('Content-Type: text/xml; charset=ISO-8859-1');
+?>
+<script language="JavaScript">
+
+function ventana2(url,ancho,alto){
+        window.open(url,'window','scrollbars=1,width='+ancho+',height='+alto);
+}
+</script>
+<?php
+
+$no_factura = $_REQUEST['factura'];
+$estado_fac = $_REQUEST['estado_fac'];
+$serie = $_REQUEST['serie'];
+
+//busco si ya existe esa factura en la bd.
+$mod_factura="update tbl_facturas set  
+							id_estado_factura='$estado_fac'
+							
+where tbl_facturas.numero_factura='$no_factura' and tbl_facturas.id_serie='$serie'				      
+";
+	$fmod_factura=ejecutar($mod_factura);
+	
+	
+		
+		/* **** Se registra lo que hizo el usuario**** */
+
+$log="Actualizo el estado de la Factura numero $no_factura forma de pago $forma_pago 
+";
+logs($log,$ip,$id_admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+		
+?>
+
+     <table border=0 cellpadding=0 cellspacing=2 width="100%">
+	<tr>
+		<td align="right" colspan=4  class="titulo_seccion">Factura Generada 
+<?php $url="'views04/ifactura.php?factura=$no_factura&serie=$serie','700','500'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Factura con los Datos del Cliente"> Imprimir Formato 1 Factura </a>
+<?php $url="'views04/ifactura2.php?factura=$no_factura&serie=$serie','700','500'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Factura con los Datos del Ente si no Escogio el Ente al Registrarla "> Imprimir Formato 2 Factura </a>
+			<?php $url="'views04/irelacion.php?factura=$no_factura&serie=$serie','700','500'";
+			?>
+<a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Relacion de Gastos de la Factura"> Imprimir Relacion</a>
+</td> 
+	</tr>
+	
+	</table>

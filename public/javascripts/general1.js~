@@ -1,0 +1,738 @@
+function nuevoAjax(){
+  var xmlhttp=false;
+  try {
+   // Creación del objeto ajax para navegadores diferentes a Explorer
+   xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+  } catch (e) {
+   // o bien
+   try {
+     // Creación del objet ajax para Explorer
+     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); } catch (E) {
+     xmlhttp = false;
+   }
+  }
+
+  if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+   xmlhttp = new XMLHttpRequest();
+  }
+  return xmlhttp;
+}
+
+function ir(url){
+  location.href = url;
+}
+
+function ventana(url){
+        window.open(url,'window','scrollbars=1,width=650,height=350');
+}	
+
+function ventana2(url,ancho,alto){
+        window.open(url,'window','scrollbars=1,width='+ancho+',height='+alto);
+}
+
+function buscarusuario(){
+	var usuario,contenedor;
+	contenedor = document.getElementById('buscarusuario');
+
+	usuario = document.usuario.usuario.value;
+	if(usuario.length>0){
+		ajax=nuevoAjax();
+		ajax.open("GET", "views07/buscarusuario.php?usuario="+usuario,true);
+		ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText
+			}
+		}
+		ajax.send(null);
+	}
+}
+
+function buscarcedula(){
+	var cedula,contenedor;
+	contenedor = document.getElementById('buscarcedula');
+	cedula = document.usuario.cedula.value;
+	if(cedula.length==0){
+	alert("El Campo cedula es Obligatorio.");
+	}
+		
+	if(cedula.length>0){
+		ajax=nuevoAjax();
+		ajax.open("GET", "views07/buscarcedula.php?cedula="+cedula,true);
+		ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText
+			}
+		}
+		ajax.send(null);
+	}
+}
+
+function buscarcedulac(){
+	var cedula,contenedor;
+	contenedor = document.getElementById('buscarcedulac');
+	cedula = document.clientes.cedula.value;
+	if(cedula.length==0){
+	alert("El Campo cedula es Obligatorio.");
+	}
+		
+	if(cedula.length>0){
+		ajax=nuevoAjax();
+		ajax.open("GET", "views01/buscarcedulac.php?cedula="+cedula,true);
+		ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText
+			}
+		}
+		ajax.send(null);
+	}
+}
+
+function buscarcliente(){
+	var cedula,contenedor;
+	contenedor = document.getElementById('buscarcliente');
+	cedula = document.clientes.cedula.value;
+	if(cedula.length==0){
+	alert("El Campo cedula es Obligatorio.");
+	}
+		
+	if(cedula.length>0){
+		ajax=nuevoAjax();
+		ajax.open("GET", "views01/buscarcliente.php?cedula="+cedula,true);
+		ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText
+			}
+		}
+		ajax.send(null);
+	}
+}
+
+function buscarestado(){
+	var pais,contenedor;
+	contenedor = document.getElementById('buscarestado');
+	pais = document.clientes.pais.value;
+	if(pais.length>0){
+		ajax=nuevoAjax();
+		ajax.open("GET", "views01/buscarestado.php?pais="+pais,true);
+		ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText
+			}
+		}
+		ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+		ajax.send(null);
+	}
+}
+
+function buscarciudad(){
+	var estado,contenedor;
+	contenedor = document.getElementById('buscarciudad');
+	estado = document.clientes.estado.value;
+	if(estado.length>0){
+		ajax=nuevoAjax();
+		ajax.open("GET", "views01/buscarciudad.php?estado="+estado,true);
+		ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText
+			}
+		}
+		ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+		ajax.send(null);
+	}
+}
+
+function verificarclave(){
+	var clave,clave1,contenedor;
+	contenedor = document.getElementById('verificarclave');
+
+	clave = document.usuario.clave.value;
+	clave1 = document.usuario.clave1.value;
+	if(clave != clave1){
+	alert("Las claves tienen que ser iguales.");
+	}
+	
+}
+
+function cliente(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_clientes();
+}
+
+
+function registrar_clientes(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views01/clientes.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_clientes(){
+	var contenedor, nombres, apellidos, cedula, sexo, correo, tlf, celular, pais, estado, ciudad, rif, nit, dir, comen, tipcli;
+	contenedor = document.getElementById('clientes');
+	nombres = document.clientes.nombres.value;
+	apellidos = document.clientes.apellidos.value;
+	cedula = document.clientes.cedula.value;
+	sexo = document.clientes.sexo.value;
+	correo = document.clientes.correo.value;
+	tlf = document.clientes.tlf.value;
+	celular = document.clientes.celular.value;
+	pais = document.clientes.pais.value;
+	estado = document.clientes.estado.value;
+	ciudad = document.clientes.ciudad.value;
+	rif = document.clientes.rif.value; 
+	nit = document.clientes.nit.value; 
+	dir = document.clientes.dir.value;
+	comen = document.clientes.comen.value;
+	tipcli = document.clientes.tipcli.value;
+	
+	if(nombres.length==0 || apellidos.length==0 || tlf.length==0 || celular.length==0 || tipcli.length==0 || ciudad.length==0 ){
+	alert("Algunos de los campos Obligatorios (*) estan vacios.");
+	
+	}
+	else
+{
+	ajax=nuevoAjax();
+	ajax.open("GET", "views01/reclientes.php?nombres="+nombres+"&apellidos="+apellidos+"&cedula="+cedula+"&sexo="+sexo+"&correo="+correo+"&tlf="+tlf+"&celular="+celular+"&pais="+pais+"&estado="+estado+"&ciudad="+ciudad+"&rif="+rif+"&nit="+nit+"&dir="+dir+"&comen="+comen+"&tipcli="+tipcli,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+}
+
+function act_clientes(){
+	var contenedor, nombres, apellidos, cedula, sexo, correo, tlf, celular, pais, estado, ciudad, rif, nit, dir, comen, tipcli;
+	contenedor = document.getElementById('clientes');
+	nombres = document.clientes.nombres.value;
+	apellidos = document.clientes.apellidos.value;
+	cedula = document.clientes.cedula.value;
+	sexo = document.clientes.sexo.value;
+	correo = document.clientes.correo.value;
+	tlf = document.clientes.tlf.value;
+	celular = document.clientes.celular.value;
+	pais = document.clientes.pais.value;
+	estado = document.clientes.estado.value;
+	ciudad = document.clientes.ciudad.value;
+	rif = document.clientes.rif.value; 
+	nit = document.clientes.nit.value; 
+	dir = document.clientes.dir.value;
+	comen = document.clientes.comen.value;
+	tipcli = document.clientes.tipcli.value;
+	
+	if(nombres.length==0 || apellidos.length==0 || tlf.length==0 || celular.length==0 || tipcli.length==0 || ciudad.length==0 ){
+	alert("Algunos de los campos Obligatorios (*) estan vacios.");
+	
+	}
+	else
+{
+	ajax=nuevoAjax();
+	ajax.open("GET", "views01/actclientes1.php?nombres="+nombres+"&apellidos="+apellidos+"&cedula="+cedula+"&sexo="+sexo+"&correo="+correo+"&tlf="+tlf+"&celular="+celular+"&pais="+pais+"&estado="+estado+"&ciudad="+ciudad+"&rif="+rif+"&nit="+nit+"&dir="+dir+"&comen="+comen+"&tipcli="+tipcli,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+}
+
+function actcliente(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		actualizar_clientes();
+}
+
+function actualizar_clientes(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views01/actclientes.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function usuario(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_usuario();
+	
+
+	}
+
+function registrar_usuario(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/usuarios.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_usuario(){
+	var contenedor, nombres, apellidos, cedula, usuario, clave, clave1, sexo, correo, tlf, celular, pais, estado, ciudad, mes, dia, ano, dir, estadoc, dpto, cargo, paso, paso1;
+	contenedor = document.getElementById('clientes');
+	nombres = document.usuario.nombres.value;
+	apellidos = document.usuario.apellidos.value;
+	cedula = document.usuario.cedula.value;
+	usuario = document.usuario.usuario.value;
+	clave = document.usuario.clave.value; 
+	clave1 = document.usuario.clave1.value; 
+	sexo = document.usuario.sexo.value;
+	correo = document.usuario.correo.value;
+	tlf = document.usuario.tlf.value;
+	celular = document.usuario.celular.value;
+	pais = document.usuario.pais.value;
+	estado = document.usuario.estado.value;
+	ciudad = document.usuario.ciudad.value;
+	mes = document.usuario.mes.value;
+	dia = document.usuario.dia.value;
+	ano = document.usuario.ano.value;
+	dir = document.usuario.dir.value;
+	estadoc = document.usuario.estadoc.value;
+	dpto = document.usuario.dpto.value;
+	cargo = document.usuario.cargo.value;
+	clave=calcMD5(clave);
+	
+	if(cedula.length==0 || nombres.length==0 || apellidos.length==0 || clave.length==0 || clave1.length==0 || dpto.length==0 || ciudad.length==0 ){
+	alert("Algunos de los campos Obligatorios (*) estan vacios.");
+	
+	}
+	else
+{
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/reusuarios.php?nombres="+nombres+"&apellidos="+apellidos+"&cedula="+cedula+"&usuario="+usuario+"&clave="+clave+"&sexo="+sexo+"&correo="+correo+"&tlf="+tlf+"&celular="+celular+"&pais="+pais+"&estado="+estado+"&ciudad="+ciudad+"&mes="+mes+"&dia="+dia+"&ano="+ano+"&dir="+dir+"&estadoc="+estadoc+"&dpto="+dpto+"&cargo="+cargo,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+}
+
+function act_usuarios(){
+	var contenedor, nombres, apellidos, cedula, usuario, clave, clave1, sexo, correo, tlf, celular, pais, estado, ciudad, mes, dia, ano, dir, estadoc, dpto, cargo, paso, paso1;
+	contenedor = document.getElementById('clientes');
+	nombres = document.usuario.nombres.value;
+	apellidos = document.usuario.apellidos.value;
+	cedula = document.usuario.cedula.value;
+	usuario = document.usuario.usuario.value;
+	clave = document.usuario.clave.value; 
+	clave1 = document.usuario.clave1.value; 
+	sexo = document.usuario.sexo.value;
+	correo = document.usuario.correo.value;
+	tlf = document.usuario.tlf.value;
+	celular = document.usuario.celular.value;
+	pais = document.usuario.pais.value;
+	estado = document.usuario.estado.value;
+	ciudad = document.usuario.ciudad.value;
+	mes = document.usuario.mes.value;
+	dia = document.usuario.dia.value;
+	ano = document.usuario.ano.value;
+	dir = document.usuario.dir.value;
+	estadoc = document.usuario.estadoc.value;
+	dpto = document.usuario.dpto.value;
+	cargo = document.usuario.cargo.value;
+	clave=calcMD5(clave);
+	
+	if(nombres.length==0 || apellidos.length==0 || clave.length==0 || clave1.length==0 || dpto.length==0 || ciudad.length==0 ){
+	alert("Algunos de los campos Obligatorios (*) estan vacios.");
+	
+	}
+	else
+{
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/actusuarios.php?nombres="+nombres+"&apellidos="+apellidos+"&cedula="+cedula+"&usuario="+usuario+"&clave="+clave+"&sexo="+sexo+"&correo="+correo+"&tlf="+tlf+"&celular="+celular+"&pais="+pais+"&estado="+estado+"&ciudad="+ciudad+"&mes="+mes+"&dia="+dia+"&ano="+ano+"&dir="+dir+"&estadoc="+estadoc+"&dpto="+dpto+"&cargo="+cargo,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+}
+
+
+
+function pais(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_pais();
+	
+
+	}
+
+function registrar_pais(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/pais.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_pais(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	nombre = document.pais.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/repais.php?nombre="+nombre,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function estado(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_estado();
+	
+
+	}
+
+function registrar_estado(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/estado.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_estado(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	pais = document.estado.pais.value;
+	nombre = document.estado.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/reestado.php?nombre="+nombre+"&pais="+pais,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ciudad(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_ciudad();
+	
+
+	}
+
+function registrar_ciudad(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/ciudad.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_ciudad(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	estado = document.ciudad.estado.value;
+	nombre = document.ciudad.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/reciudad.php?nombre="+nombre+"&estado="+estado,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+
+function dpto(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_dpto();
+	}
+
+function registrar_dpto(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/dpto.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_dpto(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	nombre = document.dpto.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/redpto.php?nombre="+nombre,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function cargo(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_cargo();
+	}
+
+function registrar_cargo(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/cargo.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_cargo(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	nombre = document.cargo.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/recargo.php?nombre="+nombre,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+
+function servicios(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_servicios();
+	}
+
+function registrar_servicios(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/servicios.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_servicios(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	nombre = document.servicios.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/reservicios.php?nombre="+nombre,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+
+
+function caracteristicas(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_caracteristicas();
+	}
+
+function registrar_caracteristicas(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/caracteristicas.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_caracteristicas(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	nombre = document.caracteristicas.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/recaracteristicas.php?nombre="+nombre,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function material(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		registrar_material();
+	}
+
+function registrar_material(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/material.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function ir_material(){
+	var contenedor, nombre;
+	contenedor = document.getElementById('clientes');
+	nombre = document.material.nombre.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/rematerial.php?nombre="+nombre,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+	
+function permisos(){
+		var var1 = document.getElementById('clientes'); 
+		var1.innerHTML = '<img src="../public/images/opciones.png"><br><span  class="titulos">buscando...</span>';
+		buscar_permisos();
+	}
+
+function buscar_permisos(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/permisos.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function buscar_permisos2(){
+	var login,contenedor;
+	contenedor = document.getElementById('clientes');
+	login = document.permiso.login.value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "views07/permisos2.php?login="+login,true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+	ajax.send(null)
+}
+
+function buscar_permisos3(){
+        var usuario,modulo,seccion,contenedor;
+        contenedor = document.getElementById('clientes');
+        usuario = document.permiso2.usuario.value;
+	modulo = document.permiso2.modulo.value;
+	seccion = document.permiso2.seccion_1.value;
+	ajax=nuevoAjax();
+        ajax.open("GET", "views07/permisos33.php?usuario="+usuario+"&modulo="+modulo+"&seccion="+seccion,true);
+        ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {	
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');	
+        ajax.send(null)
+}
+
+function ir_principal(){
+	var contenedor;
+	contenedor = document.getElementById('clientes');
+	ajax=nuevoAjax();
+	ajax.open("GET", "views01/principal.php",true);
+	ajax.onreadystatechange=function() {
+	if (ajax.readyState==4) {
+		contenedor.innerHTML = ajax.responseText
+		}
+	}
+	ajax.send(null)
+}
+

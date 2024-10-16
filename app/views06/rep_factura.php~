@@ -1,0 +1,94 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+
+
+$r_proveedor_clinica=pg_query("select proveedores.id_proveedor,clinicas_proveedores.id_clinica_proveedor,clinicas_proveedores.nombre,clinicas_proveedores.direccion from proveedores,clinicas_proveedores where clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor  order by clinicas_proveedores.nombre ");
+
+$r_ente=pg_query("select * from  entes where entes.id_tipo_ente=4 and entes.id_tipo_ente=6  order by nombre");
+
+
+$r_serie=pg_query("select sucursales.sucursal,tbl_series.* from sucursales,tbl_series where tbl_series.id_sucursal=sucursales.id_sucursal order by tbl_series.nomenclatura");
+
+?>
+<script>
+function enviar(){
+	if(document.relacionr.textfechainicio.value.length ==0 || document.relacionr.textfechafinal.value.length ==0)
+		alert("Algunos de los campos de las fechas esta vacio");
+	else
+		document.relacionr.submit();
+		
+}
+</script>
+
+
+
+
+
+<form action="" method="POST" name="rep_factura" target="_blank">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+	<tr>
+		<td colspan=4 align="center" class="titulo_seccion">Relacion  de facturas Entes Privados&nbsp;</td>
+	</tr>
+	
+	<tr> 
+		<td  class="tdtitulos">* Fecha Inicio    </td>
+		<td>
+ <input readonly type="text" size="10" id="dateField1" name="fechar" class="campos" maxlength="10" value="" > 
+<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'dateField1', 'yyyy-mm-dd')" title="Show popup calendar">
+<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+                </td>
+		<td  class="tdtitulos">*  Fecha Fin   </td>
+		<td>
+ <input readonly type="text" size="10" id="dateField2" name="fechac" class="campos" maxlength="10" value=""> 
+<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'dateField2', 'yyyy-mm-dd')" title="Show popup calendar">
+<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+                </td>
+	</tr>
+<tr>
+	  <td align="right" colspan=2><div align="center"><span class="Estilo3"></span></div></td>
+  </tr>
+	
+	<tr>
+	<td width="80" class="tdtitulos" >
+	  	    Seleccione el ente	    </td>
+			<td>
+	      <select style="width: 300px;"  id="ente" name="ente" class="campos">
+		  <option value="0">Todos los Entes </option>
+          <option value="*">Todos Excepto Cliente Particular </option>
+            <?php
+	while($f_ente=pg_fetch_array($r_ente, NULL, PGSQL_ASSOC))
+		echo "<option value=\"$f_ente[id_ente]\">$f_ente[nombre] </option>";
+	?>
+          </select>
+      </td>
+	<td class="tdtitulos">Estado de la Factura</td>
+		<td class="tdcampos">
+	<select id="forma_pago" name="forma_pago" class="campos" style="width: 200px;"  >
+		<option value="0" >Todas</option>
+		<option value="*" >Por Cobrar y Pagadas</option>
+		<option value="1" >Pagadas</option>
+		<option value="2" >Por Cobrar</option>
+		<option value="3" >Anuladas</option>
+	</select>
+	</td>
+	</tr>	
+	<tr>
+	<td width="80" class="tdtitulos" >
+	  	    Seleccione el ente	    </td>
+			<td>
+	      <select id="sucursal" name="sucursal" class="campos">
+		<option value="0" >Todas las Sucursales CliniSalud</option>  
+            <?php
+	while($f_serie=pg_fetch_array($r_serie, NULL, PGSQL_ASSOC))
+		echo "<option value=\"$f_serie[id_serie]\">Serie $f_serie[nomenclatura]  Sucursal $f_serie[sucursal] </option>";
+	?>
+          </select>
+      </td>
+	<td class="tdcampos"><input class="campos" type="hidden" name="vacio" maxlength=128 size=20 value=""><a href="#" OnClick="bus_rep_factura();" class="boton">Buscar</a>
+	<a href="#" OnClick="bus_rep_excel_factura();"> <img border="0" src="../public/images/excel.jpg"></a> 
+	<a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>  
+	</tr>  
+</table>
+<div id="bus_rep_factura"></div>
+</form>

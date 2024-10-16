@@ -1,0 +1,90 @@
+<?php
+
+/* Nombre del Archivo: guardar_usuario1.php
+   Descripción:  MODIFICAR un USUARIO en la base de datos, para ser utilizado posteriormente 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+$nombres=$_REQUEST['nombres'];
+$id_admin1=$_REQUEST['id_admin1'];
+$apellidos=$_REQUEST['apellidos'];
+$cedula=$_REQUEST['cedula'];
+$cargo=$_REQUEST['cargo'];
+$depart=$_REQUEST['depart'];
+$sucursal=$_REQUEST['sucursal'];
+$login=$_REQUEST['login'];
+$passw=$_REQUEST['passw'];
+$email=$_REQUEST['email'];
+$telef=$_REQUEST['telef'];
+$celular=$_REQUEST['celular'];
+$direccion=$_REQUEST['direccion'];
+$pais=$_REQUEST['pais'];
+$estado=$_REQUEST['estado'];
+$ciudad=$_REQUEST['ciudad'];
+$tipo=$_REQUEST['tipo'];
+$comentarios=$_REQUEST['comentarios'];
+$dia = $_REQUEST['dia'];
+$mes = $_REQUEST['mes'];
+$ano = $_REQUEST['ano'];
+
+$nombres = strtoupper($nombres);
+$apellidos=strtoupper($apellidos);
+$direccion=strtoupper($direccion);
+$comentarios=strtoupper($comentarios);
+
+
+/*echo "****";
+echo $nombres."**";
+echo $id_admin1."***";
+echo $apellidos."**";
+echo $cedula."**";
+echo $cargo."**";
+echo $depart."**";
+echo $sucursal."**";
+echo $login."**";
+echo $passw."**";
+echo $email."**";
+echo $telef."**";
+echo $celular."**";
+echo $direccion."**";
+echo $pais."--";
+echo $estado."--";
+echo $ciudad."--";
+echo $tipo."**";
+echo $comentarios."**";
+echo $dia."**" ;
+echo $mes."//" ;
+echo $ano."//";*/
+
+$fecha_nac="$ano-$mes-$dia";
+
+$fecha_creado = date("Y-m-d");
+$hora_creado = date("h:m:s");
+
+$q_usuario="update admin set id_departamento='$depart',login='$login',password='$passw',nombres='$nombres',apellidos='$apellidos',cedula='$cedula',email='$email',telefonos='$telef',direccion='$direccion',fecha_nac='$fecha_nac',comentarios='$comentarios',fecha_modificado='$fecha_creado',hora_modificado='$hora_creado',celular='$celular',id_ciudad='$ciudad',id_cargo='$cargo',id_tipo_admin='$tipo',id_sucursal='$sucursal' where admin.id_admin='$id_admin1';";
+$r_usuario=ejecutar($q_usuario);
+
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera4"  cellpadding=0 cellspacing=0>
+
+
+
+<tr>		
+<td colspan=4 class="titulo_seccion"> Se Modifico con Exito el Usuario <?php echo $nombres." ".$apellidos;?></td>	
+</tr>	
+
+	<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="reg_usuario1();" class="boton">Modificar otro Usuario</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+
+	</tr>
+	
+
+</table>
+
+?>

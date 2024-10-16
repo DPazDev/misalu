@@ -1,0 +1,382 @@
+<?php
+
+/* Nombre del Archivo: mod_usuario.php
+   Descripción: Formulario que muestra los datos para MODIFICAR un USUARIO en la base de datos 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+$ci=$_REQUEST['ci'];
+
+
+$q_usuario="select admin.*,ciudad.id_estado,estados.id_pais from admin,ciudad,estados  where admin.id_ciudad=ciudad.id_ciudad and ciudad.id_estado=estados.id_estado and estados.id_pais=pais.id_pais and admin.cedula='$ci';";
+$r_usuario=ejecutar($q_usuario);
+$f_usuario=asignar_a($r_usuario);
+
+$q_cargo = "select cargos.id_cargo,cargos.cargo from cargos";
+$r_cargo = ejecutar($q_cargo);
+
+$q_departamento = "select departamentos.id_departamento,departamentos.departamento from departamentos";
+$r_departamento = ejecutar($q_departamento);
+
+$q_sucursal = "select sucursales.id_sucursal,sucursales.sucursal from sucursales";
+$r_sucursal = ejecutar($q_sucursal);
+
+$q_pais = "select pais.id_pais,pais.pais from pais";
+$r_pais = ejecutar($q_pais);
+
+$q_estado = "select estados.id_estado,estados.estado from estados";
+$r_estado = ejecutar($q_estado);
+
+$q_ciudad = "select ciudad.id_ciudad,ciudad.ciudad from ciudad";
+$r_ciudad = ejecutar($q_ciudad);
+
+$q_tipo_usuario = "select tipos_admin.codigo_admin,tipos_admin.tipo_admin from tipos_admin";
+$r_tipo_usuario = ejecutar($q_tipo_usuario);
+
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"  src="config/md5.js" charset="iso-8859-1"></script>
+
+<form action="guardar_usuario1.php" method="post" name="usuario">
+
+<table  class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+
+<?php if($ci==$f_usuario[cedula]){?>
+
+	<tr>
+		<td colspan=4 class="titulo_seccion"> Modificar Usuario</td>
+	</tr>	
+<br>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Nombres</td>
+
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="nombres" maxlength=150 size=25 value="<?php echo $f_usuario['nombres'];?>"></td>
+			<input type="hidden" name="id_admin1" value="<?php echo $f_usuario['id_admin'];?>">
+		<td colspan=1 class="tdtitulos">* Apellidos</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="apellidos" maxlength=150 size=25 value="<?php echo $f_usuario['apellidos'];?>"></td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* C&eacute;dula</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="cedula" maxlength=150 size=25 value="<?php echo $f_usuario['cedula'];?>"></td>
+
+		<td colspan=1 class="tdtitulos">* Cargo</td>
+ 		<td colspan=1 ><select name="cargo" class="campos" style="width: 210px;">
+
+		<?php
+		while($f_cargo = asignar_a($r_cargo)){
+			if($f_cargo['id_cargo']==$f_usuario['id_cargo'])
+			echo "<option value=\"".$f_cargo['id_cargo']."\"selected >".$f_cargo['cargo']."</option>";
+			else
+			echo "<option value=\"".$f_cargo['id_cargo']."\">".$f_cargo['cargo']."</option>";
+		}
+		?>
+		</select>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Departamento</td>
+ 		<td colspan=1 ><select name="depart" class="campos" style="width: 210px;">
+		<option value="">-- Seleccione el Departamento --</option>
+		<?php
+		while($f_departamento = asignar_a($r_departamento)){
+
+			if($f_departamento['id_departamento']==$f_usuario['id_departamento'])
+			echo "<option value=\"".$f_departamento['id_departamento']."\"selected >".$f_departamento['departamento']."</option>";
+			else
+			echo "<option value=".$f_departamento['id_departamento'].">".$f_departamento['departamento']."</option>";
+		}
+		?>
+		</select>
+
+		<td colspan=1 class="tdtitulos">* Sucursal a la que pertenece</td>
+		<td colspan=1><select name="sucursal" class="campos" style="width:210px;">
+		<option value="">-- Seleccione la Sucursal --</opcion>
+		<?php
+		while($f_sucursal = asignar_a($r_sucursal)){
+			if($f_sucursal['id_sucursal']==$f_usuario['id_sucursal'])
+			echo "<option value=\"".$f_sucursal['id_sucursal']."\"selected >".$f_sucursal['sucursal']."</option>";
+			else
+			echo "<option value=".$f_sucursal['id_sucursal'].">".$f_sucursal['sucursal']."</opcion>";
+}?> 
+		</select>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Login</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="login" maxlength=65 size=25 value="<?php echo $f_usuario['login'];?>"></td>
+	
+		<td colspan=1 class="tdtitulos">* Password</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="password" name="passw" maxlength=65 size=25 value=""></td>
+	</tr>
+
+<tr>
+		<td colspan=1 class="tdtitulos">* Re-Password</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="password" name="passw1" maxlength=65 size=25 value=""></td>
+	
+		<td colspan=1 class="tdtitulos">* Correo Electr&oacute;nico</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="email" maxlength=255 size=25 value="<?php echo $f_usuario['email'];?>"></td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Tel&eacute;fono</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="telef" maxlength=32 size=25 value="<?php echo $f_usuario['telefonos'];?>"></td>
+	
+		<td colspan=1 class="tdtitulos">* Celular</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="celular" maxlength=32 size=25 value="<?php echo $f_usuario['celular'];?>"></td>
+	</tr>
+
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Direcci&oacute;n</td>
+		<td colspan=1><textarea  class="campos" name="direccion" cols=23 rows=5><?php echo $f_usuario['direccion'];?></textarea></td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Fecha de Nacimiento</td>
+		<td colspan=1 class="tdcampos"><?php
+				list($ano,$mes,$dia)=split("-",$f_usuario['fecha_nac'],3);
+				echo fechas('1','32',$dia,'','dia'); 
+				echo fechas('1','13',$mes,'','mes');
+				echo fechas('1940','2000',$ano,'','ano'); 
+				?></td>
+
+		<td colspan=1 class="tdtitulos">* Pa&iacute;s</td>
+ 		<td colspan=1 ><select name="pais" class="campos" style="width: 210px;">
+		<option value="">-- Seleccione el País --</option>
+		<?php
+		while($f_pais = asignar_a($r_pais)){
+			if($f_pais['id_pais']==$f_usuario['id_pais'])
+			echo "<option value=\"".$f_pais['id_pais']."\"selected>".$f_pais['pais']."</option>";
+			else
+			echo "<option value=".$f_pais['id_pais'].">".$f_pais['pais']."</option>";
+		}
+		?>
+		</select>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Estado</td>
+		<td colspan=1><select name="estado" class="campos" style="width:210px;">
+		<option value="">-- Seleccione el Estado --</opcion>
+		<?php
+		while($f_estado = asignar_a($r_estado)){
+			if($f_estado['id_estado']==$f_usuario['id_estado'])			
+			echo "<option value=\"".$f_estado['id_estado']."\"selected>".$f_estado['estado']."</opcion>";
+			else
+			echo "<option value=".$f_estado['id_estado'].">".$f_estado['estado']."</opcion>";
+}?> 
+		</select>
+
+		<td colspan=1 class="tdtitulos">* Ciudad</td>
+		<td colspan=1><select name="ciudad" class="campos" style="width:210px;">
+		<option value="">-- Seleccione la Ciudad --</opcion>
+		<?php
+		while($f_ciudad = asignar_a($r_ciudad)){
+			if($f_ciudad['id_ciudad']==$f_usuario['id_ciudad'])
+			echo "<option value=\"".$f_ciudad['id_ciudad']."\"selected>".$f_ciudad['ciudad']."</opcion>";
+			else
+			echo "<option value=".$f_ciudad['id_ciudad'].">".$f_ciudad['ciudad']."</opcion>";
+}?> 
+		</select>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Tipo de Usuario</td>
+		<td colspan=1><select name="tipo" class="campos" style="width:210px;">
+		<option value="">-- Seleccione el Tipo de Usuario --</opcion>
+		<?php
+		while($f_tipo_usuario = asignar_a($r_tipo_usuario)){
+			if($f_tipo_usuario['codigo_admin']==$f_usuario['id_tipo_admin'])
+			echo "<option value=\"".$f_tipo_usuario['codigo_admin']."\"selected>".$f_tipo_usuario['tipo_admin']."</opcion>";
+			else
+			echo "<option value=".$f_tipo_usuario['codigo_admin'].">".$f_tipo_usuario['tipo_admin']."</opcion>";
+
+}?> 
+		</select>
+
+<td colspan=1 class="tdtitulos">* Activar Usuario</td>
+<?
+if($f_usuario['activar']=='1'){?>
+		<td colspan=1><input class="campos" type="radio" id="activar" name="activar" checked value="1">Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			      <input class="campos" type="radio" id="activar" name="activar" value="0">No</td>
+<?}
+else
+if($f_usuario['activar']=='0'){?>
+		<td colspan=1><input class="campos" type="radio" id="activar" name="activar"  value="1">Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			      <input class="campos" type="radio" id="activar" name="activar" checked value="0">No</td>
+<?}
+?>
+
+</tr>
+<tr>
+
+		<td colspan=1 class="tdtitulos">* Comentarios</td>
+		<td colspan=1><textarea  class="campos" name="comentarios" cols=23 rows=5><?php echo $f_usuario['comentarios'] ;?></textarea></td>
+	</tr>
+
+<br>
+	<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="guardar_usuario1();" class="boton">Guardar</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+
+	</tr>
+
+<? } 
+
+ else {?>
+
+
+	<tr>
+		<td colspan=4 class="titulo_seccion"> Registrar Usuario</td>
+	</tr>	
+<br>
+	<tr>
+		<td colspan=1 class="tdtitulos">* Nombres</td>
+
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="nombres" maxlength=150 size=25 value=""></td>
+	
+		<td colspan=1 class="tdtitulos">* Apellidos</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="apellidos" maxlength=150 size=25 value=""></td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* C&eacute;dula</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="cedula" maxlength=150 size=25 value=""></td>
+	
+		<td colspan=1 class="tdtitulos">* Cargo</td>
+ 		<td colspan=1 ><select name="cargo" class="campos" style="width: 210px;">
+		<option value="">-- Seleccione el Cargo --</option>
+		<?php
+		while($f_cargo = asignar_a($r_cargo)){
+			echo "<option value=".$f_cargo['id_cargo'].">".$f_cargo['cargo']."</option>";
+		}
+		?>
+		</select>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Departamento</td>
+ 		<td colspan=1 ><select name="depart" class="campos" style="width: 210px;">
+		<option value="">-- Seleccione el Departamento --</option>
+		<?php
+		while($f_departamento = asignar_a($r_departamento)){
+			echo "<option value=".$f_departamento['id_departamento'].">".$f_departamento['departamento']."</option>";
+		}
+		?>
+		</select>
+
+		<td colspan=1 class="tdtitulos">* Sucursal a la que pertenece</td>
+		<td colspan=1><select name="sucursal" class="campos" style="width:210px;">
+		<option value="">-- Seleccione la Sucursal --</opcion>
+		<?php
+		while($f_sucursal = asignar_a($r_sucursal)){
+			echo "<option value=".$f_sucursal['id_sucursal'].">".$f_sucursal['sucursal']."</opcion>";
+}?> 
+		</select>
+	</tr>
+	<tr>
+		<td colspan=1 class="tdtitulos">* Login</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="login" maxlength=65 size=25 value=""></td>
+	
+		<td colspan=1 class="tdtitulos">* Password</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="password" name="passw" maxlength=65 size=25 value=""></td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Re-Password</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="password" name="passw1" maxlength=65 size=25 value=""></td>
+	
+		<td colspan=1 class="tdtitulos">* Correo Electr&oacute;nico</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="email" maxlength=255 size=25 value=""></td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Tel&eacute;fono</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="telef" maxlength=32 size=25 value=""></td>
+	
+		<td colspan=1 class="tdtitulos">* Celular</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="celular" maxlength=32 size=25 value=""></td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Direcci&oacute;n</td>
+		<td colspan=1><textarea  class="campos" name="direccion" cols=23 rows=5></textarea></td>
+	</tr>
+	
+	<tr>
+		<td colspan=1 class="tdtitulos">* Fecha de Nacimiento</td>
+		<td colspan=1 class="tdcampos"><?php
+				list($ano,$mes,$dia)=split("-",$f_admin['fecha_nac'],3);
+				echo fechas('1','32',$dia,'','dia'); 
+				echo fechas('1','13',$mes,'','mes');
+				echo fechas('1940','2000',$ano,'','ano'); 
+				?></td>
+
+		<td colspan=1 class="tdtitulos">* Pa&iacute;s</td>
+ 		<td colspan=1 ><select name="pais" class="campos" style="width: 210px;">
+		<option value="">-- Seleccione el País --</option>
+		<?php
+		while($f_pais = asignar_a($r_pais)){
+			echo "<option value=".$f_pais['id_pais'].">".$f_pais['pais']."</option>";
+		}
+		?>
+		</select>
+	</tr>
+	<tr>
+		<td colspan=1 class="tdtitulos">* Estado</td>
+		<td colspan=1><select name="estado" class="campos" style="width:210px;">
+		<option value="">-- Seleccione el Estado --</opcion>
+		<?php
+		while($f_estado = asignar_a($r_estado)){
+			echo "<option value=".$f_estado['id_estado'].">".$f_estado['estado']."</opcion>";
+}?> 
+		</select>
+
+		<td colspan=1 class="tdtitulos">* Ciudad</td>
+		<td colspan=1><select name="ciudad" class="campos" style="width:210px;">
+		<option value="">-- Seleccione la Ciudad --</opcion>
+		<?php
+		while($f_ciudad = asignar_a($r_ciudad)){
+			echo "<option value=".$f_ciudad['id_ciudad'].">".$f_ciudad['ciudad']."</opcion>";
+}?> 
+		</select>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Tipo de Usuario</td>
+		<td colspan=1><select name="tipo" class="campos" style="width:210px;">
+		<option value="">-- Seleccione el Tipo de Usuario --</opcion>
+		<?php
+		while($f_tipo_usuario = asignar_a($r_tipo_usuario)){
+			echo "<option value=".$f_tipo_usuario['codigo_admin'].">".$f_tipo_usuario['tipo_admin']."</opcion>";
+}?> 
+		</select>
+
+		<td colspan=1 class="tdtitulos">* Activar Usuario</td>
+		<td colspan=1><input class="campos" type="radio" id="activar" name="activar" checked value="1">Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			      <input class="campos" type="radio" id="activar" name="activar" value="0">No</td>
+	</tr>
+
+	<tr>
+		<td colspan=1 class="tdtitulos">* Comentarios</td>
+		<td colspan=1><textarea  class="campos" name="comentarios" cols=23 rows=5></textarea></td>
+	</tr>
+
+<br>
+	<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="guardar_usuario();" class="boton">Guardar</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+
+	</tr>
+<? }?>
+
+
+
+<br>
+</table>
+</from>

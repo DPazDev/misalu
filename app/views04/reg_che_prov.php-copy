@@ -1,0 +1,133 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+$q_ente=("select * from entes  order by entes.nombre");
+$r_ente=ejecutar($q_ente);
+/* **** busco el ultimo comprobante retencion islr**** */
+$q_comretislr="select * from facturas_procesos where facturas_procesos.corre_ret_islr>0 and facturas_procesos.id_banco<>9 order by facturas_procesos.corre_ret_islr desc limit 1;";
+$r_comretislr=ejecutar($q_comretislr);
+
+$f_comretislr=asignar_a($r_comretislr);
+
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select * from admin where admin.id_admin='$id_admin'");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+/* **** busco el ultimo comprobante retencion iva**** */
+$q_comretiva="select * from facturas_procesos where facturas_procesos.corre_retiva_seniat>0 and facturas_procesos.id_banco<>9 order by facturas_procesos.corre_retiva_seniat desc limit 1;";
+$r_comretiva=ejecutar($q_comretiva);
+$f_comretiva=asignar_a($r_comretiva);
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<form action="POST" method="post" name="oa" id="oa">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+<tr>		
+<td colspan=5 class="titulo_seccion">Registrar Cheques de Proveedores</td>	
+</tr>
+<tr>	
+<td colspan=3 class="titulo_seccion">Ultimo Comprobante ISLR  </td>	
+<td colspan=2 class="titulo_seccion"> <?php echo $f_comretislr[corre_compr_islr] ?></td>
+</tr>
+<tr>	
+<td colspan=3 class="titulo_seccion">Ultimo Comprobante IVA </td>	
+<td colspan=2 class="titulo_seccion"> <?php echo $f_comretiva[compro_retiva_seniat]?></td>
+</tr>
+<?php 
+if (($f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11 || $f_admin[id_tipo_admin]==2) and ($f_admin[id_sucursal]==1 || $f_admin[id_sucursal]==2)) {
+    /* **** variable iva**** */
+		$q_variable_iva=("select * from variables_globales where id_variable_global=26");
+$r_variable_iva=ejecutar($q_variable_iva);
+$f_variable_iva=asignar_a($r_variable_iva);
+/* **** variable retencion iva**** */
+    
+    
+    ?>
+<tr>
+<td colspan=5 class="tdtitulos"><br></br></td>
+</tr>	
+</tr>	
+<tr>	
+<td colspan=3 class="titulo_seccion">Variable IVA Actual</td>	
+<td colspan=2 class="titulo_seccion"> <input  type="hidden" size="10" id="id_variva" name="id_variva" class="campos" maxlength="50" value="<?php echo $f_variable_iva[id_variable_global]?>"><input  type="text" size="10" id="variva" name="variva" class="campos" maxlength="50" value="<?php echo $f_variable_iva[cantidad]?>">  <a href="#" OnClick="act_var_iva();" class="boton" title="Actualiza Variable IVA">Actualizar</a></td>
+</tr>
+<tr>		
+<td colspan=5 class="tdtitulos"><div id="act_var_iva"></div> </td>	
+</tr>
+<tr>	
+<td colspan=3 class="titulo_seccion">Codigo Para Agregar mas Datos </td>	
+<td colspan=2 class="titulo_seccion"> <input  type="text" size="30" id="codigomas" name="codigomas" class="campos" maxlength="50" value="0"> </td>
+</tr>
+<tr>	
+<td colspan=3 class="titulo_seccion">Desglosar Gastos</td>	
+<td colspan=2 class="titulo_seccion"> 
+<select id="des_gasto" name="des_gasto" class="campos" style="width: 150px;"  >
+                 <option value="0">No</option>
+			<option value="1">Si</option>
+			
+</select>
+</td>
+</tr>
+<?php
+}
+else
+{
+    ?>
+    <input  type="hidden" size="30" id="codigomas" name="codigomas" class="campos" maxlength="50" value="0">
+     <input  type="hidden" size="30" id="des_gasto" name="des_gasto" class="campos" maxlength="50" value="0">
+    <?php
+    }
+?>
+<tr>
+<td colspan=5 class="tdtitulos"><br></br></td>
+</tr>	
+<tr>
+<td colspan=1 class="tdtitulos">* Fecha Inicio </td>
+<td  colspan=1 class="tdtitulos"> <input readonly type="text" size="10" id="dateField1" name="fechar" class="campos" maxlength="10" value="" > 
+<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'dateField1', 'yyyy-mm-dd')" title="Show popup calendar">
+<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>  </td>
+<td colspan=1 class="tdtitulos">*  Fecha Fin </td>
+				<td  colspan=1 class="tdtitulos">  <input readonly type="text" size="10" id="dateField2" name="fechac" class="campos" maxlength="10" value=""> 
+<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'dateField2', 'yyyy-mm-dd')" title="Show popup calendar">
+<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a> </td>
+		<td colspan=1 class="tdtitulos"></td>	
+				</tr>
+				<tr>
+				<td colspan=1 class="tdtitulos">Seleccione</td>	
+                <td colspan=1  class="tdtitulos"> <select id="prov" name="prov" class="campos" style="width: 150px;"  OnChange="bus_provp(1);" >
+<?php if (($f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11 || $f_admin[id_tipo_admin]==2 || $f_admin[id_tipo_admin]==1)) {?>                
+		 <option value="0">Un Tipo de Proveedor</option>
+			<option value="1">Medico</option>
+			<option value="2">Clinica, Laboratorios, opticas </option>
+			<option value="3">Compras</option>
+			<option value="4">Otros</option>
+            <option value="6">Pago de Comisiones</option>
+<?php
+}
+else
+{
+?>
+        <option value="0">Un Tipo de Proveedor</option>
+	<option value="3">Compras</option>
+<?php
+}
+?>
+
+</select></td>
+<td colspan=1 class="tdtitulos">Seleccione</td>
+<td colspan=1 class="tdtitulos"><div id="bus_che_pro"></div></td>
+<td colspan=1 class="tdtitulos"><a href="#" OnClick="ir_principal();" class="boton" >Salir</a></td>
+</tr>
+</table>
+<div id="bus_che_prov"></div>
+
+
+
+
+
+</form>

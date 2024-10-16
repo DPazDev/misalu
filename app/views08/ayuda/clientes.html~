@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><B><div align="center">Módulo Clientes<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al colocar el Mouse sobre el <I>Módulo Clientes</I> Se despliega el siguiente Menú de opciones. (Ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/intro2.jpg" WIDTH=607 HEIGHT=420 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Las opciones que se manejan en este Módulo son:</P>
+<UL>
+	<LI><P ALIGN=JUSTIFY><A HREF="acita.html"><I>Act Cita</A>: Actualiza las citas a los clientes.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="acorden.html"><I>Act Cobertura en orden</A>: Actualiza la Cobertura en una orden.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="aorden.html"><I>Act Orden</I></A>: Actualiza una Orden.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="acaux.html"><I>Asi Cobertura Auxiliar</A>: Asigna Cobertura Auxiliar a una Orden.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="ceorden.html"><I>Cam Edo en Orden</I></A>: Cambia el Estado de una Orden.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="crechazo.html"><I>Carta de Rechazo</A>: Realiza la Carta de Rechazo de una orden.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="coespera.html"><I>Colocar Orden en Espera</I></A>: Coloca una Orden en Espera.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="ccpaciente.html"><I>Cons Cita Paciente</A>: Consulta las Citas de un Paciente.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="cmorb.html"><I>Cons Morbilidad</I></A>: Consulta la Morbilidad según un rango de fecha y la seleción del Médico tratante.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="omed.html"><I>Orden de Medicameto</I></A>: Consulta las Ordenes de Medicamentos externas e internas.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="construccion.html"><I>P Uni de Grac</I></A>: Genera el Pago Unico de Gracia de una Orden.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="rcita.html"><I>Reg Citas</I></A>: Registra Citas a los Clientes.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="rcliente.html"><I>Reg Cliente</I></A>: Registra nuevos Clientes.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="rorden.html"><I>Reg Orden</I></A>: Registra Ordenes de servicios.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="roespera.html"><I>Ret Orden Espera</I></A>: Registra una Orden en Espera.</P>
+	<LI><P ALIGN=JUSTIFY><A HREF="vorden.html"><I>Ver Orden</I></A>: Permite ver detalle de una Orden, imprimirla y  anularla.</P>
+</UL>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="inicio.html">Volver al menú inicial</A></U></FONT></div></P>
+</BODY>
+</HTML>

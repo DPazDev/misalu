@@ -1,0 +1,67 @@
+<?
+/* *** Nombre del Archivo: reporte_proveedor.php 
+       Descripción: Realiza la busqueda en la Base de Datos, para el Reporte de Proveedores *** */
+
+	include ("../../lib/jfunciones.php");
+	sesion();
+	$provee=$_REQUEST['provee'];
+	$provee = strtoupper($provee);
+
+if($provee==" ")	        $condicion_provee="";
+else
+$condicion_provee="personas_proveedores.nombres_prov like(upper('%$provee%'))";
+
+
+$q_cliente=("select personas_proveedores.* from personas_proveedores where $condicion_provee ORDER BY nombres_prov ASC");
+$r_cliente=ejecutar($q_cliente);
+
+?>
+
+<table class="tabla_citas" cellpadding=0 cellspacing=0 > 
+
+<tr>
+	<td class="titulo_seccion">Reporte Proveedores</td>     
+</tr>
+</table>
+
+<table class=tabla_citas"  cellpadding=0 cellspacing=0 rules="rows">
+<tr>
+	<td colspan=1 class="tdcampos">NOMBRE Y APELLIDO</td>
+	<td colspan=1 class="tdcampos">ESPECIALIDAD</td>
+	<td colspan=1 class="tdcampos">TELEFONOS</td>
+	<td colspan=1 class="tdcampos">DIRECCION</td>
+
+</tr>
+
+<?
+
+ while($f_cliente=asignar_a($r_cliente,NULL,PGSQL_ASSOC)){
+	
+$q_infor=("select s_p_proveedores.*,especialidades_medicas.especialidad_medica from s_p_proveedores,especialidades_medicas,proveedores where s_p_proveedores.id_persona_proveedor=$f_cliente[id_persona_proveedor] and s_p_proveedores.id_especialidad=especialidades_medicas.id_especialidad_medica and s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor");
+$r_infor=ejecutar($q_infor);
+ while($f_infor=asignar_a($r_infor,NULL,PGSQL_ASSOC)){
+echo"
+	<tr> 
+		<td class=\"tdtituloss\">$f_cliente[nombres_prov] $f_cliente[apellidos_prov]</td> 
+		<td class=\"tdtituloss\">$f_infor[especialidad_medica]</td>
+		<td class=\"tdtituloss\">$f_cliente[celular_prov] -- $f_infor[telefonos_prov]</td>
+		<td class=\"tdtituloss\">$f_infor[direccion_prov]</td>
+
+  
+	</tr>"; }}?>
+</table>
+
+<br>
+<table>
+<tr>
+	        <td  class="tdcamposs" title="Imprimir reporte">
+			  <?php
+			$url="'views06/ireporte_proveedor.php?provee=$provee'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton">Imprimir</a>
+		</td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+<br>
+
+</table>

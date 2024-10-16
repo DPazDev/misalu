@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Actualizar Cliente en Orden<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Esta opción se usa cuando se ha cargado una orden a un cliente al que no le corresponde dicha orden o cuando una orden ha sido cargada a otra cobertura. Para realizar el Cambio se debe buscar en el Módulo <I>Clientes</I>, la opción <I>Act Cobertura en Orden</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/acorden1.jpg" WIDTH=600 HEIGHT=414 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego en la siguiente pantalla se introduce el número de Orden a actualizar y se da un Clic en <I>Buscar</I>. (ver figura 2)</P>
+<P><div align="center"><IMG SRC="imagenes/acorden2.jpg" WIDTH=773 HEIGHT=74 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Aparecerán los datos del cliente al que se le cargo dicha orden, alli mismo aparecerá un campo donde se escribe el Número de Cédula del Cliente al que se le asignará la orden, luego se da un Clic en <I>Buscar</I>. (ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/acorden3.jpg" WIDTH=770 HEIGHT=316 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">En esta nueva pantalla se podrá ver los datos de la persona a la que se le esta asigna la orden, y se deberá escoger la cobertura, luego se da un Clic en <I>Actualizar</I>. (ver figura 4)</P>
+<P><div align="center"><IMG SRC="imagenes/acorden4.jpg" WIDTH=770 HEIGHT=587 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Por último se mostrará un mensaje de que la orden ha sido actulizada exitosamente. (ver figura 5)</P>
+<P><div align="center"><IMG SRC="imagenes/acorden5.jpg" WIDTH=771 HEIGHT=94 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 5</I></div></FONT>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="clientes.html">Volver al Módulo Cliente</A></U></FONT></div></P>
+</BODY>
+</HTML>

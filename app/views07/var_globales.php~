@@ -1,0 +1,59 @@
+<?php
+/* Nombre del Archivo: var_globales.php
+   Descripción:FORMULARIO PARA INSERTAR una VARIABLE GLOBAL en la base de datos, para ser utilizado posteriormente 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+$q_var = "select variables_globales.id_variable_global, variables_globales.nombre_var from variables_globales order by variables_globales.nombre_var";
+$r_var = ejecutar($q_var);
+
+?>
+<link HREF="../../public/stylesheets/estilos1.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js">
+
+</script>
+
+<form action="POST" method="POST" name="variables" id="formp">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+	<tr> <td colspan=4 class="titulo_seccion"><b>Variables Globales</b></td>	
+	</tr>
+<br>
+	<tr>
+	<td colspan=1 class="tdtitulos">Nombre de Variable</td>
+	<td colspan=1 class="tdcampos"><input type="text" size="30" class="campos" name="nombre" ></td>
+	<td colspan=1 class="tdtitulos">Cantidad</td>
+	<td colspan=1 class="tdcampos"><input type="text" size="15" class="campos" name="cant"></td>
+</tr>
+<br>
+	<tr>
+	<td colspan=1 class="tdtitulos">Variable Formulario de Compras</td>
+	<td colspan=1 class="tdcampos"><input type="text" size="20" class="campos" name="compra" ></td>
+	<td colspan=1 class="tdtitulos">Iva</td>
+	<td colspan=1 class="tdcampos"><input type="text" size="15" class="campos" name="iva"></td>
+</tr>
+<br>
+<tr>
+<td colspan=4 class="tdcamposcc"><a href="#" OnClick="guardar_var_global();" class="boton">Guardar</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>	
+<br>
+<tr>
+	<td colspan=1 class="tdtitulos">Verificar Nombre de Variable</td>
+	<td colspan=1><select name="nombre1" class="campos">
+		<option value="">-- Seleccione una Variable Global --</option>
+		<?php
+		while($f_var = asignar_a($r_var)){
+			echo "<option value=".$f_var['id_variable_global'].">".$f_var['nombre_var']."</option>";
+		}
+		?>
+		</select>
+		</td>
+		<td colspan=1></td>
+		<td colspan=1 class="tdcampos"><a href="#" OnClick="modificar_var_global();" class="boton">Modificar</a></td>
+        </tr>
+
+<br>
+</table>
+</form>
+

@@ -1,0 +1,243 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+
+$numcheque=$_REQUEST[numcheque];
+$banco=$_REQUEST[banco];
+$codigo=$_REQUEST[codigo];
+$cedula=$_REQUEST[cedula];
+$nombreprov=$_REQUEST[nombreprov];
+$prov=$_REQUEST[prov];
+$ente=$_REQUEST[ente];
+$fecha_emision=$_REQUEST[fecha_emision];
+$direccionpro=$_REQUEST[direccionpro];
+
+$compro_retiva_seniat=$_REQUEST[compro_retiva_seniat];
+$periodo=split("-",$compro_retiva_seniat);
+$id_admin= $_SESSION['id_usuario_'.empresa];
+/* busco el admin*/
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+/* **** Se registra lo que hizo el usuario**** */
+
+$log="Imprimo o vio el cheque o recibo   con codigo numero $codigo";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+
+	$q_facturas=("select facturas_procesos.factura,count(facturas_procesos.factura) from facturas_procesos where facturas_procesos.codigo='$codigo' group by facturas_procesos.factura
+");
+$r_facturas=ejecutar($q_facturas);
+$num_filas=num_filas($r_facturas);
+if ($num_filas==0){
+?>
+
+
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+
+<tr>		
+<td colspan=6 class="titulo3">No hay Facturas en esta Fecha</td>	
+</tr>
+</table>
+<?
+		}
+		else
+		{
+	?>
+	<link HREF="../../public/stylesheets/impresiones.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+			<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+<tr>
+<td colspan=1 class="logo">
+<img src="../../public/images/head.png">
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo">
+
+</td>
+</tr>
+<tr>
+<td colspan=1 class="titulo2">
+Rif: J-31180863-9
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo1">
+</td>
+</tr>
+			
+			<tr>		
+<td colspan=9 class="titulo3">Comprobante de Retenci&oacute;n IVA</td>	
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+	</tr>
+	<tr>
+		<td colspan=1 class="factura">Fecha Emisi&oacute;n</td>
+		<td colspan=1 class="datos_cliente"><?php echo $fecha_emision?></td>
+		<td colspan=1 class="datos_cliente"></td>
+		<td colspan=1 class="factura">Nro. de Comprobante</td>
+		<td colspan=2 class="datos_cliente"><?php echo $compro_retiva_seniat?></td>
+		<td colspan=1 class="factura">Periodo Fiscal</td>
+		<td colspan=2 class="datos_cliente"><?php echo "A&ntilde;o: $periodo[0] / Mes $periodo[1]"?></td>
+	</tr>
+	<tr>		
+<td colspan=9 class="titulo3"><hr></hr></td>	
+</tr>
+	<tr>		
+<td colspan=9 class="titulo3">Datos del Agente de Retenci&oacute;n</td>	
+</tr>
+	<tr>
+		<td colspan=3 class="factura">Nombre o Raz&oacute;n Social </td>
+		<td colspan=2 class="tdcampos">CLINISALUD C.A.</td>
+		<td colspan=2 class="factura">Rif </td>
+		<td colspan=1 class="tdcampos">J-31180863-9</td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class="factura">Domicilio Fiscal </td>
+		<td colspan=6 class="tdcampos">Av. las Americas C.C. Mayeya nivel Mezanina Locales 16,17 y 24 Sector Los Sauzales M&eacute;rida, estado M&eacute;rida</td>
+		
+	</tr>
+	<tr>		
+<td colspan=9 class="titulo3"><hr></hr></td>	
+</tr>
+	<tr>		
+<td colspan=9 class="titulo3">Datos Del Proveedor</td>	
+</tr>
+	<tr>
+		<td colspan=3 class="factura">Nombre o Raz&oacute;n Social </td>
+		<td colspan=2 class="tdcampos"><?php echo $nombreprov?></td>
+		<td colspan=2 class="factura">Rif </td>
+		<td colspan=1 class="tdcampos"><?php echo $cedula?></td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class="factura">Domicilio Fiscal  </td>
+		<td colspan=6 class="tdcampos"><?php echo $direccionpro?></td>
+		
+	</tr>
+	
+	
+	<tr>
+		<td colspan=9 class="tdtitulos"><hr></hr></td>
+		
+	</tr>
+	<tr>		
+<td colspan=9 class="titulo3">Datos De las Facturas</td>	
+</tr>
+		<tr>
+		<td colspan=1 class="factura">Num Control </td>
+		<td colspan=1 class="factura">Num Factura</td>
+		<td colspan=1 class="factura">Fecha Emisi&oacute;n </td>
+		<td colspan=1 class="factura">Monto Total </td>
+		<td colspan=1 class="factura">Monto Exento</td>
+		<td colspan=1 class="factura">Base Imponible</td>
+		<td colspan=1 class="factura">I.V.A. Facturado</td>
+		<td colspan=1 class="factura">I.V.A. Retenido</td>
+		<td colspan=1 class="factura">Total Neto A Pagar</td>
+	</tr>
+
+<?php 
+while($f_facturas=asignar_a($r_facturas,NULL,PGSQL_ASSOC)){
+	
+	$q_facturasmonto=("select * from facturas_procesos where facturas_procesos.codigo='$codigo' and facturas_procesos.factura='$f_facturas[factura]'
+");
+$r_facturasmonto=ejecutar($q_facturasmonto);
+	
+	$base_imponible=0;
+	$total_neto=0;
+	$iva_ret=0;
+	$iva=0;
+	$monto_total=0;
+	
+	
+while($f_facturasmonto=asignar_a($r_facturasmonto,NULL,PGSQL_ASSOC)){
+	$num_control=$f_facturasmonto[no_control_fact];
+	$factura=$f_facturasmonto[factura];
+	$fecha_emision=$f_facturasmonto[fecha_emision_fact];
+	$monto_total= $monto_total + ($f_facturasmonto[monto_sin_retencion] + $f_facturasmonto[monto_con_retencion]);
+	$iva=$iva + $f_facturasmonto[iva];
+	$iva_ret= 	$iva_ret + $f_facturasmonto[iva_retenido];
+	
+	}
+	$base_imponible= $monto_total - 	$iva;
+	$total_neto=$monto_total - ($iva - $iva_ret);
+	$total_base_imponible= $total_base_imponible + $base_imponible;
+	$total_pagar=$total_pagar + $total_neto;
+	$total_iva_ret=$total_iva_ret + 	$iva_ret;
+	$total_iva_fact=$total_iva_fact + $iva;
+	$total_base_imponible= $total_base_imponible + $base_imponible;
+?>	
+
+<tr>
+		<td colspan=1 class="tdcampos"><?php echo $num_control?></td>
+		<td colspan=1 class="tdcampos"><?php echo $factura?></td>
+		<td colspan=1 class="tdcampos"><?php echo $fecha_emision?></td>
+		<td colspan=1 class="tdcampos"><?php echo montos_print($monto_total)?></td>
+		<td colspan=1 class="tdcampos"><?php echo montos_print(0)?></td>
+		<td colspan=1 class="tdcampos"><?php echo montos_print($base_imponible)?></td>
+		<td colspan=1 class="tdcampos"><?php echo montos_print($iva)?></td>
+		<td colspan=1 class="tdcampos"><?php echo montos_print($iva_ret)?></td>
+		<td colspan=1 class="tdcampos"><?php echo montos_print($total_neto) ?></td>
+	</tr>
+
+
+<?php
+	}
+	
+?>	
+
+
+
+
+</tr>
+		<tr>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="factura"><?php echo montos_print($total_base_imponible)?></td>
+		<td colspan=1 class="factura"><?php echo montos_print($total_iva_fact)?></td>
+		<td colspan=1 class="factura"><?php echo montos_print($total_iva_ret)?></td>
+		<td colspan=1 class="factura"><?php echo montos_print($total_neto)?></td>
+	</tr>
+	<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos">Ley IVA - Art. 11: "Seran responsables del pago del impuesto en calidad de agentes de retenci&oacute;n los compradores o adquirientes de determinados bienes inmuebles y los receptores de ciertos servicios, a quienes la Administraci&oacute;n Tributaria designe como tal"</td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><br></br></td>
+			
+</tr>
+</tr>
+<tr>
+<td colspan=3 class="titulo3">_______________________</td>
+<td colspan=3 class="titulo3">_______________________</td>
+<td colspan=3 class="titulo3">_______________________</td>
+		
+</tr>
+<tr>
+<td colspan=3 class="titulo3">Firma del Agente Retencion</td>
+<td colspan=3 class="titulo3">Fecha Recibido</td>
+<td colspan=3 class="titulo3">Firma del Sujeto Retenido</td>
+		
+</tr>
+</table>
+<?php
+}
+?>
+
+

@@ -1,0 +1,44 @@
+<?php
+/* Nombre del Archivo: banco1.php
+   Descripción:FORMULARIO PARA MODIFICAR un BANCO en la base de datos, para ser utilizado posteriormente 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+   $nombre1=$_REQUEST['nombre1'];
+
+
+$q_banc = "select tbl_bancos.id_ban, tbl_bancos.nombanco from tbl_bancos where tbl_bancos.id_ban=$nombre1";
+$r_banc = ejecutar($q_banc);
+$f_banc = asignar_a($r_banc);
+
+
+?>
+<link HREF="../../public/stylesheets/estilos1.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js">
+
+</script>
+
+<form action="POST" method="POST" name="banca" id="banca">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+	<tr>		<td colspan=4 class="titulo_seccion">Modificar Banco</td>
+	</tr>
+	<tr>
+		<td colspan=4>&nbsp;</td>
+	</tr> 
+	<tr>
+		<td colspan=1 class="tdtitulos">* Nombre Banco</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="nombre"  size=30 value="<?php echo $f_banc['nombanco']; ?>"></td>
+		<input type="hidden" name="id_banco" value="<?php echo $f_banc[id_ban];?>">
+
+
+		<td colspan=2 class="tdcamposcc"><a href="#" OnClick="guardar_banco1();" class="boton">Guardar</a> <a href="#" OnClick="banco();" class="boton">Insertar o Modificar otro Banco</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+	<tr>
+		<td colspan=4>&nbsp;</td>
+	</tr> 
+
+</table>
+</formp>

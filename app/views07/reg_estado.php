@@ -1,0 +1,78 @@
+<?php
+
+/* Nombre del Archivo: reg_estado.php
+   Descripción: Solicita los datos para INSERTAR un ESTADO en la base de datos
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+$q_estado0 = "select estados.id_estado,estados.estado from estados";
+$r_estado0 = ejecutar($q_estado0);
+
+$q_pais = "select pais.id_pais,pais.pais from pais";
+$r_pais = ejecutar($q_pais);
+
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+
+<form action="guardar_estado.php" method="post" name="estadoo">
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=4 class="titulo_seccion">Registrar o Modificar Estado</td>	</tr>	
+	<tr> <td>&nbsp;</td>
+	<tr>
+                <td colspan=1 class="tdtitulos">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Verificar nombre del Estado</td>
+                <td colspan=1 ><select name="estado0" class="campos">
+		<option value="">-- Seleccione el Estado --</option>
+		<?php
+		while($f_estado0 = asignar_a($r_estado0)){
+			echo "<option value=".$f_estado0['id_estado'].">".$f_estado0['estado']."</option>";
+		}
+		?>
+		</select>
+		</td>
+		<td colspan=1 class="tdcampos"><a href="#" OnClick="modificar_estado();" class="boton">Modificar</a></td>
+        </tr>
+
+	<tr>
+	<tr> <td>&nbsp;</td>
+	</tr>
+
+	<tr>
+                <td colspan=1 class="tdtitulos">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nombre del País</td>
+                <td colspan=1><select name="pais" class="campos">
+		<option value="">-- Seleccione el país --</option>
+		<?php
+		while($f_pais = asignar_a($r_pais)){
+			echo "<option value=".$f_pais['id_pais'].">".$f_pais['pais']."</option>";
+		}
+		?>
+		</select>
+		</td>
+		
+        </tr>	
+	
+	<tr>
+	<tr> <td>&nbsp;</td>
+	</tr>
+
+	<tr>
+
+		<td colspan=1 class="tdtitulos">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nombre del Estado</td>
+
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="estado" maxlength=128 size=20 value=""></td>
+
+		<td colspan=1 class="tdcampos"><a href="#" OnClick="guardar_estado();" class="boton">Guardar</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+	
+	</tr>
+	<tr> <td>&nbsp;</td>
+</table>
+
+<div id="guardar_estado"></div>
+<div id="modificar_estado"></div>
+</form>

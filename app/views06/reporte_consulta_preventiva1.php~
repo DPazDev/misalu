@@ -1,0 +1,286 @@
+<?php
+
+/* Nombre del Archivo: reporte_consulta_preventiva.php
+   Descripción: Realiza la busqueda en la base de datos, para Reporte de Impresión: Relación Consultas Preventivas
+*/ 
+
+   include ("../../lib/jfunciones.php");
+   sesion();
+   $fecre1=$_REQUEST['fecha1'];
+   $fecre2=$_REQUEST['fecha2'];
+   $ci=$_REQUEST['ci'];   
+
+
+
+/*echo "******************* <br>";
+echo $fecre1."<br>"; 
+echo "******************* <br>";
+echo $fecre2."<br>"; 
+echo "******************* <br>";
+echo $ci."<br>"; 
+echo "******************* <br>";
+echo $tipcliente."<br>"; 
+echo "******************* <br>";*/
+
+$q_cliente=("select clientes.cedula,clientes.id_cliente from clientes where clientes.cedula=$ci");
+$r_cliente=ejecutar($q_cliente);
+$f_cliente=asignar_a($r_cliente);
+
+echo $f_cliente['cedula']."--";
+echo $ci."**";
+
+$q_ti=("select clientes.cedula, titulares.id_cliente from clientes, titulares where clientes.cedula=$ci and titulares.id_cliente=clientes.id_cliente ");
+$r_ti=ejecutar($q_ti);
+$f_ti=asignar_a($r_ti);
+
+$q_be=("select clientes.cedula, beneficiarios.id_cliente from clientes, beneficiarios where clientes.cedula=$ci and beneficiarios.id_cliente=clientes.id_cliente ");
+$r_be=ejecutar($q_be);
+$f_be=asignar_a($r_be);
+
+echo $f_cliente[id_cliente]."//";
+echo $f_ti[id_cliente]."***";
+echo $f_be[id_cliente];
+
+if($f_cliente[cedula]!=$ci){?>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+<tr>
+		<td class="titulo_seccion" colspan="7"> No existe un Cliente con el N&uacute;mero de C&eacute;dula <? echo"$ci"; ?></td>     
+	</tr>
+</table><?}
+else {
+
+if($f_cliente['id_cliente']==$f_ti['id_cliente'] || $f_cliente['id_cliente']==$f_be['id_cliente']){
+
+
+
+
+?>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+	<tr>
+		<td class="titulo_seccion" colspan="7">Reporte de Relaci&oacute;n Consultas Preventivas del Cliente </td>     
+	</tr>
+</table>	
+ <br>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 > 
+
+<?php if($f_cliente['id_cliente']==$f_ti['id_cliente']){
+
+	$q_titular=("select clientes.id_cliente, clientes.nombres, clientes.apellidos, clientes.cedula, titulares.id_cliente, titulares.id_titular, titulares.id_ente, entes.nombre from clientes, titulares, entes where clientes.cedula=$ci and
+titulares.id_cliente=clientes.id_cliente and
+titulares.id_ente=entes.id_ente");
+	$r_titular=ejecutar($q_titular);
+
+		while($f_titular=asignar_a($r_titular,NULL,PGSQL_ASSOC)){
+
+?>
+	<tr> 
+		<td class="tdtitulosd">Relaci&oacute;n de <?php echo " $fecre1 al $fecre2 ";?></td>
+	</tr>
+
+	<tr> 
+		<td >&nbsp;</td>
+	</tr>	
+
+	<tr> 
+		<td class="tdtituloss">Nombre y Apellido del Titular:&nbsp;&nbsp;&nbsp; <? echo "$f_titular[nombres] $f_titular[apellidos]";?></td>
+	</tr>
+
+<tr> 
+		<td class="tdtituloss">C&oacute;digo:&nbsp;&nbsp;&nbsp; <? echo "$f_titular[id_titular]"; ?></td>
+	</tr>
+
+<tr> 
+		<td class="tdtituloss">C&eacute;dula del Titular:&nbsp;&nbsp;&nbsp; <? echo "$f_titular[cedula]" ;?></td>
+	</tr>
+<tr> 
+		<td class="tdtituloss">Ente:&nbsp;&nbsp;&nbsp; <? echo "$f_titular[nombre]";?></td>
+	</tr>
+<tr> 
+		<td class="tdtituloss">Las Consultas Preventivas que lleva el Cliente son:</td>
+	</tr>
+<tr> 
+		<td >&nbsp;</td>
+	</tr>
+</table>	 	
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 border=1> 
+
+<tr> 
+
+		<td class="tdtituloss">Proceso</td>   
+		<td class="tdtituloss">Fecha</td>     
+		<td class="tdtituloss">Especialidad M&eacute;dica</td> 
+		<td class="tdtituloss">Descripci&oacute;n</td>  
+		<td class="tdtituloss" colspan=2 >An&aacute;lisis T&eacute;cnico</td> 
+		<td class="tdtituloss">Operador</td> 
+		      
+	</tr>
+
+<?
+	$q_proceso=("select consultas_preventivas.*, procesos.*, gastos_t_b.descripcion, admin.nombres from consultas_preventivas, procesos, gastos_t_b, admin where 
+consultas_preventivas.id_titular=$f_titular[id_titular] and
+consultas_preventivas.id_titular=procesos.id_titular and
+consultas_preventivas.id_proceso=procesos.id_proceso and
+procesos.id_proceso=gastos_t_b.id_proceso and
+procesos.id_admin=admin.id_admin and
+consultas_preventivas.id_beneficiario=0 and
+consultas_preventivas.fecha_creado>='$fecre1' and
+consultas_preventivas.fecha_creado<='$fecre2' order by consultas_preventivas.especialidad_medica");
+	$r_proceso=ejecutar($q_proceso);
+		$i=1;
+		while($f_proceso=asignar_a($r_proceso,NULL,PGSQL_ASSOC)){
+		
+echo"
+	<tr> 
+
+		<td class=\"tdtituloss\">$f_proceso[id_proceso]</td>   
+		<td class=\"tdtituloss\">$f_proceso[fecha_creado]</td>     
+		<td class=\"tdtituloss\">$f_proceso[especialidad_medica]</td> 
+		<td class=\"tdtituloss\">$f_proceso[descripcion]</td>  
+		<td class=\"tdtituloss\" colspan=2 >$f_proceso[comentarios]</td> 
+		<td class=\"tdtituloss\">$f_proceso[nombres]</td> 	      
+	</tr>"
+		?>
+
+<? $i++; } }
+}
+?>
+
+
+
+
+<?php if($f_cliente['id_cliente']==$f_be['id_cliente']){
+
+$q_beneficiario=("select clientes.id_cliente, clientes.nombres, clientes.apellidos, clientes.cedula, beneficiarios.id_cliente, beneficiarios.id_titular, beneficiarios.id_beneficiario, titulares.id_titular, titulares.id_ente, entes.nombre from clientes, titulares, beneficiarios, entes where clientes.cedula=$ci and
+beneficiarios.id_cliente=clientes.id_cliente and
+titulares.id_titular=beneficiarios.id_titular and
+titulares.id_ente=entes.id_ente");
+	$r_beneficiario=ejecutar($q_beneficiario);
+
+		while($f_beneficiario=asignar_a($r_beneficiario,NULL,PGSQL_ASSOC)){
+
+
+$q_tit_ben=("select clientes.id_cliente, clientes.nombres, clientes.apellidos, clientes.cedula, titulares.id_cliente, titulares.id_titular, titulares.id_ente, entes.nombre from clientes, titulares, entes where 
+titulares.id_cliente=clientes.id_cliente and
+titulares.id_titular=$f_beneficiario[id_titular] and
+titulares.id_ente=entes.id_ente");
+$r_tit_ben=ejecutar($q_tit_ben);
+$f_tit_ben=asignar_a($r_tit_ben);
+		
+
+?>
+<tr> 
+		<td class="tdtitulosd">Relaci&oacute;n de <?php echo " $fecre1 al $fecre2 ";?></td>
+	</tr>
+
+	<tr> 
+		<td >&nbsp;</td>
+	</tr>	
+
+	<tr>
+	<tr> 
+		<td class="tdtituloss">Nombre y Apellido del Titular:&nbsp;&nbsp;&nbsp; <? echo "$f_tit_ben[nombres] $f_tit_ben[apellidos]";?></td>
+	</tr>
+
+<tr> 
+		<td class="tdtituloss">C&oacute;digo:&nbsp;&nbsp;&nbsp; <? echo "$f_tit_ben[id_titular]"; ?></td>
+	</tr>
+
+<tr> 
+		<td class="tdtituloss">C&eacute;dula del Titular:&nbsp;&nbsp;&nbsp; <? echo "$f_tit_ben[cedula]" ;?></td>
+	</tr>
+ 
+<tr> 
+		<td class="tdtituloss">Ente:&nbsp;&nbsp;&nbsp; <? echo "$f_tit_ben[nombre]";?></td>
+	</tr>
+<tr>
+		<td >&nbsp;</td>
+	</tr>
+<tr>
+	<tr> 
+		<td class="tdtituloss">Nombre y Apellido del Beneficiario:&nbsp;&nbsp;&nbsp; <? echo "$f_beneficiario[nombres] $f_beneficiario[apellidos]";?></td>
+	</tr>
+
+<tr> 
+		<td class="tdtituloss">C&oacute;digo:&nbsp;&nbsp;&nbsp; <? echo "$f_beneficiario[id_beneficiario]"; ?></td>
+	</tr>
+
+<tr> 
+		<td class="tdtituloss">C&eacute;dula del Beneficiario:&nbsp;&nbsp;&nbsp; <? echo "$f_beneficiario[cedula]" ;?></td>
+	</tr>
+
+
+
+<tr>
+		<td class="tdtituloss">Las Consultas Preventivas que lleva el Cliente son:</td>
+	</tr>
+<tr> 
+		<td >&nbsp;</td>
+	</tr>
+
+</table>	 	
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 border=1> 
+
+	<tr> 
+
+		<td class="tdtituloss">Proceso</td>   
+		<td class="tdtituloss">Fecha</td>     
+		<td class="tdtituloss">Especialidad M&eacute;dica</td> 
+		<td class="tdtituloss">Descripci&oacute;n</td>  
+		<td class="tdtituloss" colspan=2 >An&aacute;lisis T&eacute;cnico</td> 
+		<td class="tdtituloss">Operador</td> 
+		      
+	</tr>
+<?
+
+	$q_proceso=("select consultas_preventivas.*, procesos.*, gastos_t_b.descripcion, admin.nombres from consultas_preventivas, procesos, gastos_t_b, admin where 
+
+consultas_preventivas.id_titular=procesos.id_titular and
+consultas_preventivas.id_proceso=procesos.id_proceso and
+procesos.id_proceso=gastos_t_b.id_proceso and
+procesos.id_admin=admin.id_admin and
+consultas_preventivas.id_beneficiario=$f_beneficiario[id_beneficiario] and
+consultas_preventivas.fecha_creado>='$fecre1' and
+consultas_preventivas.fecha_creado<='$fecre2' order by consultas_preventivas.especialidad_medica");
+	$r_proceso=ejecutar($q_proceso);
+		$i=1;
+		while($f_proceso=asignar_a($r_proceso,NULL,PGSQL_ASSOC)){
+		
+echo"
+	<tr> 
+
+		<td class=\"tdtituloss\">$f_proceso[id_proceso]</td>   
+		<td class=\"tdtituloss\">$f_proceso[fecha_creado]</td>     
+		<td class=\"tdtituloss\">$f_proceso[especialidad_medica]</td> 
+		<td class=\"tdtituloss\">$f_proceso[descripcion]</td>  
+		<td class=\"tdtituloss\" colspan=2 >$f_proceso[comentarios]</td> 
+		<td class=\"tdtituloss\">$f_proceso[nombres]</td> 	      
+	</tr>"
+		?>
+
+<? $i++;}}}
+?>
+
+	<tr> <td colspan=7>&nbsp;</td>
+	</tr>
+	<tr>
+	        <td colspan=7 class="tdtitulos" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hay un total de <? echo $i-1; ?> Consultas Preventivas  </td>
+	        
+	</tr>
+
+</table>
+
+<br>
+
+	<tr>
+	        <td colspan=7 class="tdcamposs" title="Imprimir reporte">
+			  <?php
+			$url="'views06/ireporte_consulta_preventiva.php?fecha1=$fecre1&fecha2=$fecre2&ci=$ci&tipcliente=$tipcliente'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton">Imprimir</a>
+			</td>
+	</tr><?}}?>
+	<br> 
+</table>

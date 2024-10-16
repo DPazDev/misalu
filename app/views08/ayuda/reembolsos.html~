@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Registrar Reembolsos<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Registrando un Reembolso</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Una vez que se el usuario se ha registrado en el sistema, deberá acceder al módulo <I>Clientes</I> luego seleccionar <I>Reg Orden</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/1r.jpg" WIDTH=765 HEIGHT=402 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 1</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se muestra un cuadro de texto donde se debe colocar el número de Cédula del cliente que solicita el reembolso y se selecciona el servicio <I>REEMBOLSO-AMBULATORIO</I>, se da un click en <I>Buscar</I>.</P>
+<P><div align="center"><IMG SRC="imagenes/2r.jpg" WIDTH=765 HEIGHT=108 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 2</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al registrar el Reembolso, se debe llenar: El cuadro médico, Comentario, Monto y tipo de Servicio (seleccionar Reembolso en cada item), luego dar un click en <I>Calcular Monto</I> y en <I>Proceso en Espera</I>. (ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/3r.jpg" WIDTH=765 HEIGHT=799 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 3</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">La Orden se coloca en espera para que sea evaluada por un Analista, luego de que se ha calculado el monto del reembolso y puesto en espera, el sistema indicará que el mismo esta en espera bajo un número de orden</I>. (ver figura 4)</P>
+<P><div align="center"><IMG SRC="imagenes/4r.jpg" WIDTH=765 HEIGHT=156 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 4</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al dar un click sobre <I>Reembolso en Espera</I>, saldrá un recibo indicando los datos del reembolso y que el mismo pasará a revisión. (ver figura 5)</P>
+<P><div align="center"><IMG SRC="imagenes/5r.jpg" WIDTH=765 HEIGHT=484 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 5</div></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Retomando un Orden de Reembolso en Espera</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">En el Módulo <I>Clientes</I> se selecciona <I>Ret Orden Espera.</I> (ver figura 6)</P>
+<P><div align="center"><IMG SRC="imagenes/6r.jpg" WIDTH=765 HEIGHT=251 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 6</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Se introduce el Número de Orden que está en espera, se selecciona el tipo de servicio <I>REEMBOLSO-AMBULATORIO</I> y se da un click en <I>Buscar</I>. (ver figura 7)</P>
+<P><div align="center"><IMG SRC="imagenes/7r.jpg" WIDTH=765 HEIGHT=141 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 7</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">En este paso se registra con más detalle los reembolso, se especifica el nombre de medicamento y lugar donde se relizó la compra del mismo, para las consultas y exámenes se especifica el lugar donde se realizaron, y para todos se registra el número de factura. (ver figura 8)</P>
+<P><div align="center"><IMG SRC="imagenes/8r.jpg" WIDTH=765 HEIGHT=799 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 8</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Por ultimo se da un click en <I>calcular</I> de nuevo el monto, y se da un click en <I>Guardar</I>, de esta manera el sistema indica que los gastos del reembolso de la Orden que estaba en Espera, se registraron con Exito. (ver figura 9)</P>
+<P><div align="center"><IMG SRC="imagenes/9r.jpg" WIDTH=765 HEIGHT=126 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 9</div></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Actualizando un Orden de Reembolso</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de que se han especificados los datos del reembolso, se actualiza el mismo para que sea candidato a pago, este paso requiere mayor atención del Analista pues éste debe verificar que los medicamentos, consultas y exámenes sean pertinentes con el cuadro clínico que presenta el Cliente.  Para realizar esta actualiación se busca en el Módulo <I>Cliente</I> la opción: <I>Act Orden</I>. (ver figura 10)</P>
+<P><div align="center"><IMG SRC="imagenes/10r.jpg" WIDTH=765 HEIGHT=276 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 10</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Se mostrará de nuevo los datos del reembolso correspondiente al número de orden ingresado, En éste nuevo formulario el Analista de realizar algún Comentario, si no es pertinente el pago de algún medicamento, consulta o examen, se indica el cuadro de texto <I>Comentario Gerente Operación</I>. Si el monto del reembolso es mayor a 500BsF. no requerirá un <I>Comentario Médico</I>, pero si se deberá indicar que el mismo no lo amerita por ser un monto menor a lo especificado.  Se verifican los <I>Monto reserva</I>, si existe un monto que no fue aprobado en la columna de <I>Monto Aceptado</I> se identifica y se coloca en cero (0).  Luego se da un Click en <I>Calcular Montos</I> y se da otro click en <I>Actualizar Orden</I>. (Ver figura 11)</P>
+<P><div align="center"><IMG SRC="imagenes/11r.jpg" WIDTH=765 HEIGHT=586 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 11</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">El sistema mostrará en pantalla que la Orden se actulizó con éxito. (ver figura 12)</P>
+<P><div align="center"><IMG SRC="imagenes/12r.jpg" WIDTH=765 HEIGHT=127 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 12</div></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Por ultimo se realiza la visualización de los Comentarios y Finiquitos para su posterior impresión, haciendo click en <I>Comentarios</I> y <I>Finiquito</I>.(ver figura 13 y 14)</P>
+<P><div align="center"><IMG SRC="imagenes/13r.jpg" WIDTH=765 HEIGHT=463 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 13</div></P>
+<P><div align="center"><IMG SRC="imagenes/14r.jpg" WIDTH=765 HEIGHT=463 BORDER=0></div></P>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center">Figura 14</div></P>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="inicio.html">Volver al menú inicial</A></U></FONT></div></P>
+</BODY>
+</HTML>

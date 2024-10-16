@@ -1,0 +1,943 @@
+<?php
+include("conexion.php");
+$ruta_instalacion = "/misalu";
+$ruta_imagenes= $ruta_instalacion."../public/images";
+$ip = $_SERVER['REMOTE_ADDR'];
+/*
+$datetime = new DateTime('NOW');
+//  echo "<br> fecha actual";
+$datetime->format('Y-m-d H:i:s') . "\n";
+$la_time = new DateTimeZone('America/Caracas');
+$datetime->setTimezone($la_time);
+$FechaServer=$datetime->format('Y-m-d');
+$HoraServer=$datetime->format('h:i:s');*/
+function menu($tipo){
+	$b=true;
+
+	foreach ($_SESSION['permisos'] as $codigo) {
+		foreach ($codigo as $seccion) {
+			if($seccion[codigo]==$tipo){
+			   echo "<a href=\"#\"$seccion[url] class=\"opciones_menu\">$seccion[modulo]</a><br>";
+			   $b=false;
+			  }
+		}
+	}
+	if($b)	echo "Sin opciones.";
+}
+
+function menud($tipo){
+        $b=true;
+
+        foreach ($_SESSION['permisos'] as $codigo) {
+                foreach ($codigo as $seccion) {
+                        if($seccion[codigo]==$tipo){
+                           echo " <li><a href=\"#\"$seccion[url]>$seccion[modulo]</a></li>";
+                           $b=false;
+                          }
+                }
+        }
+        if($b)  echo "Sin opciones.";
+
+}
+
+function revisar_pagina($pagina){
+	$b=true;
+	foreach ($_SESSION['permisos'] as $codigo) {
+		foreach ($codigo as $seccion) {
+			if($seccion[url]==$pagina)   $b=false;
+		}
+	}
+	if($b)	mensaje("No tienes permisos para acceder a esta página.");
+}
+
+
+
+function cabecera($titulo1){
+
+$cabecera="
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+<html>
+<head>
+<title>$titulo1</title>
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">
+<link HREF=\"../public/stylesheets/estilos.css\" HREF=\"../public/stylesheets/menu.css\" rel=\"stylesheet\" type=\"text/css\">
+<link HREF=\"../public/stylesheets/estilos.css\" HREF=\"../public/stylesheets/style.css\" rel=\"stylesheet\" type=\"text/css\">
+<LINK href=\"../public/stylesheets/menuprin.css\" rel=\"stylesheet\" type=\"text/css\">
+<LINK href=\"../public/stylesheets/index.css\" rel=\"stylesheet\" type=\"text/css\">
+<LINK href=\"../public/stylesheets/autocomplete.css\" rel=\"stylesheet\" type=\"text/css\">
+<link href=\".../public/stylesheets/default.css\"     rel=\"stylesheet\" type=\"text/css\">
+<link href=\"../public/stylesheets/alert.css\"          rel=\"stylesheet\" type=\"text/css\">
+<link href=\"../public/stylesheets/modalbox.css\"          rel=\"stylesheet\" type=\"text/css\">
+<link href=\"../public/stylesheets/cajas.css\"          rel=\"stylesheet\" type=\"text/css\">
+<link href=\"../public/stylesheets/alphacube.css\" rel=\"stylesheet\" type=\"text/css\">
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/scripts.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/ajax.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/general.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/prototype.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/scriptaculous.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/modalbox.js\"></script>
+</head>
+<body ><div >
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/js/app.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/js/libs/stats.js\"></script>
+
+<script type=\"text/javascript\" language=\"JavaScript\" charset=\"iso-8859-1\"></script>
+";
+
+return ($cabecera);
+
+}
+
+function cabecera1($titulo1){
+
+$cabecera="
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+<html>
+<head>
+<title>$titulo1</title>
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">
+<link HREF=\"../../public/stylesheets/estilos.css\" HREF=\"../../public/stylesheets/menu.css\" rel=\"stylesheet\" type=\"text/css\">
+
+<link href=\".../public/stylesheets/default.css\"     rel=\"stylesheet\" type=\"text/css\">
+<link href=\"../public/stylesheets/alert.css\"          rel=\"stylesheet\" type=\"text/css\">
+<link href=\"../public/stylesheets/alphacube.css\" rel=\"stylesheet\" type=\"text/css\">
+<LINK href=\"../../public/stylesheets/menuprin.css\" rel=\"stylesheet\" type=\"text/css\">
+
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/js/app.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/js/libs/stats.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../public/javascripts/particles.js\"></script>
+
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../../public/javascripts/scripts.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../../public/javascripts/ajax.js\"></script>
+<script language=\"JavaScript\" type=\"text/javascript\" src=\"../../public/javascripts/general.js\"></script>
+
+</head>
+<body translate='no'>
+";
+
+return ($cabecera);
+
+}
+
+
+function pie(){
+$pie="
+
+</div>
+</body>
+</html>";
+
+return ($pie);
+}
+
+function noacento($text){
+$trans = get_html_translation_table(HTML_ENTITIES);
+foreach ($trans as $literal =>$entity){
+   if (ord($literal)>=192){
+     $replace[]=substr($entity,1,1);
+     $search[]=$literal;}}
+return strtoupper(str_replace($search, $replace, $text));
+}
+
+function cedula($cedula){
+	$cedula = str_replace(",","",$cedula);
+	$cedula = str_replace("/","",$cedula);
+	$cedula = str_replace(" ","",$cedula);
+	$cedula = str_replace("V","",$cedula);
+	$cedula = str_replace(".","",$cedula);
+	return $cedula;
+}
+
+function sesion(){
+	$_SESSION['enlace1']="index.php";
+	$_SESSION['boton1']="registrarse";
+//	if(!isset($_SESSION['permisos']))
+//		mensaje("Tu sesión ha expirado por favor ingresa de nuevo al sistema.");
+
+	if(empty($_SESSION['id_usuario_'.empresa])||empty($_SESSION['login_usuario_'.empresa]))
+		mensaje("No existe ninguna sesión abierta.<br>Por favor inicie una sesión.");
+}
+
+function logs($log,$ip,$id_user){
+	$fecha=date("Y-m-d");
+	$hora=date("h:i:s A");
+	$q_logs = "insert into logs (log,ip,id_admin,fecha_creado,hora_creado) values ('$log','$ip','$id_user','$fecha','$hora')";
+	$r_logs = ejecutar($q_logs);
+}
+
+function mensaje($mensaje){
+	die(Header("Location: mensaje.php?mensaje=$mensaje"));
+}
+
+function ejecutar($query){
+	return (pg_query($query));
+}
+
+function num_filas($recurso){
+	return (pg_num_rows($recurso));
+}
+
+function asignar_a($x){
+	return (pg_fetch_array($x));
+}
+
+function assoc_a($var1){
+       return (pg_fetch_assoc($var1));
+}
+
+function camfecha($fecha1){
+      $fecha_nac=$fecha1;
+      $dia_nac=substr($fecha_nac, 8, 2);
+      $mes_nac=substr($fecha_nac, 5, 2);
+      $anno_nac=substr($fecha_nac, 0, 4);
+      $fech1="$dia_nac/$mes_nac/$anno_nac";
+      return $fech1;
+}
+
+function cerrar($con){
+	return (pg_close($con));
+}
+
+function formato_montos($valor){
+	$pos=strpos($valor,'.');
+	$entero=$valor;
+	$decimal="00";
+	if($pos){
+		$entero=substr($valor, 0, $pos);
+		$decimal=substr($valor, $pos+1);
+	}
+	while(1){
+		$tamano_monto=strlen($entero);
+		if($tamano_monto>3){
+			if($nuevo_monto)	$nuevo_monto=".".substr($entero, -3, 3).$nuevo_monto;
+			else			$nuevo_monto=".".substr($entero, -3, 3);
+			$entero=substr($entero, 0,-3);
+		}else	return ("$entero$nuevo_monto,$decimal");
+	}
+}
+
+	//fORMATOS DE nUMEROS Y MONTOS
+function Formato_Numeros($Numero){
+	$dec='2';//decimales
+	$sepDec='.';//separador de decimales
+	$sepmil='';//separador de miles
+	$FormatoMonto=number_format($Numero,$dec, $sepDec, $sepmil);
+	return ($FormatoMonto);
+}
+
+function montos_print($cantidad){
+	$pos_punto = strpos($cantidad,'.');
+	$decimal = "00";
+	if($pos_punto > 0){
+		$largo_decimal = strlen(substr($cantidad,$pos_punto+1,strlen($cantidad)));
+		$decimal = substr($cantidad,$pos_punto+1,$largo_decimal);
+		$cantidad = substr($cantidad,0,strlen($cantidad)-($largo_decimal+1));
+	}
+	$num = floor(strlen($cantidad)/3);
+	$punto = strlen($cantidad)-3;
+	for($i = 0 ; $i < $num ; $i++){
+		if($punto > 0){
+			$cantidad = substr($cantidad,0,$punto).".".substr($cantidad,$punto,strlen($cantidad)-$punto);
+			$punto = $punto - 3;
+		}
+	}
+	$decimal=substr($decimal,0,2);
+	$cantidad = $cantidad.",".$decimal;
+	return $cantidad;
+}
+
+
+function fechas($inicio,$fin,$sele,$label,$tipo){
+$var="
+	<select name=\"$tipo\" class=\"campos\">
+		<option value=\"\">$label</option>";
+	for($i=$inicio;$i<$fin;$i++){
+		if($sele==$i)
+			$var.="<option selected value=\"$i\">$i</option>";
+		else
+			$var.="<option value=\"$i\">$i</option>";
+	}
+$var.="
+	</select>
+";
+return $var;
+
+}
+
+function dsemana($dia,$mes,$ano){
+    $numerodiasemana = date('w', mktime(0,0,0,$mes,$dia,$ano));
+    if ($numerodiasemana == 0)
+       $numerodiasemana = 6;
+    else
+       $numerodiasemana--;
+    return $numerodiasemana;
+}
+
+function mostrar_archivo($carpeta){
+    if(is_dir($carpeta)){
+	   if($dir = opendir($carpeta)){
+		   while(($archivo = readdir($dir)) !== false){
+		      if($archivo != '.' && $archivo != '..' && archivo != '.htaccess'){
+				     echo "<li>$archivo</li>";
+				  }
+		   }
+		   closedir($dir);
+	   }
+	}
+}
+
+function edad($dia,$mes,$ano){
+	$diaa=date("j");
+	$mesa=date("n");
+	$anoa=date("Y");
+	if($mes>$mesa){
+		return ($anoa-$ano-1);
+	}else
+		if($mesa==$mes && $dia < $diaa){
+			return ($anoa-$ano);
+		}else if($mesa==$mes && $dia > $diaa){
+			return ($anoa-$ano-1);
+		}else if($mesa>=$mes && $dia < $diaa){
+			return ($anoa-$ano);
+		}else if($mesa<=$mes && $dia >= $diaa){
+			return ($anoa-$ano);
+		}else
+			return ($anoa-$ano);
+}
+
+
+function calcular_edad($cadena_fecha){
+	list($ano,$mes,$dia) = split("-",$cadena_fecha,3);
+	$ano_actual = date("Y");
+	$mes_actual = date("m");
+	$dia_actual = date("d");
+	if($mes_actual==$mes && $dia <= $dia_actual){
+			return ($ano_actual-$ano);
+		}
+	else if($mes_actual==$mes && $dia > $dia_actual){
+			return ($ano_actual-$ano-1);
+		}
+	else if($mes_actual>=$mes && $dia <= $dia_actual){
+			return ($ano_actual-$ano);
+	}
+	else if($mes_actual>=$mes && $dia > $dia_actual){
+			return ($ano_actual-$ano);
+		}
+	else
+			return ($ano_actual-$ano-1);
+}
+
+
+//Funciones que definen la apariencia del sistema
+function cuerpo_1(){
+	$var="
+<br>
+<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=0>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan=2>
+		<table border=0 cellpadding=0 cellspacing=0 width=\"".$_SESSION['tamano_'.empresa]."\">
+			<tr>
+			<td align=\"left\"><img src=\"imagenes/izq_sup_a.gif\"></td>
+			<td class=\"celda_tabla\" width=\"100%\"></td>
+			<td align=\"right\"><img src=\"imagenes/der_sup_a.gif\"></td>
+			</tr>
+			<tr>
+			<td colspan=3 class=\"bg_celda2\">".$_SESSION['bienvenida_'.empresa]."
+			&nbsp;&nbsp;<a href=\"panel.php\" class=\"opciones_menu\"><img src=\"imagenes/iconos/inicio.gif\" width=\"16\" height=\"16\" border=0 alt=\"inicio\" title=\"inicio\"></a>&nbsp;&nbsp;<a href=\"logout.php\" class=\"opciones_menu\"><img src=\"imagenes/iconos/salir2.gif\" width=\"16\" height=\"16\" border=0 alt=\"salir del sistema\" title=\"salir del sistema\"></a></td>
+			</tr>
+		</table></td>
+	</tr>
+	<tr>
+		<td align=\"left\"><img src=\"imagenes/izq_sup_a.gif\"></td>
+
+		<td class=\"celda_tabla\" width=\"100%\"></td>
+		<td align=\"right\"><img src=\"imagenes/der_sup_a.gif\"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class=\"bg_celda\">
+	";
+	return $var;
+}
+
+function cuerpo_2(){
+	$var="
+		</td>
+	</tr>
+	<tr>
+		<td align=\"left\"><img src=\"imagenes/izq_inf_a.gif\"></td>
+
+		<td class=\"celda_tabla\" width=\"100%\"></td>
+		<td align=\"right\"><img src=\"imagenes/der_inf_a.gif\"></td>
+	</tr>
+</table>
+<br><br>
+	";
+	return $var;
+
+}
+
+function cuerpo_msj(){
+	$var="
+<br>
+<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=0>
+	<tr>
+		<td align=\"left\"><img src=\"imagenes/izq_sup_a.gif\"></td>
+
+		<td class=\"celda_tabla\" width=\"100%\"></td>
+		<td align=\"right\"><img src=\"imagenes/der_sup_a.gif\"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class=\"bg_celda\">
+	";
+	return $var;
+}
+
+function numeros_a_letras($numero){
+	//partir
+	$pos_punto = strpos($numero,'.');
+	$decimal = "00";
+	if($pos_punto > 0){
+		$decimal = substr($numero,$pos_punto+1,2);
+		$canti=explode ('.',$numero);
+		$entero=$canti[0];
+		$decima=$canti[1];
+//	$cantidad = substr($numero,0,strlen($numero)-strlen($decimal)-1);
+	$cantidad=$entero;
+	}else{
+		$decimal = "00";
+		$cantidad = $numero;
+	}
+
+	//Varibales globales
+	$unidad = array(1 => "UNO",2 => "DOS",3 => "TRES",4 => "CUATRO",5 => "CINCO",6 => "SEIS",7 => "SIETE",8 => "OCHO",9 => "NUEVE");
+	$decenas = array(1 => "DIEZ",2 => "VEINTE",3 => "TREINTA",4 => "CUARENTA",5 => "CINCUENTA",6 => "SESENTA",7 => "SETENTA",8 => "OCHENTA",9 => "NOVENTA");
+	$centenas = array(1 => "CIENTO",2 => "DOSCIENTOS",3 => "TRESCIENTOS",4 => "CUATROCIENTOS",5 => "QUINIENTOS",6 => "SEISCIENTOS",7 => "SETECIENTOS",8 => "OCHOCIENTOS",9 => "NOVECIENTOS");
+
+	//ESCRIBIR
+	//	ENTERO
+	$largo_entero = strlen($cantidad);
+	if($largo_entero > 6){
+		$entero_millon = substr($cantidad,0,$largo_entero-6);
+		$entero_miles = substr($cantidad,$largo_entero-6,$largo_entero);
+		$largo_entero_millon = strlen($entero_millon);
+	}else {
+		$entero_millon = 0;
+		$entero_miles = substr($cantidad,0,$largo_entero);
+		$largo_entero_millon = 0;
+	}
+	$largo_entero_miles = strlen($entero_miles);
+	$num_letras = "";
+
+	switch($largo_entero_millon){
+		case 1:
+			if($entero_millon[0]==1)
+					$num_letras .= $unidad[$j]." MILLON ";
+			else{
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($entero_millon[0] == $j){
+					$num_letras .= $unidad[$j]." MILLONES ";
+					break;
+				}
+			}
+			}
+			break;
+		case 2:
+			for($j = 0 ; $j <= 9 ; $j++){
+				if($entero_millon[0] == $j){
+					$num_letras .= $decenas[$j];
+					break;
+				}
+			}
+			for($i  = 0 ; $i <= 9 ; $i++){
+				if($entero_millon[1] == $i){
+					if($entero_millon[1] == 0){
+						$num_letras .= " MILLONES ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$i]." MILLONES ";
+						break;
+					}
+				}
+			}
+			break;
+		case 3:
+			for($j = 0 ; $j <= 9 ; $j++){
+				if($entero_millon[0] == $j){
+					$num_letras .= $centenas[$j];
+					break;
+				}
+			}
+			for($i = 0 ; $i <= 9 ; $i++){
+				if($entero_millon[1] == $i){
+					$num_letras .= " ".$decenas[$i];
+					break;
+				}
+			}
+			for($k = 0 ; $k <= 9 ; $k++){
+				if($entero_millon[2] == $k){
+					if($entero_millon[2] == 0){
+						$num_letras .= " MILLONES ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$k]." MILLONES ";
+						break;
+					}
+				}
+			}
+			break;
+		case 4:
+			for($j = 0 ; $j <= 9 ; $j++){
+				if($entero_millon[0] == $j){
+					$num_letras .= $unidad[$j]." MIL ";
+					break;
+				}
+			}
+			for($i = 0 ; $i <= 9 ; $i++){
+				if($entero_millon[1] == $i){
+					$num_letras .= $centenas[$i];
+					break;
+				}
+			}
+			for($k = 0 ; $k <= 9 ; $k++){
+				if($entero_millon[2] == $k){
+					$num_letras .= " ".$decenas[$k];
+					break;
+				}
+			}
+			for($l = 0 ; $l <= 9 ; $l++){
+				if($entero_millon[3] == $l){
+					if($entero_millon[3] == 0){
+						$num_letras .= " MILLONES ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$l]." MILLONES ";
+						break;
+					}
+				}
+			}
+			break;
+		case 5:
+			for($j = 0 ; $j <= 9 ; $j++){
+				if($entero_millon[0] == $j){
+					$num_letras .= $decenas[$j];
+					break;
+				}
+			}
+			for($i = 0 ; $i <= 9 ; $i++){
+				if($entero_millon[1] == $i){
+					if($entero_millon[1] == 0){
+						$num_letras .= " MIL ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$i]." MIL ";
+						break;
+					}
+				}
+			}
+			for($k = 0 ; $k <= 9 ; $k++){
+				if($entero_millon[2] == $k){
+					$num_letras .= $centenas[$k];
+					break;
+				}
+			}
+			for($l = 0 ; $l <= 9 ; $l++){
+				if($entero_millon[3] == $l){
+					$num_letras .= " ".$decenas[$l];
+					break;
+				}
+			}
+			for($m = 0 ; $m <= 9 ; $m++){
+				if($entero_millon[4] == $m){
+					if($entero_millon[4] == 0){
+						$num_letras .= " MILLONES ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$m]." MILLONES ";
+						break;
+					}
+				}
+			}
+			break;
+		case 6:
+			for($j = 0 ; $j <= 9 ; $j++){
+				if($entero_millon[0] == $j){
+					$num_letras .= $centenas[$j];
+					break;
+				}
+			}
+			for($i = 0 ; $i <= 9 ; $i++){
+				if($entero_millon[1] == $i){
+					$num_letras .= " ".$decenas[$i];
+					break;
+				}
+			}
+			for($k = 0 ; $k <= 9 ; $k++){
+				if($entero_millon[2] == $k){
+					if($entero_millon[2] == 0){
+						$num_letras .= " MIL ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$k]." MIL ";
+						break;
+					}
+				}
+			}
+			for($l = 0 ; $l <= 9 ; $l++){
+				if($entero_millon[3] == $l){
+					$num_letras .= $centenas[$l];
+					break;
+				}
+			}
+			for($m = 0 ; $m <= 9 ; $m++){
+				if($entero_millon[4] == $m){
+					$num_letras .= " ".$decenas[$m];
+					break;
+				}
+			}
+			for($n = 0 ; $n <= 9 ; $n++){
+				if($entero_millon[5] == $n){
+					if($entero_millon[5] == 0){
+						$num_letras .= " MILLONES ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$n]." MILLONES ";
+						break;
+					}
+				}
+			}
+			break;
+	}
+	switch($largo_entero_miles){
+		case 1:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($entero_miles[0] == $j){
+					$num_letras .= $unidad[$j];
+					break;
+				}
+			}
+			break;
+		case 2:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($entero_miles[0] == $j){
+					$num_letras .= $decenas[$j];
+					break;
+				}
+			}
+			for($i  = 1 ; $i <= 9 ; $i++){
+				if($entero_miles[1] == $i){
+						$num_letras .= " Y ".$unidad[$i];
+						break;
+				}
+			}
+			break;
+		case 3:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($entero_miles[0] == $j){
+					$num_letras .= $centenas[$j];
+					break;
+				}
+			}
+			for($i = 1 ; $i <= 9 ; $i++){
+				if($entero_miles[1] == $i){
+					$num_letras .= " ".$decenas[$i];
+					break;
+				}
+			}
+			for($k = 1 ; $k <= 9 ; $k++){
+				if($entero_miles[2] == $k){
+					$num_letras .= " Y ".$unidad[$k];
+					break;
+				}
+			}
+			break;
+		case 4:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($entero_miles[0] == $j){
+					$num_letras .= $unidad[$j]." MIL ";
+					break;
+				}
+			}
+			for($i = 1 ; $i <= 9 ; $i++){
+				if($entero_miles[1] == $i){
+					$num_letras .= $centenas[$i];
+					break;
+				}
+			}
+			for($k = 1 ; $k <= 9 ; $k++){
+				if($entero_miles[2] == $k){
+					$num_letras .= " ".$decenas[$k];
+					break;
+				}
+			}
+			for($l = 1 ; $l <= 9 ; $l++){
+				if($entero_miles[3] == $l){
+					$num_letras .= " Y ".$unidad[$l];
+					break;
+				}
+			}
+			break;
+		case 5:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($entero_miles[0] == $j){
+					$num_letras .= $decenas[$j];
+					break;
+				}
+			}
+			for($i = 0 ; $i <= 9 ; $i++){
+				if($entero_miles[1] == $i){
+					if($entero_miles[1] == 0){
+						$num_letras .= " MIL ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$i]." MIL ";
+						break;
+					}
+				}
+			}
+			for($k = 1 ; $k <= 9 ; $k++){
+				if($entero_miles[2] == $k){
+					$num_letras .= $centenas[$k];
+					break;
+				}
+			}
+			for($l = 1 ; $l <= 9 ; $l++){
+				if($entero_miles[3] == $l){
+					$num_letras .= " ".$decenas[$l];
+					break;
+				}
+			}
+			for($m = 1 ; $m <= 9 ; $m++){
+				if($entero_miles[4] == $m){
+					$num_letras .= " Y ".$unidad[$m];
+					break;
+				}
+			}
+			break;
+		case 6:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($entero_miles[0] == $j){
+					$num_letras .= $centenas[$j];
+					break;
+				}
+			}
+			for($i = 1 ; $i <= 9 ; $i++){
+				if($entero_miles[1] == $i){
+					$num_letras .= " ".$decenas[$i];
+					break;
+				}
+			}
+			for($k = 0 ; $k <= 9 ; $k++){
+				if($entero_miles[2] == $k){
+					if($entero_miles[2] == 0){
+						$num_letras .= " MIL ";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$k]." MIL ";
+						break;
+					}
+				}
+			}
+			for($l = 1 ; $l <= 9 ; $l++){
+				if($entero_miles[3] == $l){
+					$num_letras .= $centenas[$l];
+					break;
+				}
+			}
+			for($m = 1 ; $m <= 9 ; $m++){
+				if($entero_miles[4] == $m){
+					$num_letras .= " ".$decenas[$m];
+					break;
+				}
+			}
+			for($n = 1 ; $n <= 9 ; $n++){
+				if($entero_miles[5] == $n){
+						$num_letras .= " Y ".$unidad[$n];
+						break;
+				}
+			}
+			break;
+	}
+	$largo_decimal = strlen($decimal);
+	switch($largo_decimal){
+		case 1:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($decimal[0] == $j){
+					$num_letras .= " CON ".$decenas[$j]." CENTIMOS";
+					break;
+				}
+			}
+			break;
+		case 2:
+			for($j = 1 ; $j <= 9 ; $j++){
+				if($decimal[0] == $j){
+					$num_letras .= " CON ".$decenas[$j];
+					break;
+				}
+			}
+			for($i  = 0 ; $i <= 9 ; $i++){
+				if($decimal[1] == $i){
+					if($decimal[1] == 0){
+						if($decimal[0] != 0)
+							$num_letras .= " CENTIMOS";
+						break;
+					}else{
+						$num_letras .= " Y ".$unidad[$i]." CENTIMOS";
+						break;
+					}
+				}
+			}
+			break;
+	}
+	$num_letras = str_replace("DIEZ Y UNO","ONCE",$num_letras);
+	$num_letras = str_replace("DIEZ Y DOS","DOCE",$num_letras);
+	$num_letras = str_replace("DIEZ Y TRES","TRECE",$num_letras);
+	$num_letras = str_replace("DIEZ Y CUATRO","CATROCE",$num_letras);
+	$num_letras = str_replace("DIEZ Y CINCO","QUINCE",$num_letras);
+	$num_letras = str_replace("DIEZ Y SEIS","DIESCISEIS",$num_letras);
+	$num_letras = str_replace("DIEZ Y SIETE","DIESISIETE",$num_letras);
+	$num_letras = str_replace("DIEZ Y OCHO","DIESCIOCHO",$num_letras);
+	$num_letras = str_replace("DIEZ Y NUEVE","DIESCINUEVE",$num_letras);
+	return $num_letras;
+}
+
+function numtolet($num,$sex)
+{
+        if (strlen($num)>14) return "inserte valores menores de 100 billones";
+        if ($num==0) return "cero";
+        $cien[0] = " cien";
+
+        $units[1] = "un";
+        $units[2] = "dos";
+        $units[3] = "tres";
+        $units[4] = "cuatro";
+        $units[5] = "cinco";
+        $units[6] = "seis";
+        $units[7] = "siete";
+        $units[8] = "ocho";
+        $units[9] = "nueve";
+
+        $teens[11] = " once";
+        $teens[12] = " doce";
+        $teens[13] = " trece";
+        $teens[14] = " catorce";
+        $teens[15] = " quince";
+
+        $decen[1] = " diez";
+        $decen[2] = " veinte";
+        $decen[3] = " treinta";
+        $decen[4] = " cuarenta";
+        $decen[5] = " cincuenta";
+        $decen[6] = " sesenta";
+        $decen[7] = " setenta";
+        $decen[8] = " ochenta";
+        $decen[9] = " noventa";
+
+        $cente[1] = " ciento ";
+        $cente[2] = " doscient".$sex." ";
+        $cente[3] = " trescient".$sex." ";
+        $cente[4] = " cuatrocient".$sex." ";
+        $cente[5] = " quinient".$sex." ";
+        $cente[6] = " seiscient".$sex." ";
+        $cente[7] = " setecient".$sex." ";
+        $cente[8] = " ochocient".$sex." ";
+        $cente[9] = " novecient".$sex." ";
+
+        $deceny[1] = " dieci";
+        $deceny[2] = " veinti";
+        $deceny[3] = " treinta y ";
+        $deceny[4] = " cuarenta y ";
+        $deceny[5] = " cincuenta y ";
+        $deceny[6] = " sesenta y ";
+        $deceny[7] = " setenta y ";
+        $deceny[8] = " ochenta y ";
+        $deceny[9] = " noventa y ";
+
+        $n = 0;
+        if (substr(strstr(strlen($num)/3,"."),1,1)==3){
+        $e = 2;
+        $numero[0] = "--";
+        }else if (substr(strstr(strlen($num)/3,"."),1,1)==6){
+        $e = 1;
+        $numero[0] = "-";
+        }else{
+        $e = 0;
+        }
+
+        for ($i=0;$i<strlen($num);$i++){
+        if ($e==3){ $n ++; $e = 0;}
+        $numero[$n] .= substr($num,$i,1);
+        $e ++;
+        }
+
+        for ($i=0;$i<count($numero);$i++){
+        if ($numero[$i]=="100"){
+        $cadena[$i] = $cien[0];
+        }else{
+        if (substr($numero[$i],0,1)!="-")
+        $cadena[$i] = $cente[substr($numero[$i],0,1)];
+        if (substr($numero[$i],1,2)>10 && substr($numero[$i],1,2)<16){
+        $cadena[$i] .= $teens[substr($numero[$i],1,2)];
+        }else{
+        if (substr($numero[$i],2,1)=="0"){
+        $cadena[$i] .= $decen[substr($numero[$i],1,1)];
+        }else{
+        if (substr($numero[$i],1,1)!="-")
+        $cadena[$i] .= $deceny[substr($numero[$i],1,1)];
+        if (substr($numero[$i],2,1)!="-")
+        $cadena[$i] .= $units[substr($numero[$i],2,1)];
+        }
+        }
+        }
+        }
+
+        $n = count($cadena);
+        for ($i=0;$i<count($cadena);$i++){
+        if ($n==5){
+        $cantidad .= $cadena[$i];
+        if (trim($cadena[$i])=="un"){
+        $cantidad .= " billon";
+        }else{
+        $cantidad .= " billones";
+        }
+        }else if ($n==4){
+        if (trim($cadena[$i])!=""){
+        if (trim($cadena[$i])=="un"){
+        $cantidad .= " mil";
+        }else{
+        $cantidad .= $cadena[$i]." mil";
+        }
+        }
+        }else if ($n==3){
+        if (trim($cadena[$i-1])!="" || trim($cadena[$i])!=""){
+        $cantidad .= $cadena[$i];
+        if (trim($cadena[$i])=="un"){
+        $cantidad .= " millon";
+        }else{
+        $cantidad .= " millones";
+        }
+        }
+        }else if ($n==2){
+        if (trim($cadena[$i])!=""){
+        if (trim($cadena[$i])=="uno"){
+        $cantidad .= " mil";
+        }else{
+        $cantidad .= $cadena[$i]." mil";
+        }
+        }
+        }else{
+        $cantidad .= $cadena[$i];
+        }
+        $n--;
+        }
+        return $cantidad;
+}
+
+
+define("DIRECCION_FISCAL", "AV ANDRES BELLO EDIF LAS TAPIAS PISO 3 LOCAL 44 URB LAS TAPIAS MERIDA MÉRIDA ZONA POSTAL 5101.");
+define("DIRECCION_MERIDA", "CLINISALUD MERIDA CALLE 25 ENTRE AV. 7 Y 8, EDIFICIO EL CISNE, TLFS. (0274) 2510092 FAX. (0274) 2510910.");
+define("DIRECCION_VIGIA", "CLINISALUD EL VIGIA AVENIDA BOLIVAR, ESQUINA CON AVENIDA 12 CALLE 6 EDIFICIO LIEGOS TLFS. (0275) 8814608-8811520 FAX (0275) 8815293.");
+define("DIRECCION_QUIROFANO", " ");
+
+
+?>

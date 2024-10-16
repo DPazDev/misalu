@@ -1,0 +1,29 @@
+<?php
+/* Nombre del Archivo: guardar_telefono.php
+   Descripción: GUARDA en la base de datos los Números Telefonicos modificados, para utilizarlo posteriormente
+*/
+
+include("../../lib/jfunciones.php");
+sesion();
+$id_cli = $_REQUEST['id_cli'];
+$telef = $_REQUEST['telef'];
+$celular = $_REQUEST['celular'];
+
+$q_tel = "update clientes set telefono_hab='$telef',telefono_otro='$celular' where clientes.id_cliente='$id_cli'";
+$r_tel = ejecutar($q_tel);
+
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera4"  cellpadding=0 cellspacing=0>
+<tr>		
+<td colspan=4 class="titulo_seccion"> Se Modifico con Exito el Número Telefónico <?php echo $tarje;?></td>	
+</tr>	
+
+	<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="reg_telefono();" class="boton">Insertar o Modificar otro Número Telefónico</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+
+</table>

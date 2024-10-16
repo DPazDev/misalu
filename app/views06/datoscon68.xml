@@ -1,0 +1,4801 @@
+﻿<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Styles>
+    <Style ss:ID="Default" ss:Name="Normal">
+      <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1" />
+      <Borders />
+      <Font />
+      <Interior />
+      <NumberFormat ss:Format="0.000" />
+      <Protection />
+    </Style>
+  </Styles>
+<Worksheet ss:Name="Comprobante Diario">
+<Table ss:ExpandedColumnCount="23" ss:ExpandedRowCount="xxx" x:FullColumns="1">
+<Row>
+<Cell>
+          <Data ss:Type="String">Rg</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuenta</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Descripcion</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Comentario</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Debe</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Haber</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">C.Costo</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Moneda</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cambio</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Tipo Doc.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Doc Ref</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cu. Gastos</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Auxiliar</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Atributo1</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Atributo2</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Atributo3</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Regla</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Fec. Doc</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Afecta Flujo Efec.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Monto no afecta</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Afecta posición monetaria</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Monto no afecta posición</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Modifica Patrimonio</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">1</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">VIDAMED CONSULTORES S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">62000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15595</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J309698079</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">2</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">88456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15596</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">02/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">3</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACTURA ANULADA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15597</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">03/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">4</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">20000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15598</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">03/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">5</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">103456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15599</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">03/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">6</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">81456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15600</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">03/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">7</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">204912</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15597-00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">03/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">8</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">TIRE SHOP MERIDA CA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">115456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15601</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J408129442</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">07/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">9</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">TIRE SHOP MERIDA CA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">115456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15601</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J408129442</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">07/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">10</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACTURA ANULADA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15602</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J408129442</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">07/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">11</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">TIRE SHOP MERIDA CA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">115456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15603</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J408129442</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">07/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">12</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">TIRE SHOP MERIDA CA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">115456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15603</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J408129442</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">07/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">13</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">ESERVAVEN, C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">98500</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15604</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J400560098</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">13/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">14</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">ESERVAVEN, C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">98500</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15604</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J400560098</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">13/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">15</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACTURA ANULADA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15605</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J296644470</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">13/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">16</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">MEDSURE OCUPACIONAL C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">63390</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15606</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J296644470</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">14/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">17</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">MEDSURE OCUPACIONAL C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">62500</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15607</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J296644470</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">14/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">18</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">MEDSURE OCUPACIONAL C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">125890</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15605-07</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J296644470</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">14/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">19</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">PASTEURIZADORA TACHIRA C.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">79500</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15608</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J070014733</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">14/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">20</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">PASTEURIZADORA TACHIRA C.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">79500</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15608</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J070014733</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">14/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">21</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">DISTRIBUIDORA TITAN, C.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">95456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15609</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J001445587</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">14/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">22</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">DISTRIBUIDORA TITAN, C.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">25000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15610</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J001445587</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">23</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">DISTRIBUIDORA TITAN, C.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">120456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15609-10</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J001445587</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">24</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">91000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15611</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">25</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">20000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15612</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">26</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">111000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15611-12</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">27</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">RECT-MOTOR C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">104456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15613</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J090183302</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">28</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">RECT-MOTOR C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">104456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15614</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J090183302</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">29</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">RECT-MOTOR C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">208912</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15613-14</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J090183302</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">30</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">98456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15615</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">31</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">CONDOMINIO DEL MERCADO PPAL DEL EDO MERIDA</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">98456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15615</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J306773860</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">32</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">125806</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15616</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">33</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">115806</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15617</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">34</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">241612</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15616-17</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">16/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">35</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">112956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15618</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">23/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">36</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">112956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15618</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">23/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">37</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">PANDOCK MERIDA, C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">79850</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15619</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J300569640</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">23/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">38</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">PANDOCK MERIDA, C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">118456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15620</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J300569640</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">23/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">39</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">PANDOCK MERIDA, C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">198306</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15619-20</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J300569640</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">23/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">40</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">VIDAMED CONSULTORES S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">79850</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15621</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J309698079</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">27/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">41</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">VIDAMED CONSULTORES S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">91350</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15622</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J309698079</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">27/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">42</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">VIDAMED CONSULTORES S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">171200</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15621-22</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J309698079</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">27/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">43</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">MERCADOS DE ALIMENTOS C.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">104747</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15623</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">G200035919</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">27/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">44</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">MERCADOS DE ALIMENTOS C.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">104747</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15623</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">G200035919</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">27/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">45</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">DISTRIBUIDORA NUBE AZUL LOS ANDES C.A. (DINAZANDES, C.A.)</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">25000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15624</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J311293590</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">28/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">46</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">DISTRIBUIDORA NUBE AZUL LOS ANDES C.A. (DINAZANDES, C.A.)</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">25000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15625</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J311293590</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">28/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">47</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">DISTRIBUIDORA NUBE AZUL LOS ANDES C.A. (DINAZANDES, C.A.)</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">50000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15624-25</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J311293590</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">28/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">48</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">ATRIO SEGUROS, S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">126956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15626</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J002980265</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">28/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">49</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">ATRIO SEGUROS, S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">111956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15627</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J002980265</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">28/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">50</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">ATRIO SEGUROS, S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">238912</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15626-27</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J002980265</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">28/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">51</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">121956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15628</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">52</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">121956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15629</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">53</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">121956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15630</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">54</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">132456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15631</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">55</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">HIPERMERCADO YUAN LIN,C.A</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">498324</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15628-31</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J305514755</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">56</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">125456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15632</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">57</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">125456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15633</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">58</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">125456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15634</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">59</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">109456</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15635</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">60</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">485824</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15632-35</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">61</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">1.01.03.01.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Cuentas por Cobrar Clientes</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">ATRIO SEGUROS, S.A.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">121956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15636</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J002980265</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+<Row xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Cell>
+          <Data ss:Type="Number">62</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">4.01.01.02.001</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">Ingresos por Servicios a Particulares</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">COMERCIALIZADORA EL VIGIA C.A. </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">121956</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">01</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">BSF</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">1.00000</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">FACT</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">15636-35</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">J304934262</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">
+          </Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">29/11/2017 12:00:00 a.m.</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="Number">0,00</Data>
+        </Cell>
+<Cell>
+          <Data ss:Type="String">false</Data>
+        </Cell>
+</Row>
+</Table>
+  </Worksheet>
+</Workbook>

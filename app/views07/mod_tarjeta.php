@@ -1,0 +1,56 @@
+<?php
+
+/* Nombre del Archivo: mod_tarjeta.php
+   Descripción: Solicita los datos para MODIFICAR EL NOMBRE DE TARJETA en la base de datos
+*/
+
+include("../../lib/jfunciones.php");
+sesion();
+
+$tar1 = $_REQUEST['tar1'];
+
+$q_tarj = "select tbl_nombre_tarjetas.id_nom_tarjeta,tbl_nombre_tarjetas.nombre_tar, tbl_nombre_tarjetas.id_tipo_pago from tbl_nombre_tarjetas where tbl_nombre_tarjetas.id_nom_tarjeta='$tar1';";
+$r_tarj = ejecutar($q_tarj);
+$f_tarj = asignar_a($r_tarj);
+
+$q_pago = "select tbl_tipos_pagos.id_tipo_pago, tbl_tipos_pagos.tipo_pago from tbl_tipos_pagos order by tbl_tipos_pagos.tipo_pago";
+$r_pago = ejecutar($q_pago);
+
+?>
+<script>
+
+</script>
+<form method="POST" action="mod_tarjeta.php" name="tar1">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+
+<tr>		<td colspan=4 class="titulo_seccion">Modificar Tarjeta</td>	</tr>		
+	<tr> <td>&nbsp;</td>
+	<tr>
+
+		<td colspan=1 class="tdtitulos">* Nuevo Nombre de Tarjeta</td>
+
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="tarje" maxlength=128 size=30 value="<?php echo $f_tarj['nombre_tar']; ?>"></td>
+		<input type="hidden" name="id_tar" value="<?php echo $f_tarj[id_nom_tarjeta];?>">
+
+		<td colspan=1 class="tdtitulos">* Tipo de Pago</td>
+ 		<td colspan=1 ><select name="pago" class="campos" style="width: 210px;">
+		<option value="">-- Seleccione el Tipo de Pago --</option>
+		<?php
+		while($f_pago = asignar_a($r_pago)){
+
+			if($f_pago['id_tipo_pago']==$f_tarj['id_tipo_pago'])
+			echo "<option value=\"".$f_pago['id_tipo_pago']."\"selected >".$f_pago['tipo_pago']."</option>";
+			else
+			echo "<option value=".$f_pago['id_tipo_pago'].">".$f_pago['tipo_pago']."</option>";
+		}
+		?>
+		</select>
+</tr>
+	<tr> <td>&nbsp;</td>
+<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="guardar_tarjeta1();" class="boton">Guardar</a> <a href="#" OnClick="reg_tarjeta();" class="boton">Insertar o Modificar otra Tarjeta</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+</tr>
+	<tr> <td>&nbsp;</td>
+</table>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Crear Donativo<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para crear un donativo el usuario deberá acceder al módulo <I>Compras</I> luego seleccionar <I>Crear Donativo</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo1.jpg" WIDTH=456 HEIGHT=210 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Aparecerá en pantalla un formulario, se deberá llenar los siguientes datos: Autorizado por (unicamente por el presidente de CliniSalud), Dependencia (de donde saldrá el donativo), Cédula del Cliente (la persona que solicita el donativo), Comentario (motivo del donativo), Selección de tipo de insumos (se podrá seleccionar uno o mas tipo de insumos). (ver figura 2)</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo2.jpg" WIDTH=617 HEIGHT=631 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Realizando un donativo</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de haber seleccionado la persona autorizada, la dependencia, debe colocarse el número de cédula del cliente solicitante del donativo y dar un clic en <I>Buscar</I>.  Si el cliente no está registrado el sistemá mostrará un mensaje de que el mismo no existe (ver figura 3) por tanto deberá registrarse dando un clic en <A HREF="rcliente.html"><I>Registrar</I></A>, de lo contrario deberá aparecer los datos del cliente (ver figura 4).  .</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo3.jpg" WIDTH=617 HEIGHT=279 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/cdonativo4.jpg" WIDTH=617 HEIGHT=303 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se continua con el proceso de petición de donativo sin realizar la busqueda del cliente el sistema indicará que debe darse clic en Buscar cliente para mostrar la información del mismo. (ver figura 5).</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo6.jpg" WIDTH=398 HEIGHT=148 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 5</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se realiza la busqueda del cliente y se escribe el comentario (motivo del donativo), al dar un clic en <I>Imprimir Solicitud</I>, aparecerá un formato petición de dicho donativo con los datos del cliente. (ver figura 6).</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo5.jpg" WIDTH=580 HEIGHT=420 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 6</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se da un clic en <I>Imprimir Solicitud</I> sin haber escrito el comentario, el sistema mostrará un mensaje de que dicho campo es necesario. (ver figura 7).</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo7.jpg" WIDTH=369 HEIGHT=143 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 7</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si no se escoge ningún tipo de insumo y se da un clic <I>Buscar</I>, el sistema mostrará un mensaje informando que debe seleccionarse al menos un tipo de insumo. (ver figura 8)</P>  
+<P><div align="center"><IMG SRC="imagenes/cdonativo8.jpg" WIDTH=398 HEIGHT=136 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 8</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de escoger un tipo de insumo, y dar un clic en <I>Buscar</I> (ver figura 9), aparecerá un formulario donde se podrá realizar la carga de uno o mas insumos pedidos por el solicitante del donativo. (ver figura 10).</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo9.jpg" WIDTH=771 HEIGHT=789 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 9</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/cdonativo9.jpg" WIDTH=617 HEIGHT=109 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 10</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al seleccionar el artículo se podrá visualizar la cantidad en existencia para saber si puede ser donando o no, se escribe la cantidad a donar (menor o igual a la cantidad en existencia), y se da un clic en <I>Procesar</I>, debajo de este formulario se irán visualizando los artículos cargados, cuando ya se hayan realizado todos los artículos a donar se dará un clic en <I>Guardar</I>. (ver figura 11)</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo11.jpg" WIDTH=617 HEIGHT=303 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 11</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Por ultimo el sistema indicará un número para dicho donativo el cual se ha generado exitosamente. (ver figura 12)</P>
+<P><div align="center"><IMG SRC="imagenes/cdonativo12.jpg" WIDTH=618 HEIGHT=69 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 12</I></div></FONT>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="compras.html">Volver al Módulo Compras</A></U></FONT></div></P>
+</BODY>
+</HTML>

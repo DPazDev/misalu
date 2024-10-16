@@ -1,0 +1,100 @@
+<?
+include ("../../lib/jfunciones.php");
+sesion();
+$fecha=date("Y-m-d");
+$hora=date("H:i:s");
+$elid=$_SESSION['id_usuario_'.empresa];
+$elus=$_SESSION['nombre_usuario_'.empresa];
+$elidpoliza=$_POST['lapolizaid'];
+$buscarpol=("select polizas.nombre_poliza from polizas where polizas.id_poliza=$elidpoliza;");
+$repbuspoli=ejecutar($buscarpol);
+$ladata=assoc_a($repbuspoli);
+$nompoliza=$ladata['nombre_poliza'];
+$lospartentesco=("select parentesco.id_parentesco,parentesco.parentesco from parentesco order by parentesco.parentesco;");
+$replosparentes=ejecutar($lospartentesco);
+$arregloedadini=array();
+$arregloedadinival=array();
+$arregloedadfin=array();
+$arregloedadfinval=array();
+
+for($i=0;$i<=99;$i++){
+    $arregloedadini[$i]=$i;
+	$arregloedadinival[$i]="$i a&ntilde;os";
+	$arregloedadfin[$i]=$i;
+    $arregloedadfinval[$i]="$i a&ntilde;os";
+}
+?>
+<input type="hidden" id="elidpoliza" value="<?echo $elidpoliza?>">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr> 
+         <td colspan=3 class="titulo_seccion">Cargar las primas para la p&oacute;liza <?echo $nompoliza ?></td>
+	</tr>	 
+ </table>	
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+         <td class="tdtitulos">Parentesco:</td>
+         <td class="tdcampos">
+			  <select id="elparentesco" class="campos"  style="width: 230px;" >
+			        <option value=""></option>
+              <?php  
+			         while($parentescos=asignar_a($replosparentes,NULL,PGSQL_ASSOC)){
+				?>
+					<option value="<?php echo $parentescos[id_parentesco]?>"> <?php echo "$parentescos[parentesco]"?>    
+					</option>
+			      <?}?>
+			 </select>  
+		  </td>
+</tr>
+<tr>
+		 <td class="tdtitulos">Descripci&oacute;n:</td>  
+	     <td class="tdtitulos"><TEXTAREA COLS=65 ROWS=3 id="descriprima" class="campos"></TEXTAREA></td>         </tr>   
+<tr>
+         <td class="tdtitulos">Edad inicio:</td>
+         <td class="tdcampos">
+			  <select id="edadinicio" class="campos"  style="width: 230px;" >
+			  <option value=""></option>
+              <?php  
+			         for($ed1=0;$ed1<=99;$ed1++){
+				?>
+					<option value="<?php echo $arregloedadini[$ed1]?>"> <?php echo "$arregloedadinival[$ed1]"?>    
+					</option>
+			      <?}?>
+			 </select>  
+		  </td>
+</tr>		 
+<tr>
+         <td class="tdtitulos">Edad fin:</td>
+         <td class="tdcampos">
+			  <select id="edadfin" class="campos"  style="width: 230px;" >
+			  <option value=""></option>
+              <?php  
+			         for($ed2=0;$ed2<=99;$ed2++){
+				?>
+					<option value="<?php echo $arregloedadfin[$ed2]?>"> <?php echo "$arregloedadfinval[$ed2]"?>    
+					</option>
+			      <?}?>
+			 </select>  
+		  </td>
+</tr>	
+<tr>
+       <td class="tdtitulos">Prima anual:</td>
+       <td class="tdcampos"><input type="text" id="primaunual" class="campos" size="25">Bs.S</td>
+ </tr>
+<tr>
+       <td class="tdtitulos">Prima semestral:</td>
+       <td class="tdcampos"><input type="text" id="primsemest" class="campos" size="25">Bs.S</td>
+ </tr> 
+<tr>
+       <td class="tdtitulos">Prima trimestral:</td>
+       <td class="tdcampos"><input type="text" id="primtrimes" class="campos" size="25">Bs.S</td>
+ </tr>  
+<tr>
+       <td class="tdtitulos">Prima mensual:</td>
+       <td class="tdcampos"><input type="text" id="primmes" class="campos" size="25">Bs.S</td>
+ </tr>   
+<tr>
+             <td  title="Procesar las primas para la p&oacute;liza"><label class="boton" style="cursor:pointer" onclick="guardaprimas()" >Procesar</label></td>   
+            </tr>  
+</table>
+<img alt="spinner" id="spinnerP1" src="../public/images/esperar.gif" style="display:none;" />  
+<div id="lasprimaspoliza"></div>

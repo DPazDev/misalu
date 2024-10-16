@@ -1,0 +1,305 @@
+<?php
+include ("../../lib/jfunciones.php");
+
+$proveedor=$_REQUEST['proveedor'];
+$conexa=$_REQUEST['conexa'];
+$procesos1=$_REQUEST['procesos1'];
+$banco=$_REQUEST['banco'];
+$numcheque=$_REQUEST['numcheque'];
+$factura1=$_REQUEST['factura1'];
+$controlfactura1=$_REQUEST['controlfactura1'];
+$idservicios1=$_REQUEST['idservicios1'];
+$rif=$_REQUEST['rif'];
+$honorarios_medicos1=$_REQUEST['honorarios_medicos1'];
+$gastos_clinicos1=$_REQUEST['gastos_clinicos1'];
+$ret1=$_REQUEST['ret1'];
+$prov=$_REQUEST['prov'];
+$nombreprov=$_REQUEST['nombreprov'];
+$fecha_emision1=$_REQUEST['fecha_emision1'];
+$direccionprov=$_REQUEST['direccionprov'];
+$iva1=$_REQUEST['iva1'];
+$retiva1=$_REQUEST['retiva1'];
+$total_iva=$_REQUEST['total_iva'];
+$anombrede=$_REQUEST['anombrede'];
+$cedularif=$_REQUEST['cedularif'];
+$personaprov=$_REQUEST['personaprov'];
+
+$procesos2=split("@",$procesos1);
+$factura2=split("@",$factura1);
+$controlfactura2=split("@",$controlfactura1);
+$idservicios2=split("@",$idservicios1);
+$honorarios_medicos2=split("@",$honorarios_medicos1);
+$gastos_clinicos2=split("@",$gastos_clinicos1);
+$ret2=split("@",$ret1);
+$iva2=split("@",$iva1);
+$retiva2=split("@",$retiva1);
+$motivo=$_REQUEST['motivo'];
+$fecha_emision2=split("@",$fecha_emision1);
+$tipocuenta=$_REQUEST['tipocuenta'];
+if ($numcheque==0){
+	$banco=13;
+	}
+if ($banco==8)
+{
+$numcheque=0;
+}
+$fecha=date("Y");
+$anio=date("Y");
+$mes=date("m");
+$fechacreado=date("Y-m-d");
+$hora=date("H:i:s");
+/* **** busco el usuario admin **** */
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+/* **** fin de buscar el usuario admin **** */
+$codigo=time();
+/* **** busco el ultimo comprobante **** */
+$q_facturap="select * from facturas_procesos order by facturas_procesos.id_factura_proceso desc limit 1;";
+$r_facturap=ejecutar($q_facturap);
+
+if(num_filas($r_facturap)==0){
+	$no_comprobante="1";
+}
+else
+{
+	$f_facturap=asignar_a($r_facturap);
+	$no_comprobante=$f_facturap[comprobante];
+	$no_comprobante++;
+}
+/* **** fin buscar el ultimo comprobante **** */
+
+/* **** busco el ultimo comprobante retencion islr**** */
+$q_comretislr="select * from facturas_procesos where facturas_procesos.corre_ret_islr>0 and facturas_procesos.id_banco<>9 and facturas_procesos.fecha_creado>='2014-01-01' order by facturas_procesos.corre_ret_islr desc limit 1;";
+$r_comretislr=ejecutar($q_comretislr);
+
+
+
+
+if(num_filas($r_comretislr)==0){
+	$no_comp_ret_islr="1";
+	$ceros="00000000";
+	$length = strlen($no_comp_ret_islr);
+	$ceros= substr($ceros,0, - $length);
+	$no_comp_ret_islr1= $ceros . $no_comp_ret_islr;
+}
+else
+{
+	$f_comretislr=asignar_a($r_comretislr);
+	$no_comp_ret_islr=$f_comretislr[corre_ret_islr];
+	$no_comp_ret_islr++;
+	$ceros="00000000";
+	$length = strlen($no_comp_ret_islr);
+	$ceros= substr($ceros,0, - $length);
+	$no_comp_ret_islr1= $ceros . $no_comp_ret_islr;
+}
+
+/* **** fin buscar el ultimo comprobante islr**** */
+
+if ($total_iva>0){
+/* **** busco el ultimo comprobante retencion iva**** */
+$q_comretiva="select * from facturas_procesos where facturas_procesos.corre_retiva_seniat>0 and facturas_procesos.id_banco<>9 order by facturas_procesos.corre_retiva_seniat desc limit 1;";
+$r_comretiva=ejecutar($q_comretiva);
+
+if(num_filas($r_comretiva)==0){
+	$no_comp_ret_iva="1";
+	$ceros="00000000";
+	$length = strlen($no_comp_ret_iva);
+	$ceros= substr($ceros,0, - $length);
+	$no_comp_ret_iva1= $anio . "-" . $mes . "-" . $ceros . $no_comp_ret_iva;
+}
+else
+{
+	$f_comretiva=asignar_a($r_comretiva);
+	$no_comp_ret_iva=$f_comretiva[corre_retiva_seniat];
+	$no_comp_ret_iva++;
+	$ceros="00000000";
+	$length = strlen($no_comp_ret_iva);
+	$ceros= substr($ceros,0, - $length);
+	$no_comp_ret_iva1= $anio . "-" . $mes . "-" . $ceros . $no_comp_ret_iva;
+
+}
+}
+else
+{
+$no_comp_ret_iva1=0;
+$no_comp_ret_iva=0;
+}
+/* **** fin buscar el ultimo comprobante iva **** */
+
+
+/* **** busco el ultimo recibo segun la sucursal que pertenezca el admin **** */
+if ($banco==8)
+{
+$q_facturap1="select * from facturas_procesos where facturas_procesos.id_admin=admin.id_admin and admin.id_sucursal=$f_admin[id_sucursal] and facturas_procesos.id_banco=8 order by num_recibo desc limit 1;";
+$r_facturap1=ejecutar($q_facturap1);
+	
+if(num_filas($r_facturap1)==0){
+	$no_factura1="1";
+	$descripcion="Recibo numero $no_factura1";
+}
+else
+{
+		
+	$f_facturap1=asignar_a($r_facturap1);
+	$no_factura1=$f_facturap1[num_recibo];
+	$no_factura1++;
+	$descripcion="Recibo numero $no_factura1";
+}
+}
+
+else
+{
+	$descripcion="Cheque numero $numcheque";
+	$no_factura1=0;
+	}
+/* **** fin de buscar el ultimo recibo segun la sucursal que pertenezca el admin **** */
+
+$q="
+begin work;
+";
+
+for($i=0;$i<=$conexa;$i++){
+	
+	
+	$procesos=$procesos2[$i];
+	$factura=$factura2[$i];
+	$controlfactura=$controlfactura2[$i];
+	$idservicios=$idservicios2[$i];
+	$honorarios_medicos=$honorarios_medicos2[$i];
+	$gastos_clinicos=$gastos_clinicos2[$i];
+	$ret=$ret2[$i];
+	$iva=$iva2[$i];
+	$retiva=$retiva2[$i];
+	$fecha_emision=$fecha_emision2[$i];
+
+	if(!empty($procesos) && $procesos>0){
+			$procesot .=$procesos .",";
+			/*	echo $fechacreado;
+			echo "*****";
+			echo $hora;
+			echo "*****";
+			echo $admin;
+			echo "*****";
+			echo $codigo;
+			echo "*****";
+			echo $numcheque;
+			echo "*****";
+			echo $no_comprobante;
+			echo "*****";
+			echo $baseimponible;
+			echo "*****";
+			echo $iva_fact;
+			echo "*****";
+			echo $montoexento;
+			echo "*****";
+			echo $honorarios;
+			echo "*****";
+			echo $banco;
+			echo "*****";
+			echo $rif;
+			echo "*****";
+			echo $factura;
+			echo "*****";
+			echo $no_factura1;
+			echo "*****";
+			echo $idordcom;
+			echo "*****";
+			echo $no_comp_ret_iva1;
+			echo "*****";
+			echo $no_comp_ret_iva;
+			echo "*****";
+			echo $iva_ret;
+*/
+
+if ($banco==8)
+{
+	$q.="
+insert into facturas_procesos (id_proceso,fecha_creado,hora_creado,id_admin,id_servicio,codigo,id_proveedor,numero_cheque,comprobante,
+monto_con_retencion,retencion,descuento,iva,monto_sin_retencion,id_banco,cedula,tipo_proveedor,factura,num_recibo,
+id_orden_compra,compro_retiva_seniat,corre_retiva_seniat,iva_retenido,no_control_fact,fecha_emision_fact,
+corre_compr_islr,corre_ret_islr,anombre,ci,motivo,id_tipo_cuenta) 
+values ('$procesos','$fechacreado','$hora','$admin','$idservicios','$codigo','$proveedor','$numcheque','$no_comprobante',
+'$honorarios_medicos','$ret','0','$iva','$gastos_clinicos','$banco','$rif','$prov','$factura','$no_factura1',
+'0','0','0','$retiva','$controlfactura','$fecha_emision','$no_comp_ret_iva1','$no_comp_ret_iva','$anombrede','$cedularif','$motivo','$tipocuenta');
+";
+}
+else
+{
+	
+	$q.="
+insert into facturas_procesos (id_proceso,fecha_creado,hora_creado,id_admin,id_servicio,codigo,id_proveedor,numero_cheque,comprobante,
+monto_con_retencion,retencion,descuento,iva,monto_sin_retencion,id_banco,cedula,tipo_proveedor,factura,num_recibo,
+id_orden_compra,compro_retiva_seniat,corre_retiva_seniat,iva_retenido,no_control_fact,fecha_emision_fact,
+corre_compr_islr,corre_ret_islr,anombre,ci,motivo,id_tipo_cuenta) 
+values ('$procesos','$fechacreado','$hora','$admin','$idservicios','$codigo','$proveedor','$numcheque','$no_comprobante',
+'$honorarios_medicos','$ret','0','$iva','$gastos_clinicos','$banco','$rif','$prov','$factura','$no_factura1',
+'0','$no_comp_ret_iva1','$no_comp_ret_iva','$retiva','$controlfactura','$fecha_emision','$no_comp_ret_islr1','$no_comp_ret_islr','$anombrede','$cedularif','$motivo','$tipocuenta');
+";
+/* **** Actualizo el proceso **** */
+if ($banco==13){
+$mod_proceso="update procesos set id_estado_proceso='15'  where id_proceso='$procesos'";
+$fmod_proceso=ejecutar($mod_proceso);
+}
+else
+{
+	$mod_proceso="update procesos set id_estado_proceso='10'  where id_proceso='$procesos'";
+$fmod_proceso=ejecutar($mod_proceso);
+	}
+}
+
+
+}
+
+	}
+
+$q.="
+commit work;
+";
+$r=ejecutar($q);
+
+	
+/* **** Se registra lo que hizo el usuario**** */
+
+
+$log="Genero el $descripcion  para los id_orden_compra  ($procesot) y codigo numero $codigo";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">Cheque Generado Con Exito</td>	</tr>
+<tr>
+		<td class="tdtitulos"><?php
+		if ($f_admin[id_tipo_admin==11] || $f_admin[id_tipo_admin==7]){
+	
+			$url="'views04/icheque_prov_islr.php?codigo=$codigo&banco=$banco&nombreprov=$nombreprov&cedula=$rif&prov=$prov&id_proveedor=$proveedor&personaprov=$personaprov'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Cheque o Recibo"> Imprimir Cheque</a>
+			<?php
+	}
+			$url="'views04/icom_ret_islr.php?codigo=$codigo&banco=$banco&nombreprov=$nombreprov&cedula=$rif&prov=$prov&fecha_emision=$fechacreado&compro_retiva_islr=$no_comp_ret_islr1&direccionpro=$direccionprov&id_proveedor=$proveedor&personaprov=$personaprov'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Comprobante Retencion ISLR"> Imprimir Comprobante Ret. I.S.L.R.</a>
+			
+			<?php
+	
+			$url="'views04/icom_ret_islr2.php?codigo=$codigo&banco=$banco&nombreprov=$nombreprov&cedula=$rif&prov=$prov&fecha_emision=$fechacreado&compro_retiva_islr=$no_comp_ret_islr1&direccionpro=$direccionprov&id_proveedor=$proveedor&personaprov=$personaprov'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Comprobante Retencion ISLR"> Imprimir Comprobante Ret. I.S.L.R. 2</a>
+			
+			<?php
+	
+			$url="'views04/icom_ret_iva2.php?codigo=$codigo&banco=$banco&nombreprov=$nombreprov&cedula=$rif&prov=$prov&fecha_emision=$fechacreado&compro_retiva_seniat=$no_comp_ret_iva1&direccionpro=$direccionprov&id_proveedor=$proveedor&personaprov=$personaprov'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Comprobante Retencion Iva"> Imprimir Comprobante Ret. IVA</a>
+			
+			
+			<a href="#" OnClick="reg_che_prov();" class="boton" title="Ir a Cheques Proveedores">Crear Otro Cheque de Proveedor</a><a href="#" OnClick="ir_principal();" class="boton">salir</a>
+			</td>
+	</tr>
+
+</table>
+
+

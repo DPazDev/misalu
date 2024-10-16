@@ -1,0 +1,8 @@
+<?php
+
+/* Nombre del Archivo: guardar_ciudad2.php
+   Descripción: MODIFICA una CIUDAD en la base de datos, para ser utilizado posteriormente
+*/
+
+include("../../lib/jfunciones.php");
+sesion();

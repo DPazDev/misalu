@@ -1,0 +1,110 @@
+<?
+include ("../../lib/jfunciones.php");
+sesion();
+$lamatriz=$_SESSION['matriz'];
+$elmatriz=$_SESSION['matrizt'];
+$fecha=date("Y-m-d");
+$hora=date("H:i:s");
+$elid=$_SESSION['id_usuario_'.empresa];
+$elus=$_SESSION['nombre_usuario_'.empresa];
+$provees=$_POST['elproveedor'];
+$comentarioes=$_POST['elcoment'];
+$coberturaes=$_POST['lacobertu'];
+$recepciones=$_POST['fecharecep'];
+$idtipservi=$_POST['eltiposervi'];
+$idservi=$_POST['elservicio'];
+$montoadescargar=$_POST['montodescarga'];
+$numpresupuesto=$_POST['elpresupuesto'];
+$codigot=time();
+$pasogtb=0;
+$codigo=$elid.$codigot;
+$busctipodetiobe=("select coberturas_t_b.id_titular,coberturas_t_b.id_beneficiario,coberturas_t_b.monto_actual from coberturas_t_b where coberturas_t_b.id_cobertura_t_b=$coberturaes;");
+$repbusctiobe=ejecutar($busctipodetiobe);
+$databustiobe=assoc_a($repbusctiobe);
+$estitu=$databustiobe['id_titular'];
+$esbene=$databustiobe['id_beneficiario'];
+$montoactualcober=$databustiobe['monto_actual'];
+if($montoadescargar>$montoactualcober){
+	echo"<table class=\"tabla_cabecera3\"  cellpadding=0 cellspacing=0>
+      <tr>  
+         <td colspan=8 class=\"titulo_seccion\">El monto a descargar es mayor que la cobertura actual !!</td>   
+       </tr> 
+     </table>";
+	}else{
+
+		 //guardar el proceso para crear el gasto
+		$guardarenproceso=("insert into procesos(id_titular,id_beneficiario,id_estado_proceso,fecha_recibido,fecha_creado
+                                             ,hora_creado,comentarios,id_admin,codigo,nu_planilla) 
+                                   values($estitu,$esbene,2,'$recepciones','$fecha','$hora',
+                                            upper('$comentarioes'),$elid,'$codigo',$numpresupuesto);");
+		   $repguardaenproceso=ejecutar($guardarenproceso);									  
+		//busco lo que guarde en la tabla procesos
+         $buscoelproceso=("select procesos.id_proceso from procesos 
+                                     where procesos.id_titular=$estitu and
+				 procesos.id_beneficiario=$esbene and procesos.fecha_creado='$fecha' and 
+                                 procesos.hora_creado='$hora' and procesos.codigo='$codigo';");
+		$repbuscoelproceso=ejecutar($buscoelproceso);	
+		$databuscoelproceso=assoc_a($repbuscoelproceso);
+		$elprocesocargado=$databuscoelproceso['id_proceso'];
+		//guardo en la tabla gastos_t_b
+ 		$cuantos=count($lamatriz);  
+                 for ($f=0;$f<$cuantos;$f++){
+			 $cantidades= $lamatriz[$f][1];
+			 $precioprodu=$lamatriz[$f][2]; 
+			 $subtotalprod=$lamatriz[$f][3]; 
+                         $iddependencia=$lamatriz[$f][4];   
+			 $idinsumopro=$lamatriz[$f][5]; 
+                if($cantidades>=1){
+                $buscarnpro=("select tbl_insumos.insumo from tbl_insumos where id_insumo=$idinsumopro;");
+                $repbusnpro=ejecutar($buscarnpro);          
+                $datanopro=assoc_a($repbusnpro);
+                $elconceptoes=$datanopro['insumo'];
+                $servicios=("select tipos_servicios.tipo_servicio from tipos_servicios 
+                            where tipos_servicios.id_tipo_servicio=$idtipservi;");
+                $repservicios=ejecutar($servicios);
+                $dataservicio=assoc_a($repservicios); 
+                $producto=$dataservicio['tipo_servicio'];
+		$guardoengatotb=("insert into gastos_t_b(id_proceso,nombre,descripcion,fecha_creado,hora_creado,id_cobertura_t_b,
+                                                id_proveedor,id_tipo_servicio,id_servicio,monto_reserva,monto_aceptado,
+						monto_pagado,fecha_cita,hora_cita,unidades,id_dependencia,id_insumo) 
+					values
+                                           ($elprocesocargado,'$elconceptoes','$producto','$fecha','$hora',$coberturaes,
+                                        $provees,$idtipservi,$idservi,'$subtotalprod','$subtotalprod',
+                                        '$subtotalprod','$fecha','$hora','$cantidades',$iddependencia,$idinsumopro);"); 
+			$repguardoengatotb=ejecutar($guardoengatotb);						
+			$pasogtb=1;
+                $insumoalmacen=("select tbl_insumos_almacen.cantidad from tbl_insumos_almacen where 
+                                tbl_insumos_almacen.id_insumo=$idinsumopro and tbl_insumos_almacen.id_dependencia=$iddependencia;");
+                $repinsumoalmacen=ejecutar($insumoalmacen); 
+                $datainsalmacen=assoc_a($repinsumoalmacen);
+                $cantiactual=$datainsalmacen['cantidad']; 
+                $lanuevacanti=$cantiactual-$cantidades;
+                $actualizaralmacen=("update tbl_insumos_almacen set cantidad=$lanuevacanti where 
+                         tbl_insumos_almacen.id_insumo=$idinsumopro and tbl_insumos_almacen.id_dependencia=$iddependencia;"); 
+                $repactualmacen=ejecutar($actualizaralmacen);  
+                }
+	       }
+   if($pasogtb==1){
+	  $buscpararestar=("select coberturas_t_b.id_titular,coberturas_t_b.id_beneficiario,coberturas_t_b.monto_actual from coberturas_t_b where coberturas_t_b.id_cobertura_t_b=$coberturaes;");
+	   $repbuscpararestar=ejecutar($buscpararestar);  
+	   $datapararestar=assoc_a($repbuscpararestar);   
+	   $elmontoqtiene=$datapararestar['monto_actual'];
+	   $larestaes= $elmontoqtiene-$montoadescargar;
+	   $actualizolacober=("update coberturas_t_b set monto_actual=$larestaes where coberturas_t_b.id_cobertura_t_b=$coberturaes;");   
+	   $repactualizolacober=ejecutar($actualizolacober);   
+	
+	  echo"<table class=\"tabla_cabecera3\"  cellpadding=0 cellspacing=0>
+      <tr>  
+         <td colspan=8 class=\"titulo_seccion\">El proceso No. $elprocesocargado se ha cargado exitosamente!!</td>   
+         <td colspan=7 class=\"titulo_seccion\" title=\"Imprimir reporte\">";	  
+			$url="'views01/farmaext7.php?elproceso=$elprocesocargado'";?>
+			<a href="javascript: imprimir(<?php echo $url; ?>);" class="boton">Imprimir</a>
+			<?echo"</td>
+         <td class=\"titulo_seccion\"><label title=\"Regresar a Orden de M&eacute;dicamento\"class=\"boton\" style=\"cursor:pointer\" onclick=\"reg_farma()\" >Regresar</label></td>
+       </tr> 
+     </table>";
+	}
+
+}?>
+
+

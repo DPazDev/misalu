@@ -1,0 +1,57 @@
+<?php
+/* Nombre del Archivo: reporte_consultas_medicas_proveedor.php
+   Descripción: Realiza la busqueda en la base de datos, para el Reporte de Impresión: Morbilidad de los Proveedores Persona y Clinicas
+*/  
+
+
+ include ("../../lib/jfunciones.php");
+   sesion();
+   $fecre1=$_REQUEST['fecha1'];
+   $fecre2=$_REQUEST['fecha2'];
+
+list($id_sucursal)=explode("@",$_REQUEST['sucursal']);
+if($id_sucursal==0)	        $condicion_sucursal="";
+else
+$condicion_sucursal="and admin.id_sucursal=$id_sucursal";
+
+list($id_servicio)=explode("@",$_REQUEST['servicio']);
+if($id_servicio==0)	        $condicion_servicio="and (gastos_t_b.id_servicio=2 or gastos_t_b.id_servicio=3 or gastos_t_b.id_servicio=4 or gastos_t_b.id_servicio=8 or gastos_t_b.id_servicio=11 or gastos_t_b.id_servicio=14)";
+else
+$condicion_servicio="and gastos_t_b.id_servicio=$id_servicio";
+
+
+list($id_estado)=explode("@",$_REQUEST['estado']);
+if($id_estado==0)	        $condicion_estado="and (procesos.id_estado_proceso=2 or procesos.id_estado_proceso=7 or procesos.id_estado_proceso=14)";
+else
+$condicion_estado="and procesos.id_estado_proceso=$id_estado";
+
+list($proveedor)=explode("@",$_REQUEST['proveedor']);
+if($proveedor=="0")	        $condicion_proveedor="and s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and 
+personas_proveedores.id_persona_proveedor=s_p_proveedores.id_persona_proveedor";
+else
+$condicion_proveedor="and proveedores.id_proveedor=$proveedor";
+
+if($proveedor=='*')     $condicion_proveedor="and clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor";
+
+if($proveedor=='TODOS' )    $condicion_proveedor="";
+
+$q_servicio=("select servicios.id_servicio,servicios.servicio from servicios where servicios.id_servicio=$id_servicio");
+$r_servicio=ejecutar($q_servicio);
+$f_servicio=asignar_a($r_servicio);
+
+
+?>
+
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+	<tr>
+		<td class="titulo_seccion" colspan="19">Consultas M&eacute;dicas Proveedores, Relaci&oacute;n <? if ($id_servicio==0) echo "Todos los Servicios"; else echo $f_servicio[servicio];?> </td>
+</table>	
+ <br>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 > 
+	<tr> 
+		<td class="tdtitulosd" colspan=19> Relaci&oacute;n de <?php echo "$fecha1 al $fecha2";?></td>
+	</tr> 
+
+

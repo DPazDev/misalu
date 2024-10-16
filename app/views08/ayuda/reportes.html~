@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Módulo Reporte<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al acceder al módulo <I>Reportes</I> se pueden visualizar todos los reportes que pueden hacerse. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/reportes.jpg" WIDTH=600 HEIGHT=303 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Los reportes que pueden realizarse son: </P>
+<UL>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><I><A HREF="rclientesa.html">Clientes entre A y B años</A></I>: Esta opción permite Ver los Clientes entre un rango de edad A-B introducido por el usuario.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><I><A HREF="rclientesc.html">Clientes por Cobertura</A></I>: Esta opción permite Ver los Clientes según un tipo de Cobertura.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><I><A HREF="rclientese.html">Clientes por Ente</A></I>: Esta opción permite Ver los Clientes según un Ente seleccionado.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="cclientesp.html">Cobertura Clientes por Ente</A></I>: Esta opción permite Ver la cobertura de los Clientes por Ente.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="eclientes.html">Estado de los Clientes</A></I>: Esta opción permite Ver el estado de los Clientes si están Activos o Excluidos.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="construccion.html">Finiquitos</A></I>:Esta opción permite ver un reporte de los finiquitos procesados en un rango de tiempo, según: Sucursal, Servicio, Estado del Proceso y Tipo de Proveedor.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="gclientes.html">Gastos del Cliente</A></I>: Esta opción permite Ver un reporte con los Gastos de un Cliente.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="omedicamento.html">Ordenes de Medicamento</A></I>: Esta opción permite Ver un reporte de las Ordenes de Medicamentos.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="pentes.html">Parientes por Ente</A></I>: Esta opción permite Ver un reporte de los Parientes incluidos como Beneficiarios de cada uno de los Entes, puede seleccionarse el tipo de pariente (Padres, Abuelos, Hijos, Cónyuges, Hermanos).</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="pparametros.html">Por Parámetros</A></I>: Esta opción permite Ver un reporte de número de órdenes y su monto, según: Sucursal, Servicio prestado, Ente, Estado del Proceso, Tipo de Cliente y Proveedor.</P>
+	<LI><P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom:0cm"><I><A HREF="rentesp.html">Relación Ente Privado</A></I>: Esta opción permite Ver un reporte de los entes privados.</P>
+</UL>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="inicio.html">Volver a Menú Inicial</A></U></FONT></div></P>
+</BODY>
+</HTML>

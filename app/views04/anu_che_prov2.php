@@ -1,0 +1,49 @@
+<?php
+include ("../../lib/jfunciones.php");
+
+$codigo=$_REQUEST['codigo'];
+$motivo=strtoupper($_REQUEST['motivo']);
+
+
+$fecha=date("Y");
+$fechacreado=date("Y-m-d");
+$hora=date("H:i:s");
+/* **** busco el usuario admin **** */
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+/* **** **** */
+$q_facturas_procesos="select * from facturas_procesos where facturas_procesos.codigo='$codigo'";
+$r_facturas_procesos=ejecutar($q_facturas_procesos);
+$f_facturas_procesos=asignar_a($r_facturas_procesos);
+/* **** Actualizo la tabla procesos los procesos a candidato a pago **** */
+$mod_pro="update procesos set id_estado_proceso=7 from facturas_procesos where procesos.id_proceso=facturas_procesos.id_proceso and facturas_procesos.codigo='$codigo'";
+$fmod_pro=ejecutar($mod_pro);
+
+    
+/* **** Actualizo la tabla facturas_procesos los procesos a anulados **** */
+$mod_fpro="update facturas_procesos set monto_con_retencion=0,	iva=0, 	monto_sin_retencion=0, iva_retenido=0, numero_cheque='S/N',id_banco=9,id_banco_anulado=$f_facturas_procesos[id_banco],motivo='$motivo',compro_retiva_seniat='0',corre_retiva_seniat='0',corre_compr_islr='0',corre_ret_islr='0' where  facturas_procesos.codigo='$codigo'";
+$fmod_fpro=ejecutar($mod_fpro);
+
+/* **** Se registra lo que hizo el usuario**** */
+$log="Se Anulo el Comprobante  con el  codigo numero $codigo motivo $motivo";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">Cheque o Recibo Anulado Con Exito</td>	</tr>
+<tr>
+		<td class="tdtitulos">
+			
+			<a href="#" OnClick="che_reembolso();" class="boton" title="Ir a Chueques Reembolsos">Crear Otro Cheque de Reembolso</a><a href="#" OnClick="ir_principal();" class="boton">salir</a>
+			</td>
+	</tr>
+
+</table>
+
+

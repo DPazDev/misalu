@@ -1,0 +1,62 @@
+<?php
+include ("../../lib/jfunciones.php");
+
+
+$cedula=$_REQUEST['cedula'];
+$q_cliente=("select clientes.id_cliente,clientes.nombres,clientes.apellidos,clientes.cedula,estados_clientes.estado_cliente,titulares.id_titular,titulares.id_ente,entes.nombre from clientes,titulares,estados_t_b,estados_clientes,entes
+                where clientes.cedula='$cedula' and clientes.id_cliente=titulares.id_cliente and titulares.id_titular=estados_t_b.id_titular and estados_t_b.id_beneficiario=0 and estados_t_b.id_estado_cliente=estados_clientes.id_estado_cliente and titulares.id_ente=entes.id_ente");
+
+$r_cliente=ejecutar($q_cliente) or mensaje(ERROR_BD);
+$num_filas=num_filas($r_cliente);
+$f_cliente=asignar_a($r_cliente);
+if ($num_filas == 0) { 
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+
+<tr> <td colspan=4 class="titulo_seccion">El Numero de cedula no existe Si es particular debe dirigirse a administracion a cancelar la consulta si es afiliado y no a parece preguntar en dpto de nomina o operacion  </td>      </tr>
+
+	<tr>
+		<td class="tdtitulos"></td>
+		<td class="tdtitulos"><a href="#" OnClick="reg_cita();" class="boton">Registrar Citas</a></td>
+		<td class="tdtitulos"></td>
+		<td class="tdtitulos"><a href="#" OnClick="ir_principal();" class="boton">salir</a></td>
+		<td class="tdtitulos"></td>
+	</tr>
+	</table>
+<?php
+}
+else
+{
+?>
+
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr> <td colspan=4 class="titulo_seccion">  <?php echo  "El Numero de Cedula $cedula Pertenece a:"?></td></tr>
+<tr>
+		<td class="tdtitulos">Nombres</td>
+		<td class="tdcampos"><input class="campos" type="text" name="nombres" maxlength=128 size=20 value="<?php echo $f_cliente[nombres]?>"></td>
+		<td class="tdtitulos">Apellidos</td>
+		<td class="tdcampos"><input class="campos" type="text" name="apellidos" maxlength=128 size=20 value="<?php echo $f_cliente[apellidos]?>"></td>
+	</tr>	
+
+	<tr>
+	<td class="tdtitulos">Ente</td>
+	<td class="tdca
+	</tr>
+	
+
+
+	<tr>
+		<td class="tdtitulos"></td>
+		<td class="tdtitulos"><a href="#" OnClick="act_clientes();" class="boton">Registrar</a></td>
+		<td class="tdtitulos"></td>
+		<td class="tdtitulos"><a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+		<td class="tdtitulos"></td>
+	</tr>
+</table>
+
+<?php
+}
+?>
+

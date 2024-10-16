@@ -1,0 +1,141 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Color principal */
+  /* --color-primario:#06496a; */
+
+  /* Color para mes de cáncer de mama */
+  --color-primario:#a62851;
+}
+
+
+.centrar {
+  margin: 0 auto;
+}
+
+nav {
+  width: 500px;
+  margin: 10px auto 0 auto;
+}
+
+nav ul {
+  margin: 0;
+  padding: 7.5px 0;
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  gap: 20px;
+}
+
+nav ul li a {
+  background-color: rgb(255, 255, 255);
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-weight: bolder;
+  color:var(--color-primario);
+  text-decoration: none;
+}
+
+nav ul li:hover {
+  transform: scale(1.02);
+}
+
+nav ul li a:hover {
+  color: black;
+}
+
+#loginPage {
+  margin: 10px 20px;
+  display: flex;
+}
+
+#loginPage form {
+  margin: 0 auto 15px auto;
+  background-color: #fff;
+  padding: 20px 10px 0 10px;
+  border-radius: 15px;
+  -webkit-box-shadow: 0px 0px 8px 3.5px rgba(212,213,230,0.75);
+  -moz-box-shadow: 0px 0px 8px 3.5px rgba(212,213,230,0.75);
+  box-shadow: 0px 0px 8px 3.5px rgba(212,213,230,0.75);
+}
+
+#loginPage form .contenedor_imagen {
+  text-align: center;
+}
+
+#loginPage form .contenedor_imagen img {
+  border-radius: 10px;
+}
+
+#loginPage form .formulario_campos {
+  padding: 15px;
+}
+
+#loginPage form .formulario_campos .container_campos {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+#loginPage form .formulario_campos .container_campos label {
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--color-primario);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#loginPage form .formulario_campos .container_campos input {
+  width: 495px;
+  background-color: #eeeeee;
+  padding: 4px 7px;
+  outline: none;
+  border-width: 1px;
+  border-style: groove;
+  border-color: #d3d3d3;
+  border-radius: 5px;
+}
+
+#loginPage form .formulario_campos .container_campos input:hover{
+  transform: scale(1.02);
+}
+
+#loginPage form .formulario_botones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px 15px 15px;
+}
+
+#loginPage form .formulario_botones .recuperar {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+#loginPage form .formulario_botones .recuperar:hover {
+  color: var(--color-primario);
+}
+
+#loginPage form .formulario_botones .entrar {
+  font-size: 15px;
+  background: var(--color-primario);
+  padding: 9px 25px;
+  border-radius: 5px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+}
+
+#loginPage form .formulario_botones .entrar:hover {
+  transform: scale(1.07);
+}
+
+.texto {
+  margin: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color:var(--color-primario);
+  max-width: 500px;
+}

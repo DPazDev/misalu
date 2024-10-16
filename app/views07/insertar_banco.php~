@@ -1,0 +1,28 @@
+<?php
+/* Nombre del Archivo: insertar_banco.php
+   Descripción:FORMULARIO PARA INSERTAR un BANCO en la base de datos, para ser utilizado posteriormente 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+?>
+<link HREF="../../public/stylesheets/estilos1.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js">
+
+</script>
+
+<form action="POST" method="POST" name="banca" id="formp">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+<tr>		<td colspan=4 class="titulo_seccion">Insertar Banco</td>
+</tr>
+<br>		
+	<tr>
+		<td colspan=1 class="tdtitulos">* Nombre Banco</td>
+		<td colspan=1 class="tdcampos"><input type="text" size="30" class="campos" name="nombre"></td>
+</tr>
+<br>
+<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="guardar_var_global1();" class="boton">Guardar</a> <a href="#" OnClick="var_globales();" class="boton">Insertar o Modificar otra Variable Global</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>

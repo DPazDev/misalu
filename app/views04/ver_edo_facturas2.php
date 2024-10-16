@@ -1,0 +1,551 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+header('Content-Type: text/xml; charset=ISO-8859-1');
+$factura = $_REQUEST['factura'];
+$serie = $_REQUEST['serie'];
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_sucursales=("select * from sucursales  order by sucursales.sucursal");
+$r_sucursales=ejecutar($q_sucursales);
+$q_servicios=("select * from servicios  order by servicios.servicio");
+$r_servicios=ejecutar($q_servicios);
+$q_admin=("select * from admin  where admin.id_admin=$admin");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+//busco las series.
+$q_partidas= "select * from tbl_partidas";
+$r_partidas = ejecutar($q_partidas);
+
+$q_tipo_ente= "select * from tbl_tipos_entes where tbl_tipos_entes.id_tipo_ente=3  or tbl_tipos_entes.id_tipo_ente=5 order by tipo_ente";
+$r_tipo_ente = ejecutar($q_tipo_ente);
+
+$q_factura="select tbl_series.*,tbl_facturas.* from tbl_facturas,tbl_series,admin where tbl_facturas.numero_factura='$factura' 
+and tbl_facturas.id_serie=tbl_series.id_serie and tbl_series.id_serie='$serie' and tbl_facturas.id_admin=admin.id_admin;";
+$r_factura=ejecutar($q_factura);
+
+	if(num_filas($r_factura)==0){
+		?>
+		<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">La factura No Existe</td> 
+</tr>
+</table>
+	<?php
+	}
+	else
+	{
+			$f_factura = asignar_a($r_factura);
+			
+            $q_proceso="select * from procesos,tbl_procesos_claves
+ where procesos.id_proceso=tbl_procesos_claves.id_proceso and
+   tbl_procesos_claves.id_factura=$f_factura[id_factura]";
+$r_proceso=ejecutar($q_proceso);
+//echo $q_proceso;
+$f_proceso=asignar_a($r_proceso);
+
+/* busco si posee una nota de credito*/
+$q_notacre="select * from tbl_notacredito where tbl_notacredito.id_factura=$f_factura[id_factura]";
+$r_notacre=ejecutar($q_notacre);
+$num_filasn=num_filas($r_notacre);
+
+/* busco si es un recibo de cuadro de prima */
+ $q_recibo_contrato="select  entes.*,tbl_procesos_claves.*,tbl_recibo_contrato.*,tbl_contratos_entes.*
+from entes,tbl_procesos_claves,tbl_recibo_contrato,tbl_contratos_entes,tbl_facturas
+where tbl_facturas.id_recibo_contrato=tbl_recibo_contrato.id_recibo_contrato and 
+tbl_facturas.id_factura=tbl_procesos_claves.id_factura and
+tbl_facturas.id_factura=$f_factura[id_factura] and 
+tbl_recibo_contrato.id_contrato_ente=tbl_contratos_entes.id_contrato_ente and
+tbl_contratos_entes.id_ente=entes.id_ente ";
+$r_recibo_contrato=ejecutar($q_recibo_contrato);
+$f_recibo_contrato=asignar_a($r_recibo_contrato);
+
+
+$q_procesos="select * from tbl_procesos_claves where   tbl_procesos_claves.id_factura=$f_factura[id_factura]";
+$r_procesos=ejecutar($q_procesos);
+		
+        if ($f_factura[tipo_ente]>0)
+				{
+                    
+                    ?>
+                    
+                    	<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">Datos del Cliente</td> 
+</tr>
+
+					<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social: </td>
+<td class="tdcampos">GOBERNACION DEL ESTADO MERIDA - PLAN DE SALUD</td>
+<td class="tdtitulos">Rif o C.I. No.: </td>
+<td class="tdcampos">G-20000156-9</td>
+</tr>
+					<tr>
+<td class="tdtitulos">Direccion: </td>
+<td class="tdcampos">PLAZA BOLIVAR PALACIO DE GOBIERNO ENTRE AV. 2 Y 3 MERIDA EDO MERIDA</td>
+</tr>
+                    <?php
+                    }
+                    else
+                    {
+        
+		if ($f_factura[con_ente]>0)
+				{
+				//busco los datos del ente
+	$q_ente="select * from entes where entes.id_ente=$f_factura[con_ente]";
+	$r_ente = ejecutar($q_ente);
+	$f_ente = asignar_a($r_ente);
+					?>
+					<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">Datos del Cliente</td> 
+</tr>
+					<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social:</td>
+<td class="tdcampos"><?= $f_ente['nombre'] ?></td>
+<td class="tdtitulos">Rif o C.I. No.: </td>
+<td class="tdcampos"><?= $f_ente['rif'] ?></td>
+</tr>
+
+<tr>
+<td class="tdtitulos">Direcci&oacute;n:</td>
+<td class="tdcampos"><?= $f_ente['direccion'] ?></td>
+<td class="tdtitulos">Tel&eacute;fonos:</td>
+<td class="tdcampos"><?= $f_ente['telefonos'] ?></td>
+</tr>
+					<?php
+					}
+					else
+					{
+
+	
+	$id_titular = $f_proceso['id_titular'];
+	$id_beneficiario = $f_proceso['id_beneficiario'];
+	$proceso= $f_proceso['id_proceso'];
+	$clave= $f_proceso['no_clave'];
+	//busco los datos del ente
+	$q_ente="select entes.* from entes, titulares 
+			where 
+			titulares.id_titular = '$id_titular' and 
+			titulares.id_ente = entes.id_ente;";
+	$r_ente = ejecutar($q_ente);
+	$f_ente = asignar_a($r_ente);
+
+	//Busco los datos del titular.
+	$q_titular = "select clientes.* from clientes, titulares 
+			where 
+			clientes.id_cliente = titulares.id_cliente and
+			titulares.id_titular = '$id_titular'";
+	$r_titular = ejecutar($q_titular);
+	$f_titular = asignar_a($r_titular);
+
+	//Busco los datos del beneficiario.
+	if($id_beneficiario>0){
+	$q_bene = "select clientes.* from clientes, titulares, beneficiarios
+			where
+			clientes.id_cliente = beneficiarios.id_cliente and
+			titulares.id_titular = '$id_titular' and
+			beneficiarios.id_titular = titulares.id_titular and
+			beneficiarios.id_beneficiario = '$id_beneficiario'";
+	$r_bene = ejecutar($q_bene);
+	$f_bene = asignar_a($r_bene);
+	}
+	
+	
+?>
+
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">Datos del Cliente</td> 
+</tr>
+
+<?php
+if($f_ente['id_ente']!=0){
+?>
+<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social:</td>
+<td class="tdcampos"><?= $f_ente['nombre'] ?></td>
+<td class="tdtitulos">Rif o C.I. No.: </td>
+<td class="tdcampos"><?= $f_ente['rif'] ?></td>
+</tr>
+
+<tr>
+<td class="tdtitulos">Direcci&oacute;n:</td>
+<td class="tdcampos"><?= $f_ente['direccion'] ?></td>
+<td class="tdtitulos">Tel&eacute;fonos:</td>
+<td class="tdcampos"><?= $f_ente['telefonos'] ?></td>
+</tr>
+<tr>
+<td class="tdtitulos">Proceso</td>
+<td class="tdcampos"><?php echo $proceso; ?></td>
+<td class="tdtitulos">No. de Clave:</td>
+<td class="tdcampos"><?= $clave ?></td>
+</tr>
+<tr>
+<td class="tdtitulos">Titular: </td>
+<td class="tdcampos"><?= $f_titular['nombres'].' '.$f_titular['apellidos'] ?></td>
+<td class="tdtitulos">Cedula.</td>
+<td class="tdcampos"><?= $f_titular['cedula'] ?></td>
+</tr>
+<?php
+	if($id_beneficiario>0){
+?>
+	<tr>
+	<td class="tdtitulos">Beneficiario: </td>
+	<td class="tdcampos"><?= $f_bene['nombres'].' '.$f_bene['apellidos'] ?></td>
+	<td class="tdtitulos">Cedula</td>
+	<td class="tdcampos"><?= $f_bene['cedula'] ?></td>
+	</tr>
+<?php
+	}else{
+?>
+	<tr><td class="tdtitulos"><b></b>  <b></b></td></tr>
+<?php
+	}
+}
+else
+{
+?>
+<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social:</td>
+<td class="tdcampos"><?= $f_titular['nombres'] .' '.$f_titular['apellidos'] ?></td>
+<td class="tdtitulos">Rif o C.I. No.:</td>
+<td class="tdcampos"><?= $f_titular['cedula'] ?></td>
+</tr>
+<tr>
+<td class="tdtitulos">Direcci&oacute;n: </td>
+<td class="tdcampos"><?= $f_titular['direccion_hab'] ?></td>
+<td class="tdtitulos">Tel&eacute;fonos:</td>
+<td class="tdcampos"><?= $f_titular['telefono_hab'].' /  '.$f_titular['celular'] ?></td>
+</tr>
+<tr><td class="tdtitulos"><hr></td></tr>
+
+<?php
+}
+}
+}
+?>
+<tr>
+<td colspan=4 class="tdtitulos"><hr></td></tr>
+
+<?php
+if ($f_recibo_contrato[id_recibo_contrato]>0)
+				{
+                    
+                    ?>
+                    <tr>
+		<td class="tdcamposr" colspan=1 >Cuadro Recibo</td>
+		<td class="tdcamposr" colspan=1 ><?php echo $f_recibo_contrato[num_recibo_prima] ?></td>
+		</tr>
+	<tr>
+	<td class="tdtitulos" colspan=2 >CONCEPTO O DESCRIPCION	</td>
+	<td class="tdtitulos" colspan=2 >Bs.S.</td>
+</tr>
+<tr>
+		<td class="tdcampos" colspan=2 ><?php echo $f_factura[concepto]?> </td>
+		<td class="tdcampos" colspan=1  valign="bottom"><?php echo $f_recibo_contrato[monto]?></td>
+		</tr>
+                    <?php
+                    $total=$f_recibo_contrato[monto];
+                    }
+                    else
+                    {
+	//Busco los procesos que estan afiliados a la clave.
+	pg_result_seek($r_procesos,0);
+
+	while($f_proceso = asignar_a($r_procesos)){
+		
+        $pro_deducible=$pro_deducible + $f_proceso[fac_deducible];
+		$subtotal=0;
+		?>
+		<tr>
+		<td class="tdcamposr" colspan=1 >PROCESO</td>
+		<td class="tdcamposr" colspan=1 ><?php echo $f_proceso[id_proceso] ?></td>
+		</tr>
+	<tr>
+	<td class="tdtitulos" colspan=2 >CONCEPTO O DESCRIPCION	</td>
+	<td class="tdtitulos" colspan=2 >Bs.S.</td>
+</tr>
+
+		
+		
+		<?php
+		$q_proceso = "select gastos_t_b.*, procesos.* from gastos_t_b,procesos 
+				where 
+				procesos.id_proceso='$f_proceso[id_proceso]' and
+				procesos.id_proceso=gastos_t_b.id_proceso";
+		$r_proceso = ejecutar($q_proceso);
+		if(num_filas($r_proceso)>0){
+		while($f = asignar_a($r_proceso)){
+                $tipservicio=$f['id_tipo_servicio'];
+                 if(($tipservicio<>27) and ($tipservicio<>28)){
+		   $subtotal=$subtotal + $f[monto_aceptado];
+		   $total=$total + $f[monto_aceptado];
+                  }
+		?>
+		<tr>
+		<td class="tdcampos" colspan=2 ><?php echo $f[descripcion]?> &nbsp;&nbsp; <?php echo $f[nombre] ?></td>
+		<td class="tdcampos" colspan=1  valign="bottom"><?php echo montos_print($f[monto_pagado])?></td>
+		</tr>
+
+		<?php
+		}
+			?>
+		<tr>
+		<td class="tdtitulos" colspan=1 ></td>
+		<td class="tdtitulos" colspan=1 >Sud Total</td>
+		<td class="tdtitulos" colspan=1  valign="bottom"><?php echo montos_print($subtotal)?></td>
+		</tr>
+
+		<?php
+		}
+	}
+}
+?>
+<tr>
+<td  class="tdtitulos"></td>
+<td  class="tdcamposr">Total BF.</td>
+<td colspan=2 class="tdcamposr"><?php echo montos_print($total)?></td> 
+</tr>
+<tr>
+<td  class="tdtitulos"></td>
+<td  class="tdcamposr">Deducible</td>
+<td colspan=2 class="tdcamposr"><input type="hidden" id="pro_deducible" name="pro_deducible" class="campos" size=20 value="<?php echo $pro_deducible?>"><?php echo $pro_deducible;?></td> 
+</tr>
+<tr><td colspan=4  class="titulo_seccion"> Datos de la Factura
+
+		
+<?php $url="'views04/ifactura.php?factura=$f_factura[numero_factura]&serie=$f_factura[id_serie]','700','500'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Factura con los Datos del Cliente"> Formato 1  </a>
+<?php $url="'views04/ifactura2.php?factura=$f_factura[numero_factura]&serie=$f_factura[id_serie]','700','500'";
+			?>
+<a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Factura con los Datos del Ente si no Escogio el Ente al Registrarla"> Formato 2 </a>
+
+<?php $url="'views04/irelacion.php?factura=$f_factura[numero_factura]&serie=$f_factura[id_serie]','700','500'";
+			?>
+<a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Relacion de Gastos de la Factura"> Imprimir Relacion</a>
+</td> 
+
+	</tr>
+ <tr>
+		<td align="right" colspan=4  class="titulo_seccion">Formatos Gobernacion 
+<?php $url="'views04/ifacturagob.php?factura=$f_factura[numero_factura]&serie=$f_factura[id_serie]','700','500'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Factura">  Formato 1  <?php echo "$no_factura" ?></a>
+<?php $url="'views04/ifacturagob2.php?factura=$f_factura[numero_factura]&serie=$f_factura[id_serie]','700','500'";
+			?>
+<a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Factura Formato Clinica">  Formato  2</a>
+
+<?php $url="'views04/ifacturagob3.php?factura=$f_factura[numero_factura]&serie=$f_factura[id_serie]','700','500'";
+			?>
+<a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Factura Formato Clinica cuentas por tercero">  Formato   3</a>
+
+<?php $url="'views04/irelafacturagob.php?factura=$f_factura[numero_factura]&serie=$f_factura[id_serie]&servicios=$servicios','700','500'";
+			?>
+<a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Relacion de Factura"> Relacion  Gobernacion<?php echo "$no_factura Serie $serie" ?></a>
+
+</td> 
+	</tr>
+
+<?php 
+if ($num_filasn==0){ 
+}
+else
+{
+$f_notacre=asignar_a($r_notacre);
+?>
+
+ <tr>
+		<td align="right" colspan=4  class="titulo_seccion">Esta Factura Tiene una Nota de Credito num <?php echo "$f_notacre[num_notacredito] Numero Control $f_notacre[numcontrolnc] Monto $f_notacre[montonc]" ?> 
+		</td>
+		</tr>	
+<?php
+}
+?>
+<tr>
+<td  class="tdtitulos">No. de Factura</td>
+<td  class="tdcampos"><input type="hidden" id="factura" name="factura" value="<?php echo $f_factura[numero_factura]; ?>"><?php echo $f_factura[numero_factura]; ?></td>
+<td class="tdtitulos">Serie</td>
+<td class="tdcampos"><input type="hidden" id="serie" name="serie" value="<?php echo $f_factura[id_serie]; ?>"><?php echo $f_factura[nomenclatura]; ?></td>
+<tr> 
+<tr> 
+<td  class="tdtitulos">No. de Control Factura</td>
+<td  class="tdcampos"><input class="campos" size="10" type="text" id="controlfactura" name="controlfactura" value="<?php echo $f_factura[numcontrol]; ?>"></td>
+<td  class="tdtitulos">  Codigo Sap </td>
+		<td>
+		<input class="campos"  type="hidden" id="codigosap" name="codigosap" value="<?php echo $f_factura[codigosap] ?>">
+        </td>
+</tr>
+		<td  class="tdtitulos">* Fecha Emision   </td>
+		<td>
+ <input readonly type="text" size="10" id="dateField3" name="fechar" class="campos" maxlength="10" value="<?php echo $f_factura[fecha_emision]?>" > 
+<a href="javascript:void(0);" onclick="g_Calendar.show(event, 'dateField3', 'yyyy-mm-dd')" title="Show popup calendar">
+<img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+                </td>
+	<td class="tdtitulos"  colspan=1 align="left">Estado de Factura</td>
+		<td class="titulos" colspan=1 align="left">
+		
+		
+		<select id="estado_fac" name="estado_fac" class="campos" style="width: 200px;"  <?php echo $desactivar_2; ?>>
+		
+		<option value="1" <?php if($f_factura['id_estado_factura']==1) echo "selected"; ?>>Pagada</option>
+		<option value="2" <?php if($f_factura['id_estado_factura']==2) echo "selected"; ?>>Por Cobrar</option>
+		<option value="3" <?php if($f_factura['id_estado_factura']==3) echo "selected"; ?>>Anulada</option>
+	</select>
+  
+		</td>
+		
+	</tr>
+        <tr> 
+<td  colspan=1 class="tdtitulos">Comentario</td>
+<td colspan=3 class="tdcampos">
+<input class="campos" size="60" type="text" id="comen_fact" name="comen_fact" value="<?php echo $f_factura[comen_fact]; ?>">
+<a href="#"              
+OnClick="mod_edo_fact1();" title="Modifica el Estado de La Factura" class="boton">Modificar Estado</a>
+</td>
+</tr>
+	<tr>
+	<td colspan=4 height=20 class="titulos"><hr></td>
+	</tr>
+
+
+      	     <tr>
+              <td  colspan=4  class="titulo_seccion">Datos del Pago</td> 
+
+             </tr>
+
+             <tr>
+              <td  colspan=4  class="">
+              	<table class="tabla_cabecera3">
+             
+            <?php 
+              //Busco datos en la tabla tbl_oper_multi
+         	   $b_datos_pago=("select * from tbl_oper_multi  where  tbl_oper_multi.id_factura=$f_factura[id_factura]");
+         	   $r_datos_pago=ejecutar($b_datos_pago);
+
+	         	   while($t_datos_pago=pg_fetch_array($r_datos_pago, NULL, PGSQL_ASSOC)){
+
+	                    $q_tipo_pago=("select * from tbl_tipos_pagos where id_tipo_pago=$t_datos_pago[condicion_pago]");
+							        $r_tipo_pago=ejecutar($q_tipo_pago);
+							        $f_tipo_pago=asignar_a($r_tipo_pago);
+							      ?>
+							      <tr>
+             		    <td class="titulosa">* Forma de pago</td>
+		                <td class="tdcampos"><input type="hidden" id="forma_pago" name="forma_pago" value="<?php echo $f_tipo_pago[id_tipo_pago]?>"><?echo $f_tipo_pago[tipo_pago];?></td>
+		                </tr>
+
+                     
+                     <?php
+                     $moneda=("select * from tbl_monedas where id_moneda=$t_datos_pago[id_moneda]");
+                     $b_moneda=ejecutar($moneda); 
+                     $f_moneda=asignar_a($b_moneda);
+                     ?>
+                     <tr>   
+                  <td class="tdtitulos">Monto</td>
+		                <td class="tdcampos"><?echo montos_print($t_datos_pago[monto]);?></td>
+		              </tr>
+                    <tr>   
+                    <td class="tdtitulos">Moneda</td>
+		                <td class="tdcampos"><?php echo  $f_moneda[moneda];?></td>
+                    </tr>
+
+                    <?php
+
+                    if ($t_datos_pago[condicion_pago]==1){//EFECTIVO?>
+                   <?php }
+
+                    if($t_datos_pago[condicion_pago]==2){// CREDITO?>
+										     <tr>   
+											   <td  class="tdtitulos">*  Fecha de Final de Credito   </td>
+											   <td  class="tdcampos"><?php echo $f_factura[fecha_credito]?><br><br></td>
+												 </tr>
+									  <?php        }
+
+									   if($t_datos_pago[condicion_pago]==5){//TARJETAS DE CREDITO
+										       $q_nom_tarjeta=("select * from tbl_nombre_tarjetas  order by tbl_nombre_tarjetas.nombre_tar");
+				                   $r_nom_tarjeta=ejecutar($q_nom_tarjeta);
+			             	      $f_nom_tarjeta = asignar_a($r_nom_tarjeta);
+											?>
+											<td class="tdtitulos">Tipo de Tarjeta</td>
+											<td class="tdcampos"><?php echo $f_nom_tarjeta[nombre_tar]?></td>
+										 
+											   <?php  }
+
+                       if(($t_datos_pago[condicion_pago]>=3 && $t_datos_pago[condicion_pago]<=5) || $t_datos_pago[condicion_pago]==7 || $t_datos_pago[condicion_pago]==10){
+							              //busco los bancos
+							          	$q_bancos="select * from tbl_bancos where tbl_bancos.id_ban=$t_datos_pago[id_banco]";
+								         	$r_bancos=ejecutar($q_bancos);
+								         	$f_banco=asignar_a($r_bancos);
+							          	?>
+								            <tr>
+								            <td class="tdtitulos">Banco</td>
+								     			  <td class="tdcampos"><?php echo $f_banco[nombanco]?>
+    			
+							        
+										       <td class="tdtitulos">Referencia</td>
+													 <td class="tdcampos"><?php echo $t_datos_pago[numero_cheque]?><br><br></td>
+													</tr>
+																							       								   
+							           <?php;}  
+
+							           if ($t_datos_pago[condicion_pago]==7 || $t_datos_pago[condicion_pago]==10) {//TRANSFERENCIAS, DEPOSITOS O PAGO MOVIL ?>
+                  
+						              <tr>
+						              <td class="tdtitulos">Nombre </td>
+							            <td class="tdcampos"><?php echo $t_datos_pago[nombre_p_pago];?></td>
+
+							            <td class="tdtitulos">Cedula</td>
+							            <td class="tdcampos"><?php echo $t_datos_pago[cedula_p_pago];?></td>
+						               </tr>
+                          <tr>
+							            <td class="tdtitulos">Tel&eacute;fono</td>
+							            <td class="tdcampos"><?php echo $t_datos_pago[telf_p_pago];?><br><br></td>
+							          </tr>
+    
+						          <?php }   
+
+						                if ($t_datos_pago[condicion_pago]==11) {//ZELLE?>
+
+                        <tr>
+                        	 <td class="tdtitulos">Nombre y Apellido</td>
+									         <td class="tdcampos"><?php echo $t_datos_pago[nombre_p_pago];?></td>
+									          <td class="tdtitulos">Tel&eacute;fono</td>
+									         <td class="tdcampos"><?php echo $t_datos_pago[telf_p_pago];?></td>
+									      </tr>   								       
+								         <tr>
+								           <td class="tdtitulos">Correo</td>
+											     <td class="tdcampos"><?php echo $t_datos_pago[correo_p_pago]?><br><br></td>							       
+								         </tr>
+								       
+	          
+									       <?php
+									        }//FIN TIPO PAGO ZELLE       
+
+
+
+                   }//FIN WHILE DE BUSQUEDA DE LOS DATOS
+
+ 
+     ?>
+<input type="hidden" id="nombre_titular" name="nombre_titular" value="<?= $f_titular['nombres'].' '.$f_titular['apellidos'] ?>">
+<input type="hidden" id="telf_titular" name="telf_titular" value="<?php echo $f_titular[telefono_otro]?>">     
+<input type="hidden" id="cedula_titular" name="cedula_titular" value="<?php echo $f_titular[cedula]?>">
+<input type="hidden" name="id_factura" id="id_factura" value="<?php echo $f_factura[id_factura] ?>">   
+<div id="datos_pago"></div>
+
+
+
+ </td>
+ </tr>
+</table>
+
+
+
+<tr>
+<td colspan=1 class="tdtitulos">Concepto</td>
+<td colspan=3 class="tdcampos"><textarea id="concepto" name="concepto" cols=81 rows=2 class="campos"><?php echo $f_factura[concepto]?></textarea></td>
+</tr>	
+
+
+
+
+
+<?php }?>

@@ -1,0 +1,214 @@
+<?
+include ("../../lib/jfunciones.php");
+sesion();
+echo "paso";
+ $cdbef=$_POST['lacedulaclien'];
+$buscsiempre=("select * from clientes where cedula='$cdbef';") ;
+$repuesbusiempre=ejecutar($buscsiempre);
+$nsiempre=num_filas($repuesbusiempre);
+$titulaides=$_POST['eltitularides'];
+ if($nsiempre>=1){
+	   $pasolabus=1; 
+	   $datasiempre=assoc_a($repuesbusiempre);
+	   $laciudad=$datasiempre['id_ciudad'];   
+	   $buscarciudad=("select ciudad.id_ciudad,ciudad.id_estado,ciudad.ciudad,estados.estado,pais.pais,
+                                      pais.id_pais 
+                                      from 
+                                      ciudad,estados,pais,clientes where clientes.id_ciudad=ciudad.id_ciudad and                
+									  ciudad.id_estado=estados.id_estado and estados.id_pais=pais.id_pais and 
+                                      clientes.id_ciudad='$laciudad' limit 1");   
+		$respuestabusciudad=ejecutar($buscarciudad);			
+		$datosciudad=assoc_a($respuestabusciudad);
+		}
+$cdtitu=$_POST['lacedeltitu'];
+$buscatitu=("select titulares.id_titular,titulares.id_ente,clientes.nombres,clientes.apellidos from titulares,clientes,estados_t_b where clientes.id_cliente=titulares.id_cliente and clientes.cedula='$cdtitu' and titulares.id_titular=estados_t_b.id_titular and estados_t_b.id_estado_cliente=4 and estados_t_b.id_beneficiario=0 and titulares.id_titular=$titulaides");
+$respbuscatitu=ejecutar($buscatitu);
+$cualtitu=num_filas($respbuscatitu);
+$losestatus=("select estados_clientes.id_estado_cliente,estados_clientes.estado_cliente from estados_clientes order by estado_cliente;");
+$resestatus=ejecutar($losestatus);
+$lospaises=("select pais.id_pais,pais.pais from pais order by pais");
+$respaises=ejecutar($lospaises);
+$losparentesco=("select parentesco.id_parentesco,parentesco.parentesco from parentesco order by parentesco;");
+$respparentesco=ejecutar($losparentesco);
+    if($cualtitu>=1){
+		  $infotitu=assoc_a($respbuscatitu);
+		  $nomtitu=$infotitu['nombres'];  
+		  $apetitu= $infotitu['apellidos'];   
+		  $cetitu=$infotitu['cedula'];    
+		  $iddeltitu=$infotitu['id_titular'];
+		  $entetitu= $infotitu['id_ente']; 
+		  $lapoliza=("select propiedades_poliza.id_poliza,polizas.nombre_poliza from  
+                            propiedades_poliza,coberturas_t_b,polizas   where 
+                           coberturas_t_b.id_titular='$iddeltitu' and coberturas_t_b.id_beneficiario=0 and   
+                           coberturas_t_b.id_propiedad_poliza=propiedades_poliza.id_propiedad_poliza and
+                           propiedades_poliza.id_poliza=polizas.id_poliza limit 1;");  
+		   $resplapoliza=ejecutar($lapoliza);				   
+		   $datapoliza=assoc_a($resplapoliza);   
+		   $lapolizaes= $datapoliza['nombre_poliza'];  
+		   $mensaje="Cliente como beneficiario del titular $nomtitu $apetitu <br> P&oacute;liza: ($lapolizaes)";  
+		   $losentesb=("select polizas.nombre_poliza,polizas.id_poliza from polizas,polizas_entes where 
+                                 polizas_entes.id_poliza=polizas.id_poliza and polizas_entes.id_ente='$entetitu';"); 
+		   $resplosente=ejecutar($losentesb);					 
+		}else{
+			 $mensaje="La c&eacute;dula del titular no existe!!!";  
+			$verinfo=2; 
+			}
+ 
+ if ($verinfo==2){ ?>
+ <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr> 
+         <td colspan=4 class="titulo_seccion"><?echo $mensaje;?></td>  
+     </tr>
+</table>	 
+<?}else{?>
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr> 
+         <td colspan=4 class="titulo_seccion"><?echo $mensaje;?></td>  
+     </tr>
+</table>	 
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+     <tr>
+      <td class="tdtitulos">C&eacute;dula:</td>
+      <td class="tdcampos"><? echo "$cdbef"?></td>
+	  <td class="tdtitulos">C&eacute;dula del titular:</td>
+      <td class="tdcampos"><? echo "$cdtitu"?></td>  
+	  <input type="hidden" id="cedbenf" value="<?echo "$cdbef";?>">  
+  	 <input type="hidden" id="cedtitu" value="<?echo "$cdtitu";?>">  
+	 <input type="hidden" id="idtitu" value="<?echo "$iddeltitu";?>">  
+	 <input type="hidden" id="idente" value="<?echo "$entetitu";?>">   
+     </tr>
+	 <tr>
+	   <td class="tdtitulos">Fecha de inclusi&oacute;n:</td> 
+	  <td class="tdcampos"  colspan="1"><input type="text" size="10" id="feinc" class="campos" maxlength="10" value="<?echo date("Y-m-d")?>">
+	                  <a href="javascript:void(0);" onclick="g_Calendar.show(event, 'feinc', 'yyyy-mm-dd')" title="Ver calendario">
+	                 <img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a></td>  
+		<td class="tdtitulos" colspan="1">Estado del Cliente:</td>
+       <td class="tdcampos"  colspan="1"><select id="clienestatu" class="campos" style="width: 160px;">
+                              <option value=""></option>
+			   <?php  while($verestatu=asignar_a($resestatus,NULL,PGSQL_ASSOC)){?>
+                              <option value="<?php echo $verestatu[id_estado_cliente]?>"> <?php echo "$verestatu[estado_cliente]"?></option>
+			   <?php
+			  }
+			  ?>
+			 </select>  </td> 						 
+	 </tr> 
+	 <tr>
+	   <td class="tdtitulos" colspan="1">Nombre:</td>
+        <td class="tdcampos"  colspan="1"><input type="text" id="cliennombre" class="campos" size="30" value="<? echo $datasiempre[nombres];?>"></td>
+       <td class="tdtitulos" colspan="1">Apellido:</td>
+       <td class="tdcampos" colspan="1"><input type="text" id="clienapellido"  class="campos" size="30" value="<? echo $datasiempre[apellidos];?>"></td>
+	 </tr>   
+	<tr>
+	   <td class="tdtitulos" colspan="1">Genero:</td>
+        <td class="tdcampos"  colspan="1"><select name="cliengenero" id="cliengenero" class="campos" onChange="vergenero()" style="width: 100px;">
+							<option value="<?  echo $datasiempre[sexo];?>"><? 
+							                                        if($pasolabus==1){  
+																	  if($datasiempre[sexo]==0){
+								                                           echo "Femenino";
+								                                       }else{
+																		   echo "Masculino";
+																	  }
+																	}  ?></option>
+                            <option value="0">Femenino</option>
+							<option value="1">Masculino</option>
+						</select>	
+		<div id='genero'></div>				
+		</td>  				
+       <td class="tdtitulos" colspan="1">Parentesco:</td>	
+		<td class="tdcampos"  colspan="1"><select id="clienparent" class="campos" style="width: 160px;">
+                              <option value=""></option>
+			   <?php  while($verparen=asignar_a($respparentesco,NULL,PGSQL_ASSOC)){?>
+                              <option value="<?php echo $verparen[id_parentesco]?>"> <?php echo "$verparen[parentesco]"?></option>
+			   <?php
+			  }
+			  ?>
+			 </select>  </td> 
+	 </tr>    
+	<tr>
+	    <td class="tdtitulos" colspan="1">Tel&eacute;fono habitaci&oacute;n:</td>
+       <td class="tdcampos" colspan="1"><input type="text" id="clientf1"  class="campos" size="15"value="<? echo $datasiempre[telefono_hab];?>"></td>				
+       <td class="tdtitulos" colspan="1">Tel&eacute;fono celular:</td>
+       <td class="tdcampos" colspan="1"><input type="text" id="clientf2"  class="campos" size="15"value="<? echo $datasiempre[telefono_otro];?>"></td>
+	 </tr>  
+	 <tr>
+	    <td class="tdtitulos" colspan="1">Fecha de nacimiento:</td>
+       <td class="tdcampos" colspan="1"><input type="text" size="10" id="fechanaci" class="campos" maxlength="10" value="<? echo $datasiempre[fecha_nacimiento];?>">
+	                  <a href="javascript:void(0);" onclick="g_Calendar.show(event, 'fechanaci', 'yyyy-mm-dd')" title="Ver calendario">
+	                 <img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a></td>				
+       <td class="tdtitulos" colspan="1">Estado civil:</td>
+       <td class="tdcampos" colspan="1"><select id="clienestcivil" class="campos" style="width: 130px;">
+	                           <option value="<? echo $datasiempre[estado_civil];?>"><? echo $datasiempre[estado_civil];?></option>  
+                              <option value="SOLTERO">Soltero(a)</option>
+							  <option value="CASADO">Casado(a)</option>
+							  <option value="DIVORCIADO">Divorciado(a)</option>  
+							  <option value="VIUDO">Viudo(a)</option>    
+							  <option value="CONCUBINO">Concubino(a)</option>      
+						</select>	</td>
+	 </tr>   
+     <tr>
+	     <td class="tdtitulos" colspan="1">Correo:</td>
+       <td class="tdcampos" colspan="1"><input type="text" id="cliencorre"  class="campos" size="30"value="<? echo $datasiempre[email];?>"></td> 	   	
+       <td class="tdtitulos" colspan="1">Pa&iacute;s:</td>
+       <td class="tdcampos" colspan="1"><select id="paicli" class="campos" onChange="$('prue1').hide(),paises(); return false"  style="width:130px;" >
+                              <option value="0"></option>
+			      <?php  while($verpais=asignar_a($respaises,NULL,PGSQL_ASSOC)){?>
+			      <option value="<?php echo $verpais[id_pais]?>"> <?php echo "$verpais[pais]"?></option>
+			      <?php
+			             }
+		              ?>
+			 </select> </td>
+		 
+	 </tr>  
+	<tr>
+	 <td class="tdtitulos" colspan="1">Estado:</td>
+	 <td class="tdcampos" colspan="1"><div id="prue1"><select disabled="disabled" class="campos" style="width: 130px;" >
+	                               <option value="0">
+				       </select>
+	</div> <div id="laciudad"></div></td>	   
+	<td class="tdtitulos" colspan="1">Ciudad:</td>
+      <td class="tdcampos" colspan="1"><div id="prue2"><select disabled="disabled" class="campos" style="width: 130px;" >
+                                       <option value="0">
+	                               </select>
+       </div> <div id="laciudad2"></div></td>
+	</tr>
+	<tr> 
+	   <td class="tdtitulos" colspan="1">Direcci&oacute;n:</td>
+       <td class="tdcampos" colspan="3"><TEXTAREA COLS=60 ROWS=2 id="cliendirr" class="campos"><? echo $datasiempre[direccion_hab];?></TEXTAREA></td>
+	</tr> 
+	<tr>
+	   <td class="tdtitulos" colspan="1">Comentario:</td>
+       <td class="tdcampos" colspan="3"><TEXTAREA COLS=60 ROWS=2 id="cliencoment" class="campos"><? echo $datasiempre[comentarios];?></TEXTAREA></td>
+	</tr> 
+	 <br>
+       </table>
+     <table class="tabla_citas"  cellpadding=0 cellspacing=0>
+     <tr>
+         <td class="titulo_seccion" colspan="1">P&oacute;liza</td>
+         <td class="titulo_seccion" colspan="1">Selecci&oacute;n</td>
+     </tr>
+	  <?
+	        $polinu=0;  
+	        while($verentes=asignar_a($resplosente ,NULL,PGSQL_ASSOC)){
+		            $elentebf=$verentes['nombre_poliza'];  
+					$idpolente=$verentes['id_poliza'];
+		?>
+		<tr>
+		 <td class="tdtitulos" colspan="1"><?echo $elentebf;?></td>
+		 <td class="tdtitulos" colspan="1"><input type="radio" id="caja_<? echo $polinu;?>" name="group1" value="<?echo $idpolente;?>" ></td>  
+		</tr>
+	   <?
+	     $polinu++;
+	     }
+	   ?>
+         <input type="hidden" id="cajafinal" value="<?echo "$polinu";?>">	
+	 </table> 
+	     
+        <div id='losente'></div>
+	<br>
+          <table class="tabla_citas"  cellpadding=0 cellspacing=0>
+	     <tr>
+	       <td title="Guardar cliente"><label id="benefboton" class="boton" style="cursor:pointer" onclick="validclienbe(); return false;" >Guardar</label>
+	      </tr>
+          </table>	 
+		
+<?}?>

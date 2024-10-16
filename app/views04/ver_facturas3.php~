@@ -1,0 +1,618 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+header('Content-Type: text/xml; charset=ISO-8859-1');
+list($tipo_ente,$nom_tipo_ente)=explode("@",$_REQUEST['tipo_ente']);
+
+if ($tipo_ente==3) {
+    $titularesvar="procesos.id_beneficiario=0 and";
+    }
+    else
+    {
+        $titularesvar="procesos.id_beneficiario>=0 and";
+        }
+$clave = $_REQUEST['clave'];
+$proceso = $_REQUEST['proceso'];
+$planilla = $_REQUEST['planilla'];
+$entes = $_REQUEST['entes'];
+$dateField1 = $_REQUEST['dateField1'];
+$dateField2 = $_REQUEST['dateField2'];
+$admin= $_SESSION['id_usuario_'.empresa];
+$sucursal = $_REQUEST['sucursal'];
+$servicios = $_REQUEST['servicios'];
+$partidas = $_REQUEST['partidas'];
+/* **** verifico si hago la busqueda tomando en cuenta la partida si la facturacion es para la gobernacion **** */
+if ($partidas>0) {
+    $tpartida=" titulares.tipo_partida='$partidas' and";
+   
+    }
+    else
+    {
+        $tpartida="";
+        }
+/* **** fin verifico si hago la busqueda tomando en cuenta la partida si la facturacion es para la gobernacion **** */
+if ($sucursal=='**'){
+$sucursal1="and procesos.id_admin=admin.id_admin and admin.id_sucursal<>'2'";
+}
+else
+{
+if ($sucursal=='*'){
+$sucursal1="and procesos.id_admin=admin.id_admin and admin.id_sucursal>'0'";
+}
+else
+{
+$sucursal1="and procesos.id_admin=admin.id_admin and admin.id_sucursal='$sucursal'";
+}
+}
+
+if ($servicios=='*'){
+$servicios1="and procesos.id_proceso=gastos_t_b.id_proceso and gastos_t_b.id_servicio>'0'";
+}
+else
+{
+$servicios1="and procesos.id_proceso=gastos_t_b.id_proceso and gastos_t_b.id_servicio='$servicios'";
+
+}
+
+
+
+
+//busco las series.
+$r_serie=("select * from tbl_series,admin where tbl_series.id_sucursal=admin.id_sucursal and admin.id_admin='$admin'");
+$f_serie=ejecutar($r_serie) or mensaje(ERROR_BD);
+$f_series=asignar_a($f_serie);
+$q_factura="select * from tbl_facturas where tbl_facturas.id_serie=$f_series[id_serie] order by tbl_facturas.id_factura desc limit 1;";
+$r_factura=ejecutar($q_factura);
+
+if (!empty($cua_rec_prim))
+	{
+	$q = "select 
+                                    tbl_contratos_entes.*,
+                                    entes.*,
+                                    tbl_recibo_contrato.*,
+                                    polizas.porcentaje,
+                                    polizas.cuota
+                            from 
+                                    tbl_contratos_entes,
+                                    entes ,
+                                    tbl_recibo_contrato,
+                                    polizas,
+                                    polizas_entes
+                            where 
+                                    tbl_recibo_contrato.num_recibo_prima='$cua_rec_prim' and
+                                    tbl_contratos_entes.id_ente=entes.id_ente and
+                                    tbl_contratos_entes.estado_contrato=1 and
+                                    tbl_contratos_entes.id_contrato_ente=tbl_recibo_contrato.id_contrato_ente and
+                                    entes.id_ente=polizas_entes.id_ente and
+                                    polizas_entes.id_poliza=polizas.id_poliza and
+                                    polizas.maternidad=0";
+	}
+	else
+	{
+if (!empty($proceso))
+	{
+	$q = "select * From procesos where  procesos.id_proceso='$proceso'";
+	}
+	else
+	{
+		if (!empty($clave))
+		{
+			if ($dateField1<>""){
+				$fecha="and procesos.fecha_ent_pri>='$dateField1' and procesos.fecha_ent_pri<='$dateField2'";
+				}
+				else
+				{
+					$fecha="";
+					}
+				
+		$q = "select * From procesos where  procesos.no_clave='$clave' $fecha";
+		}
+		else
+		{
+			if (!empty($planilla))
+			{
+			$q = "select * From procesos where  procesos.nu_planilla='$planilla'";
+			}
+			else
+			{
+				if (!empty($entes))
+				{
+				$q = "select procesos.id_titular,procesos.id_beneficiario,procesos.id_proceso,count(gastos_t_b.id_proceso) 
+From procesos,titulares,admin,gastos_t_b
+where procesos.fecha_ent_pri>='$dateField1' and procesos.fecha_ent_pri<='$dateField2' 
+and procesos.id_titular=titulares.id_titular and titulares.id_ente='$entes' $servicios1 $sucursal1 
+group by procesos.id_titular,procesos.id_beneficiario,procesos.id_proceso";
+				}
+                else
+                {
+     	if (!empty($tipo_ente))
+				{              
+                    /* comparo si el servicio orden de atencion */
+if ($servicios==4) {
+$q= "select  
+                                    procesos.id_proceso,
+                                    count(gastos_t_b.id_proceso) 
+                            from 
+                                    gastos_t_b,
+                                    procesos,
+                                    titulares,
+                                    entes,
+                                    admin 
+                            where 
+                                    procesos.id_proceso=gastos_t_b.id_proceso and 
+                                    gastos_t_b.id_servicio=$servicios and
+                                    gastos_t_b.fecha_cita>='$dateField1 ' and 
+                                    gastos_t_b.fecha_cita<='$dateField2' and 
+                                    procesos.id_titular=titulares.id_titular and 
+                                    titulares.id_ente=entes.id_ente and 
+                                    entes.id_tipo_ente=$tipo_ente and 
+                                    procesos.id_admin=admin.id_admin and 
+                                    admin.id_sucursal=$sucursal and 
+$titularesvar
+$tpartida
+                                    (procesos.id_estado_proceso=7 or 
+                                    procesos.id_estado_proceso=2 or 
+                                    procesos.id_estado_proceso=10 or 
+                                    procesos.id_estado_proceso=11 or 
+                                    procesos.id_estado_proceso=15 or 
+                                    procesos.id_estado_proceso=16 ) 
+                            group by 
+                                    procesos.id_proceso";
+                }
+                
+/* comparo si el servicio es de emergencia o hospitalizacion */
+if ($servicios==6 || $servicios==9) {
+     
+$q= "select  
+                                    procesos.nu_planilla,
+                                    count(procesos.nu_planilla) 
+                            from 
+                                    gastos_t_b,
+                                    procesos,
+                                    titulares,
+                                    entes,
+                                    admin 
+                            where 
+                                    procesos.id_proceso=gastos_t_b.id_proceso and 
+                                    gastos_t_b.id_servicio=$servicios and
+                                    procesos.fecha_recibido>='$dateField1 ' and 
+                                    procesos.fecha_recibido<='$dateField2' and 
+                                    procesos.id_titular=titulares.id_titular and 
+                                    titulares.id_ente=entes.id_ente and 
+                                    entes.id_tipo_ente=$tipo_ente and 
+                                    procesos.id_admin=admin.id_admin and 
+                                    admin.id_sucursal=$sucursal and 
+                                    procesos.nu_planilla>'0' and
+                                    $titularesvar
+$tpartida
+                                    (procesos.id_estado_proceso=7 or 
+                                    procesos.id_estado_proceso=2 or 
+                                    procesos.id_estado_proceso=10 or 
+                                    procesos.id_estado_proceso=11 or 
+                                    procesos.id_estado_proceso=15 or 
+                                    procesos.id_estado_proceso=16 ) 
+                            group by 
+                                    procesos.nu_planilla";
+                }
+/*fin de  comienzo harcer las comparaciones para ver que servicio se va a facturar y hacer su busquedad*/
+                    }
+                    
+                    
+                    }
+			}
+		}
+	}
+}
+$r_procesos = ejecutar($q);
+	if(num_filas($r_procesos)==0){
+	?>
+    <table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">No Existen </td> 
+</tr>
+</table>
+	<?php
+	}
+	
+	else
+	{
+		 if (!empty($cua_rec_prim))
+     
+	{
+           $f_bus = asignar_a($r_procesos);
+       $q_bus_caract= "select 
+                                        sum(monto_prima) 
+                                from 
+                                        tbl_caract_recibo_prima 
+                                where 
+                                       tbl_caract_recibo_prima.id_recibo_contrato=  $f_bus[id_recibo_contrato]";
+    $r_bus_caract = ejecutar($q_bus_caract);
+    $f_bus_caract = asignar_a($r_bus_caract);
+        ?>
+        <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+<tr>		<td colspan=4 class="titulo_seccion">Datos del Contratante</td>	</tr>	
+	<tr>
+		<td class="tdtitulos">Usuario:</td>
+		<td class="tdcampos"><?php echo $f_bus[nombre]?></td>
+		<td colspan=1 class="tdtitulos">Numero de Contrato         
+        </td>
+<td colspan=1 class="tdcampos">
+<?php echo $f_bus[numero_contrato]?>
+<input class="campos" type="hidden" id="numero_contrato1" name="numero_contrato1" maxlength=128 size=20 value="<?php echo $f_bus[numero_contrato]?>">
+	</td>
+		</tr>
+        <tr>
+		<td class="tdtitulos">Cedula / Rif</td>
+		<td class="tdcampos"><?php echo $f_bus[rif]?>
+        <input class="campos" type="hidden" id="cedula1" name="cedula1" maxlength=128 size=20 value="<?php echo $f_bus[rif]?>">
+        </td>
+		<td colspan=1 class="tdtitulos">Numero Recibo
+        <input class="campos" type="hidden" id="id_recibo_contrato" name="id_recibo_contrato" maxlength=128 size=20 value="<?php echo $f_bus[id_recibo_contrato]?>">
+        </td>
+<td colspan=1 class="tdcampos">
+<?php echo $f_bus[num_recibo_prima]?>
+	</td>
+		</tr>
+          <tr>
+		<td class="tdtitulos">Direccion</td>
+		<td class="tdcampos"><?php echo $f_bus[direccion]?></td>
+		<td colspan=1 class="tdtitulos">Fecha Emision</td>
+<td colspan=1 class="tdcampos">
+<?php echo "$f_bus[fecha_emision] $f_bus[hora_emision] "?>
+	</td>
+		</tr>
+           <tr>
+		<td class="tdtitulos"></td>
+		<td class="tdcampos"></td>
+		<td colspan=1 class="tdtitulos"><hr></hr></td>
+<td colspan=1 class="tdcampos">
+<hr></hr>
+	</td>
+		</tr>
+        <tr>
+		<td class="tdtitulos"></td>
+		<td class="tdcampos"></td>
+		<td colspan=1 class="tdtitulos">Total Prima</td>
+<td colspan=1 class="tdcamposr">
+<?php echo number_format($f_bus_caract[sum]  ,2,',','');?>
+<input class="campos" type="hidden" id="tprima" name="tprima" maxlength=10 size=5 value="<?php 
+echo $f_bus_caract[sum];?>">   
+	</td>
+		</tr>
+        
+        <tr><td colspan=4  class="titulo_seccion">Ingresar Datos de la Factura</td> 
+</tr>
+<tr>
+<td  class="tdtitulos">No. de Factura</td>
+<td  class="tdcampos"><input type="hidden" id="factura" name="factura" value="<?php echo $no_factura; ?>"><?php echo $no_factura; ?></td>
+<td class="tdtitulos">Serie</td>
+<td class="tdcampos"><input type="hidden" id="serie" name="serie" value="<?php echo $f_series[id_serie]; ?>"><?php echo $f_series[nomenclatura]; ?></td>
+<tr> 
+<td  class="tdtitulos">* No. de Control Factura</td>
+<td  class="tdcampos"><input class="campos" type="text" id="controlfactura" name="controlfactura" value=""></td>
+		<td  class="tdtitulos">* Fecha Emision   </td>
+		<td>
+ <input type="text" size="10" id="dateField3" name="dateField3" class="campos" maxlength="10" value="<?php echo $fecha_emision?>" >
+               
+               </td>
+		<tr>
+    <td colspan=1 class="tdtitulos">Concepto</td>
+	<td colspan=3 class="tdcampos"><textarea id="concepto" name="concepto" cols=70 rows=2 class="campos"></textarea>
+<a href="#" OnClick="guar_fact_rec_pri();" id="guardar" name="guardar" class="boton">Guardar</a></td>
+</tr>			
+	</tr>
+        </table>
+        <?php
+        
+        }
+else
+{
+    	if (!empty($tipo_ente))
+				{
+                    ?>
+					<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">Datos del Cliente</td> 
+</tr>
+
+					<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social: </td>
+<td class="tdcampos">GOBERNACION DEL ESTADO MERIDA - PLAN DE SALUD</td>
+<td class="tdtitulos">Rif o C.I. No.: </td>
+<td class="tdcampos">G-20000156-9</td>
+</tr>
+					<tr>
+<td class="tdtitulos">Direccion: </td>
+<td class="tdcampos">PLAZA BOLIVAR PALACIO DE GOBIERNO ENTRE AV. 2 Y 3 MERIDA EDO MERIDA Telefono: 02742525072</td>
+</tr>
+	        
+    
+                    <?php
+                    
+                    }
+                    else
+                    {
+		if (!empty($entes))
+				{
+					//busco los datos del ente
+	$q_ente="select * from entes where entes.id_ente=$entes";
+	$r_ente = ejecutar($q_ente);
+	$f_ente = asignar_a($r_ente);
+					?>
+					<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">Datos del Cliente</td> 
+</tr>
+					<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social:</td>
+<td class="tdcampos"><?= $f_ente['nombre'] ?></td>
+<td class="tdtitulos">Rif o C.I. No.: </td>
+<td class="tdcampos"><?= $f_ente['rif'] ?></td>
+</tr>
+
+<tr>
+<td class="tdtitulos">Direcci&oacute;n:</td>
+<td class="tdcampos"><?= $f_ente['direccion'] ?></td>
+<td class="tdtitulos">Tel&eacute;fonos:</td>
+<td class="tdcampos"><?= $f_ente['telefonos'] ?></td>
+</tr>
+					<?php
+					}
+					else
+					{
+
+	$f_procesos=asignar_a($r_procesos);
+	$id_titular = $f_procesos['id_titular'];
+	$id_beneficiario = $f_procesos['id_beneficiario'];
+	$proceso= $f_procesos['id_proceso'];
+	$clave= $f_procesos['no_clave'];
+	//busco los datos del ente
+	$q_ente="select entes.* from entes, titulares 
+			where 
+			titulares.id_titular = '$id_titular' and 
+			titulares.id_ente = entes.id_ente;";
+	$r_ente = ejecutar($q_ente);
+	$f_ente = asignar_a($r_ente);
+
+	//Busco los datos del titular.
+	$q_titular = "select clientes.* from clientes, titulares 
+			where 
+			clientes.id_cliente = titulares.id_cliente and
+			titulares.id_titular = '$id_titular'";
+	$r_titular = ejecutar($q_titular);
+	$f_titular = asignar_a($r_titular);
+
+	//Busco los datos del beneficiario.
+	if($id_beneficiario>0){
+	$q_bene = "select clientes.* from clientes, titulares, beneficiarios
+			where
+			clientes.id_cliente = titulares.id_cliente and
+			titulares.id_titular = '$id_titular' and
+			beneficiarios.id_titular = titulares.id_titular and
+			beneficiarios.id_beneficiario = '$id_beneficiario'";
+	$r_bene = ejecutar($q_bene);
+	$f_bene = asignar_a($r_bene);
+	}
+
+?>
+<script language="JavaScript">
+<!--
+function enviar(){
+	
+		document.factura.submit();
+	
+}
+-->
+</script>
+
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td  colspan=4  class="titulo_seccion">Datos del Cliente</td> 
+</tr>
+
+<?php
+if($f_ente['id_ente']!=0){
+
+?>
+<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social:</td>
+<td class="tdcampos"><?= $f_ente['nombre'] ?></td>
+<td class="tdtitulos">Rif o C.I. No.: </td>
+<td class="tdcampos"><?= $f_ente['rif'] ?></td>
+</tr>
+
+<tr>
+<td class="tdtitulos">Direcci&oacute;n:</td>
+<td class="tdcampos"><?= $f_ente['direccion'] ?></td>
+<td class="tdtitulos">Tel&eacute;fonos:</td>
+<td class="tdcampos"><?= $f_ente['telefonos'] ?></td>
+</tr>
+<tr>
+<td class="tdtitulos">Proceso</td>
+<td class="tdcampos"><?php echo $proceso; ?></td>
+<td class="tdtitulos">No. de Clave:</td>
+<td class="tdcampos"><?= $clave ?></td>
+</tr>
+<tr>
+<td class="tdtitulos">Titular: </td>
+<td class="tdcampos"><?= $f_titular['nombres'].' '.$f_titular['apellidos'] ?></td>
+<td class="tdtitulos">Cedula.</td>
+<td class="tdcampos"><?= $f_titular['cedula'] ?></td>
+</tr>
+<?php
+	if($id_beneficiario>0){
+?>
+	<tr>
+	<td class="tdtitulos">Beneficiario: </td>
+	<td class="tdcampos"><?= $f_bene['nombres'].' '.$f_bene['apellidos'] ?></td>
+	<td class="tdtitulos">Cedula</td>
+	<td class="tdcampos"><?= $f_bene['cedula'] ?></td>
+	</tr>
+<?php
+	}else{
+?>
+	<tr><td class="tdtitulos"><b></b>  <b></b></td></tr>
+<?php
+	}
+}
+else
+{
+?>
+<tr>
+<td class="tdtitulos">Nombre o raz&oacute;n social:</td>
+<td class="tdcampos"><?= $f_titular['nombres'] .' '.$f_titular['apellidos'] ?></td>
+<td class="tdtitulos">Rif o C.I. No.:</td>
+<td class="tdcampos"><?= $f_titular['cedula'] ?></td>
+</tr>
+<tr>
+<td class="tdtitulos">Direcci&oacute;n: </td>
+<td class="tdcampos"><?= $f_titular['direccion_hab'] ?></td>
+<td class="tdtitulos">Tel&eacute;fonos:</td>
+<td class="tdcampos"><?= $f_titular['telefono_hab'].' /  '.$f_titular['celular'] ?></td>
+</tr>
+<tr><td class="tdtitulos"><hr></td></tr>
+
+<?php
+}
+}
+}
+?>
+<tr>
+<td colspan=4 class="tdtitulos"><hr></td></tr>
+
+<?php
+	//Busco los procesos que estan afiliados a la clave.
+	pg_result_seek($r_procesos,0);
+	
+if (($servicios==6 || $servicios==9) && $tipo_ente>0) {
+	while($f_proceso = asignar_a($r_procesos)){
+		$subtotal=0;
+		?>
+		<tr>
+		<td class="tdcamposr" colspan=1 >Numero Planilla</td>
+		<td class="tdcamposr" colspan=1 ><?php echo $f_proceso[nu_planilla] ?></td>
+		</tr>
+	<tr>
+	<td class="tdtitulos" colspan=2 >CONCEPTO O DESCRIPCION	</td>
+	<td class="tdtitulos" colspan=2 >Bs.S.</td>
+</tr>
+		
+		
+		<?php
+		$q_proceso = "select
+                                        gastos_t_b.*, 
+                                        procesos.* 
+                                from
+                                        gastos_t_b,procesos 
+                                where 
+                                        procesos.id_proceso=gastos_t_b.id_proceso and
+                                        procesos.nu_planilla='$f_proceso[nu_planilla]'";
+		$r_proceso = ejecutar($q_proceso);
+		if(num_filas($r_proceso)>0){
+		while($f = asignar_a($r_proceso)){
+		$subtotal=$subtotal + $f[monto_aceptado];
+		$total=$total + $f[monto_aceptado];
+	?>
+		<tr>
+		<td class="tdcampos" colspan=2 ><?php echo $f[descripcion] ?> &nbsp;&nbsp; <?php $f[nombre]?></td>
+		<td class="tdcampos" colspan=1  valign="bottom"><?php echo montos_print($f[monto_aceptado])?></td>
+		</tr>
+
+		<?php
+		}
+        }
+        
+		?>	
+		
+        
+        
+		<tr>
+		<td class="tdtitulos" colspan=1 ></td>
+		<td class="tdtitulos" colspan=1 >Sud Total</td>
+		<td class="tdtitulos" colspan=1  valign="bottom"><?php echo montos_print($subtotal)?></td>
+		</tr>
+<tr>
+		<td class="tdtitulos" colspan=4 ><hr></hr></td>
+		</tr>
+
+	
+		<?php
+		}
+	}
+    else
+    {
+        
+        
+        
+	while($f_proceso = asignar_a($r_procesos)){
+        
+        $pro_deducible=$pro_deducible + $f_proceso[pro_deducible];
+		$subtotal=0;
+		?>
+		<tr>
+		<td class="tdcamposr" colspan=1 >PROCESO</td>
+		<td class="tdcamposr" colspan=1 ><?php echo $f_proceso[id_proceso] ?></td>
+		</tr>
+	<tr>
+	<td class="tdtitulos" colspan=2 >CONCEPTO O DESCRIPCION	</td>
+	<td class="tdtitulos" colspan=2 >Bs.</td>
+</tr>
+		
+		
+		<?php
+		$q_proceso = "select gastos_t_b.*, procesos.* from gastos_t_b,procesos 
+				where 
+				procesos.id_proceso='$f_proceso[id_proceso]' and
+				procesos.id_proceso=gastos_t_b.id_proceso";
+		$r_proceso = ejecutar($q_proceso);
+		if(num_filas($r_proceso)>0){
+		while($f = asignar_a($r_proceso)){
+		$subtotal=$subtotal + $f[monto_aceptado];
+		$total=$total + $f[monto_aceptado];
+	?>
+		<tr>
+		<td class="tdcampos" colspan=2 ><?php echo $f[descripcion] ?> &nbsp;&nbsp; <?php $f[nombre]?></td>
+		<td class="tdcampos" colspan=1  valign="bottom"><?php echo montos_print($f[monto_pagado])?></td>
+		</tr>
+
+		<?php
+		}
+        }
+		?>	
+		<tr>
+		<td class="tdtitulos" colspan=1 ></td>
+		<td class="tdtitulos" colspan=1 >Sud Total</td>
+		<td class="tdtitulos" colspan=1  valign="bottom"><?php echo montos_print($subtotal)?></td>
+		</tr>
+<tr>
+		<td class="tdtitulos" colspan=4 ><hr></hr></td>
+		</tr>
+	
+		<?php
+		}
+	}
+
+?>
+<tr>
+<td  class="tdtitulos"></td>
+<td  class="tdcamposr">Total BF.</td>
+<td colspan=2 class="tdcamposr"><?php echo montos_print($total)?></td> 
+</tr>
+
+        <tr>
+<td  class="tdtitulos"></td>
+<td  class="tdcamposr">Deducible</td>
+<td colspan=2 class="tdcamposr"><input type="hidden" id="pro_deducible" name="pro_deducible" class="campos" size=20 value="<?php echo $pro_deducible?>"><?php echo $pro_deducible;?></td> 
+</tr>
+<tr>
+<td class="tdtitulos"></td>
+<td class="tdtitulos"></td>
+<td class="tdtitulos"></td>
+<td class="tdcampos"><input class="campos" type="hidden" name="vacio" maxlength=128 size=20 value=""><a href="#" OnClick="actualizar_factura();" class="boton">Actualizar</a></td>
+		</tr>
+	</table>
+
+<?php }
+}?>

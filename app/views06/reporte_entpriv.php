@@ -1,0 +1,216 @@
+<?php
+header("Content-Type: text/html;charset=utf-8");
+/* Nombre del Archivo: reporte_entpriv.php
+   Descripción: Realiza la busqueda en la base de datos, para Reporte de Impresión: Relación Entes Privados
+*/ 
+
+   include ("../../lib/jfunciones.php");
+   sesion();
+   $fecre1=$_REQUEST['fecha1'];
+   $fecre2=$_REQUEST['fecha2'];
+
+
+list($repente,$entenombre)=explode("@",$_REQUEST['enpriv']);
+if($repente=="-04"){
+	$condicion_ente="and entes.id_tipo_ente='4' and titulares.id_ente=entes.id_ente";
+    $yente="entes,titulares";
+    $gente="entes.nombre";
+}else{
+    $condicion_ente="and titulares.id_ente=$repente and titulares.id_ente=entes.id_ente";
+    $yente="titulares,entes"; 
+    $gente="entes.nombre";
+ }  
+list($restpro,$estnombre)=explode("@",$_REQUEST['estapro']);  
+ if($restpro==0)
+    $condicion_restpro="";
+else
+    $condicion_restpro="and procesos.id_estado_proceso=$restpro";
+
+list($id_sucursal, $sucursal)=explode("@",$_REQUEST['sucur']);
+
+if($id_sucursal=='-01')
+$condicion_sucursal="and admin.id_sucursal!='2'";
+else if($id_sucursal==0)
+  $condicion_sucursal="";
+else
+$condicion_sucursal="and admin.id_sucursal=$id_sucursal";
+
+list($id_servicio,$servicio)=explode("@",$_REQUEST['servic']);
+if($id_servicio==0)	       
+  $condicion_servicio="and gastos_t_b.id_servicio>0";
+
+else if($id_servicio=="-01"){
+	$condicion_sevicio="and gastos_t_b.id_servicio=4 and gastos_t_b.id_servicio=6";
+}
+else
+$condicion_servicio="and gastos_t_b.id_servicio=$id_servicio";
+
+
+
+/*echo "******************* <br>";
+echo $sucrepo."<br>"; 
+echo "******************* <br>";
+echo $fecre1."<br>"; 
+echo "******************* <br>";
+echo $fecre2."<br>"; 
+echo "******************* <br>";
+echo $repservi."<br>"; 
+echo "******************* <br>";
+echo $repente."<br>"; 
+echo "******************* <br>";
+echo $restpro."<br>"; 
+echo "******************* <br>";*/
+
+
+   $qreporte=("select
+procesos.id_proceso,
+procesos.id_titular,
+procesos.id_beneficiario,
+procesos.comentarios,
+procesos.fecha_recibido, 
+procesos.fecha_ent_pri,
+procesos.id_admin,
+procesos.no_clave,
+subdivisiones.subdivision,
+servicios.servicio,
+servicios.id_servicio,
+entes.nombre,
+count(gastos_t_b.id_proceso)
+from 
+  procesos,gastos_t_b,admin,subdivisiones,$yente,titulares_subdivisiones,servicios
+where 
+procesos.fecha_ent_pri between '$fecre1' and '$fecre2' and 
+gastos_t_b.id_proceso=procesos.id_proceso  and
+ admin.id_admin=procesos.id_admin  
+$condicion_sucursal  $condicion_servicio $condicion_ente $condicion_restpro and 
+procesos.id_titular=titulares.id_titular and 
+titulares.id_titular=titulares_subdivisiones.id_titular and
+titulares_subdivisiones.id_subdivision=subdivisiones.id_subdivision and 
+servicios.id_servicio=gastos_t_b.id_servicio
+
+group by 
+procesos.id_proceso,
+procesos.id_titular,
+procesos.id_beneficiario,
+procesos.comentarios,
+procesos.fecha_recibido,
+procesos.fecha_ent_pri,
+procesos.id_admin,titulares.id_ente,
+procesos.no_clave,
+subdivisiones.subdivision,
+servicios.servicio,
+servicios.id_servicio,
+entes.nombre,
+$gente
+ORDER BY procesos.no_clave DESC");
+$rreporte=ejecutar($qreporte);
+
+?>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+	<tr>
+		<td class="titulo_seccion" colspan="4">Reporte Relaci&oacute;n de <?php  echo $servicio?> en Estado <?php echo $estnombre ?> del Ente Privado <?php echo "$entenombre";?> </td>     
+	</tr>
+</table>	
+  <tr><td>&nbsp;</td></tr>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 > 
+	<tr> 
+		<td class="tdtitulosd">Relaci&oacute;n de <?php echo "$fecre1 al $fecre2";?></td>
+	</tr> 
+	
+	<tr> 
+		<td class="tdcamposc"><?php  echo $sucursal;?></td>
+	</tr>
+  <tr><td>&nbsp;</td></tr>
+</table>	 	
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 rules="rows"> 
+	<tr> 
+
+		<td class="tdcampos">ORDEN</td>   
+		<td class="tdcampos">CLAVE</td>     
+		<td class="tdcampos">ENTE</td> 
+		<td class="tdcampos">SUBDIVISION</td> 
+		<td class="tdcampos">TITULAR</td>  
+		<td class="tdcampos">CEDULA TITULAR</td> 
+		<td class="tdcampos">BENEFICIARIO</td> 
+		<td class="tdcampos">FECHA</td>  
+		<td class="tdcampos">SERVICIO</td>            
+		<td class="tdcampos">DIAGNOSTICO</td>   
+		<td class="tdcampos">MONTO (Bs.S)</td>      
+	</tr>
+	<?php
+	     $i=1;
+		  $bsf=0; 
+
+	     while($freporte=asignar_a($rreporte,NULL,PGSQL_ASSOC))
+		{
+
+			$rtitular=("select clientes.nombres,clientes.apellidos,clientes.cedula from clientes,titulares where titulares.id_titular=$freporte[id_titular] and titulares.id_cliente=clientes.id_cliente"); 
+			$qtitular=ejecutar($rtitular);
+			$datatitular=asignar_a($qtitular);
+			$ftitular="$datatitular[nombres] $datatitular[apellidos]";
+			$fcedula="$datatitular[cedula]";
+			   if ($freporte[id_beneficiario]>0){
+				  $rbenf=("select clientes.nombres,clientes.apellidos from clientes,beneficiarios where beneficiarios.id_beneficiario=$freporte[id_beneficiario] and beneficiarios.id_cliente=clientes.id_cliente;");
+				
+
+				  $qbenf=ejecutar($rbenf);
+				  $databenf=asignar_a($qbenf);
+				  $fbenf="$databenf[nombres] $databenf[apellidos]";  
+				    
+			  }else{$fbenf='';}
+
+
+$qgasto=("select gastos_t_b.monto_aceptado from gastos_t_b where gastos_t_b.id_proceso=$freporte[id_proceso]");
+$rgasto=ejecutar($qgasto);
+
+		$bsf=0;
+
+	while($fgasto=asignar_a($rgasto,NULL,PGSQL_ASSOC))
+		{
+		  $bsf= $bsf + ($fgasto[monto_aceptado]);
+		  $bsf1= $bsf1 + ($fgasto[monto_aceptado]);}
+
+		  echo"
+            <tr> 
+
+		    <td class=\"tdtituloss\">$freporte[id_proceso]</td>   
+	            <td class=\"tdtituloss\">$freporte[no_clave]</td>
+		    <td class=\"tdtituloss\">$freporte[nombre]</td>  
+	            <td class=\"tdtituloss\">$freporte[subdivision]</td> 
+	                       
+	            <td class=\"tdtituloss\">$ftitular</td>   
+		    <td class=\"tdtituloss\">$fcedula</td>
+	            <td class=\"tdtituloss\">$fbenf</td> 
+	            <td class=\"tdtituloss\">$freporte[fecha_ent_pri]</td> 
+      	            <td class=\"tdtituloss\">$freporte[servicio]</td> 
+	            <td class=\"tdtituloss\">$freporte[comentarios]</td>   
+	            <td class=\"tdtituloss\">".montos_print($bsf)."</td>      
+	        </tr>";
+		$i++;
+		}
+	?>
+	<tr>
+	        <td colspan=7 class="tdcampos" >&nbsp; &nbsp; Hay un total de <?php echo $i-1; ?> Ordenes </td>
+	        <td colspan=2 class="tdcampos" >Total Bs.&nbsp;&nbsp;  </td>
+	        <td  class="tdcampos"><?php echo montos_print($bsf1); ?></td>
+	</tr>
+
+</table>
+<table>
+  <tr><td>&nbsp;</td></tr>      
+
+	<tr>
+	        <td colspan=9 class="tdcamposs" title="Imprimir reporte">
+			  <?php
+			$url="'views06/ireporte_entpriv.php?fecha1=$fecre1&fecha2=$fecre2&sucur=$id_sucursal@$sucursal&servic=$id_servicio@$servicio&enpriv=$repente@$entenombre&lgnue=$replogo&estapro=$restpro@$estnombre'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton">Imprimir</a>   <?php
+			$url="'views06/excel_entpriv.php?fecha1=$fecre1&fecha2=$fecre2&sucur=$id_sucursal@$sucursal&servic=$id_servicio@$servicio&enpriv=$repente@$entenombre&lgnue=$replogo&estapro=$restpro@$estnombre'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton">Excel</a>
+			</td>
+	</tr> 
+  <tr><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td></tr>
+

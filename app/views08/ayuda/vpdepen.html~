@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Ver Pedido Dependencia<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Ver Pedidos</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para ver los pedidos realizados por las dependencias el usuario deberá acceder al módulo <I>Compras</I> luego seleccionar <I>Ver Pedido Dependencia</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen1.jpg" WIDTH=460 HEIGHT=225 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">En la siguiente pantalla un formulario de control de pedido, podrá seleccionarse el estado del pedido: Pendiente o Procesado, y Las dependencias, al dar un clic en <I>Buscar</I> apareceran los pedidos en el caso de los hubiese. (ver figura 2 y 3)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen2.jpg" WIDTH=617 HEIGHT=67 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/vpdepen3.jpg" WIDTH=618 HEIGHT=67 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Modificar Pedidos</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al seleccionar los pendientes, se podrá tender la opción a procesarlas dándo un clic en <I>Procesar</I> o en Modificar dando un clic en <I>Modificar</I> luego de ser visualizadas. (ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen4.jpg" WIDTH=613 HEIGHT=301 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se da un clic en Modificar en alguno de los pedidos, aparecerá la lista de tipos de artículos a cargar y seleccionados aquellos que han sido solicitados, podrán añadirse o quitarse, luego se da un clic en <I>Buscar</I>. (ver figura 5)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen5.jpg" WIDTH=618 HEIGHT=364 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 5</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">El la siguiente pantalla se podrán cargar los artículos faltantes, o eliminar aquellos que estén demás tal como se realiza en <A HREF="cpdepen.html">Crear Pedido Dependencia</A>, luego de realizar los cambios se da clic en <I>Guardar</I>. (ver figurad 6 y 7).</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen6.jpg" WIDTH=618 HEIGHT=212 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 6</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/vpdepen7.jpg" WIDTH=617 HEIGHT=333 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 7</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego el sistema indicará que el vedido se ha modificado exitosamente. (ver figura 8).</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen8.jpg" WIDTH=615 HEIGHT=53 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 8</I></div></FONT>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Procesar Pedidos</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se desea procesar la solicitud, se da clic en <I>Procesar</I>, luego se podrá ver el pedido la cantidad de artículos solicitados y en exisistencia, en el caso de que la cantidad de artículos en existencia sea cero (0), el sistema indicará que existen artículos cuyas cantidades a despachar son mayores a la que están en existencias. (ver figura 9 y 10).</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen9.jpg" WIDTH=615 HEIGHT=462 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 9</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/vpdepen10.jpg" WIDTH=617 HEIGHT=143 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 10</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si la cantidad en existencia de los mismos son menores a las pedidas, se modifica la cantidad a despachar y se hace el comentario al respecto, y se procede a procesar la solicitud dando un clic en <I>Procesar</I>. (ver figura 11)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen11.jpg" WIDTH=617 HEIGHT=464 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 11</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Finalmente el sistema indicará que el pedido ha sido procesado exitosamente. (ver figura 12).</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen12.jpg" WIDTH=616 HEIGHT=54 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 12</I></div></FONT>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Ver pedidos Despachados y Recibir Pedidos</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al seleccionar los pedido procesados, y seleccionar la dependecia, apareceran los pedidos que ya han sido procesados, para visualizarlos se da un clic en <I>Ver pedido</I>. (ver figura 13)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen13.jpg" WIDTH=615 HEIGHT=270 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 13</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Se verá el pedido, la cantidad despechada y el comentario realizado por la dependencia que lo despachó.  Para aceptar el pedido se da un clic en <I>Aceptar Pedido</I> y el sistema luego indicará que se ha recibido exitosamente. (ver figura 14 y 15)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen14.jpg" WIDTH=617 HEIGHT=331 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 14</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/vpdepen15.jpg" WIDTH=616 HEIGHT=66 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 15</I></div></FONT>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Ver pedido Recibidos</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al seleccionar los pedido recibidos y la dependencia, se deplegará una selección de rango de fecha y dar un clic en <I>Buscar</I>. (ver figura 16 y 17)</P>
+<P><div align="center"><IMG SRC="imagenes/vpdepen16.jpg" WIDTH=617 HEIGHT=141 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 16</I></div></FONT>
+<P><div align="center"><IMG SRC="imagenes/vpdepen17.jpg" WIDTH=617 HEIGHT=304 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 17</I></div></FONT>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="compras.html">Volver al Módulo Compras</A></U></FONT></div></P>
+</BODY>
+</HTML>

@@ -1,0 +1,63 @@
+<?php
+/* Nombre del Archivo: banco1.php
+   Descripción:FORMULARIO PARA INSERTAR un BANCO en la base de datos, para ser utilizado posteriormente 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+   $nombre1=$_REQUEST['nombre1'];
+
+
+$q_banc = "select tbl_bancos.id_ban, tbl_bancos.nombanco from tbl_bancos where tbl_bancos.id_ban=$nombre1";
+$r_banc = ejecutar($q_banc);
+$f_banc = asignar_a($r_banc);
+
+$q_tc = "select * from tbl_tiposcuentas order by tbl_tiposcuentas.tipo_cuenta";
+$r_tc = ejecutar($q_tc);
+
+
+?>
+<link HREF="../../public/stylesheets/estilos1.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js">
+
+</script>
+
+<form action="POST" method="POST" name="banca" id="formp">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+	<tr>		<td colspan=4 class="titulo_seccion">Insertar Cuentas Bancarias</td>
+	</tr>
+	<tr>
+		<td colspan=4>&nbsp;</td>
+	</tr> 
+	<tr>
+		<td colspan=1 class="tdtitulos">* Nombre Banco</td>
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="nombre"  size=30 value="<?php echo $f_banc['nombanco']; ?>"></td>
+		<input type="hidden" name="id_banco" value="<?php echo $f_banc[id_ban];?>">
+	<td colspan=1 class="tdtitulos">N&uacute;mero de Cuenta</td>
+	<td colspan=1 class="tdcampos"><input type="text" size="30" class="campos" name="num"></td>
+	</tr>
+	<tr>
+		<td colspan=4>&nbsp;</td>
+	</tr> 
+	<tr>
+		<td colspan=1 class="tdtitulos">Tipo de Cuenta</td>
+		<td colspan=1><select name="tipo" class="campos">
+		<option value="0">-- Seleccione un Tipo de Cuenta --</option>
+		<?php
+		while($f_tc = asignar_a($r_tc)){
+			echo "<option value=".$f_tc['tipo_cuenta'].">".$f_tc['tipo_cuenta']."</option>";
+		}
+		?>
+		</select>
+		</td>
+
+
+		<td colspan=2 class="tdcamposcc"><a href="#" OnClick="guardar_cuenta();" class="boton">Guardar</a> <a href="#" OnClick="modificar_banco();" class="boton">Modificar</a> 			</td>
+	</tr>
+	<tr>
+		<td colspan=4>&nbsp;</td>
+	</tr> 
+</table>
+</formp>

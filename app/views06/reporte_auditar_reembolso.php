@@ -1,0 +1,189 @@
+<?php
+/* Nombre del Archivo: reporte_auditar_reemboloso.php
+   Descripción: Realiza la busqueda en la base de datos, para el Reporte de Impresión: Auditar Reembolsos
+*/  
+header("Content-Type: text/html;charset=utf-8");
+ include ("../../lib/jfunciones.php");
+ sesion();
+
+$fecha = date("Y-m-d");
+
+	$fecre1=$_REQUEST['fecha1'];
+	$fecre2=$_REQUEST['fecha2'];
+
+?>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+	<tr> <td colspan=4>&nbsp;</td></tr>
+	<tr> <td colspan=4>&nbsp;</td></tr>
+	<tr>
+		<td class="titulo_seccion" colspan="19">REPORTE AUDITAR REEMBOLSOS DESDE EL <?php echo "$fecre1 AL $fecre2";?>  </td>
+
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>	
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0  border=3> 
+
+	<tr> 
+		<td class="tdcampos">ORDEN</td>   	   	
+		<td class="tdcampos">TITULAR</td>
+	        <td class="tdcampos">CEDULA TITULAR</td> 
+		<td class="tdcampos">BENEFICIARIO</td>
+	        <td class="tdcampos">CEDULA BENEFICIARIO</td>
+		<td class="tdcampos">FECHA RECIBIDO</td> 
+		<td class="tdcampos">FECHA VENC. ULTIMA CUOTA</td> 
+		<td class="tdcampos">ENTE</td>        
+		<td class="tdcampos">ESTADO PROCESO</td> 
+		<td class="tdcampos">ANALISTA</td> 
+		<td class="tdcampos">REVISION MEDICA</td> 
+		<td class="tdcampos">FECHA ADMINISTRACION</td> 
+		<td class="tdcampos">MONTO RECONOCIDO</td> 
+		<td class="tdcampos">FECHA CHEQUE</td> 
+		<td class="tdcampos">DIAS DE PAGO</td> 
+		<td class="tdcampos">90 DIAS DE VENCIMIENTO</td> 
+	</tr>
+
+<?php
+
+$q_reemb=("
+select
+	procesos.id_proceso,
+	procesos.id_titular,
+	procesos.id_beneficiario,
+	procesos.fecha_recibido, 
+	procesos.id_admin,
+	procesos.id_estado_proceso,
+	procesos.hora_creado,
+	titulares.id_ente,
+	admin.nombres,
+	admin.apellidos,
+	clientes.id_cliente,
+	(clientes.nombres) AS n,
+	(clientes.apellidos) AS a,
+	clientes.cedula,
+	entes.nombre,
+	estados_procesos.estado_proceso,
+	admin.nombres,
+	admin.apellidos,
+	procesos.comentarios_medico
+	from procesos,gastos_t_b,admin,titulares,clientes,entes,estados_procesos 
+where 
+	procesos.fecha_recibido between '$fecre1' and '$fecre2' and 
+	gastos_t_b.id_proceso=procesos.id_proceso
+	and procesos.id_estado_proceso>0 
+	and  (procesos.id_beneficiario>0 or procesos.id_beneficiario=0) and
+	admin.id_admin=procesos.id_admin 
+	and admin.id_sucursal>0 
+	and (gastos_t_b.id_servicio=1 or gastos_t_b.id_servicio=10) and
+	procesos.id_titular=titulares.id_titular and 
+	titulares.id_ente=entes.id_ente  and
+	titulares.id_cliente=clientes.id_cliente and 
+	procesos.id_estado_proceso=estados_procesos.id_estado_proceso 
+group by
+	procesos.id_proceso,
+	procesos.id_titular,
+	procesos.id_beneficiario,
+	procesos.fecha_recibido, 
+	procesos.id_admin,
+	procesos.id_estado_proceso,
+	procesos.hora_creado,
+	titulares.id_ente,
+	admin.nombres,
+	admin.apellidos,
+	clientes.id_cliente,
+	n,
+	a,
+	clientes.cedula,
+	entes.nombre,
+	estados_procesos.estado_proceso,
+	admin.nombres,
+	admin.apellidos,
+	procesos.comentarios_medico
+
+ORDER BY procesos.id_proceso DESC");
+
+$r_reemb=ejecutar($q_reemb);
+
+	while($f_reemb=asignar_a($r_reemb)){
+$nombe="";
+$cebe="";
+
+
+if ($f_reemb[id_beneficiario]>0){
+$q_benf=("select clientes.nombres,clientes.apellidos,clientes.cedula,clientes.id_cliente,clientes.fecha_nacimiento,clientes.sexo from clientes,beneficiarios where beneficiarios.id_beneficiario='$f_reemb[id_beneficiario]' and beneficiarios.id_cliente=clientes.id_cliente;");
+ $r_benf=ejecutar($q_benf);
+ $f_benf=asignar_a($r_benf);
+
+$nombe="$f_benf[nombres] $f_benf[apellidos]";
+$cebe=$f_benf[cedula];
+
+}
+
+$q_final=("select tbl_contratos_entes.id_ente, tbl_contratos_entes.fecha_final_pago from tbl_contratos_entes where tbl_contratos_entes.id_ente=$f_reemb[id_ente]");
+$r_final=ejecutar($q_final);
+$f_final=asignar_a($r_final);
+
+$q_factura=("select facturas_procesos.id_proceso, facturas_procesos.fecha_creado, facturas_procesos.fecha_imp_che, facturas_procesos.monto_sin_retencion from facturas_procesos where
+$f_reemb[id_proceso]=facturas_procesos.id_proceso ");
+$r_factura=ejecutar($q_factura);
+$f_factura=asignar_a($r_factura);
+
+$dia1=$f_factura[fecha_imp_che];
+$dia2=$f_reemb[fecha_recibido];
+
+if($f_reemb[id_estado_proceso]=='11')  {
+$dias = (strtotime($dia1)-strtotime($dia2))/86400;
+	$dias = abs($dias); 
+	$dias = floor($dias);
+
+$dia3=date("Y/m/d", strtotime("$dia1 + 90 day"));
+}
+
+else {$dias=' ';
+$dia3=' ';}
+
+echo  " 
+		<tr>
+		<td class=\"tdtitulos\">$f_reemb[id_proceso] </td>  
+		<td class=\"tdtitulos\">$f_reemb[n] $f_reemb[a] </td> 
+		<td class=\"tdtitulos\">$f_reemb[cedula] </td> 
+		<td class=\"tdtitulos\">$nombe </td>
+		<td class=\"tdcamposc\">$cebe </td>
+		<td class=\"tdcamposc\">$f_reemb[fecha_recibido] </td>
+		<td class=\"tdtitulos\">$f_final[fecha_final_pago] </td>
+		<td class=\"tdtitulos\">$f_reemb[nombre]   </td>
+		<td class=\"tdtitulos\">$f_reemb[estado_proceso] </td>
+		<td class=\"tdtitulos\">$f_reemb[nombres] $f_reemb[apellidos] </td>
+		<td class=\"tdtitulos\">$f_reemb[comentarios_medico] </td>
+		<td class=\"tdtitulos\">$f_factura[fecha_creado] </td>
+		<td class=\"tdtitulos\">$f_factura[monto_sin_retencion] </td>
+		<td class=\"tdtitulos\">$f_factura[fecha_imp_che] </td>
+		<td class=\"tdcamposr\">$dias</td>
+		<td class=\"tdcamposr\">$dia3</td>
+"; 
+?>	              
+	        </tr>
+<?php  
+}
+?>
+
+</table>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+<tr><td colspan=4>&nbsp;</td></tr>
+<tr><td colspan=4>&nbsp;</td></tr>
+
+</table>
+<table>
+ 
+	<tr> <td colspan=4>&nbsp;</td></tr>
+	<tr>
+	        <td colspan=4 class="tdcamposs" title="Imprimir reporte">
+			  <?php
+			 $url="'views06/excel_auditar_reembolso.php?fecha1=$fecre1&fecha2=$fecre2'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton">Excel</a>
+		</td>
+	</tr>
+	<tr> <td colspan=4>&nbsp;</td></tr>
+</table>

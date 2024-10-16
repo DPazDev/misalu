@@ -1,0 +1,8077 @@
+function valirepoFM(){
+
+  if((Field.present('Fini')==false) || (Field.present('Fifi')==false) || ($F('sucur')<=0) || ($F('servic')<=0) ||
+        ($F('estarpro')<=0)){
+       alert("Todos los campos son necesarios");
+	alert('hola');
+      }else{
+         Element.show('repp');
+
+		ImpReporFM();
+      }
+}
+
+function valirepo(){
+  if((Field.present('Fini')==false) || (Field.present('Fifi')==false) || ($F('sucur')<=0) || ($F('servic')<=0) ||
+        ($F('estarpro')<=0)){
+       alert("Todos los campos son necesarios");
+      }else{
+         ImpRepor()
+      }
+}
+function hola (cedula,titu){
+   document.getElementById('cednom').value=cedula;
+   CliCedula (cedula,titu);
+}
+
+function CliCedula(cedula,titu){
+	tipclien = $LF('eltipclien');
+    new Ajax.Request("views01/bsc_cliente.php",
+    {
+        method:'post',
+        asynchronous: true,
+        postBody: 'cedulaclien='+cedula+'&eltidelb='+titu+'&eltipclien='+tipclien,
+        onComplete: mostrarClien
+    });
+}
+
+//modificasion franklin monsalve 2021-11-03
+ function edipro(idpp,act,cedu,n=''){
+	 new Ajax.Updater( act,
+     "views03/datprovee.php",
+     {
+         method:'post',
+	 asynchronous: true,
+	 postBody: 'elpp='+idpp+'&lace='+cedu+'&numero='+n,
+     });
+}
+
+//fin modulo
+
+
+function busClien(){
+   tipclien = $LF('eltipclien');
+   var a;
+   a=document.getElementById('cednom').value;
+   if (a.length==0){
+     alert("Campo C\u00e9dula \u00f3 Nombre necesario!!");
+   }else{
+    new Ajax.Request("views01/bsc_cliente.php",
+                  {
+                     method:'post',
+                     asynchronous: true,
+                     postBody: 'cedulaclien='+$F('cednom')+'&eltipclien='+tipclien,
+                     onComplete: mostrarClien
+                  });
+   }
+}
+function mostrarClien(req){
+       $('clientes').innerHTML= req.responseText;
+}
+
+function VerCob1(){
+      var a,b,c;
+      a=document.getElementById('vfi').value;
+      for (i=1; i<=a; i++){
+      	b=document.getElementById('group_'+i).checked;
+        if (b==true){
+           c=i;
+           VerCob2(c);
+	   document.getElementById('group_'+i).checked=false;
+        }
+      }
+}
+function VerCob2(r){
+    new Ajax.Request("views01/ver_cobt.php",
+                  {
+		    method: 'post',
+		    asynchronous: true,
+		    postBody: 'idtitular='+$F('group_'+r)+'&vetp='+$F('estt'),
+		    onComplete: verCoClien
+		  });
+}
+
+function VerCobTcB(r){
+   new Ajax.Request("views01/ver_cobt.php",
+                  {
+		    method: 'post',
+		    asynchronous: true,
+		    postBody: 'idtitular='+r+'&vetp='+('Benf'),
+		    onComplete: verCoClien
+		  });
+}
+
+function verCoClien(req)
+   {
+     $('titcober').innerHTML=req.responseText;
+   }
+
+function VerCob1a(){
+      var a,b,c;
+      a=document.getElementById('vfno').value;
+         for (i=1; i<=a; i++){
+	       b=document.getElementById('grupo_'+i).checked;
+	       if (b==true){
+	          c=i;
+	          busCli(c);
+	         document.getElementById('grupo_'+i).checked=false;
+	      }
+	   }
+}
+
+function busCli(r){
+   new Ajax.Request("views01/bsc_cliente.php",
+     {
+        method:'post',
+        asynchronous: true,
+        postBody: 'cedulaclien='+$F('grupo_'+r),
+        onComplete: mostrarClien1
+     });
+}
+
+function mostrarClien1(req){
+   $('clientes').innerHTML= req.responseText;
+}
+
+function datprovee(){
+    new Ajax.Request("views03/datprovee.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'cedulaclien='+$F('boton'),
+	        onComplete: mostrarprov
+       });
+}
+
+function mostrarprov(req){
+   $('datprov').innerHTML= req.responseText;
+}
+
+function buscarprovee(){
+  new Ajax.Request("views03/verprovee.php",
+  {
+            method:'post',
+	    asynchronous: true,
+	    postBody: 'ceduprovee='+$F('cedulap'),
+	    onComplete: mostrarP
+
+  });
+
+}
+
+function buscarprovee11(cedula){
+  new Ajax.Request("views03/verprovee.php",
+  {
+            method:'post',
+	    asynchronous: true,
+	    postBody: 'ceduprovee='+cedula,
+	    onComplete: mostrarP
+
+  });
+
+}
+
+
+function mostrarP(req){
+   $('inprove').innerHTML= req.responseText;
+}
+
+function ira(){
+ new Ajax.Updater('clientes', 'views01/principal.php',
+   {
+
+   });
+}
+
+//modificacion franklin monsalve 2021-11-03
+function gucprove(n=''){
+  registro=1;
+        extr=$F('extram1'+n);
+        intr=$F('intram1'+n);
+        if(extr==0){
+          provinex=extr;
+         }else{
+           provinex=1;
+        }
+	var1=$F('cedu1'+n);
+	var2=$F('idpr'+n);
+
+	l=$F('lunes1'+n);
+	m=$F('martes1'+n);
+
+        act1=$F('op1'+n);
+        act2=$F('op2'+n);
+
+        if(act1==1){
+          opcion=1;
+        }else{
+          opcion=0;
+          }
+
+          TipoMonto=$F('TipoMonto'+n);
+          CostoServicio=$F('CostoServicio'+n);
+          monedaservicio=$F('monedaservicio'+n);
+              if(TipoMonto=='0')
+                { strCosto=CostoServicio.split('.');
+                  cantCost=strCosto.length;
+                  if((cantCost>1) || (CostoServicio > 100) ){
+                            alert('Para declarar porcentajes solo use numeros enteros, entre 0 y 100');
+                    registro=0;
+                    }
+                }
+        if(registro==1){
+	new Ajax.Request("views03/guardp.php",
+  {       method: 'post',
+	        asynchronous: true,
+	        postBody: 'ci1='+$F('ciu'+n)+'&es1='+$F('esme'+n)+'&dip1='+$F('dpro'+n)+'&te1='+$F('tel1'+n)+'&ser1='+
+                  $F('servmedico'+n)+'&ced1='+$F('cedulpro'+n)+'&idp1='+$F('idpr'+n)+
+				  '&com1='+$F('coment'+n)+'&h1='+$F('hop'+n)+'&tipsucur='+$F('lasucur'+n)+'&pv1='+$F('pvn'+n)+'&lanuce='+var1+
+				  '&llunes='+$F('lunes1'+n)+'&lmarte='+$F('martes1'+n)+'&lmier='+$F('miercoles1'+n)+'&ljuev='+$F('jueves1'+n)+
+				  '&lviern='+$F('viernes1'+n)+'&lsaba='+$F('sabado1'+n)+'&ldomi='+$F('domingo1'+n)+'&opciacti='+opcion+
+                                  '&elnom='+$F('nombre1m'+n)+'&elapell='+$F('apellido1m'+n)+'&provinex='+provinex+
+                                  '&pllune='+$F('lablunes'+n)+'&plmarte='+$F('labmarte'+n)+'&plmierc='+$F('labmiercoles'+n)+'&pljueve='+$F('labjueves'+n)+
+                                  '&plvierne='+$F('labviernes'+n)+'&plsabad='+$F('labsabado'+n)+'&pldoming='+$F('labdomingo'+n)+'&TipoMonto='+TipoMonto+'&CostoServicio='+CostoServicio+'&monedaservicio='+monedaservicio,
+       onComplete: buscarprovee
+  });
+  }
+}
+//fin funcion
+//modificacion franklin monsalve 2021-11-03
+function cargaservi(dato){
+
+  new Ajax.Request("views03/servi.php",
+    {
+            method: 'post',
+	    asynchronous: true,
+            postBody: 'cedupp='+dato,
+	    onComplete: mnsPROV
+   });
+ }
+//fin funcion
+
+function mnsPROV(req){
+  $('pprovee').innerHTML= req.responseText;
+}
+///modificacion franklin monsave 2021-11-03
+function guaservi(){
+  registro=1;
+  //el servicio esta activo
+  act1=$F('op1');
+   act2=$F('op2');
+  if(act1==1){
+          opcion=1;
+        }else{
+          opcion=0;
+          }
+
+  extr=$F('extram');
+   intr=$F('intram');
+   if(extr==0){//es intar o extramural
+     provinex=extr;
+   }else{
+     provinex=1;
+   }
+
+vartipp=$F('pvnp');
+  if(vartipp==null){
+    varpvnp=0;//esprovedor nomina no
+    varlunes=0;
+    varmarte=0;
+    varmierc=0;
+    varjueve=0;
+    varvier=0;
+    varsabad=0;
+    vardomin=0;
+    ///estudios por dias
+    EstLunes=0;
+    EstMartes=0;
+    EstMiercoles=0;
+    EstJueve=0;
+    EstVierne=0;
+    EstSabad=0;
+    EstDomingo=0;
+   }else{
+        varpvnp=1;//esprovedor nomina no
+        vl=document.getElementById('lunes1').checked
+        if(vl==true){
+          varlunes=1;
+          EstLunes=$F('estuidolunes1');
+        }else{
+         varlunes=0;
+         EstLunes=0;
+        }
+        vm=document.getElementById('martes1').checked
+        if(vm==true){
+          varmarte=1;
+          EstMartes=$F('estuidomartes1');
+        }else{
+         varmarte=0;
+         EstMartes=0;
+        }
+        vmi=document.getElementById('miercoles1').checked
+        if(vmi==true){
+          varmierc=1;
+          EstMiercoles=$F('estuidomiercoles1');
+        }else{
+         varmierc=0;
+         EstMiercoles=0;
+        }
+        vje=document.getElementById('jueves1').checked
+        if(vje==true){
+          varjueve=1;
+          EstJueve=$F('estuidojueves1');
+        }else{
+         varjueve=0;
+         EstJueve=0;
+        }
+        vve=document.getElementById('viernes1').checked
+        if(vve==true){
+          varvier=1;
+          EstVierne=$F('estuidoviernes1');
+        }else{
+         varvier=0;
+         EstVierne=0;
+        }
+        vsab=document.getElementById('sabado1').checked
+        if(vsab==true){
+          varsabad=1;
+          EstSabad=$F('estuidosabado1');
+        }else{
+         varsabad=0;
+         EstSabad=0;
+        }
+        vdomi=document.getElementById('domingo1').checked
+        if(vdomi==true){
+          vardomin=1;
+          EstDomingo=$F('estuidodomingo1');
+        }else{
+         vardomin=0;
+         EstDomingo=0;
+        }
+ }
+ TipoMonto=$F('TipoMonto');
+ CostoServicio=$F('CostoServicio');
+ monedaservicio=$F('monedaservicio');
+     if(TipoMonto=='0')
+       { strCosto=CostoServicio.split('.');
+         cantCost=strCosto.length;
+         if((cantCost>1) || (CostoServicio > 100) ){
+                   alert('Para declarar porcentajes solo use numeros enteros, entre 0 y 100');
+           registro=0;
+           }
+       }
+if(registro==1){
+   new Ajax.Request("views03/guadsr.php", {
+  method: 'post',
+  asynchronous: true,
+  postBody: 'dirp='+$F('dprop')+'&telfp='+$F('tel1p')+'&servpp='+$F('servp')+'&ciupp='+$F('ciup')+
+          '&esmepp='+$F('esmep')+'&hop1='+$F('hopp')+'&comentpp='+$F('comentp')+
+		  '&pvnpp='+$F('pvnp')+'&idppo='+$F('perspro')+'&lasucu='+$F('sucur')+
+                  '&ellunes='+varlunes+'&elmartes='+varmarte+'&elmiercoles='+varmierc+
+                  '&eljueves='+varjueve+'&elviernes='+varvier+'&elsabado='+varsabad+'&eldoming='+vardomin+
+                  '&EstLunes='+EstLunes+'&EstMartes='+EstMartes+'&EstMiercoles='+EstMiercoles+
+                  '&EstJueve='+EstJueve+'&EstVierne='+EstVierne+'&EstSabad='+EstSabad+'&EstDomingo='+EstDomingo+
+                  '&TipoMonto='+TipoMonto+'&CostoServicio='+CostoServicio+'&monedaservicio='+monedaservicio+'&claspiex='+provinex+'&estacti='+opcion,
+          onComplete: buscarprovee
+});
+}
+}
+///fin modulo
+function proveeGUARs(req){
+ $('inprove').innerHTML= req.responseText;
+}
+
+//modificacion franklin monsalve 2021-11-03
+function cargaservi1(){
+cedupp=$F('cedpnu');
+nopnu=$F('nompnue');
+apenu=$F('appepnu');
+cornu=$F('correpnu');
+tnu=$F('telnu');
+msc='Campos: ';
+error=0;
+if(cedupp=='' || cedupp.legend=='0')
+{ msc=msc+' Cedula ';
+error=1;}
+
+if(nopnu=='' || nopnu.legend=='0')
+{ msc=msc+' Nombre ';
+error=1;}
+
+if(apenu=='' || apenu.legend=='0')
+{ msc=msc+' Apellido ';
+error=1;}
+
+if(error==1)
+  {alert(msc+' es obligatorio');}
+  else
+    {     new Ajax.Request("views03/servin.php",
+            {
+             method: 'post',
+             asynchronous: true,
+             postBody: 'cedupp='+cedupp+'&nopnu='+nopnu+'&apenu='+apenu+'&cornu='+cornu+'&tnu='+tnu,
+             onComplete: mnsPROVa
+           });
+    }
+}
+
+function mnsPROVa(req){
+ $('pprovee1').innerHTML= req.responseText;
+}
+
+//modificacion  franklin monsalve 2021-11-03
+function guaservi1(){
+  registro=1;
+ extr=$F('extram');
+  intr=$F('intram');
+  if(extr==0){
+    provinex=extr;
+  }else{
+    provinex=1;
+  }
+ act1=$F('op1');
+  act2=$F('op2');
+  varciudad=$F('ciup');
+  varespeci=$F('esmep');
+  varsucurs=$F('sucur');
+  if(act1==1){
+          opcion=1;
+        }else{
+          opcion=0;
+          }
+
+      TipoMonto=$F('TipoMonto');
+  		CostoServicio=$F('CostoServicio');
+  		monedaservicio=$F('monedaservicio');
+      		if(TipoMonto=='0')
+      			{ strCosto=CostoServicio.split('.');
+              cantCost=strCosto.length;
+              if((cantCost>1) || (CostoServicio > 100) ){
+              					alert('Para declarar porcentajes solo use numeros enteros, entre 0 y 100');
+      					registro=0;
+      					}
+      			}
+if(registro==1){
+   if(varciudad<=0){
+     alert("El campo ciudad es obligatorio!!");
+    }else{
+          if(varespeci<=0){
+            alert("El campo especialidad m\u00e9dica es obligatorio!!");
+           }else{
+               if(varsucurs<=0){
+                  alert("El campo sucursal es obligatorio!!");
+               }else {
+
+                  new Ajax.Request("views03/guapnu.php",    {
+    method: 'post',
+    asynchronous: true,
+    postBody: 'pcen='+$F('pce')+'&pnbpnom='+$F('nombr')+'&papnu='+$F('pape')+'&pcorenu='+$F('pcore')+'&ptenu='+$F('pte')+
+              '&dirp='+$F('dprop')+'&telfp='+$F('tel1p')+'&servpp='+$F('servp')+'&ciupp='+$F('ciup')+'&esmepp='+$F('esmep')+
+              '&hop1='+$F('hopp')+'&comentpp='+$F('comentp')+'&pvnpp='+$F('pno')+'&lasucu='+$F('sucur')+
+			  '&rlunes='+$F('lunes1')+'&rmart='+$F('martes1')+'&rmierc='+$F('miercoles1')+'&rjueve='+$F('jueves1')+
+			  '&rvierne='+$('viernes1')+'&rsabad='+$F('sabado1')+'&rdomin='+$F('domingo1')+
+  '&EstLunes='+$F('estuidolunes1')+'&EstMartes='+$F('estuidomartes1')+'&EstMiercoles='+$F('estuidomiercoles1')+'&EstJueve='+$F('estuidojueves1')+
+  '&EstVierne='+$F('estuidoviernes1')+'&EstSabad='+$F('estuidosabado1')+'&EstDomingo='+$F('estuidodomingo1')+'&estacti='+opcion+'&claspiex='+provinex+'&TipoMonto='+TipoMonto+'&CostoServicio='+CostoServicio+'&monedaservicio='+monedaservicio,
+    onComplete:buscarprovee
+  });
+                }
+            }
+         }
+       }
+}
+
+//fin modulo
+
+function busclienrif(elrif){
+  new Ajax.Request("views03/verprocli.php",
+    {
+       method:'post',
+       asynchronous: true,
+       postBody: 'rifpc='+elrif,
+       onComplete: mostrarPCL
+    });
+}
+function buscarprocli(){
+	//v1=$F('rifp');
+	//a=Field.present('rifp');
+	//alert(a);
+  new Ajax.Request("views03/verprocli.php",
+    {
+       method:'post',
+       asynchronous: true,
+       postBody: 'rifpc='+$F('rifp'),
+       onComplete: mostrarPCL
+    });
+}
+function mostrarPCL(req){
+  $('inprove').innerHTML= req.responseText;
+}
+
+function paises(){
+  new Ajax.Request("views03/paises.php",
+    {
+      method: 'post',
+      asynchronous: true,
+      postBody: 'elpaises='+$F('paicli'),
+      onComplete: mostrarPais
+    });
+}
+function mostrarPais(req){
+  $('laciudad').innerHTML= req.responseText;
+}
+
+function estados(){
+  new Ajax.Request("views03/estados.php",
+      {
+            method: 'post',
+	    asynchronous: true,
+            postBody: 'laciudad='+$F('estclin'),
+	    onComplete: mostrarCiu
+      });
+}
+function mostrarCiu(req){
+  $('laciudad2').innerHTML= req.responseText;
+  }
+///////////////////////modulo registro proveedor clinica modificacion 2021 franklin mosalve////
+	function cargaclini(){
+		registro=1;
+	extr=$F('extram');
+	intr=$F('intram');
+	if(extr==0){
+	  provinex=extr;
+	}else{
+	  provinex=1;
+	}
+	act1=$F('op1');
+	act2=$F('op2');
+	if(act1==1){
+	   opcion=1;
+	}else{
+	   opcion=0;
+	}
+	a=$F('provcom1a');
+	b=$F('provcom1b');
+	if ((a==2)||(b==3)){
+	   varcomprcont='';
+	   varcomdircot='';
+	   varcomptelef='';
+	}else{
+	   varcomprcont=$F('comprnomb');
+	   varcomdircot=$F('dirprocomp');
+	   varcomptelef=$F('telecompra');
+	}
+		TipoMonto=$F('TipoMonto');
+    CostoServicio=$F('CostoServicio');
+    monedaservicio=$F('monedaservicio');
+    if(TipoMonto=='0')
+			{ strCosto=CostoServicio.split('.');
+        cantCost=strCosto.length;
+        if((cantCost>1) || (CostoServicio > 100) ){
+        					alert('Para declarar porcentajes solo use numeros enteros, entre 0 y 100');
+					registro=0;
+					}
+			}
+      //enviar un nombre con caractere & para que no corete la cadena
+        prclinomb=$F('fnoclin');
+        strNprov=prclinomb.split('&');
+      TieneCEsp=0; //TieneCaracterEspecial
+        cant=strNprov.length;
+        if(cant>0){
+          for(i=0;i<cant;i++){
+            prclinomb=prclinomb.replace('&','*AND*');
+            TieneCEsp=1;
+          }
+      }
+
+  if(registro==1){
+  new Ajax.Request("views03/clifin.php",
+     {
+            method: 'post',
+            asynchronous: true,
+            postBody: 'rifcf='+$F('elrif')+'&prclinomb='+prclinomb+'&TieneCEsp='+TieneCEsp+'&prclitelef='+$F('ftelcli')+'&fifax='+$F('faxclif')+
+                      '&fpw='+$F('pagcli')+'&fdirec='+$F('dircli')+'&fnit='+$F('nitcli')+'&corecl='+$F('correcli')+
+                    '&elpai='+$F('paicli')+'&escli='+$F('estclin')+'&prcidf='+$F('ciuclin')+'&elsercli='+$F('servicli')+
+                    '&esprcomp1='+$F('provcom1')+'&esprcomp2='+$F('provcom1a')+'&comprnocont='+varcomprcont+
+                    '&comprdircont='+varcomdircot+'&comprtelcon='+varcomptelef+'&provacti='+$F('activprovee')+
+                    '&esprcomp3='+$F('provcom1b')+'&cheqnombre='+$F('cheqnom')+'&diranombre='+$F('dircheq')+
+                    '&rifanombre='+$F('cherif')+'&opciacti='+opcion+'&actprov='+provinex+'&TipoMonto='+TipoMonto+'&CostoServicio='+CostoServicio+'&monedaservicio='+monedaservicio,
+           onComplete: buscarprocli
+     });
+    }
+}
+
+
+function PorcentajeMontoservicio(e,str){
+//e: EVENTO
+//str: this
+  CotSerc=document.getElementById('CostoServicio');
+
+    if(str.value==0){
+			CotSerc.value='40';
+      CotSerc.max='100';
+      CotSerc.maxlength='3';
+      CotSerc.step="5"
+        }else{
+      CotSerc.value='0';
+      CotSerc.max='9999999999999999';
+      CotSerc.maxlength='9999999999999999';
+      CotSerc.step="0.001"
+            }
+
+}
+//////////////////fin modificaciones///
+
+function mostraF(req){
+     $('final').innerHTML= req.responseText;
+}
+
+function modifcli(){
+   new Ajax.Request("views03/climodif.php",
+    {
+        method: 'post',
+	asynchronous: true,
+	postBody: 'elrif='+$F('elricli'),
+	onComplete: Clf
+    });
+}
+
+function Clf(req){
+     $('finalcli').innerHTML= req.responseText;
+ }
+
+/////////modificacion franklin monsalve 2021 noviembre/////
+function finalmodif(){
+   extr=$F('extram');
+   intr=$F('intram');
+   idcliente=$F('elidcliente');
+   if(extr==0){
+     provinex=extr;
+   }else{
+      provinex=1;
+    }
+   act1=$F('op1');
+   act2=$F('op2');
+   varsiprocom=$F('provcom1');
+   varnosprocom=$F('provcom1a');
+   varotroprocom=$F('provcom1b');
+   monedaservicio=$F('monedaservicio');
+   if(varsiprocom==1){
+      varactpro=1;
+    }else{
+      if(varnosprocom==0){
+        varactpro=0;
+       }else{
+           varactpro=2;
+         }
+    }
+   if(act1==1){
+     opcion=1;
+   }else{
+     opcion=0;
+   }
+   //////////////////porcentajes del servicio
+   TipoMonto=$F('TipoMonto');
+   CostoServicio=$F('CostoServicio');
+   if(TipoMonto=='0')
+     { strCosto=CostoServicio.split('.');
+       cantCost=strCosto.length;
+       if((cantCost>1) || (CostoServicio > 100) ){
+                 alert('Para declarar porcentajes solo use numeros enteros, entre 0 y 100');
+         registro=0;
+         }
+     }
+     //enviar un nombre con caractere & para que no corete la cadena
+       prclinomb=$F('nvnomb');
+       strNprov=prclinomb.split('&');
+     TieneCEsp=0; //TieneCaracterEspecial
+       cant=strNprov.length;
+       if(cant>0){
+         for(i=0;i<cant;i++){
+           prclinomb=prclinomb.replace('&','*AND*');
+           TieneCEsp=1;
+         }
+       }
+  new Ajax.Request("views03/camclie.php",
+  {
+    method: 'post',
+    asynchronous: true,
+    postBody: 'verif='+$F('rifve')+'&ricamb='+$F('nvrif')+'&nitcamb='+$F('nvnit')+'&nomcamb='+prclinomb+'&TieneCEsp='+TieneCEsp+'&dircamb='+$F('nvdircli')+
+               '&tefcamb='+$F('nvtelf')+'&corrcamb='+$F('nvcorr')+'&pagcamb='+$F('nvpagi')+'&opciacti='+opcion+'&laactivipro='+$F('activprovee')+
+               '&elcheanom='+$F('cheqano')+'&elcherif='+$F('cheqrif')+'&elchedir='+$F('cheqdiri')+'&actiprovp='+varactpro+'&tipoproinex='+provinex+
+               '&clientesid='+idcliente+'&TipoMonto='+TipoMonto+'&CostoServicio='+CostoServicio+'&monedaservicio='+monedaservicio,
+    onComplete: buscarprocli
+  });
+}
+//////// fin modulo////////
+
+
+
+function  ImpRepor11(){
+      vrfech1=$F('Fini');
+	  vrfech2=$F('Fifi');
+	  vresucur=$F('sucur');
+	  vreservi=$F('servic');
+	  vreprov='1';
+	  vrrelogo=$F('lgnue');
+	  vrestapro=$F('estarpro');
+	  vcualpro='1';
+	  url='views06/impelreporten.php?rfech1='+vrfech1+'&rfech2='+vrfech2+'&resucur='+vresucur+'&reservi='+vreservi+
+	        '&reprov='+vreprov+'&rrelogo='+vrrelogo+'&restapro='+vrestapro+'&cualpro='+vcualpro ;
+	        imprimir(url);
+}
+
+function  ImpReporFM(){
+	 new Ajax.Request("views06/elreportFM.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'rfech1='+$F('Fini')+'&rfech2='+$F('Fifi')+'&resucur='+$F('sucur')+'&reservi='+$F('servic')+
+                          '&reprov='+$F('propp')+'&rrelogo='+$F('lgnue')+'&restapro='+$F('estarpro')+'&cualpro='+$F('group1'),
+
+	        onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner1' ).show();
+                             },
+						        onComplete: FinMOD
+                            });
+}
+
+function  ImpRepor1(){
+
+	 new Ajax.Request("views06/elreporteh.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'rfech1='+$F('Fini')+'&rfech2='+$F('Fifi')+'&resucur='+$F('sucur')+'&reservi='+$F('servic')+
+                          '&reprov='+'1'+'&rrelogo='+$F('lgnue')+'&restapro='+$F('estarpro')+'&cualpro='+'1',
+	        onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner' ).show();
+                             },
+						        onComplete: MedEH
+                            });
+}
+
+function MedEH(req){
+	$('repp').hide();
+		$('repp').show();
+	$('repp').innerHTML=req.responseText;
+	Element.hide('spinner');
+}
+
+function FinMOD(req){
+	$('repp').hide();
+		$('repp').show();
+	$('repp').innerHTML=req.responseText;
+	Element.hide('spinner');
+}
+
+function MedGUAR(req){
+	$('clientes').innerHTML=req.responseText;
+	Element.hide('spinner2');
+}
+
+
+function  ImpRepor(){
+	vartipservi=$F('servic');
+	if((vartipservi==1) || (vartipservi==10)){
+		new Ajax.Request("views06/elreporte.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'rfech1='+$F('Fini')+'&rfech2='+$F('Fifi')+'&resucur='+$F('sucur')+'&reservi='+$F('servic')+
+                          '&restapro='+$F('estarpro')+'&reprov='+'*',
+	        onCreate:  ResulPro,
+	        onComplete: mostraRepor
+       });
+	}
+	 new Ajax.Request("views06/elreporte.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'rfech1='+$F('Fini')+'&rfech2='+$F('Fifi')+'&resucur='+$F('sucur')+'&reservi='+$F('servic')+
+                          '&reprov='+$F('propp')+'&rrelogo='+$F('lgnue')+'&restapro='+$F('estarpro')+'&cualpro='+$F('group1'),
+	        onCreate:  ResulPro,
+	        onComplete: mostraRepor
+       });
+}
+function mostraRepor(req){
+   $('repp').innerHTML= req.responseText;
+}
+
+function tipproved(){
+      new Ajax.Request("views06/tipoprove.php",
+      {
+           method:'post',
+           asynchronous: true,
+           postBody: 'elppe='+$F('group1'),
+           onComplete: mostraLOP
+      });
+}
+function  mostraLOP(req){
+  $('tipprove').innerHTML=req.responseText;
+}
+
+function  ResulPro(){
+  $('repp').show();
+}
+
+function cliennuevo(){
+     cedul=$F('cedulclien');
+      if (cedul==""){
+         alert("El campo c\u00e9dula es necesario!!!");
+        }else{
+	   new Ajax.Request("views01/datacliente.php",
+             {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'lacedulaclien='+$F('cedulclien'),
+                 onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinner').show();
+                    },
+	            onComplete: mostraClienN
+                   });
+       }
+}
+
+function  mostraClienN(req){
+  $('spinner').hide();
+  $('clientenuevo').innerHTML=req.responseText;
+}
+
+function clientitu(){
+	   new Ajax.Request("views01/clientetitu.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'lacedulaclien='+$F('cedulclien'),
+		    onComplete: mostraTitular
+       });
+	}
+
+function  mostraTitular(req){
+  $('clientenuevo').innerHTML=req.responseText;
+}
+
+function nuevobenfPRO(){
+	 varcedulatitular=$F('cedultibenfi');
+	 varcedulabenfi=$F('ceduladelbenefi');
+	new Ajax.Updater('cuantostitulare', 'views01/benf_titular1a.php', {
+          parameters:{cedutit: varcedulatitular,cedubenif: varcedulabenfi}
+       });
+}
+
+
+function nuevobenf1(){
+	new Ajax.Request("views01/benf_datos.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'lacedulaclien='+$F('ceduladelbenefi')+'&lacedeltitu='+$F('cedultibenfi')+'&eltitularides='+$F('losentestitulares'),
+		   onComplete: ClienNuevocT
+       });
+}
+function  ClienNuevocT(req){
+	$('clienTcomoB').show();
+  $('clienTcomoB').innerHTML=req.responseText;
+}
+
+function nuevobenf(){
+	new Ajax.Request("views01/benf_datos.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'lacedulaclien='+$F('cedulclien')+'&lacedeltitu='+$F('cedultibenfi'),
+		   onComplete: ClienNuevo
+       });
+}
+function  ClienNuevo(req){
+  $('clienTcomoB').innerHTML=req.responseText;
+}
+function clienbenf(){
+	   new Ajax.Request("views01/benf_titular.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'lacedulaclien='+$F('cedulclien'),
+		   onComplete: mostraBefTitular
+       });
+	}
+
+function  mostraBefTitular(req){
+  $('dataclienteTB').innerHTML=req.responseText;
+}
+
+function clienbenf1(){
+	   new Ajax.Request("views01/benf_titular1.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'lacedulaclien='+$F('cedulclien'),
+		   onComplete: mostraBefTitular
+       });
+	}
+//
+function verpoliza(){
+    var combo = $('clienente');
+    var combouni = $F('clienente');
+    var lapoliza = combo.options[combo.selectedIndex].text;
+    varclinom=$F('cliennombre');
+    varcliape=$F('clienapellido');
+    if((lapoliza=='PARTICULAR')||(combouni==53)){
+     $('spinnerP1').show();
+     $('noesparticular').hide();
+     new Ajax.Updater('siesparticular', 'views01/titularparticu.php', {
+               parameters: {cedulati: $F('cliencedula'),lanombre: varclinom, laape: varcliape, elenteti: $F('clienente'), clienid: $F('idclienteid')},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: Tituparti
+               });
+    }else{
+    new Ajax.Request("views01/polizastitu.php",
+        {
+                method:'post',
+                asynchronous: true,
+                postBody: 'elenteti='+$F('clienente')+'&clienteid='+$F('idclienteid'),
+                onComplete: mostraEnte
+       });
+   }
+}
+function Tituparti(req){
+  $('spinnerP1').hide();
+}
+function  mostraEnte(req){
+  $('losente').innerHTML=req.responseText;
+}
+
+function validclienbe(){
+  varcedulabenf=$F('cedbenf');
+  varcedulatitu=$F('cedtitu');
+  varfeinclu=$F('feinc');
+  varestatus=$F('clienestatu');
+  varnombre=$F('cliennombre');
+  varapellid=$F('clienapellido');
+  vargenero=$F('cliengenero');
+  varcorreb=$F('cliencorre');
+  vartf1=$F('clientf1');
+  vartf2=$F('clientf2');
+  varfenaci=$F('fechanaci');
+  varestclien=$F('clienestcivil');
+  varparen=$F('clienparent');
+  variddeltitu=$F('idtitu');
+        varrecalculo=$LF('recalculo');
+  varentetitu=$F('idente');
+        vardirecci=$F('cliendirr');
+        varcomentcl=$F('cliencoment');
+        varentees=$F('lapolizaes');
+        varfechatitu=$F('fechatituna');
+        vartpente=$F('eltipente');
+        var f = new Date();
+        fechactual=f.getFullYear() + "-" + ('0'+(f.getMonth()+1)).slice(-2) + "-" + f.getDate();
+        anonaci=varfenaci.substring(0,4);
+        mesnaci=varfenaci.substring(5,7);
+        dianaci=varfenaci.substring(8,10);
+        anotitunaci=varfechatitu.substring(0,4);
+        mestitunaci=varfechatitu.substring(5,7);
+        diatitunaci=varfechatitu.substring(8,10);
+        comparano=Number(anotitunaci)+10;
+        cuantano=Number(f.getFullYear())-Number(anonaci);
+
+            if (varnombre==""){
+            alert("El campo nombre es necesario!!")
+        }else{
+      if(varapellid==""){
+          alert("El campo apellido es necesario!!")
+      }else{
+           if(varestatus==""){
+       alert("El estatus del cliente es necesario!!")
+           }else{
+       if (varfenaci==""){
+        alert("La fecha de nacimiento es necesaria!!")
+       }else{
+         if (varparen==""){
+            alert("El parentesco es necesario!!")
+          }else{
+        if(vargenero==""){
+           alert("El genero es necesario!!")
+        }else{
+          varciucli=$F('ciuclin');
+          varpoliza=$F('cajafinal');
+              if(varpoliza==""){
+             alert("Debe selecionar una poliza!!")
+               }else{
+                                   if ( vargenero==1){
+                                       if((varentees=='PARTICULAR')){
+                                         varmaterni=99
+                                       }else{
+                                         varmaterni=99
+                                        }
+                                   }else{
+                                          if((varentees=='PARTICULAR')){
+                                           varmaterni=99
+                                         }else{
+                                          varmaterni=$F('maternidad1');
+                                         }
+
+                                        }if((fechactual==varfenaci) &&((vartpente!=6)&&(vartpente!=4))){
+                                         alert("La fecha de nacimiento debe ser distinta a la fecha actual!!")
+                                        }else{
+                                          if((anonaci<comparano) &&((varparen==4) || (varparen==3))&&((vartpente!=6)&&(vartpente!=4))){
+                                          alert("Por favor verifique la edad de nacimiento del beneficiario!!");
+                                          }else{
+                                            if(((varparen==5) || (varparen==6) || (varparen==2) || (varparen==1))&&(anonaci>=anotitunaci)||(cuantano>=100)&&((vartpente!=6)&&(vartpente!=4))){
+                                                 alert('Por favor verifique la edad de nacimiento del beneficiario!!')
+                                            }else{
+                                              for (i=0;i<varpoliza;i++){
+                                                 varcober=$F('caja_'+i);
+                                                 if (varcober>0){
+                                                   varfinal=varcober;
+                                                 }
+                                              }
+                Element.hide('benefboton');
+                                  new Ajax.Request("views01/benefregistrado.php",
+                                     {
+               method:'post',
+                                 asynchronous: true,
+                                 postBody: 'cedulaben='+varcedulabenf+'&cedulatitu='+varcedulatitu+'&polibenf='+varfinal+
+                                       '&titularid='+variddeltitu+'&tituente='+varentetitu+'&fecbeinclu='+varfeinclu+
+                                       '&beestatu='+varestatus+'&bennombre='+varnombre+'&benapell='+varapellid+
+                                       '&begenero='+vargenero+'&becorre='+varcorreb+'&bet1='+vartf1+'&bet2='+vartf2+
+                                       '&befenaci='+varfenaci+'&beescivil='+varestclien+'&beparen='+varparen+'&dirbenf='+vardirecci+
+                                       '&comeben='+varcomentcl+'&materbenf='+varmaterni+'&benciudad='+varciucli+'&clirecalculo='+varrecalculo,
+                     onCreate: function(){ Element.show('spinner')},
+                                onComplete: BenefiGuar
+                                     });
+                                     }
+             }
+                                    }
+           }
+        }
+         }
+            }
+          }
+       }
+    }
+}
+
+
+function BenefiGuar(req){
+	    $('clientenuevo').hide();
+		$('dataclienteTB').hide();
+		$('clienTcomoB').hide();
+		Element.hide('spinner');
+
+        $('mensajeTB').innerHTML=req.responseText;
+}
+
+function validcliente(){
+	   varcedula=$F('cliencedula');
+	   varcodcli=$F('clientcodig');
+	   varclienen=$F('clienente');
+	   varfechaingre=$F('inempre');
+	   varfeinclusion=$F('feinc');
+	   varcargos=$F('cliencarg');
+	   varsubdivi=$F('cliensubd');
+	   varestatus=$F('clienestatu');
+	   varnombre=$F('cliennombre');
+	   varapellid=$F('clienapellido');
+	   vargenero=$F('cliengenero');
+	   varcorreo=$F('cliencorre');
+	   vartele1=$F('clientf1');
+	   vartele2=$F('clientf2');
+	   varfenaci=$F('fechanaci');
+	   varescivil=$F('clienestcivil');
+	   vardirecci=$F('cliendirr');
+	   varcomentcl=$F('cliencoment');
+	   varpoliza=$F('cajafinal');
+           varpartida=$F('clienpartida');
+	   varfinal=new Array();
+	   var f = new Date();
+           fechactual=f.getFullYear() + "-" + ('0'+(f.getMonth()+1)).slice(-2) + "-" + f.getDate();
+
+             for (i=0;i<varpoliza;i++){
+                  varcober=$F('caja_'+i);
+				 if (varcober>0){
+				   varfinal[i]=varcober;
+                }
+             }
+
+	      if( varclienen==""){
+	         alert("El campo ente es necesario!!")
+		 } else{
+		    if(varnombre==""){
+			alert("El campo nombre es necesario!!")
+		    }else{
+
+				if(varestatus==""){
+			      alert("El estatus del cliente es necesario!!")
+			}else{
+        if(varcorreo==""){
+          alert("El correo es necesario")
+
+        }else{  
+			 if(varfechaingre==""){
+			    alert("La fecha de ingreso a la empresa es necesaria!!")
+			 }else{
+                             if(varsubdivi<=0){
+                                alert("La Sub-divisi\u00f3n es necesaria!!")
+                             }else{
+			      if(varapellid==""){
+				 alert("El campo apellido es necesaria!!")
+			      }else{
+				 if(varfenaci==""){
+				   alert("La fecha de nacimiento es necesaria!!")
+				 }else{
+				   if ( vargenero==1){
+					varmaterni=99
+				   }else{
+					    varmaterni=$F('maternidad1');
+				        }if(fechactual==varfenaci){
+                                          alert("La fecha de nacimiento debe ser distinta a la fecha actual");
+                                        }else{
+					varciudad=$F('ciuclin');
+                                        Element.hide('titularboton');
+				         new Ajax.Request("views01/clienteregistrado.php",
+                                             {
+	                                       method:'post',
+	                                       asynchronous: true,
+	                                       postBody: 'cedulacl='+varcedula+'&entclien='+varclienen+'&feingreso='+varfechaingre
+					       +'&fechainclu='+varfeinclusion+'&carclien='+ varcargos+
+					       '&subdiv='+ varsubdivi+'&estclien='+ varestatus+'&clinom='+varnombre
+					       +'&cliape='+varapellid+'&cligen='+vargenero+'&conmate='+varmaterni
+					       +'&clicorr='+ varcorreo+'&telf1='+ vartele1+'&telf2='+vartele2
+					       +'&clifenaci='+varfenaci+'&clicivil='+varescivil+'&cliendir='+ vardirecci
+					       +'&cliencoment='+varcomentcl+'&cliciud='+varciudad+
+					       '&elcocli='+varcodcli+'&clipoliza='+$A(varfinal)+'&cliparida='+varpartida,
+						    onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner' ).show();
+                             },
+						        onComplete: TitularGuar
+                            });
+				    }
+                                   }
+			           }
+				}
+                             }
+			   }
+       }
+			}
+		}
+	}
+
+function TitularGuar(req){
+	$('clientenuevo').hide();
+	$('clientenuevo').show();
+	$('clientenuevo').innerHTML=req.responseText;
+	Element.hide('spinner');
+}
+
+function vergenero(){
+        vargene=0;
+        vargene=$F('cliengenero');
+        if (vargene==1){
+           new Ajax.Updater("genero", "views01/matertetitu.php",
+                {
+                  method:'post',
+                  asynchronous: true,
+                  postBody: 'numgenero='+1,
+                });
+
+        }else{
+           new Ajax.Updater("genero", "views01/matertetitu.php",
+               {
+                  method:'post',
+                  asynchronous: true,
+                  postBody: 'numgenero='+0,
+                });
+        }
+       $('elparentesco').hide();
+       paraelparentesco(vargene);
+}
+
+function BenfTitu(nuevoti){
+	 new Ajax.Request("views01/benparatitular.php",
+         {
+		     method:'post',
+	         asynchronous: true,
+	         postBody: 'lacedulaclien='+nuevoti,
+			onComplete: BencomoTitu
+         });
+}
+
+function BencomoTitu(req){
+     $('clientes').innerHTML=req.responseText;
+}
+
+function clienotroente(){
+	new Ajax.Updater("genero", "views01/tituotroente.php",
+               {
+                  method:'post',
+                  asynchronous: true,
+                  postBody: 'laceduc='+$F('cedtioente'),
+				  onComplete: mostraBefTitular
+                });
+	}
+
+function validotrotiente(){
+   varclien=$F('clienente');
+   varfechaing=$F('inempre');
+   varfeinclu=$F('feinc');
+   varcargo=$F('cliencarg');
+   varsubdi=$F('cliensubd');
+   varesta=$F('clienestatu');
+   varcodcli=$F('clientcodig');
+   varidelclin=$F('eltitucliente');
+   varexistclien=$F('siexistecliente');
+   varcedulaclien=$F('cliencedula');
+   if(varexistclien==3000){
+	var opac=confirm("El cliente ya existe en el ente seleccionado!!\nDesea ver la informaci\u00f3n?");
+		   if(opac==true){
+			 CliCedula(varcedulaclien);
+		  }
+  }else{
+       if (varclien==""){
+		  alert("El campo ente es necesario!!")
+		}else{
+			    if (varfechaing==""){
+			     alert("La fecha de ingreso a la empresa es necesaria!!")
+				}else{
+					     varpoliza=$F('cajafinal');
+	                     varfinal=new Array();
+                        for (i=0;i<varpoliza;i++){
+                              varcober=$F('caja_'+i);
+				              if (varcober>0){
+				                varfinal[i]=varcober;
+                              }
+						}
+						   if (varfinal<=0){
+							alert("Debe selecionar una poliza!!")
+						   }else{
+							          new Ajax.Request("views01/guactotente.php",
+                                     {
+				                    method:'post',
+	                               asynchronous: true,
+	                               postBody: 'elidclies='+varidelclin+'&codigotitu='+varcodcli+'&elentitu='+varclien+
+								   '&ingesoemp='+varfechaing+'&inclsis='+varfeinclu+'&estcli='+varesta+
+								   '&titusubd='+varsubdi+'&cartitu='+varcargo+'&polititu='+$A(varfinal),
+			                       onComplete: BenefiGuar
+                                     });
+							       }
+					   }
+		  }
+   }
+}
+function creardepen(){
+ $('spinnerP1').hide();
+ new Ajax.Updater('dependencias', 'views05/depen1.php', {
+         parameters: { },
+	                onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                  $('spinnerP1' ).show();
+                        },
+	                  onComplete: Secargo
+                      });
+}
+
+function Secargo(req){
+   $('spinnerP1').hide();
+}
+
+function guardadepen(){
+	varnomdepen=$F('depenom');
+	varsies=$F('siesdep');
+	varnoes=$F('noesdep');
+	longt=varnomdepen.length;
+	if (varnomdepen==''){
+		alert("El nombre de la dependencia es necesario!!")
+		}else{
+			if(longt<=3){
+				alert("Nombre de la dependencia muy corto!!")
+				}else{
+				 if((varsies==null) && (varnoes==null)){
+					 alert("Tipo de dependencia es necesario!!")
+					 }else{
+
+	                  new Ajax.Request("views05/guardadepen.php",
+                      {
+	                     method:'post',
+	                     asynchronous: true,
+	                     postBody: 'nomdepen='+$F('depenom')+'&eliddp='+$F('iddpen')+'&siesalma='+varsies+'&noesalma='+varnoes,
+                             onCreate: function(response) {
+                                a= Ajax.activeRequestCount;
+                               if(a>=0)
+	                           $('spinnerP1' ).show();
+                                },
+		                 onComplete: creardepen
+                     });
+				    }
+				}
+		 }
+}
+
+function modifdepen(iddepen,nomde,qtipo){
+  if(qtipo=='No'){
+	document.getElementById('noesdep').checked = true;
+	  }else{
+		   document.getElementById('siesdep').checked = true;
+		  }
+  document.getElementById('depenom').value=nomde;
+  document.getElementById('iddpen').value=iddepen;
+}
+
+function usuaridepen(){
+	  new Ajax.Updater('dependencias', 'views05/usudepen.php', {
+          parameters: { },
+	                onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                  $('spinnerP1' ).show();
+                        },
+	                  onComplete: Secargo
+                      });
+}
+
+function usudepen(){
+	varnusuario=$F('nomusu');
+	variddepen=$F('nomdep');
+	varop1=$F('op1');
+	varop2=$F('op2');
+	varop3=$F('op3');
+	varop4=$F('op4');
+	varmodif=$F('modif');
+	   if(varnusuario==0){
+	      alert("El nombre del usuario es necesario!!")
+	   }else{
+	         if(variddepen==0){
+		  alert("El nombre de la dependecia es necesaria!!")
+	         }else{
+		       if(varop1>0){
+		        varfinal=varop1
+		       }else{
+		             if(varop2>0){
+			      varfinal=varop2
+		             }else{
+			           if(varop3>0){
+			            varfinal=varop3
+			           }else{
+			                 if((varop1==null) && (varop2==null)&& (varop3==null)&& (varop4==null)){
+			                  alert("La permisolog\u00eda es necesaria!!");
+			                 }else{
+			                       if(varop4>0){
+			                        varfinal=varop4;
+			                       }
+
+			                      }
+			                }
+			           }
+		              }
+		       }
+	          }
+
+      if(((varop1>0) || (varop2>0)|| (varop3>0)|| (varop4>0)) && (varnusuario>0) && (variddepen>0)){
+		 document.getElementById('nomusu').value=0;
+		 document.getElementById('nomdep').value=0;
+              new Ajax.Request("views05/guarusudepen.php",
+              {
+                  method:'post',
+                  asynchronous: true,
+                  postBody: 'adminid='+varnusuario+'&depedid='+variddepen+'&permi='+varfinal+'&modiusu='+varmodif,
+                  onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                  $('spinnerP1' ).show();
+                        },
+                  onComplete: UsuenDep
+              });
+
+      }
+}
+function UsuenDep(req){
+    $('spinnerP1' ).hide();
+     $('usuendepen').innerHTML=req.responseText;
+}
+
+function modifudep(depena,nom){
+ new Ajax.Updater('dependencias', 'views05/usudepen.php', {
+	parameters: { text: depena },
+       onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+                          $('spinnerP1' ).show();
+                        },
+                          onComplete: Secargo
+ });
+}
+
+function depenusuarios(){
+	  new Ajax.Updater('dependencias', 'views05/losusuarios.php', {
+         parameters: { },
+	                onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                  $('spinnerP1' ).show();
+                        },
+	                  onComplete: Secargo
+                      });
+}
+
+function limp1(){
+	 document.getElementById('nomdep').value=0;
+}
+function limp2(){
+	 document.getElementById('nomusuarios').value=0;
+}
+function BusUdepn(){
+
+	  new Ajax.Request("views05/hayusuarios.php",
+              {
+                  method:'post',
+                  asynchronous: true,
+                  postBody: 'adminid='+$F('nomusuarios')+'&depencia='+$F('nomdep'),
+                  onComplete: hayUeD
+              });
+}
+
+function hayUeD(req){
+     $('losusudepn').innerHTML=req.responseText;
+}
+function provCom(){
+   varpco=$F('provcom1');
+    new Ajax.Updater('proveecom', 'views03/provcompras.php', { });
+}
+
+function creadonativo(){
+   new Ajax.Updater('misdonativos', 'views05/pedidonativo1.php', { });
+}
+
+function pedidopro1(){
+   new Ajax.Updater('pedidoprodepen', 'views05/pedidoprovee1.php', { });
+}
+
+function pedidodep1(){
+ new Ajax.Updater('pedidoprodepen', 'views05/pedidodepen1.php', { });
+}
+
+function Busarti(){
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varprove=$F('proveedcom');
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+           if(varprove==""){
+              alert("Debe seleccionar un proveedor");
+              }else{
+               new Ajax.Request("views05/pedidoprovee2.php",
+              {
+                  method:'post',
+                  asynchronous: true,
+                  postBody: 'elprovee='+varprove+'&arreglo='+$A(losarticulos),
+                  onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                  $('spinnerP1' ).show();
+                        },
+                  onComplete: MostInsumos
+              });
+              }
+
+         }
+}
+function BusartiDepen1(){
+	varcajas=$F('tocajas');
+	varidpedido=$F('elpedidoid');
+	vardepene=$F('eliddepen');
+	var losarticulos=new Array();
+    var paso=0;
+	for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+		       new Ajax.Request("views05/pedidoprovee2modi.php",
+                   {
+                      method:'post',
+                      asynchronous: true,
+                      postBody: 'idpedido='+varidpedido+
+					  '&arreglo='+$A(losarticulos)+
+					  '&depenes='+vardepene,
+                      onComplete: MostCarga
+                    });
+		    }
+}
+function MostCarga(req){
+	 $('clientes').hide();
+	 $('clientes').show();
+	 $('clientes').innerHTML=req.responseText;
+}
+
+function BusartiIMU(){
+   varpeden=1;
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varprove=$F('proveedcom');
+
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+            if(varprove==""){
+               alert("Debe seleccionar la dependencia saliente");
+			   }else{
+                               new Ajax.Request("views05/invenmuerto1.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elprovee='+varprove+'&arreglo='+$A(losarticulos)+'&espedidodepen='+varpeden,
+                                  onCreate: function(response) {
+                                     a= Ajax.activeRequestCount;
+                                     if(a>=0)
+	                              $('spinnerP1' ).show();
+                                     },
+                                  onComplete: MostInsumosMuero
+                                });
+                              }
+            }
+}
+function MostInsumosMuero(req){
+    $('spinnerP1' ).hide();
+     $('clientes').innerHTML=req.responseText;
+}
+function BusartiDepen(){
+   varpeden=1;
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varprove=$F('proveedcom');
+   varmisdepen=$F('misdependen');
+
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+           if(varmisdepen==""){
+              alert("Debe seleccionar la dependencia saliente");
+              }else{
+			           if(varprove==""){
+                          alert("Debe seleccionar la dependencia entrante");
+			           }else{
+                               new Ajax.Request("views05/pedidoprovee2.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elprovee='+varprove+'&arreglo='+$A(losarticulos)+'&espedidodepen='+varpeden+
+								  '&misdepen='+varmisdepen,
+                                  onCreate: function(response) {
+                                   a= Ajax.activeRequestCount;
+                                    if(a>=0)
+	                             $('spinnerP1' ).show();
+                                   },
+                                  onComplete: MostInsumos
+                                });
+                              }
+                        }
+         }
+}
+
+
+function MostInsumos(req){
+      $('spinnerP1' ).hide();
+	 $('pedidoprodepen').hide();
+     $('pedidoarticulos').innerHTML=req.responseText;
+}
+function ReporteCArti(){
+
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varprovsaliente=$F('varprovsaliente');
+   varproventrante=$F('proveentrante');
+   varfecha1=$F('Fini');
+	varfecha2=$F('Fifi');
+
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+             if(varprovsaliente==""){
+                 alert("Debe seleccionar la dependencia");
+			 }else{
+	                 if( varfecha1==""){
+                        alert("La fecha inicial es necesaria");
+                       }else{
+						if( varfecha2==""){
+                        alert("La fecha final es necesaria");
+                       }else{
+				               new Ajax.Request("views06/controlarti1.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elsaliente='+varprovsaliente+
+								  '&arreglo='+$A(losarticulos)+
+								  '&fecha1='+varfecha1+'&fecha2='+varfecha2+
+								  '&elentrante='+varproventrante,
+								  onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner1' ).show();
+                                   },
+						           onComplete: MostConArti
+                                });
+                              }
+                        }
+					}
+         }
+}
+function ReporteUsoArti(){
+
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varprovsaliente=$F('varprovsaliente');
+   varproventrante=$F('proveentrante');
+   varfecha1=$F('Fini');
+	varfecha2=$F('Fifi');
+
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+             if(varprovsaliente==""){
+                 alert("Debe seleccionar la dependencia");
+			 }else{
+	                 if( varfecha1==""){
+                        alert("La fecha inicial es necesaria");
+                       }else{
+						if( varfecha2==""){
+                        alert("La fecha final es necesaria");
+                       }else{
+				               new Ajax.Request("views06/usopedido.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elsaliente='+varprovsaliente+
+								  '&arreglo='+$A(losarticulos)+
+								  '&fecha1='+varfecha1+'&fecha2='+varfecha2+
+								  '&elentrante='+varproventrante,
+								  onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner1' ).show();
+                                   },
+						           onComplete: MostConArti
+                                });
+                              }
+                        }
+					}
+         }
+}
+
+
+function MostConArti(req){
+	 Element.hide('spinner');
+	 $('clientes').innerHTML=req.responseText;
+}
+
+
+function ReporteCArti1(){
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varprove=$F('proveedcom');
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+             if(varprove==""){
+                 alert("Debe seleccionar la dependencia");
+			 }else{
+                               new Ajax.Request("views06/controlartinvent.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elprovee='+varprove+'&arreglo='+$A(losarticulos),
+                                  onComplete: MostConArtinven
+                                });
+                              }
+
+         }
+}
+
+function ReporteCArti2(){
+	var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varaproxima=$F('nombarti');
+   varfe1=$F('Fini');
+   varfe2=$F('Fifi');
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+	if((paso==0) && (varaproxima=='')){
+		 alert('Debe seleccionar al menos un tipo de art\u00edculo \u00f3 Aproximaci\u00f3n de nombre!!');
+		}else{
+			      if((paso>0) && (Field.present('nombarti')==true)){
+					    alert('Solo debe seleccionar tipo de art\u00edculo \u00f3 Aproximaci\u00f3n de nombre!!');
+					  }else{
+						       if((varfe1==0) || (varfe2==0)){
+								    alert('Los campos fechas son necesario!!');
+								   }else{
+									   new Ajax.Request("views06/controlartinvent2.php",
+                                      {
+	                                   method:'post',
+	                                   asynchronous: true,
+	                                   postBody: 'aproxim='+varaproxima+'&arreglo='+$A(losarticulos)+'&fe1='+varfe1+'&fe2='+varfe2,
+
+	                                   onCreate: function(response) {
+                                            a= Ajax.activeRequestCount;
+                                            if(a>=0)
+					                          $('spinner' ).show();
+                                            },
+						                    onComplete: InvCom
+                                        });
+									 }
+						     }
+			    }
+}
+function InvCom(req){
+	 $('clientes').innerHTML=req.responseText;
+	 $('spinner' ).hide();
+}
+
+function MostConArtinven(req){
+	 $('clientes').innerHTML=req.responseText;
+}
+
+function ponercanActual(){
+	var posicion=0;
+	idart=$F('artiprovee');
+	posicion=idart.indexOf('@');
+	longitud=idart.length;
+	cantidadactual=idart.substring(posicion+1,longitud);
+	document.getElementById('existenciactual').value=cantidadactual;
+}
+function ponerprecio(){
+	var posicion=0;
+	idart=$F('artiprovee');
+	posicion=idart.indexOf('@');
+	posicion2=idart.indexOf('|');
+	longitud=idart.length;
+	precio=idart.substring(posicion+1,posicion2);
+	cantid=idart.substring(posicion2+1,longitud);
+	document.getElementById('precioarti').value=precio;
+	document.getElementById('canarti').value=cantid;
+}
+function ponerprecio1(){
+	var posicion=0;
+	idart=$F('artiprovee');
+	posicion=idart.indexOf('@');
+	posicion2=idart.indexOf('|');
+	longitud=idart.length;
+	precio=idart.substring(posicion+1,posicion2);
+	cantid=idart.substring(posicion2+1,longitud);
+	document.getElementById('canarti').value=cantid;
+}
+
+function PProveIM(){
+
+	 varidarti=$F('artiprovee');
+	 var posicion=0;
+	 longitud=varidarti.indexOf('@');
+	elidarticulo=varidarti.substring(posicion,longitud);
+	varidarti=elidarticulo;
+	varcantid=$F('cantidapedido');
+
+         if (varidarti<=0){
+           alert("Debe seleccionar un art\u00edculo para procesar el pedido")
+         }else{
+               if(varcantid==""){
+                 alert("El campo cantidad es necesario")
+               }else{
+                    if (isNaN(varcantid)==true){
+                      alert("El valor de la cantidad debe ser num\u00e9rico");
+                    }else{
+	                  new Ajax.Updater('totalarticulospedidos', 'views05/invenmuerto2.php', {
+	                   parameters: { nomar: varidarti,canti:varcantid },
+                             onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                               if(a>=0)
+	                        $('spinnerP1' ).show();
+                               },
+					   onCreate:  ResulPedido,
+                          });
+                          document.getElementById('cantidapedido').value="";
+                         }
+                      }
+            }
+}
+
+function PProve(){
+	 varidarti=$F('artiprovee');
+	 varcantid=$F('cantidapedido');
+         varcodbarra=$F('cobbarra');
+         if (varidarti==10000000000){
+           alert("Debe seleccionar un art\u00edculo para procesar el pedido")
+         }else{
+               if(varcantid==""){
+                 alert("El campo cantidad es necesario")
+               }else{
+                    if (isNaN(varcantid)==true){
+                      alert("El valor de la cantidad debe ser num\u00e9rico");
+                    }else{
+	                  new Ajax.Updater('totalarticulospedidos', 'views05/pedidoprovee3.php', {
+	                   parameters: { nomar: varidarti,canti:varcantid,barras: varcodbarra },
+                           onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                              if(a>=0)
+	                        $('spinnerP1' ).show();
+                              },
+					   onCreate:  ResulPedido,
+                          });
+                          document.getElementById('cantidapedido').value="";
+                          document.getElementById('precioarti').value="";
+                          document.getElementById('cobbarra').value="";
+			  document.getElementById('canarti').value="";
+                         }
+                      }
+            }
+}
+function PProve1(){
+	varpedio=$F('artiprovee');
+	posicion=varpedio.indexOf('@');
+	varpedio=varpedio.substring(0,posicion);
+	varcanti=$F('cantidapedido');
+    if (isNaN(varcanti)==true){
+           alert("El valor de la cantidad debe ser num\u00e9rico");
+    }else{
+		       if(varcanti==""){
+                 alert("El campo cantidad es necesario")
+               }else{
+				$('temporalarti').hide();
+				        new Ajax.Updater('totalarticulospedidos', 'views05/pedidoprovee3.php', {
+	                   parameters: { nomar: varpedio,canti:varcanti },
+                                        onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                              if(a>=0)
+                                $('spinnerP1' ).show();
+                              },
+
+					   onCreate:  ResulPedido,
+                          });
+                          document.getElementById('cantidapedido').value="";
+                          document.getElementById('canarti').value="";
+					   }
+		    }
+}
+function guarocomprapro(){
+	  varcoment=$F('comentpedi');
+
+	if (confirm("Desea agregar otro art\u00edculo al pedido ")) {
+
+	}else{
+          Element.hide('despachoprovee');
+    	  new Ajax.Updater('clientes', 'views05/pedidoprovee4.php', {
+		  parameters: { coment: varcoment},
+		  onCreate: function(){ Element.show('spinner')},
+		  onComplete: function(){ Element.hide('spinner')},
+		  });
+
+          $('clientes').show();
+	   }
+	}
+
+function guarocompraproIM(){
+	  varcoment=$F('comentpedi');
+
+	if (confirm("Desea agregar otro art\u00edculo al pedido ")) {
+
+	}else{
+
+    	  new Ajax.Updater('clientes', 'views05/invenmuerto3.php', {
+		  parameters: { coment: varcoment},
+		  onCreate: function(){ Element.show('spinner')},
+		  onComplete: function(){ Element.hide('spinner')},
+		  });
+
+          $('clientes').show();
+	   }
+	}
+
+function  ResulPedido(){
+  $('spinnerP1' ).hide();
+  $('totalarticulospedidos').show();
+}
+function buspPro(){
+    varestatpedido=$F('estadopedi');
+    varalmacen=$F('almacenes');
+	if((Field.present('estadopedi')==false)||(Field.present('almacenes')==false)) {
+	  alert('Los campos Estado pedido y Almacen son necesarios!!!!');
+	}else{
+		 new Ajax.Updater('mispedprove', 'views05/contropeprov.php', {
+			parameters: { estapedido: varestatpedido,dependencia:varalmacen},
+			});
+		}
+}
+function buspPro2(estado,depen){
+    varestatpedido=estado;
+    varalmacen=depen;
+     alert(varestatpedido);
+     alert(varalmacen);
+
+     $('mispedprove').show();
+
+		 new Ajax.Updater('mispedprove', 'views05/ac.php', {
+			parameters: { estapedido: varestatpedido,dependencia:varalmacen},
+			});
+
+}
+function buspdepen(dep=0,EdoPedido=0){
+   varestaped=$F('estadopedi');
+	varmisdepen=$F('misdependen');
+      if(EdoPedido=='0' && dep==0)
+      { varestaped=$F('estadopedi');
+        varmisdepen=$F('misdependen');
+      }else{//si viene de AnulaElPed()
+        varestaped=EdoPedido;
+          varmisdepen=dep;
+      }
+
+   if((varestaped==3)||(varestaped==5)) {
+   varini=$F('Fini');
+   varfin=$F('Fifi');
+   }
+   if (varmisdepen==""){
+	    alert('Debe seleccionar una dependencia')
+	   }else{
+	    if((varestaped==3)||(varestaped==5)) {
+
+	       if((varini=='')||(varfin=='')){
+		      alert('Fecha de inicio y Fecha final son necesarias!!')
+		    }	else{
+              new Ajax.Updater('mispeddepen', 'views05/contropeddepen.php', {
+				            parameters: { estapedido: varestaped,dependencia:varmisdepen,fe1:varini,fe2:varfin},
+				  });
+				       }
+		} else{
+		   if(varestaped!=3){
+				  new Ajax.Updater('mispeddepen', 'views05/contropeddepen.php', {
+				  parameters: { estapedido: varestaped,dependencia:varmisdepen},
+				  });
+				}
+		  }
+		}
+}
+
+function pediprovee(npedido){
+	 $('mispedprove').hide();
+	 $('clientes').hide();
+	 $('clientes').show();
+	 vardepen=$F('ladepenc');
+	 new Ajax.Updater('clientes', 'views05/losartipedprov.php', {
+			parameters: { elidpedido: npedido,depend: vardepen},
+			});
+	}
+function pediprovee1(npedido){
+	 $('mispedprove').hide();
+	 $('clientes').hide();
+	 $('clientes').show();
+	 vardepen=$F('ladepenc');
+	 new Ajax.Updater('clientes', 'views05/losartipedprov1.php', {
+			parameters: { elidpedido: npedido,depend: vardepen},
+			});
+	}
+function pedideid(npedido){
+
+	 $('mispeddepen').hide();
+	 new Ajax.Updater('lospedidosdepe', 'views05/losartidepen.php', {
+			parameters: { elidpedido: npedido},
+			});
+
+
+	}
+	function Retomapedido1(npedidespacho,a){
+	 $('mispeddepen').hide();
+	 $('clientes').hide();
+	 $('clientes').show();
+	 new Ajax.Updater('clientes', 'views05/losartidepen1.php', {
+			parameters: { elidpedido: npedidespacho,bloquear:a},
+			});
+	}
+	function Retomapedido(npedidespacho){
+	 $('mispeddepen').hide();
+	 $('clientes').hide();
+	 $('clientes').show();
+	 new Ajax.Updater('clientes', 'views05/losartidepen1.php', {
+			parameters: { elidpedido: npedidespacho},
+			});
+	}
+
+   function Retomapedido2(npedidespacho){
+         $('mispeddepen').hide();
+         $('clientes').hide();
+         $('clientes').show();
+         new Ajax.Updater('clientes', 'views05/losartidepen11.php', {
+                        parameters: { elidpedido: npedidespacho},
+                        });
+        }
+	function Retomapedido22(npedidespacho){
+         $('mispeddepen').hide();
+         $('clientes').hide();
+         $('clientes').show();
+         new Ajax.Updater('clientes', 'views05/losartidepen1a.php', {
+                        parameters: { elidpedido: npedidespacho},
+                        });
+        }
+function Vercandespacho(){
+	varpaso=0;
+	vartotacaja=$F('totalcaja');
+	for(i=1;i<=vartotacaja;i++){
+		   pasaranumero=$F('caja'+i);
+		   pasaranumero1=$F('cajaac'+i);
+		   pedido=Number(pasaranumero);
+		   actual=Number(pasaranumero1);
+			if(pedido>actual){
+				 varpaso=varpaso+1;
+				}
+		 }
+	if(varpaso>=1){
+		 alert('Existe '+varpaso+' art\u00edculo(s) cuya(s) cantidades a despachar son mayores a las cantidades en existencia');
+		}else{
+			Prodespacho();
+			}
+}
+
+function Prodespacho(){
+   Element.hide('despachopedido');
+   vartotacaja=$F('totalcaja');
+   varidpedido=$F('elidpedido');
+   varcomtdesp=$F('comentdespacho');
+   var lascantid=new Array();
+   var losid=new Array();
+   var cont=1;
+     for(i=1;i<=vartotacaja;i++){
+		   pasaranumero=$F('caja'+i);
+                   if(pasaranumero>=1){
+		    lascantid[cont]=Number(pasaranumero);
+		    losid[cont]=$F('cajas'+i);
+                    cont=cont+1;
+                   }
+		 }
+
+		new Ajax.Request("views05/descontpedido.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elidpedido='+varidpedido+'&cantidades='+$A(lascantid)+'&idedes='+$A(losid)+
+								  '&comedes='+varcomtdesp,
+                                  onComplete: Mostdecpedidos
+                                });
+
+}
+function Mostdecpedidos(req){
+	 $('clientes').hide();
+	 $('clientes').show();
+         $('clientes').innerHTML=req.responseText;
+}
+
+function Modifdespacho(){
+	  new Ajax.Updater('modifpedido', 'views05/modifpedido.php', { });
+	}
+
+function BusartiDepenModif(){
+	 var paso=0;
+	 vartotaldecajas=$F('tocajasmodf');
+	 varidpedido=$F('elidpedido');
+	 pedidmodif=new Array();
+	  for(i=1;i<=vartotaldecajas;i++){
+		 artmodi=$F('cajamd'+i);
+		  if(artmodi>0){
+		   pedidmodif[i]=artmodi;
+		   paso=1;
+		  }
+	    }
+	if(paso==0){
+	   alert("Debe seleccionar un art\u00edculo para procesar el pedido")
+	}else{
+		    new Ajax.Request("views05/pedidoprovee2modi.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'arreglo='+$A(pedidmodif)+'&idpedido='+varidpedido,
+                                  onComplete: MostpedidosModif
+                                });
+		}
+}
+function MostpedidosModif(req){
+	 $('modifpedido').hide();
+	 $('modifpedido').appear();
+     $('modifpedido').innerHTML=req.responseText;
+}
+function quetoco(){
+
+	varescog=$F('estadopedi');
+	if ((varescog==3)||(varescog==5)){
+
+	 new Ajax.Updater('segunpedido', 'views05/depensegunpedido.php', {
+			parameters: { escogue: varescog},
+			onComplete: function() {
+                       $('nohay').hide();
+	                   $('segunpedido').appear();
+			}
+			});
+	   new Ajax.Updater('mispeddepen', 'views05/fechapedido.php', { });
+		$('segunpedido').appear();
+	 }else{
+
+	 new Ajax.Updater('segunpedido', 'views05/depensegunpedido.php', {
+			parameters: { escogue: varescog},
+			onComplete: function() {
+                       $('nohay').hide();
+	                   $('segunpedido').appear();
+			}
+			});
+	}
+	$('segunpedido').appear();
+}
+
+function Apedido2(npedido){
+  ///ANUAR PEDIDO
+            if (confirm("Anular el pedido?")) {
+              $('clientes').hide();
+              $('clientes').show();
+          new Ajax.Updater('clientes', 'views05/nada2.php', {
+                  parameters: {elnpedido: npedido}
+                  });
+        }else{
+
+           }
+        }
+
+function Apedido(npedido){
+
+            if (confirm("Acepta el pedido?")) {
+                  Element.hide('esconderpedido');
+                  $('clientes').hide();
+              $('clientes').show();
+          new Ajax.Updater('clientes', 'views05/nada.php', {
+                  parameters: {elnpedido: npedido},
+                     onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner' ).show();
+                             },
+		   onComplete: function(){ Element.hide('spinner')}  ,
+                  });
+        }else{
+
+
+             }
+}
+
+function ModfElPed(idpedido){
+  $('clientes').hide();
+  $('clientes').show();
+          new Ajax.Updater('clientes', 'views05/pedidodepenmodif1.php', {
+		  parameters: {elidpedido: idpedido}
+		  });
+}
+
+function ModfElPedpro(idpedido){
+  $('clientes').hide();
+  $('clientes').show();
+  varpepro=1;
+  vardepen=$F('ladepenc');
+
+          new Ajax.Updater('clientes', 'views05/pedidoprovmodif1.php', {
+		  parameters: {elidpedido: idpedido,pedipro: varpepro,ladepes: vardepen}
+		  });
+}
+
+function validclienteB(){
+	   varcedula=$F('cliencedula');
+	   varcodcli=$F('clientcodig');
+	   varclienen=$F('clienente');
+	   varfechaingre=$F('inempre');
+	   varfeinclusion=$F('feinc');
+	   varcargos=$F('cliencarg');
+	   varsubdivi=$F('cliensubd');
+	   varestatus=$F('clienestatu');
+	   varnombre=$F('cliennombre');
+	   varapellid=$F('clienapellido');
+	   vargenero=$F('cliengenero');
+	   varcorreo=$F('cliencorre');
+	   vartele1=$F('clientf1');
+	   vartele2=$F('clientf2');
+	   varfenaci=$F('fechanaci');
+	   varescivil=$F('clienestcivil');
+	   vardirecci=$F('cliendirr');
+	   varcomentcl=$F('cliencoment');
+	   varpoliza=$F('cajafinal');
+           varpartida=$F('clienpartida');
+	   varfinal=new Array();
+
+
+             for (i=0;i<varpoliza;i++){
+                  varcober=$F('caja_'+i);
+				 if (varcober>0){
+				   varfinal[i]=varcober;
+                }
+             }
+
+	      if( varclienen==""){
+	         alert("El campo ente es necesario!!")
+		 } else{
+		    if(varnombre==""){
+			alert("El campo nombre es necesariodasdasdasd!!")
+		    }else{
+				if(varestatus==""){
+			      alert("El estatus del cliente es necesario!!")
+			}else{
+			 if(varfechaingre==""){
+			    alert("La fecha de ingreso a la empresa es necesaria!!")
+			 }else{
+			      if(varapellid==""){
+				 alert("El campo apellido es necesaria!!")
+			      }else{
+				 if(varfenaci==""){
+				   alert("La fecha de nacimiento es necesaria!!")
+				 }else{
+				   if ( vargenero==1){
+					varmaterni=99
+				   }else{
+					    varmaterni=$F('maternidad1');
+				        }
+					varciudad=$F('ciuclin');
+                                        Element.hide('benparatitu');
+				         new Ajax.Request("views01/clienteregistrado.php",
+                                             {
+	                                       method:'post',
+	                                       asynchronous: true,
+	                                       postBody: 'cedulacl='+varcedula+'&cliencorreo='+varcorreo+'&entclien='+varclienen+'&feingreso='+varfechaingre
+					       +'&fechainclu='+varfeinclusion+'&carclien='+ varcargos+
+					       '&subdiv='+ varsubdivi+'&estclien='+ varestatus+'&clinom='+varnombre
+					       +'&cliape='+varapellid+'&cligen='+vargenero+'&conmate='+varmaterni
+					       +'&clicorr='+ varcorreo+'&telf1='+ vartele1+'&telf2='+vartele2
+					       +'&clifenaci='+varfenaci+'&clicivil='+varescivil+'&cliendir='+ vardirecci
+					       +'&cliencoment='+varcomentcl+'&cliciud='+varciudad+
+					       '&elcocli='+varcodcli+'&clipoliza='+$A(varfinal)+'&cliparida='+varpartida,
+						    onComplete: TitularGuarB
+                            });
+				    }
+			           }
+				}
+			   }
+			}
+		}
+	}
+
+function TitularGuarB(req){
+	 $('clientes').hide();
+	 $('clientes').show();
+	 $('clientes').innerHTML=req.responseText;
+}
+
+function ProceCFac1(fe1,fe2,prov,sucur,estapro){
+      varfacactual=$F('actualfac');
+      varnfactura= $F('nuevonumfac');
+      varcontrfac=$F('controlfac');
+      varnfechfac=$F('nuefechafac');
+	if(Field.present('actualfac')==false){
+         alert("Debe ingresar el num\u00e9ro de la factura al cual desea hacer el cambio");
+        }else{
+          if(Field.present('nuevonumfac')==false){
+           alert("Debe ingresar el nuevo num\u00e9ro de factura");
+          }else{
+            if(Field.present('nuefechafac')==false){
+              alert("Debe ingresar la fecha emisi\u00f3n de factura");
+            }else{
+	     Modalbox.show("views06/cambnuofech1.php", {title: 'Cambio de factura exito!!!', method: 'get',
+             params:{
+             rangfe1:fe1,rangfe2:fe2,cualprove:prov,factuactu:varfacactual,factunuev:varnfactura,contfac:varcontrfac,facfechnu:varnfechfac,
+             fasucursal:sucur,faestpro:estapro}
+             });
+           }
+         }
+      }
+}
+function ProceCFac(fe1,fe2,prov,sucur,estapro){
+      varfacactual=$F('actualfac');
+      varnfactura= $F('nuevonumfac');
+      varnfechfac=$F('nuefechafac');
+	if(Field.present('actualfac')==false){
+         alert("Debe ingresar el num\u00e9ro de la factura al cual desea hacer el cambio");
+        }else{
+          if(Field.present('nuevonumfac')==false){
+           alert("Debe ingresar el nuevo num\u00e9ro de factura");
+          }else{
+	     Modalbox.show("views06/cambnuofech.php", {title: 'Cambio de factura exito!!!', method: 'get',
+             params:{
+             rangfe1:fe1,rangfe2:fe2,cualprove:prov,factuactu:varfacactual,factunuev:varnfactura,facfechnu:varnfechfac,
+             fasucursal:sucur,faestpro:estapro}
+             });
+         }
+      }
+}
+
+function tiporsona(valor){
+	new Ajax.Updater('loscliedona', 'views05/loscliedona.php', {
+   parameters: {tipodeclien: valor}
+   });
+}
+function DonaCliente(){
+
+         varcedudona=$F('ceducliendona');
+         estado=$('datoscliendon').style.display;
+         if(estado==''){
+           estado='none';
+         }
+         if(Field.present('ceducliendona')==false){
+           alert("El campo c\u00e9dula es necesario!!!");
+         }else{
+
+         if(estado=='none'){
+           $('datoscliendon').style.display='';
+
+
+          new Ajax.Updater('datoscliendon', 'views05/buscliendona.php', {
+              parameters: {cedudona: varcedudona},
+	                onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                  $('spinnerP1' ).show();
+                        },
+                      onComplete: Ocultar
+              });
+         }
+        }
+}
+function Ocultar(req){
+$('spinnerP1' ).hide();
+}
+function Impactadon(iddona){
+   url='views05/iacta.php?iorddona='+iddona;
+   imprimir(url)
+}
+
+function ImprimirDonat(){
+   varelcoment=$F('comentdona');
+   estado=$('datoscliendon').style.display;
+    if(estado=='none'){
+          alert('Debe hacer clik en Buscar cliente!\nPara mostrar informacion del mismo');
+    }else{
+      vartipoclien=$F('esun');
+      if(varelcoment==''){
+              alert('El campo comentario es necesario!!!');
+      }else{
+             url='views05/solicituddona.php?tipousu='+vartipoclien+'&coment='+varelcoment;
+	     imprimir(url)
+           }
+     }
+}
+function BusartiDonat(){
+
+   varautoriza=$F('autorizados');
+   varelcoment=$F('comentdona');
+   vardepdona=$F('misdependendona');
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varcedula=$F('ceducliendona');
+   estado=$('datoscliendon').style.display;
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i);
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        }
+    }
+      if(varautoriza==''){
+		 alert('El campo autorizado es necesario!!!');
+      }else{
+            if(vardepdona==''){
+			alert('El campo dependencia es necesario!!!');
+	    }else{
+                  if(varcedula==''){
+                       alert('El campo c\u00e9dula es necesario!!!');
+                      }else{
+                            if(estado=='none'){
+                                 alert('Debe hacer clik en Buscar cliente!\nPara mostrar informacion del mismo');
+                                }else{
+                                      vartipoclien=$F('esun');
+                                      if(varelcoment==''){
+                                          alert('El campo comentario es necesario!!!');
+                                      }else{
+                                            if(paso==0){
+						alert('Debe seleccionar al menos un tipo de insumo!!!');
+						}else{
+                                                      new Ajax.Request("views05/pedidonativo2.php",{
+                                                      method:'post',
+                                                      asynchronous: true,
+                                                      postBody: 'dependencia='+vardepdona+'&arreglo='+$A(losarticulos)
+							        +'&loautoriza='+varautoriza+'&eldichoso='+vartipoclien
+ 								+'&comentario='+varelcoment,
+                                                     onComplete: MostDonativo
+                                                     });
+                                                     }
+                                           }
+                                     }
+                           }
+                 }
+           }
+}
+
+function MostDonativo(req){
+	    $('clientes').hide();
+		$('clientes').show();
+        $('clientes').innerHTML=req.responseText;
+}
+
+function PDonativo(){
+	 var posicion=0;
+	 varidarti=$F('artiprovee');
+	posicion1=varidarti.indexOf('@');
+	varidarti=varidarti.substring(posicion,posicion1);
+
+
+	 varcantid=$F('cantidadonar');
+         if(varidarti<=0){
+			 alert('Debe seleccionar al menos un art\u00edculo')
+			}else{
+				  if(varcantid<=0){
+					 alert('Debe ingresar la cantidad a donar');
+					}else{
+						       new Ajax.Request("views05/pedidonativo3.php",
+                                   {
+                                       method:'post',
+                                       asynchronous: true,
+                                       postBody: 'nomar='+varidarti+'&canti='+varcantid,
+									   onComplete: hideProcessing
+                                    });
+									document.getElementById('cantidadonar').value="";
+						     }
+
+			  }
+}
+
+function showProcessing() {
+	document.getElementById('spinner').style.display = 'inline'
+}
+
+function hideProcessing (req) {
+ 	 $('totalarticulospedidos').innerHTML=req.responseText;
+}
+function ponerprecio1(){
+	var posicion=0;
+	idart=$F('artiprovee');
+	posicion=idart.indexOf('@');
+	longitud=idart.length;
+	existe=idart.substring(posicion+1,longitud);
+	document.getElementById('cantiexistencia').value=existe;
+}
+function guardonativo(){
+	  varcomentdona=$F('comentpedi');
+	  vardependencia=$F('ladepensaliente');
+          varquieautoriza=$F('elautorizo');
+          varcomentpricipal=$F('elcomentario');
+          varclient=$F('eltipocliente');
+          new Ajax.Request("views05/pedidonativo4.php",
+                                   {
+                                       method:'post',
+                                       asynchronous: true,
+                                       postBody: 'elcomentariodona='+varcomentdona+'&depensalien='+vardependencia+
+                                                  '&elqautoriza='+varquieautoriza+'&elcomentprin='+varcomentpricipal+
+                                                  '&eltipclien='+varclient,
+                                        onCreate: function(response) {
+                                         a= Ajax.activeRequestCount;
+                                         if(a>=0)
+					 $('spinner' ).show();
+                                        },
+ 					onComplete: MostrarDona
+                                    });
+
+
+}
+function MostrarDona(req){
+     $('clientes').innerHTML=req.responseText;
+     $('spinner').hide();
+}
+
+function buscardona(){
+   vardepen=$F('estadopedi');
+   varmisdepen=$F('misdependen');
+    if(vardepen==''){
+       alert('Debe seleccionar el estado del donativo')
+    }else{
+         if(varmisdepen==''){
+              alert('Debe seleccionar la dependencia')
+             }else{
+                   new Ajax.Updater('losdonativos', 'views05/losdonativos.php', {
+                    parameters: {estadodona: vardepen,dependencia:varmisdepen}
+                   });
+                  }
+        }
+}
+function ponerprecios1(){
+	var posicion=0;
+	idart=$F('artiprovee');
+	posicion=idart.indexOf('@');
+	posicion2=idart.length;
+	precio=idart.substring(posicion+1,posicion2);
+    document.getElementById('canarti').value=precio;
+}
+
+function Ponerprecio(){
+   vartotalcajasprecio=$F('totalcaja');
+   variva=$F('ivacomp');
+   variva=(variva/100);
+   varaumento=$F('aumentcomp');
+   varaumento=(varaumento/100);
+
+     for(i=1;i<=vartotalcajasprecio;i++){
+		    varcandesp=$F('caja1'+i);
+			varpreprove=$F('caja3'+i);
+			vartieneiva=$F('caja5'+i);
+			vartieneaumento=$F('caja6'+i);
+			if((isNaN(varcandesp)==true) || (isNaN(varpreprove)==true)){
+				alert('El valor debe ser num\u00e9rico')
+			}else{
+						if(varpreprove>0){
+									if(vartieneiva=='on'){
+										preciofconimpuesto=(varpreprove * variva);
+										preciofconiva=Number(varpreprove)+Number(preciofconimpuesto);
+										precioaumento=(Number(preciofconiva));
+										preciototalfinal=(((Number(varpreprove) * variva) + Number(varpreprove))*varcandesp);
+										caja='caja4'+i;
+										cajaf='caja7'+i;
+										document.getElementById(caja).value=Number(precioaumento.toFixed(2));
+										document.getElementById(cajaf).value=Number(preciototalfinal.toFixed(2));
+									}
+									if(vartieneiva!='on') {
+										preciofconimpuesto=(varpreprove);
+										precioaumento=(Number(preciofconimpuesto));
+										 preciototalfinal=(Number(precioaumento) * varcandesp);
+										 caja='caja4'+i;
+										 cajaf='caja7'+i;
+										 document.getElementById(caja).value=Number(precioaumento.toFixed(2));
+										 document.getElementById(cajaf).value=Number(preciototalfinal.toFixed(2));
+							        }
+                        }
+                   }
+	 }
+}
+function montofactura(){
+ vartotalcajasprecio=$F('totalcaja');
+   variva=$F('ivacomp');
+   variva=(variva/100);
+   varaumento=$F('aumentcomp');
+   varaumento=(varaumento/100);
+   varacumulador= new Number();
+   varacumulador=0;
+   losdeliva=0;
+   sindeliva=0;
+   sinnada=0;
+     for(i=1;i<=vartotalcajasprecio;i++){
+		    varcandesp=$F('caja1'+i);
+			varpreprove=$F('caja3'+i);
+			vartieneiva=$F('caja5'+i);
+			vartieneaumento=$F('caja6'+i);
+			if((isNaN(varcandesp)==true) || (isNaN(varpreprove)==true)){
+				alert('El valor debe ser num\u00e9rico')
+			}else{
+						if(varpreprove>0){
+									if(vartieneiva=='on'){
+										preciofconimpuesto=(varpreprove * variva);
+										preciofconiva=Number(varpreprove)+Number(preciofconimpuesto);
+										precioaumento=(Number(preciofconiva));
+										preciototalfinal=(((Number(varpreprove) * variva) + Number(varpreprove))*varcandesp);
+										losdeliva=Number(varpreprove)*varcandesp+losdeliva;
+										caja='caja4'+i;
+										cajaf='caja7'+i;
+										document.getElementById(caja).value=Number(precioaumento.toFixed(2));
+										document.getElementById(cajaf).value=Number(preciototalfinal.toFixed(2));
+									}
+									if(vartieneiva!='on') {
+										preciofconimpuesto=(varpreprove);
+										precioaumento=(Number(preciofconimpuesto));
+										 preciototalfinal=(Number(precioaumento) * varcandesp);
+										 caja='caja4'+i;
+										 cajaf='caja7'+i;
+										 document.getElementById(caja).value=Number(precioaumento.toFixed(2));
+										 document.getElementById(cajaf).value=Number(preciototalfinal.toFixed(2));
+										 sindeliva=sindeliva+(Number(precioaumento) * varcandesp);
+
+							        }
+						varacumulador=varacumulador+preciototalfinal;
+						sinnada=sinnada+(varpreprove*varcandesp);
+
+                        }
+                   }
+	 }
+	document.getElementById('montogeneral').value=Number(varacumulador.toFixed(2));
+	document.getElementById('elmosinada').value=Number(sinnada.toFixed(2));
+	document.getElementById('montodelosiva').value=losdeliva;
+	document.getElementById('montosiniva').value=sindeliva;
+
+}
+
+////funcion de factura modificada ing franklin monsalve 25/08/2017
+function GuardarFactrua(){
+	vartotalcajasprecio=$F('totalcaja');
+   variva=$F('ivacomp');
+    variva=(variva/100);
+    varaumento=$F('aumentcomp');
+    varaumento=(varaumento/100);
+	varnumfactura=$F('numfactu');
+	///verificar numero de farctura no alla sido guardado anteriormente
+	varidpedido=$F('elidpedido');
+	vardepenid=$F('depdencia');
+	varnumcontrol=$F('numcontrol');
+	 arridinsumos=new Array();
+	 arridinsOrdPedi=new Array();
+	 arrcandesp=new Array();
+	 arrpreprove=new Array();
+	 arriva=new Array();
+	 arraumento=new Array();
+     arrfechaven=new Array();
+     arrMatrizLotes=new Array();
+     arrnoguardarlote=new Array();
+     arrMatrizLdatos=new Array();
+     campocantlot=new Array();
+     arrcantidad=new Array();
+	varelmontoge=$F('montogeneral');
+	varfecemifact=$F('fechemifactura');
+	varordcompra=$F('ordcomprasi');
+
+	if (varordcompra=='si') { ordencompras=true; alert('ORDEN COMPRAS');}
+	else {ordencompras=false;}
+
+         exierr=0;
+	if(Field.present('montogeneral')==false){
+		alert('La factura no se ha procesado totalmente');
+	} else{
+	          if(Field.present('numfactu')==false) {
+		      alert('El n\u00famero de la factura es necesario!!')
+	}else{
+		if(Field.present('numcontrol')==false){
+			alert('El n\u00famero de control es necesario!!')
+			}
+          else{
+            if(Field.present('fechemifactura')==false){
+                    alert('La fecha emisi\u00f3n de factura es necesario!!')
+               }
+            else{
+       j=0;cadenalot='';
+	   errorvacioa=true;
+	   errorvaciob=true;
+	   errorvacioc=true;
+	   lotesvacios=false;
+	   errornumec=true;
+	   errorfecha=true;
+	   loteerr=true;
+	   errosumacantidadlotes=true;
+	   nlotevacio=true;
+
+	   for(i=1;i<=vartotalcajasprecio;i++){
+	   	cadenalot='';
+	   	     varidinsumos=$F('caja2'+i);
+		        varcandesp=  $F('caja1'+i);
+		              if (isNaN(varcandesp)){
+                           alert ("Error en campo, solo se permiten numeros!!");
+                        }
+                          else{
+                            if (varcandesp % 1 == 0) {
+                          }
+                          else{
+                               alert ("Error en campo, solo se permiten cantidades enteras!!");
+                               exierr=1;
+                            }
+                         }
+			varpreprove=  $F('caja3'+i);
+			vartieneiva=  $F('caja5'+i);
+			vartieneaumento=$F('caja6'+i);
+			arridinsumos[i]=varidinsumos;
+			arrcandesp[i]=varcandesp;
+			arrpreprove[i]=varpreprove;
+			arriva[i]=vartieneiva;
+			arraumento[i]=vartieneaumento;
+        	tbla='tbl'+i;//id tabla de lotes
+			tbl=document.getElementById(tbla);
+     		tblrow=tbl.rows.length;
+     		var SumaCantlotes=0;
+     	camtlot='';
+		tablaid='tbl'+i;
+		nlottblrow=$(''+tablaid+'').rows.length;
+		for(k=0;k < tblrow;k++)
+         {
+         if(k==0)
+         {spcad='';spdca='';}
+         else
+         {spcad='---';spdca='***';}
+         campa='caja8a'+i+'-'+k;//lote
+         campb='caja8b'+i+'-'+k;//fecha v
+         campc='caja8c'+i+'-'+k;//cantidad lot
+        		var campoa=document.getElementById(campa);$(campoa).style.border='';
+			var campob=document.getElementById(campb);$(campob).style.border='';
+			var campoc=document.getElementById(campc);$(campoc).style.border='';
+			///validar campo bacios
+			cantlot=parseInt(campoc.value);
+			validarlot=true;
+			arrnoguardarlote[i]=true;//validad guardar el lote
+		if(nlottblrow>1){
+			if(Field.present(campa)==false) {errorvacioa=false; errorcampo(campa);}
+			if(Field.present(campb)==false) {errorvaciob=false; errorcampo(campb);}
+			if(Field.present(campc)==false) {cantlot=0;errorvacioc=false; errorcampo(campc);}
+			}else{
+			if(Field.present(campa)==false && Field.present(campb)==false && Field.present(campc)==false)
+			{validarlot=false;cantlot=0;
+			//esta fila no se guarda los lotes
+			arrnoguardarlote[i]=false;//no guradar el lote
+			}
+			else
+			 {
+			 if(Field.present(campa)==false) {errorvaciob=false; errorcampo(campa);}
+			 if(Field.present(campb)==false) {errorvaciob=false; errorcampo(campb);}
+			 if(Field.present(campc)==false) {cantlot=0;errorvaciob=false; errorcampo(campc);}
+			 }
+			}
+	//los campos lotes fecha y cantidad por lotes vacios
+	if(errorvacioa==false && errorvaciob==false && errorvacioc==false){
+		lotesvacios=true;	//si hay lotes vacios
+		validarlot=false;
+		}
+		//transformar a entero
+			SumaCantlotes=parseInt(SumaCantlotes)+cantlot;//cantidad total por lotes
+			camtlot=camtlot+spdca+campoc.id;
+			if(validarlot!=false){//si validarlote es true no todos estan vacios
+			if(fec=validarMesAn(campob.value)==false){errorfecha=false;errorcampo(campb);}
+			if( isNaN(campoc.value) ) { errornumec=false;errorcampo(campc);}
+			if( Field.present(campc)==false ) { nlotevacio=false;errorcampo(campc);}
+			if(Field.present(campa)==false) {loteerr=false;}
+		}
+			DatosLot=''+campoa.value+':'+campob.value+':'+campoc.value+'';
+			cadenalot=cadenalot+spcad+DatosLot;
+		 }
+	arrcantidad[j]=camtlot;
+	arcl=camtlot.split('***');
+	if(arrcandesp[i] < SumaCantlotes)
+	{errosumacantidadlotes=false;
+			for(g=0;g<arcl.length;g++){errorcampo(arcl[g]);	}
+	}else{
+			//for(g=0;g<arcl.length;g++){$(arcl[g]).style=''; }
+		}
+      arrMatrizLotes[j]=cadenalot; //matriz  de lotes
+		j++;
+
+}
+if(fecfact=validarMesAn(varfecemifact)==false){errorfechafact=false;errorcampo($('fechemifactura').id);}else{errorfechafact=true;}
+		if(lotesvacios==true || errorfecha==false || errornumec==false || errosumacantidadlotes==false || errorfechafact==false){
+		if(lotesvacios==true){vamslot='Campos lote,Fecha Ven. y Cant. lot estan vac\u00EDos \n';}	else{vamslot=''}
+		if(errorfecha==false){fecaherr='Campo Fecha Ven tiene errores \n';}else{fecaherr=''}
+		if(errorfechafact==false){fecfacterr='Campo Fecha de Factura tiene errores \n';}else{fecfacterr=''}
+		if(errornumec==false){nunlterr='Campo Cant. lot tiene errores \n';}else{nunlterr=''}
+		if(nlotevacio==false){nunvac='Campo Cant. lot esta vac\u00EDos \n';}else{nunvac=''}
+		if(loteerr==false){loterror='Campo lote esta vac\u00EDos \n';}else{loterror=''}
+		if(errosumacantidadlotes==false){maxicantlote='La suma de los lotes sobrepaso la cantidad despachada del insumo\n'}else{maxicantlote=''}
+
+		var msERROR='ERROR:\n'+maxicantlote+vamslot+fecaherr+nunlterr+nunvac+loterror+fecfacterr;
+		errorlot=false;
+
+		}else{errorlot=true;var msERROR='';}
+	     vardescuento=$F('montdescuent');
+   if(Field.present('montdescuent')==false){
+                vardescuento=0;
+                varmontodescuent=0;
+             }else{
+               vardescuento=$F('montdescuent');
+               varmontodescuent=$F('tdescuento');
+             }
+   if(exierr==1){
+		       alert ("Error existe al menos una cantidad con un valor no valido!!");
+		     }
+		     else if(errorlot==false){
+		     	alert(msERROR);
+		     	}else{
+	       new Ajax.Request("views05/lafacturafinal.php",
+                                   {
+                                       method:'post',
+                                       asynchronous: true,
+                                       postBody: 'numfact='+varnumfactura+'&ordencompras='+ordencompras+'&pedidoid='+varidpedido+'&eliva='+variva+
+				       '&elaumento='+varaumento+'&losidpro='+$A(arridinsumos)+'&lascandes='+arrcandesp+
+				       '&lospreprove='+$A(arrpreprove)+'&losqtiva='+$A(arriva)+
+				       '&losqtiaumento='+$A(arraumento)+'&depenid='+vardepenid+'&lot='+arrMatrizLotes+'&nolote='+arrnoguardarlote+
+						 '&controlfactura='+varnumcontrol+'&eldescuento='+vardescuento+'&eltotaldescuen='+varmontodescuent+
+                                        '&fechemifact='+varfecemifact,
+                                        onCreate: function(response) {
+                                         a= Ajax.activeRequestCount;
+                                         if(a>=0)
+					 $('spinner' ).show();
+                                        },
+ 					onComplete: FacturaProces
+ 											});
+
+                    }
+                   }//fin else 3
+		  }//fin if2
+		}//fin else1
+	}//fin if0
+//fin de la funcion
+}
+////////FIN GuardarFactura//////
+
+function FacturaProces(req) {
+     $('clientes').hide();
+	 $('clientes').show();
+ 	 $('clientes').innerHTML=req.responseText;
+    $('spinner' ).hide();
+}
+//nuevas funciones frank
+function visualizarcaracteristicas()
+{
+ var opciongrupo=document.getElementById('grupoarti').options[document.getElementById('grupoarti').selectedIndex].text;
+ if(opciongrupo=='MEDICAMENTO')
+ {document.getElementById('camposCarcarteisticas').style.display='';}
+ else
+ {document.getElementById('camposCarcarteisticas').style.display='none';}
+}
+function GuardandoArticulo(req){
+	  $('spinner2' ).hide();
+}
+
+function crearElemento(str){
+//--- idElemento:id del elemento que hace la llamada o elemento cercano hermano, nodo: tipo de nodo a insertar DIV,SPAN,P,LI,UL,INPUT
+ var idElemento=str.id;
+ var nodo='div';
+ var idNuevoNodo=idElemento+1;//id del nuevo elemento conpuesto por elemento
+ var i=1;
+while(document.getElementById(''+idNuevoNodo+''))//asinga otro numero al id del nuevo elemento
+ {i++;
+ idNuevoNodo=idElemento+i;
+ }
+ elemento=document.getElementById(idElemento);
+ nodinsert=document.createElement(nodo);
+ nodinsert.id=idNuevoNodo;//id del nuevo nodo compuesto del elemento hermano idElemento+nodo+nunmero de nodo
+ nodemscontenido=document.createTextNode(i+'Elemento ya creado');
+ nodinsert.appendChild(nodemscontenido);
+ padre=document.getElementById(''+idElemento+'').parentNode.id;//id del padre
+ if(!document.getElementById(''+idElemento+'').parentNode.id)//asiganar un id al padre
+ padre=document.getElementById(''+idElemento+'').parentNode.id='contnedornodo'+idElemento;
+ document.getElementById(''+padre+'').appendChild(nodinsert);//insertar elementos despues
+ idnovo=document.getElementById(idNuevoNodo)
+ return idNuevoNodo;
+}
+
+function elementoselecionado(str,idinvocacion){//idinvocacion:campo o boton que hace la invocacion,str:elemeto selecionado
+	tex=str.innerHTML;//texto del elemento
+	invocaion=document.getElementById(''+idinvocacion+'');
+	invocaion.value=tex;
+	idElemento=str.id;
+	ElementoPadre=document.getElementById(''+idElemento+'').parentNode.id;
+	PadreDeLista=document.getElementById(''+ElementoPadre+'').parentNode.id;
+	Divcontenedor=document.getElementById(''+PadreDeLista+'').parentNode.id;
+	EliminaLista(Divcontenedor);
+	invocaion.focus();
+}
+function EliminaLista(listaEliminar){
+//alert(PadreDeLista)
+	if(!document.getElementById(''+listaEliminar+'').parentNode.id)//asiganar un id al padre
+	padre=document.getElementById(''+listaEliminar+'').parentNode.id='eliminar'+listaEliminar;
+  	document.getElementById(listaEliminar).style.display = "none";
+  	document.getElementById(''+padre+'').removeChild(document.getElementById(''+listaEliminar+''));
+}
+
+function errorcampo(c){
+$(''+c+'').classList.add('errorcampo');
+}
+/*********/
+function llenarcampos(camp,valor){
+document.getElementById(''+camp+'').value=''+valor+'';
+}
+
+function cambiarselec(camp,opcion){
+	camp=camp;
+	var val = opcion;
+	var sel = document.getElementById(''+camp+'');
+	var opts = sel.options;
+	for(var opt, j = 0; opt = opts[j]; j++) {
+		if(opt.value == val) {
+		 sel.selectedIndex = j;
+		 break;
+		}
+    }
+ return;
+}
+
+function verificarNombreMarca(){ //verificar el nombre de un producto que sea igual a la marca
+nombreARticulo=$F('nombarti');
+marcArticulo=$F('marcarti');
+//limpiar campos
+	if(nombreARticulo!=false && marcArticulo!=false )
+	{	llenarcampos('nom_comercial','');//nombre comercial
+		llenarcampos('nom_comercial','');//nombre comercial
+   	llenarcampos('nom_generico','');//nombre generico
+   	llenarcampos('princ_activo','');//principio activo
+   	llenarcampos('minimo_stock','');//minimo
+   	llenarcampos('farmacologia','');//famacologia
+   	llenarcampos('descripcion','');//descripcion
+		divResultado = document.getElementById('verificadatos');
+		ajax=nuevoAjax();
+      ajax.open("GET",'views05/crearticulo_verificarSerial.php?nombre='+nombreARticulo+'&marca='+marcArticulo);
+      ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+         divResultado.innerHTML= ajax.responseText;
+         if(divResultado.innerHTML!='' && divResultado.innerHTML != 'true')
+         { //señalamos que no se puede guardar ya existe
+				errorcampo('nombarti');
+           	errorcampo('marcarti');
+            document.getElementById('verificacion').value='false';
+				verifMarcNomb=false;
+				document.getElementById('MODcaract').style.display=""; //mostra boton de modificar caracteristicas
+				misresultados=divResultado.innerHTML;
+            var dto= new Array();
+            dto=misresultados.split("/#/");
+            idinsu=dto[2].trim();llenarcampos('idinsumo',idinsu);
+            intipo=dto[3].trim();
+				inidtipo=dto[4].trim();	cambiarselec('grupoarti',inidtipo);
+				insum=dto[5].trim();
+				inmarca=dto[6].trim();
+				incod=dto[7].trim();llenarcampos('codbarra',incod);
+				dto[0];//false
+            if(dto[0].trim()=='true')//medicamento
+           	{ document.getElementById('camposCarcarteisticas').style.display="";
+           		if(dto[1].trim()=='true')//tiene caracteristicas
+					{	inncomer=dto[8].trim();
+						inngener=dto[9].trim();
+						inprinci=dto[10].trim();
+						inbajomi=dto[11].trim();
+						infarmco=dto[12].trim();
+						incaract=dto[13].trim();
+						inpsi=dto[14].trim();
+						psiopcion=document.getElementsByName('option1');
+						if(inpsi=='0')
+						{ psiopcion[1].checked = true;	}
+						else
+						{psiopcion[0].checked = true;}
+					}else{//es MEDICAMENTO pero no se ha asignado características
+						inncomer='';
+						inngener='';
+						inprinci='';
+						inbajomi='';
+						infarmco='';
+						incaract='';
+						document.getElementsByTagName('option1')[0].checked = true;
+					}
+				llenarcampos('nom_comercial',inncomer);//nombre comercial
+				llenarcampos('nom_comercial',inncomer);//nombre comercial
+            llenarcampos('nom_generico',inngener);//nombre generico
+            llenarcampos('princ_activo',inprinci);//principio activo
+            llenarcampos('minimo_stock',inbajomi);//minimo
+            llenarcampos('farmacologia',infarmco);//famacologia
+            llenarcampos('descripcion',incaract);//descripcion
+            }else{document.getElementById('camposCarcarteisticas').style.display='none';}
+         return false;
+        }
+        else
+        { document.getElementById('MODcaract').style.display="none";
+        	 document.getElementById('verificacion').value='true';
+          $('nombarti').style.border='';
+          $('marcarti').style.border='';
+         return true;
+        }
+   	}
+	}
+	ajax.send(null);
+	}
+}
+
+function buscarcodbarra(str,funcion){
+	var datos=str.value;
+	if(datos.trim()!=''){
+	new Ajax.Request("views05/crearticulo_code.php",
+   {
+		method:'post',
+		asynchronous: true,
+		parameters:'codbarra='+datos,
+		onSuccess:function(respuesta){
+		res=respuesta.responseText;
+	if(res!='' && res != 'true')
+   {
+   	document.getElementById('verificacion').value='false';
+   	errorcampo('nombarti');
+      errorcampo('marcarti');
+		verifMarcNomb=false;
+		document.getElementById('MODcaract').style.display=""; //mostra boton de modificar caracteristicas
+		misresultados=res
+		var dto= new Array();
+		dto=misresultados.split("/#/");
+		idinsu=dto[2].trim();llenarcampos('idinsumo',idinsu);
+		intipo=dto[3].trim();
+		inidtipo=dto[4].trim();	cambiarselec('grupoarti',inidtipo);
+		insum=dto[5].trim();llenarcampos('nombarti',insum);
+		inmarca=dto[6].trim();cambiarselec('marcarti',inmarca);
+		incod=dto[7].trim();llenarcampos('codbarra',incod);
+		dto[0];//false
+		if(dto[0].trim()=='true')//medicamento
+        { document.getElementById('camposCarcarteisticas').style.display="";
+        		if(dto[1].trim()=='true')//tiene caracteristicas
+				{  inncomer=dto[8].trim();
+					inngener=dto[9].trim();
+					inprinci=dto[10].trim();
+					inbajomi=dto[11].trim();
+					infarmco=dto[12].trim();
+					incaract=dto[13].trim();
+					inpsi=dto[14].trim();
+					psiopcion=document.getElementsByName('option1');
+					if(inpsi=='0')
+					{ psiopcion[1].checked = true;}
+					else
+					{ psiopcion[0].checked = true;}
+				}else{//es MEDICAMENTO pero no se ha asignado características
+					inncomer='';
+					inngener='';
+					inprinci='';
+					inbajomi='';
+					infarmco='';
+					incaract='';
+					document.getElementsByTagName('option1')[0].checked = true;
+				}
+			 llenarcampos('nom_comercial',inncomer);//nombre comercial
+			 llenarcampos('nom_comercial',inncomer);//nombre comercial
+			 llenarcampos('nom_generico',inngener);//nombre generico
+			 llenarcampos('princ_activo',inprinci);//principio activo
+			 llenarcampos('minimo_stock',inbajomi);//minimo
+			 llenarcampos('farmacologia',infarmco);//famacologia
+			 llenarcampos('descripcion',incaract);//descripcion
+			}else{document.getElementById('camposCarcarteisticas').style.display='none'; }
+    	return false;
+    }else
+    { Field.clear('marcarti');
+    	Field.clear('grupoarti');
+    	Field.clear('nombarti');
+    	Field.clear('idinsumo');
+    	document.getElementById('verificacion').value='true';
+    	document.getElementById('camposCarcarteisticas').style.display="none";
+    	document.getElementById('MODcaract').style.display="none";
+    return true;
+    }
+  }
+  });
+ }
+}
+
+function medicacaractactualiza(){
+ id=$F('idinsumo');
+ varpiso=$F('psi');
+ nomcomer=$F('nom_comercial');
+ nomgenerico=$F('nom_generico');
+ prinActivo=$F('princ_activo');
+ miniStock=$F('minimo_stock');
+ famacolog=$F('farmacologia');
+ descri=$F('descripcion');
+ if(varpiso==2)
+ 	{psitrop='1';}else{psitrop='0';}
+ 	msc='';
+if(Field.present('nom_comercial')==false){
+			nomC=false;
+			var msc=msc+'* Nombre comercial vac\u00EDo \n';
+			errorcampo('nom_comercial');
+		}
+		else{	nomC=true;
+			document.getElementById('nom_comercial').style='';
+		}
+
+		if(Field.present('nom_generico')==false){
+			nomg=false;
+			msc=msc+'* Nombre Gen\u00E9rico vac\u00EDo \n';
+			errorcampo('nom_generico');
+		}
+		else{
+			nomg=true;
+			document.getElementById('nom_generico').style='';
+		}
+
+		if(Field.present('princ_activo')==false){
+			pactiv=false;
+			msc=msc+'* Principio activo vac\u00EDo \n';
+			errorcampo('princ_activo');
+		}
+		else{	pactiv=true;
+			document.getElementById('princ_activo').style='';
+		}
+ if((isNaN(miniStock) ) || (Field.present('minimo_stock')==false) || (/\s/.test(miniStock))){
+			miniSt=false;
+			msc=msc+'* M\u00EDnimo Stock debe contener solo n\u00FAmeros \n';
+			errorcampo('minimo_stock');
+		}
+		else{	miniSt=true;
+			document.getElementById('minimo_stock').style='';
+		}
+if(nomC==false || nomg==false || pactiv==false || miniSt==false)
+ {alert(msc);
+ 	}else
+ if(Field.present('idinsumo')==false){
+ 	alert("Debe ingresar un valor para la busquedad");
+ 	}else{
+ 	new Ajax.Updater('carctactuliza', 'views05/crearticulo_actualizarmedicamento.php', {
+ 		parameters: {idinsumo:id, psi:psitrop, nomcomer:nomcomer, nomgener:nomgenerico, prinacti:prinActivo, ministock:miniStock, famaco:famacolog, descri:descri},
+	   onCreate: function(response) {
+	   		a= Ajax.activeRequestCount;
+	   		if(a>=0)
+	   			$('spinner2' ).show();
+      },
+      evalScripts:true,
+      onComplete: GuardandoArticulo
+   });
+  }
+}
+
+function sugerir(str,dir){
+	var idelemento=str.id;
+	var datos=dir;
+	//'http://'+dir+"/crearticulo_verificarnombre.php?q="+str.value+'&idcampoinvocaion='+idelemento;
+		//str objeto de donde consutas
+	idelementomecreaste=idelemento+1;
+	idnovo=idelementomecreaste+1;
+	if(!document.getElementById(''+idelementomecreaste+''))//exite el nodo
+	{	contenedor= crearElemento(str);
+		document.getElementById(''+contenedor+'').className="buscarcod";
+		cod=document.getElementById(''+contenedor+'').id;
+		DivContenedor=document.getElementById(''+contenedor+'');
+		idnovo=cod+1;
+		document.getElementById(''+contenedor+'').innerHTML=" <a href='#' ><span class='spanX' onclick=\"EliminaLista('"+contenedor+"')\">X</span></a><div id='"+idnovo+"'>"
+	}
+	divResultado = document.getElementById(''+idnovo+'');
+ 	ajax=nuevoAjax();
+ 	ajax.open("GET",datos);
+ 	ajax.onreadystatechange=function() {
+ 		if (ajax.readyState==4) {
+ 			divResultado.innerHTML = ajax.responseText;
+ 			if(divResultado.innerHTML=='')
+   		{DivContenedor.style.display='none';}
+      }else{DivContenedor.style.display='';}
+   }
+   ajax.send(null);
+}
+//guardar
+function Guardarti(){
+	varcodbarra=$F('codbarra');
+	varnombarti=$F('nombarti');
+	vargrupoarti=$F('grupoarti');
+	varmarca=$F('marcarti');
+	varpiso=$F('psi');
+	nomcomer=$F('nom_comercial');
+	nomgenerico=$F('nom_generico');
+	prinActivo=$F('princ_activo');
+	miniStock=$F('minimo_stock');
+	famacolog=$F('farmacologia');
+	descri=$F('descripcion');
+	ms='';
+	var opcion=document.getElementById('grupoarti').options[document.getElementById('grupoarti').selectedIndex].text;
+	//iniciar variables
+	nomC=true;
+	nomg=true;
+	pactiv=true;
+	miniSt=true;
+	var verifMarcNomb=true;
+	msm='';
+	var ms='Error: \n';
+	if(opcion=='MEDICAMENTO')
+	{	if(Field.present('nom_comercial')==false){
+			nomC=false;
+			var msm=msm+'* Nombre comercial vac\u00EDo \n';
+			errorcampo('nom_comercial');
+		}
+		else{
+			nomC=true;
+			document.getElementById('nom_comercial').style='';
+		}
+//nombre Generico No Vacio
+		if(Field.present('nom_generico')==false){
+			nomg=false;
+			msm=msm+'* Nombre Gen\u00E9rico vac\u00EDo \n';
+			errorcampo('nom_generico');
+		}
+		else{
+			nomg=true;
+			document.getElementById('nom_generico').style='';
+		}
+//principio activo No vacío
+		if(Field.present('princ_activo')==false){
+	pactiv=false;
+			msm=msm+'* Principio activo vac\u00EDo \n';
+			errorcampo('princ_activo');
+		}
+		else{
+			pactiv=true;
+			document.getElementById('princ_activo').style='';
+		}
+if(isNaN(miniStock)){
+			miniSt=false;
+			msm=msm+'* M\u00EDnimo Stock debe contener solo n\u00FAmeros \n';
+			errorcampo('minimo_stock');
+		}
+		else{	miniSt=true;
+			document.getElementById('minimo_stock').style='';
+		}
+}
+
+if(Field.present('nombarti')==false){
+ 	nonbArt=false;
+  	ms=ms+'El nombre del art\u00edculo es necesario \n';
+errorcampo('nombarti');
+ }else{
+ 	nonbArt=true;
+   document.getElementById('nombarti').style='';
+     	}
+
+ if(vargrupoarti<=0){
+gartic=false;
+  	ms=ms+'El grupo del art\u00edculo es necesario \n';
+  	errorcampo('grupoarti');
+ 	}else{
+ 		gartic=true;
+ 		  	document.getElementById('grupoarti').style='';
+ 	}
+
+ if(varmarca<=0){
+marcart=false;
+  	ms=ms+'La marca es necesaria\n';
+  	errorcampo('marcarti');
+ 	}else{
+ 		marcart=true;
+ 		  	document.getElementById('marcarti').style='';
+ 	}
+
+if(document.getElementById('verificacion').value=='false')
+{
+verifMarcNomb=false;
+ms+='El nombre del articulo con esta marca ya esta registrado\n';
+}
+else
+{verifMarcNomb=true;}
+
+if(nonbArt==false || gartic==false || marcart==false || nomC==false || nomg==false || pactiv==false || miniSt==false || verifMarcNomb==false)
+	{ms=ms+msm; alert(ms);	}
+else{
+		new Ajax.Request("views05/guardaraticulo.php",
+              {
+                 method:'post',
+                 asynchronous: true,
+                 postBody: 'codbarra='+varcodbarra+'&artinombre='+varnombarti+
+	         '&grupoarte='+vargrupoarti+'&marcarti='+varmarca+'&psicotro='+varpiso+
+	         '&noncomer='+nomcomer+'&generico='+nomgenerico+'&princiactivo='+prinActivo+
+	         '&stok='+miniStock+'&farmacologia='+famacolog+'&vardescr='+descri,
+		onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                 if(a>=0)
+		  $('CargGuardarti' ).show();
+                 },
+   		  onComplete: Articuloguardado
+                 });
+	      }
+
+}//finnuevas frank
+
+function Articuloguardado(req) {
+     $('clientes').hide();
+     $('clientes').show();
+     $('clientes').innerHTML=req.responseText;
+     $('spinnerP1' ).hide();
+}
+function crearodmedexter(dato){
+    new Ajax.Updater('ordenesmedic', 'views01/farmaext1.php', {
+                    parameters: {operacion: dato}
+                   });
+}
+function crearodmedinter(dato){
+    new Ajax.Updater('ordenesmedic', 'views01/farmaext1.php', {
+                  parameters: {operacion: dato}
+                  });
+}
+function crearodemh(dato){
+    new Ajax.Updater('ordenesmedic', 'views01/farmaext1.php', {
+                  parameters: {operacion: dato}
+                  });
+}
+function BuscarclienO(){
+    varcedulacli=$F('cedulaclien');
+    tipcliente=$F('tipcliente');
+    varopcion=$F('miopcion');
+      if(varopcion=='emhp'){
+         new Ajax.Updater('datosclientes', 'views01/emerhospita.php', {
+		  parameters: {cliencedul: varcedulacli, eltipcliente: tipcliente }
+		  });
+        }else{
+           new Ajax.Updater('datosclientes', 'views01/farmaext2.php', {
+		  parameters: {cliencedul: varcedulacli, eltipcliente: tipcliente}
+		  });
+         }
+}
+
+////filtro para provedores ORDEN MEDICAMENTOS//
+function verfiltroproveedores(opc){ //franklin monsalve 12-2021
+  //filtrar proveedores por intramural extramural y todos
+   tipodeprovee=opc;
+   clasificaProv=3;//todos
+   if (document.getElementById('cproveedor-intramural')){
+   if (document.getElementById('cproveedor-intramural').checked) {
+     clasificaProvIntramural=document.getElementById('cproveedor-intramural').value;
+     selecion=clasificaProvIntramural;
+     clasificaProv=1;//la clasificacion 1 es intramural
+   }
+   }
+
+   if (document.getElementById('cproveedor-extramural')){
+   if (document.getElementById('cproveedor-extramural').checked) {
+     clasificaProvExtramural=document.getElementById('cproveedor-extramural').value;
+     selecion=clasificaProvExtramural;
+     clasificaProv=0;//la clasificacion 0 es extramural
+   }
+   }
+
+   if (document.getElementById('cproveedor-todos')){
+   if (document.getElementById('cproveedor-todos').checked) {
+     clasificaProvTodos=document.getElementById('cproveedor-todos').value;
+     selecion=clasificaProvTodos;
+     clasificaProv=2;//todos
+   }
+   }
+   //intramural(1)
+   //extramural(2)
+   //todos(3)
+   new Ajax.Updater('mostrar-provee', 'views01/filtrarproveedores.php', {
+               parameters: {clasificaproveedor: clasificaProv}});
+}
+////Fincarga de filtro para provedores ORDEN MEDICAMENTOS//
+
+function Vercober1a(tipoC,Busqid){
+   new Ajax.Updater('lascobertura', 'views01/farmaext3.php', {
+		  parameters: {tipoc: tipoC, idbusq: Busqid }
+		  });
+}
+
+function procesarmEH(){
+  document.cookie ='0';
+   var valortocatb;
+    paso=0;
+   paso1=0;
+   paso2=0;
+   valorder=$F('valor');
+   varqtipo=$F('quees');
+   vartipoop=$F('laopera');
+   varfecha=$F('Fini');
+   p=0;
+   q=0;
+   varnopres=$F('nopresupuesto');
+   varcoment=$F('comentope');
+   varidpro=$F('idprovee');
+   vartiposervi=$F('tiposervi');
+   IdDependencia=$F('iddependencia');
+	for(i=1;i<valorder;i++){
+       contenido=$F('laspolizas'+i)
+       if(contenido>0){
+		    contenido=contenido;
+			p=contenido;
+	        paso=paso+1;
+			paso1=0;
+			contcomoben=0;
+        }
+    }
+	if((contenido<=0) && (p==0)){
+		contenido=0;
+		}else{
+			contenido=p
+			}
+	if(varqtipo>=1){
+	valortocatb=$F('totcb');
+
+	   for(x=1;x<valortocatb;x++){
+		contcomoben=$F('laspolizastb'+x);
+		if(contcomoben>0){
+		 q=contcomoben;
+		 paso1=paso1+1;
+		 }
+		}
+	 if((contcomoben<=0) && (q==0)){
+		contcomoben=0;
+		}else{
+			contcomoben=q
+			}
+	}
+	if(contenido>0){
+		 lacobert=contenido;
+	}else{
+		lacobert=contcomoben
+	}
+  if(IdDependencia=='*' || IdDependencia<='0'){
+     paso2=1;
+     alert('Debe seleccionar una dependencia');
+   }
+  if(vartiposervi=='0'){
+     paso2=1;
+     alert('Debe seleccionar el Tipo servicio');
+   }
+   if(Field.present('nopresupuesto')==false){
+     paso2=1;
+   alert("El numero de planilla es necesario!!")
+   }
+	if((paso>1) && (paso1>=0)){
+      alert('Solo puede seleccionar una cobertura');
+    }else{
+		   if(varidpro<=0){
+			   alert('Debe seleccionar un proveedor');
+            }else{
+            if(paso2==0) {
+					new Ajax.Updater('clientes', 'views01/emerhospita1.php', {
+							parameters: {fechaop: varfecha, numpres: varnopres,
+                                                        elcoment: varcoment,elprovee: varidpro,
+							cobToB: lacobert, tiposervi: vartiposervi,IdDependencia:IdDependencia}
+							});
+                }
+		         }
+		}
+
+}
+
+function procesarmEX(){
+  document.cookie ='0';
+   var valortocatb;
+    paso=0;
+   paso1=0;
+   paso2=0;
+   selCobertura=0;
+   valorder=$F('valor');
+   varqtipo=$F('quees');
+   vartipoop=$F('laopera');
+   varfecha=$F('Fini');
+   p=0;
+   q=0;
+   varenfer=$F('laenfermedad');
+   varcoment=$F('comentope');
+   varidpro=$F('idprovee');
+   IdDependencia=$F('iddependencia');
+	for(i=1;i<valorder;i++){
+       contenido=$F('laspolizas'+i)
+       if(contenido>0){
+         selCobertura++;
+		    contenido=contenido;
+			p=contenido;
+	        paso=paso+1;
+			paso1=0;
+			contcomoben=0;
+        }
+    }
+	if((contenido<=0) && (p==0)){
+		contenido=0;
+		}else{
+      	contenido=p
+			}
+	if(varqtipo>=1){
+	valortocatb=$F('totcb');
+	   for(x=1;x<valortocatb;x++){
+		contcomoben=$F('laspolizastb'+x);
+		if(contcomoben>0){
+      selCobertura++;
+		 q=contcomoben;
+		 paso1=paso1+1;
+		 }
+		}
+	 if((contcomoben<=0) && (q==0)){
+		contcomoben=0;
+		}else{
+			contcomoben=q
+			}
+	}
+  if(selCobertura==0){
+    paso2=1;
+    alert('Debe seleccionar una cobertura');
+  }
+	if(contenido>0){
+		 lacobert=contenido;
+	}else{
+		lacobert=contcomoben;
+	}
+ if(IdDependencia=='*' || IdDependencia<='0'){
+    paso2=1;
+    alert('Debe seleccionar una dependencia');
+  }
+ if((vartipoop=='externa') && ($F('idprovee')<=0)){
+    alert('Debe seleccionar un proveedor');
+    paso2=1;
+  }
+ if((paso>1) && (paso1>=0)){
+      alert('Solo puede seleccionar una cobertura');
+      paso2=1;
+    }
+		   if(paso2==0){
+					new Ajax.Updater('clientes', 'views01/farmaext4.php', {
+							parameters: {fechaop: varfecha, laenferme: varenfer, elcoment: varcoment, elprovee: varidpro,
+							cobToB: lacobert,IdDependencia:IdDependencia}
+							});
+					}
+}
+//carga de articuloas orden medicamentos
+function ProcepmediCEH(){
+	    varcodbarra=$F('codbarra');
+		  varcantidad=$F('cantidad');
+      varnumproceso=$F('cualnumproce');
+		  varcomentario=$F('cualcoment');
+		  varcobertura=$F('lacobertura');
+		  varcarfechapro=$F('lafechaproc');
+      varelproveedor=$F('cualproved');
+      vartipservi=$F('cualtiposervi');
+      varservicio=$F('cualservici');
+		 if(varcodbarra==''){
+			alert('El campo codigo de barra es necesario!!!')
+		} else{
+		    if(varcantidad==''){
+		      alert('El campo cantidad es necesario!!!')
+	        }else{
+			      	new Ajax.Request("views01/emerhospita2.php",
+                                   {
+                                       method:'post',
+                                       asynchronous: true,
+                                       postBody:'codbarra='+varcodbarra+'&lacantidad='+ varcantidad+'&elcomentar='+varcomentario+
+						'&elprovee='+varelproveedor+'&elnumproceso='+varnumproceso+'&lacobert='+varcobertura+
+						'&fechacargpro='+varcarfechapro+'&tiposervic='+vartipservi
+                                                +'&servicios='+varservicio,
+					 onCreate: function(response) {
+                                         a= Ajax.activeRequestCount;
+                                         if(a>=0)
+					$('spinner' ).show();
+                                         },
+					 onComplete: ArticuloFarma
+                                    });
+					document.getElementById('codbarra').value='';
+					document.getElementById('cantidad').value='';
+					document.getElementById('Fini').value='';
+					$('codbarra').focus();
+				}
+			}
+}
+
+///ELIMINAR ARTICULOS DE LA LISTA DE ORDEN DE MEDICAMENTOS FRANKLIN MONSAVLE
+function QuitarArticuloOrdenMedicamentos(idarti,depen,CanActInsumo){
+	    varcodbarra=''+idarti+'-'+depen+'-'+CanActInsumo+'';
+		  varcantidad='0';
+      varnumproceso=$F('cualnumproce');
+		  varcomentario=$F('cualcoment');
+		  varcobertura=$F('lacobertura');
+		  varcarfechapro=$F('lafechaproc');
+      varelproveedor=$F('cualproved');
+      vartipservi=$F('cualtiposervi');
+      varservicio=$F('cualservici');
+  	if(varcodbarra==''){
+			alert('El campo codigo de barra es necesario!!!')
+		} else{
+		    if(varcantidad==''){
+		      alert('El campo cantidad es necesario!!!')
+	        }else{
+			      	new Ajax.Request("views01/emerhospita2.php",
+                                   {
+                                       method:'post',
+                                       asynchronous: true,
+                                       postBody:'codbarra='+varcodbarra+'&lacantidad='+ varcantidad+'&elcomentar='+varcomentario+
+						'&elprovee='+varelproveedor+'&elnumproceso='+varnumproceso+'&lacobert='+varcobertura+
+						'&fechacargpro='+varcarfechapro+'&tiposervic='+vartipservi
+                                                +'&servicios='+varservicio,
+					 onCreate: function(response) {
+                                         a= Ajax.activeRequestCount;
+                                         if(a>=0)
+					$('spinner' ).show();
+                                         },
+					 onComplete: ArticuloFarma
+                                    });
+					document.getElementById('codbarra').value='';
+					document.getElementById('cantidad').value='';
+					document.getElementById('Fini').value='';
+					$('codbarra').focus();
+				}
+			}
+}
+///FIN ELIMINAR ARTICULOS DE LA LISTA DE ORDEN DE MEDICAMENTOS FRANKLIN MONSAVLE
+function ProcepmediC(){
+      varcantidad=$F('cantidad');
+	    varcodbarra=$F('codbarra');
+		  vartratamiento=$F('tramiento');
+		  varfechaingre=$F('Fini');
+		  varespmedic=$F('especialidame');
+		  varcomentario=$F('cualcoment');
+		  varlaenfermedad=$F('cualenferm');
+		  varcobertura=$F('lacobertura');
+		  varcarfechapro=$F('lafechaproc');
+      varelproveedor=$F('cualproved');
+		  if(vartratamiento!=1){
+			vartratamiento=0;
+		  }
+		 if(varcodbarra==''){
+			alert('El campo codigo de barra es necesario!!!')
+		  }else{
+		    if(varcantidad==''){
+		      alert('El campo cantidad es necesario!!!')
+	        }else{
+			      	new Ajax.Request("views01/farmaext5.php",
+                                   {
+                                       method:'post',
+                                       asynchronous: true,
+                                       postBody: 'codbarra='+varcodbarra+'&tratamien='+vartratamiento+'&fechatrata='+varfechaingre+
+									   '&especmedic='+varespmedic+'&lacantidad='+ varcantidad+'&elcomentar='+varcomentario+
+									   '&elprovee='+varelproveedor+'&laenferm='+varlaenfermedad+'&lacobert='+varcobertura+
+									   '&fechacargpro='+varcarfechapro,
+									    onCreate: function(response) {
+                                         a= Ajax.activeRequestCount;
+                                         if(a>=0)
+										$('spinner' ).show();
+                                      },
+
+   									   onComplete: ArticuloFarma
+                                    });
+									document.getElementById('codbarra').value='';
+									document.getElementById('cantidad').value='';
+									document.getElementById('Fini').value='';
+									$('codbarra').focus();
+				}
+			}
+}
+
+//////////////////Eliminar Articulo del pedido ORDENE EXTARENA /////
+function EliminarArtProcepmediC(arrayArticulo,posicion){
+  ///datos a conservar
+  varlaenfermedad=$F('cualenferm');
+  varcobertura=$F('lacobertura');
+  varcarfechapro=$F('lafechaproc');
+  varelproveedor=$F('cualproved');
+  Eliminar=0;
+  dataArticulo=arrayArticulo.split('-');
+  posicion=dataArticulo[0];
+  idart=dataArticulo[1];
+  depe=dataArticulo[2];
+  especialidad=dataArticulo[3];
+  lacantidad=0;
+  if(posicion>=0)
+    {eliminar=1;}
+    else{eliminar=0;}
+  if(varcodbarra>0)
+    {eliminar=1;}
+    else{eliminar=0;}
+  if(depe>0)
+    {eliminar=1;}
+    else{eliminar=0;}
+  if(especialidad>0)
+    {eliminar=1;}
+    else{eliminar=0;}
+  if(eliminar==1){
+      new Ajax.Request("views01/farmaext5.php",
+                             {   method:'post',
+                                 asynchronous: true,
+                                 postBody: 'EliminarArt='+eliminar+'&posicion='+posicion+'&idarticulo='+idart+
+               '&especmedic='+especialidad+'&depe='+depe+'&lacantidad'+lacantidad+'&elcomentar='+varcomentario+
+               '&elprovee='+varelproveedor+'&laenferm='+varlaenfermedad+'&lacobert='+varcobertura+
+               '&fechacargpro='+varcarfechapro,
+                onCreate: function(response) {
+                                   a= Ajax.activeRequestCount;
+                                   if(a>=0)
+              $('spinner' ).show();
+                                },
+                          onComplete: ArticuloFarma
+                        });
+      }
+}
+//////////////////FIN Eliminar Articulo del pedido ORDENE EXTARENA /////////
+function ArticuloFarma(req) {
+     $('losartifarmacia').innerHTML=req.responseText;
+     $('spinner').hide();
+}
+function guardarEX(){
+    a = document.cookie.substring(0,1);
+    if(a=='0'){
+        Element.hide('botonordmedi');
+	varprovee=$F('elproveedores');
+	varenferm=$F('laenfermedes');
+	varcome=$F('elcomentes');
+	varCTB=$F('lacoberturaes');
+	varfecharecp=$F('fecharecep');
+	varespcmedi=$F('especialmedi');
+	descargatotal=$F('totaladescar');
+	error=$F('error');
+  if(error>0){ alert('Revisar el la Orden, exiseten errores')}
+  else{
+	   new Ajax.Request("views01/farmaext6.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'elproveedor='+varprovee+'&laenferme='+varenferm+'&elcoment='+varcome+'&lacobertu='+
+			                varCTB+ '&fecharecep='+varfecharecp+'&mediespcial='+varespcmedi+'&montodescarga='+descargatotal,
+	        onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner2' ).show();
+                             },
+						        onComplete: MedGUAR
+                            });
+    }
+	}else{
+         a=Number(a)+1;
+         document.cookie =String(a);
+         alert('El proceso se esta procesando espere un momento por favor!!!');
+        }
+}
+function guardarEEH(){
+    a = document.cookie.substring(0,1);
+    if(a=='0'){
+        Element.hide('emerhoboton');
+	varprovee=$F('elproveedores');
+	varcome=$F('elcomentes');
+	varCTB=$F('lacoberturaes');
+	varfecharecp=$F('fecharecep');
+	vartiposer=$F('tiposervi');
+        varservicio=$F('servicio');
+	descargatotal=$F('totaladescar');
+        numpresupuesto=$F('presupnumero');
+	new Ajax.Request("views01/emerhospita3.php",
+        {
+	        method:'post',
+	        asynchronous: true,
+	        postBody: 'elproveedor='+varprovee+'&elcoment='+varcome+'&lacobertu='+varCTB+
+                          '&fecharecep='+varfecharecp+'&eltiposervi='+vartiposer+'&elservicio='+varservicio+
+                          '&montodescarga='+descargatotal+'&elpresupuesto='+numpresupuesto,
+	        onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+					                $('spinner2' ).show();
+                             },
+						        onComplete: MedGUAR
+                            });
+	}else{
+         a=Number(a)+1;
+         document.cookie =String(a);
+         alert('El proceso se esta procesando espere un momento por favor!!!');
+        }
+}
+function veromext(valor){
+    new Ajax.Updater('ordenesmedic', 'views01/imfarmaext1.php', {
+                    parameters: {operacion: valor}
+                   });
+}
+function Buscaroet(){
+     numpro=$F('noproceso');
+     new Ajax.Updater('ordeexiste', 'views01/imfarmaext2.php', {
+                    parameters: {operacion: numpro}
+                   });
+}
+function anularfarma(proceso,tipo){
+ var comentanula = $F('anularproceso');
+	if(Field.present('anularproceso')==false){
+     alert('El campo comentario es obligatorio!!');
+    }else{
+      if (confirm("Realmente desea eliminar la orden "+proceso)) {
+          new Ajax.Updater('farmaelim', 'views01/elifarmaexp.php', {
+                     parameters: {elproceso: proceso,elopera: tipo,elcomenta: comentanula}
+                  });
+
+        }else{
+
+        }
+     }
+}
+
+function inclMED(){
+new Ajax.Updater('noexistemed', 'views01/farmaext8.php', {});
+}
+
+function inclMED1(){
+  varccodba=$F('codbarranu');
+  varnomnu=$F('artinu');
+  varprecnu=$F('cosanu');
+  new Ajax.Updater('seguardome', 'views01/farmaext9.php', {
+          parameters:{codba1:varccodba,nomb1:varnomnu,costo1:varprecnu}
+       });
+}
+
+function cerraMOD(){
+  $('seguardome').hide();
+  $('noexistemed').hide();
+}
+
+function MarcaLab(){
+ 	  estado=$('marcaslab').style.display;
+
+         if(estado=='none'){
+           $('marcaslab').style.display='';
+         }
+}
+
+function VerMarcaLab(){
+	estado=$('marcaslab').style.display;
+
+         if(estado==''){
+           $('marcaslab').style.display='none';
+		   }
+}
+function GuardNombreMarca(){
+	 varmarca=$F('nuenomarca');
+	 if(Field.present('nuenomarca')==false){
+		 alert('El nombre de la marca es necesario!!!');
+		}else{
+		new Ajax.Updater('seguardomarca', 'views05/marcas.php', {
+          parameters:{nmarca:varmarca},
+	                onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                  $('spinnerP1' ).show();
+                        },
+	                  onComplete: SecargoW
+       });
+		}
+
+}
+function SecargoW(req){
+ $('spinnerP1' ).hide();
+}
+
+function ReporteCArtiExcel(){
+  varfechaini=$F('fechaini');
+  varfechafin=$F('fechafin');
+  varprovsaliente=$F('despachopor');
+  varproventrante=$F('recibidopor');
+  vararreglo=$F('elarreglo');
+  window.open("views06/reportcartiexcel.php?fechaini="+varfechaini+
+"&fechafin="+varfechafin+"&elentrante="+varproventrante+"&arreglo="+vararreglo+"&elsaliente="+varprovsaliente,"","width=900,height=500,scrollbars=YES, menubar=YES");
+}
+
+
+function Buscarelarti(){
+   varaproxnombre=$F('aroxnombre');
+   varellaborator=$F('grupolabor');
+   varelgruparti=$F('grupoarti');
+   varcobarra=$F('codbarraar');
+    if( (varaproxnombre =='')&& (varellaborator=='')  &&  (varelgruparti=='') &&  (varcobarra=='') ){
+          alert('Debe seleccionar al menos una de las opciones!!');
+     }else{
+    if( (varaproxnombre!='')&& (varellaborator!='')  &&  (varelgruparti!='') &&  (varcobarra!='') ){
+          alert('cuando busques por codigo de barra no seleciones mas opsiones');
+     }
+	  else{
+          new Ajax.Request("views05/modfarticulo1.php",
+            {
+              method:'post',
+              asynchronous: true,
+              postBody: 'nombaprox='+varaproxnombre+'&loslabora='+varellaborator+'&elgruparti='+varelgruparti+'&elcodbarra='+varcobarra,
+              onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                  if(a>=0)
+		    $('spinner' ).show();
+                  },
+		  onComplete: RepBusArti
+             });
+          }
+
+	}
+}
+
+function RepBusArti(req){
+	$('respbusarti').show();
+     $('respbusarti').innerHTML=req.responseText;
+     $('spinner').hide();
+}
+
+function Editarticulo(idinsumo){
+	new Ajax.Updater('articuloson', 'views05/modifarticulo2.php', {
+          parameters:{idarticulo:idinsumo}
+       });
+}
+function EditarticuloPre(idinsumo){
+
+	new Ajax.Updater('articuloson', 'views05/precioarticulo2.php', {
+          parameters:{idarticulo:idinsumo}
+       });
+}
+
+function Aptuarti2(){
+   varidarti=$F('elarti');
+   varactivo=$F('activo');
+   varbloq=$F('bloqueo');
+   varnunomb=$F('nombrearti');
+   varnulab=$F('laboratorio');
+   varnugruarti=$F('grupoarticulo');
+   varcobarra=$F('cobarra');
+   varnombreac=$F('nombreactual');
+   if(varactivo==null){
+     bloque='0';
+   }else{bloque='1';}
+
+    new Ajax.Request("views05/modfarticulo3.php",
+            {
+              method:'post',
+              asynchronous: true,
+              postBody: 'idartic='+varidarti+'&elbloqu='+bloque+'&nombaprox='+varnunomb+'&loslabora='+varnulab+'&elgruparti='+varnugruarti+'&elcobarra='+varcobarra+'&elnomactu='+varnombreac,
+              onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                  if(a>=0)
+		    $('spinnerP1' ).show();
+                  },
+		  onComplete: ActuArti2
+             });
+}
+function ActuArti2(req){
+     $('clientes').innerHTML=req.responseText;
+     $('spinnerP1').hide();
+}
+
+
+function Aptuarti(){
+   varidarti=$F('elarti');
+   varnunomb=$F('nombrearti');
+   varnulab=$F('laboratorio');
+   varnugruarti=$F('grupoarticulo');
+   new Ajax.Request("views05/modfarticulo3.php",
+            {
+              method:'post',
+              asynchronous: true,
+              postBody: 'nombaprox='+varnunomb+'&loslabora='+varnulab+'&elgruparti='+varnugruarti+'&idartic='+varidarti,
+              onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                  if(a>=0)
+		    $('spinner' ).show();
+                  },
+		  onComplete: ActuArti
+             });
+}
+
+function ActuArti(req){
+     $('clientes').innerHTML=req.responseText;
+     $('spinner').hide();
+}
+
+
+function BusartiOBienes(){
+
+   var losarticulos=new Array();
+   var paso=0;
+   varcajas=$F('tocajas');
+   varproseentrega=$F('proveedcom');
+   varelsaliente=$F('misdependen');
+   varcustodio=$F('eladmin');
+    for(i=1;i<varcajas;i++){
+      artiseleccion=$F('caja'+i)
+      if(artiseleccion>0){
+        losarticulos[i]=artiseleccion;
+      }
+    }
+    for(j=1;j<varcajas;j++){
+      if(losarticulos[j]>0){
+        elar=losarticulos[j];
+        paso=1;
+        cadena='r'+','+String(elar);
+       }
+    }
+    if (paso==0){
+      alert("Debe seleccionar al menos un tipo de art\u00edculo")
+    }else{
+           if(varelsaliente==""){
+              alert("Debe seleccionar la dependencia saliente");
+              }else{
+			           if(varproseentrega==""){
+                          alert("Debe seleccionar la dependencia entrante");
+			           }else{ if(varcustodio==""){
+                          alert("Debe seleccionar el custio de la dependencia");
+			           }else{
+                               new Ajax.Request("views05/orden_bienes2.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elqrecibe='+varproseentrega+'&arreglo='+$A(losarticulos)+'&elqentrega='+varelsaliente+'&elcustodio='+varcustodio,
+                                  onComplete: MostInsuOB2
+                                });
+                              }
+                             }
+                        }
+         }
+}
+
+function MostInsuOB2(req){
+     $('clientes').innerHTML=req.responseText;
+}
+
+function PProveOB(){
+	 varidarti=$F('artiprovee');
+	 varcantid=$F('cantidapedido');
+
+         if (varidarti==10000000000){
+           alert("Debe seleccionar un art\u00edculo para procesar el pedido")
+         }else{
+               if(varcantid==""){
+                 alert("El campo cantidad es necesario")
+               }else{
+                    if (isNaN(varcantid)==true){
+                      alert("El valor de la cantidad debe ser num\u00e9rico");
+                    }else{
+	                  new Ajax.Updater('totalarticulospedidos', 'views05/orden_bienes3.php', {
+	                   parameters: { nomar: varidarti,canti:varcantid },
+					   onCreate:  ResulPedido,
+                          });
+                          document.getElementById('cantidapedido').value="";
+                         }
+                      }
+            }
+}
+
+
+function guarocompraprOB(){
+	 varcoment=$F('comentpedi');
+
+	if (confirm("Desea agregar otro art\u00edculo al pedido ")) {
+
+	}else{
+          new Ajax.Updater('clientes', 'views05/orden_bienes4.php', {
+	  parameters: { coment: varcoment},
+	  onCreate: function(response) {
+          a= Ajax.activeRequestCount;
+            if(a>=0)
+	         $('spinner' ).show();
+            },
+	    onComplete: Secargo
+           });
+           }
+}
+
+function Secargo(req){
+     $('clientes').innerHTML=req.responseText;
+     $('spinner').hide();
+}
+
+function ProcesarDona(id_orden){
+    new Ajax.Updater('clientes', 'views05/pedidonativo5.php', {
+	  parameters: { elidorden: id_orden},
+	  onCreate: function(response) {
+          a= Ajax.activeRequestCount;
+            if(a>=0)
+	         $('spinner' ).show();
+            },
+	    onComplete: Secargo
+           });
+}
+function Verdonafinal(){
+	varpaso=0;
+	vartotacaja=$F('totalcaja');
+	for(i=1;i<=vartotacaja;i++){
+		   pasaranumero=$F('caja'+i);
+		   pasaranumero1=$F('cajaac'+i);
+		   pedido=Number(pasaranumero);
+		   actual=Number(pasaranumero1);
+			if(pedido>actual){
+				 varpaso=varpaso+1;
+				}
+		 }
+	if(varpaso>=1){
+		 alert('Existe '+varpaso+' art\u00edculo(s) cuya(s) cantidades a despachar son mayores a las cantidades en existencia');
+		}else{
+			ProDonafinal();
+			}
+}
+
+function ProDonafinal(){
+   vartotacaja=$F('totalcaja');
+   varidpedido=$F('elidpedido');
+
+   var lascantid=new Array();
+   var losid=new Array();
+     for(i=1;i<=vartotacaja;i++){
+		   pasaranumero=$F('caja'+i);
+		    lascantid[i]=Number(pasaranumero);
+			losid[i]=$F('cajas'+i);
+		 }
+
+		new Ajax.Request("views05/descdonativo.php",
+                               {
+                                  method:'post',
+                                  asynchronous: true,
+                                  postBody: 'elidpedido='+varidpedido+'&cantidades='+$A(lascantid)+'&idedes='+$A(losid),
+                                  onComplete: Mostdecpedidos
+                                });
+
+}
+
+function medimayor(){
+   new Ajax.Updater('opcionemedica', 'views06/medicamayor.php', {});
+}
+
+function Reportmedmayor(){
+  varfecha1=$F('Fini');
+  varfecha2=$F('Fifi');
+  varprovee=$F('proveedor');
+  varservici=$F('servicio');
+  varente=$F('ente');
+  varestaproc=$F('estaproce');
+  vartipocliente=$F('tipocliente');
+  varinsumo=$F('insumo');
+       if((varfecha1=='') || (varfecha2=='') || (varprovee=='') || (varservici=='') || (varente=='') || (varestaproc=='')){
+          alert('Todos los campos son necesarios!');
+        }else{
+               new Ajax.Updater('reportemedi', 'views06/medicamayor1.php', {
+	       parameters: { fechaini: varfecha1, fechafin: varfecha2, elproveedor: varprovee, elservicio: varservici, elente: varente, estproceso: varestaproc, tipcliente: vartipocliente, insumo: varinsumo},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinner' ).show();
+               },
+	         onComplete: SecargoM
+               });
+             }
+}
+
+function mediconti(){
+   new Ajax.Updater('opcionemedica', 'views06/medicacontinuo.php', {});
+}
+
+function Reportcontinuo(){
+  varfecha1=$F('Fini');
+  varfecha2=$F('Fifi');
+  varprovee=$F('proveedor');
+  varservici=$F('servicio');
+  varente=$F('ente');
+  varestaproc=$F('estaproce');
+  vartipocliente=$F('tipocliente');
+  vartipmedic=$F('tipomedic');
+       if((varfecha1=='') || (varfecha2=='') || (varprovee=='') || (varservici=='') || (varente=='') || (varestaproc=='')){
+          alert('Todos los campos son necesarios!');
+        }else{
+               new Ajax.Updater('reportemedi', 'views06/medicacontinuo1.php', {
+	       parameters: { fechaini: varfecha1, fechafin: varfecha2, elproveedor: varprovee, elservicio: varservici, elente: varente, estproceso: varestaproc, tipcliente: vartipocliente, tipmedi: vartipmedic},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinner' ).show();
+               },
+	         onComplete: SecargoM
+               });
+             }
+}
+
+function ImpReportcontinuo(){
+    varfecha1=$F('Fini');
+  varfecha2=$F('Fifi');
+  varprovee=$F('proveedor');
+  varservici=$F('servicio');
+  varente=$F('ente');
+  varestaproc=$F('estaproce');
+  vartipocliente=$F('tipocliente');
+  vartipmedic=$F('tipomedic');
+       if((varfecha1=='') || (varfecha2=='') || (varprovee=='') || (varservici=='') || (varente=='') || (varestaproc=='')){
+          alert('Todos los campos son necesarios!');
+        }else{
+                 url='views06/medicacontinuo2.php?fechaini='+ varfecha1+'&fechafin='+varfecha2+'&elproveedor='+varprovee+
+				        '&elservicio='+varservici+'&elente='+varente+'&estproceso='+varestaproc+'&tipcliente='+vartipocliente+
+						'&tipmedi='+vartipmedic ;
+	              imprimir(url)
+                }
+}
+
+function ImpReportmedmayor(){
+
+ varfecha1=$F('Fini');
+  varfecha2=$F('Fifi');
+  varprovee=$F('proveedor');
+  varservici=$F('servicio');
+  varente=$F('ente');
+  varestaproc=$F('estaproce');
+  vartipocliente=$F('tipocliente');
+  vartipmedic=$F('tipomedic');
+       if((varfecha1=='') || (varfecha2=='') || (varprovee=='') || (varservici=='') || (varente=='') || (varestaproc=='')){
+          alert('Todos los campos son necesarios!');
+        }else{
+                url='views06/medicamayor2.php?fechaini='+ varfecha1+'&fechafin='+varfecha2+'&elproveedor='+varprovee+
+				        '&elservicio='+varservici+'&elente='+varente+'&estproceso='+varestaproc+'&tipcliente='+vartipocliente+
+						'&tipmedi='+vartipmedic ;
+	              imprimir(url)
+             }
+}
+
+function SecargoM(req){
+     $('reportemedi').innerHTML=req.responseText;
+     $('spinner').hide();
+}
+
+function GuardarFM(div,montres,cuan,proceso){
+   varnumfac=$F('factura_'+div);
+   varnumcontrol=$F('facturacontro_'+div);
+   varmon=Number(montres)-1;
+  apunta=Number(cuan)-1;
+  apunta1=(Number(varmon)-Number(cuan))+1;
+  apunta2=apunta1+1;
+   lafacuta=$F('factura_'+div);
+   lafechaf=$F('facfinal_'+div);
+   var varmoreserva=new Array();
+   var varmoaceptado=new Array();
+   var varidgastotb=new Array();
+   var concmor;
+   var concacu;
+   var idgatb;
+   apu=0;
+        for(j=apunta2;j<=varmon;j++){
+			montr=$F('montreser_'+j);
+			monta=$F('montacept_'+j);
+			gastotb=$F('gastos_'+j);
+			if(apu==0){
+			    concmor=montr;
+				concacu=monta;
+				idgatb=gastotb;
+			}else{
+				    concmor=concmor+","+montr;
+					concacu=concacu+","+monta;
+					idgatb=idgatb+","+gastotb;
+				}
+			varmoreserva[apu]=montr;
+			varmoaceptado[apu]=monta;
+			varidgastotb[apu]=gastotb;
+			apu=apu+1;
+
+       }
+
+
+	new Ajax.Updater('quepasa', 'views06/guardlafactura.php', {
+	       parameters: { elproceso: proceso,lafechafa: lafechaf, lafactura: lafacuta,elcontro: varnumcontrol,montrese: concmor,montacep: concacu, elgastb:  idgatb}
+               });
+	document.getElementById('facturaregi_'+div).value='Factura Registrada';
+
+}
+
+
+function ponerfactura(){
+   totalfac=$F('totalfac');
+   lafactura=$F('factura_1');
+
+   paso=0;
+   for(j=2;j<=totalfac;j++){
+	   valor=document.getElementById('factura_'+j).value;
+	   fechavalor=document.getElementById('facfinal_'+j).value;
+	   if(valor==''){
+		   paso=0;
+		   } else{
+			 paso=1;
+			}
+			 if(fechavalor==''){
+		   pasof=0;
+		   } else{
+			 pasof=1;
+			}
+	}
+  if(paso==0){
+   if (confirm("Desea que el n\u00famero de factura sea el mismo en todos los procesos?")) {
+	   for(i=2;i<=totalfac;i++){
+		  document.getElementById('factura_'+i).value= lafactura;
+		}
+
+	}else{
+
+
+	   }
+   }
+}
+function ponercontrol(){
+   totalfac=$F('totalfac');
+   lafactura=$F('facturacontro_1');
+
+   paso=0;
+   for(j=2;j<=totalfac;j++){
+	   valor=document.getElementById('facturacontro_'+j).value;
+	   if(valor==''){
+		   paso=0;
+		   } else{
+			 paso=1;
+			}
+	   }
+  if(paso==0){
+   if (confirm("Desea que el n\u00famero de Control sea el mismo en todos los procesos?")) {
+	   for(i=2;i<=totalfac;i++){
+		  document.getElementById('facturacontro_'+i).value= lafactura;
+		}
+
+	}else{
+
+
+	   }
+   }
+}
+
+function ponerfecha(){
+	totalfec=$F('totalfec')-1;
+	lafecha=$F('facfinal_1');
+	vf=validarFecha(lafecha);
+     if(vf==0){
+      for(i=2;i<=totalfec;i++){
+       valorf=document.getElementById('facfinal_'+i).value;
+	   if(valorf==''){
+           paso=0;
+         }else{
+           paso=1;
+          }
+      }
+     if(paso==0){
+     if (confirm("Desea que la fecha de la factura sea el mismo en todos los procesos?")) {
+	   for(i=2;i<=totalfec;i++){
+		  document.getElementById('facfinal_'+i).value= lafecha;
+		}
+
+	}else{
+
+
+	   }
+    }
+  }
+}
+
+function validarFecha(obj) {
+  alert("El formato de la fecha debe ser AAAA-MM-DD \n Ejm. 2011-01-31");
+  todobien=0;
+  longcompleta=obj.length;
+  ano=obj.substring(0,4);
+  longiano=ano.length;
+  mes=obj.substring(5,7);
+  longimes=mes.length;
+  dia=obj.substring(8,10);
+  longidia=dia.length;
+
+     if(longcompleta=10){
+     if((longiano>4)|| (longimes>2) || (longidia>2)){
+          alert('Error en fecha!!!');
+          todobien=2;
+      }else{
+            if((mes>12)||(dia>31)){
+                  alert('Error en fecha!!!');
+                  todobien=2;
+                }
+           }
+   }else{
+        alert('Error en fecha!!!');
+        todobien=2;
+        }
+  return todobien;
+}
+
+function nuevo_ramo(){
+ $('nuevoramo').show();
+  new Ajax.Updater('nuevoramo', 'views02/ramos_polizas.php', {});
+}
+
+function cerrar_actual(){
+   $('nuevoramo').hide();
+}
+
+function cerrar_actual1(){
+   $('nuevaspropiedadespo').hide();
+}
+
+function nuevo_tipobeni(){
+  $('nuevoramo').show();
+  new Ajax.Updater('nuevoramo', 'views02/nuevo_tipobeni.php', {});
+}
+//funcion Editada ing franklin monsalve
+
+function guardarpoliza(){
+      varnuevpoliza=$F('nompoliza');
+      vardescpoliza=$F('descripoliz');
+      varramo=$F('ramos');
+      varmoneda=$F('moneda');
+	  primaper = $('formulario').getInputs('radio','opciones').find(function(radio) { return radio.checked; }).value;
+	  pogrufami= $('formulario2').getInputs('radio','poligrupo').find(function(radio) { return radio.checked; }).value;
+	  polaespe= $('formulario3').getInputs('radio','poliespera').find(function(radio) { return radio.checked; }).value;
+	  if((varnuevpoliza=='') || (vardescpoliza=='') || (varramo=='') ){
+ 	  alert('Todos los campos son necesarios!!!');
+		}else{
+			   new Ajax.Updater('poliguardad', 'views02/poliza_guardada.php', {
+	       parameters: {lapoliza: varnuevpoliza, ladescripoliza: vardescpoliza, elramo: varramo,lamoneda: varmoneda,
+		                         primperso: primaper, polizgrupo: pogrufami, polizenespera: polaespe},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: GuardoPoliza
+               });
+			}
+}
+
+function GuardoPoliza(req){
+     $('spinnerP1').hide();
+}
+
+function guardar_nuevo_ramo(){
+	varnuevoramo=$F('nuevoramop');
+	if(varnuevoramo==''){
+		alert('El campo nuevo ramo es necesario!!!!');
+		}else{
+			   new Ajax.Updater('laspolizas', 'views02/nuevoramo_guardada.php', {
+	       parameters: {nuevoramopoli: varnuevoramo},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP2' ).show();
+               },
+	         onComplete: GuardoNuevoRamo
+               });
+			}
+}
+function GuardoNuevoRamo(req){
+     $('spinnerP2').hide();
+}
+function propiedades_poliza(){
+
+   $('clientes').hide();
+   $('clientes').show();
+   nompoliza=$F('lapoliza');
+   elidpoliza= $F('idpoliza');
+   new Ajax.Updater('clientes', 'views02/propiedad_poliza.php', {
+	       parameters: {nombrepoliz: nompoliza,polizaid: elidpoliza}});
+	$('appear_pc').hide();
+}
+
+function guardapropiedadpoliza(){
+    varpropiepoli=$F('propiedapolizas');
+	varmotpropi=$F('montopropi');
+    vardescripol=$F('descripropoli');
+	varidpoliza=$F('idpolizap');
+	   if((varpropiepoli<=0) || (varmotpropi=='') || (vardescripol=='') ){
+		alert('Todos los campos son necesarios!!!');
+	   }else{
+	         if (isNaN(varmotpropi)==true){
+			  alert('El campo monto p\u00f3liza debe ser n\u00famerico');
+
+	        }else{
+		     new Ajax.Updater('laspropiedadesp', 'views02/regpropiedadpoliza.php', {
+	       parameters: {lapropipoliza: varpropiepoli, montopoli: varmotpropi, descripoli: vardescripol, idpoliza: varidpoliza},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerPPP' ).show();
+               },
+	         onComplete: GuardoProPoliza
+               });
+		   }
+		}
+}
+
+function GuardoProPoliza(req){
+     $('spinnerPPP').hide();
+}
+
+function  limpiardata(){
+	document.getElementById('propiedapolizas').value='';
+    document.getElementById('montopropi').value='';
+	document.getElementById('descripropoli').value='';
+}
+
+function nueva_pro_polizas(){
+	 $('nuevaspropiedadespo').show();
+	 nompoliza=$F('lapolizap');
+     elidpoliza= $F('idpolizap');
+	 new Ajax.Updater('nuevaspropiedadespo', 'views02/nueva_prop_poliza.php', {
+	       parameters: {lapoliza: nompoliza, idpoli: elidpoliza},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerPPP' ).show();
+               },
+	         onComplete: GuardoProPoliza
+               });
+}
+
+function guardar_nueva_propoliza(){
+
+    nomnuevapoliza=$F('nuevapropoliza');
+
+    new Ajax.Updater('', 'views02/guarda_nueva_propie.php', {
+	       parameters: {nombrenuevapoliz: nomnuevapoliza},
+	       onComplete: cerrar_propiedad_poliza
+	       });
+
+  }
+function cerrar_propiedad_poliza() {
+varpoliza=$F('lapolizap');
+varidpoliza=$F('idpolizap');
+
+  alert('La propiedad se ha registrado exitosamente!!!'+varpoliza+'-'+varidpoliza);
+  nuevpropoli(varidpoliza,varpoliza)
+
+  }
+
+function guarda_poliza_fina(){
+	$('clientes').hide();
+    $('clientes').show();
+	varfinpoli=$F('idpolizafinal');
+     new Ajax.Updater('clientes', 'views02/fin_de_poliza.php', {
+	       parameters: {lapolizaid: varfinpoli},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerPFin' ).show();
+               },
+	         onComplete: GuardoPoliFina
+               });
+}
+
+function GuardoPoliFina(req){
+     $('spinnerPFin').hide();
+}
+
+function registrarpripol(){
+	$('clientes').hide();
+	$('clientes').show();
+        varidpoliza=$F('idpolizap');
+	new Ajax.Updater('clientes', 'views02/primas_de_poliza.php', {
+	       parameters: {lapolizaid: varidpoliza},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerPFinPri' ).show();
+               },
+	         onComplete: GuardoPoliPrim
+               });
+}
+function GuardoPoliPrim(req){
+     $('spinnerPFinPri').hide();
+}
+
+function ver_polizas(){
+  $('clientes').hide();
+  $('clientes').show();
+   new Ajax.Updater('clientes', 'views02/ver_polizas.php', {});
+}
+
+function impsoli(idorden){
+   url='views05/solicituddonarep1.php?idordendona='+idorden ;
+   imprimir(url);
+
+}
+
+function impacta(idorden){
+ url='views05/iacta.php?iorddona='+idorden ;
+   imprimir(url);
+}
+
+function OrdenporNom(val){
+   new Ajax.Updater('laspolizas', 'views02/ver_polizas1.php', {
+               parameters: {opcion: val}});
+}
+
+function guardaprimapoli(){
+	varidpoliza=$F('lapoliza');
+    varparen=$F('elparentesco');
+    vardescrip=$F('descriprima');
+	varedaini=$F('edadinicio');
+	varedafin=$F('edadfin');
+	varprimanual=$F('primaunual');
+	varprisemes=$F('primsemest');
+	varpritrimes=$F('primtrimes');
+	varprimensu=$F('primmes');
+	 if(Field.present('elparentesco')==false){
+		  alert('El campo parentesco es necesario!!');
+	}else{
+		     if(Field.present('descriprima')==false){
+				alert('El campo descripci\u00f3n es necesario!!');
+				}
+			else{
+				if(Field.present('edadinicio')==false){
+					alert('El campo fecha inicio es necesario!!');
+					}else{
+				if(Field.present('edadfin')==false){
+					alert('El campo fecha fin es necesario!!');
+					}
+					else{
+						  if (isNaN(varprimanual)==true){
+                              alert("El valor de la prima anual debe ser num\u00e9rico");
+					     }else{
+							  if (isNaN(varprisemes)==true){
+								alert("El valor de la prima semestral debe ser num\u00e9rico");
+							  }else{
+								if (isNaN(varpritrimes)==true){
+								alert("El valor de la prima trimestral debe ser num\u00e9rico");
+							  }else{
+							        if (isNaN(varprimensu)==true){
+								       alert("El valor de la prima mensual debe ser num\u00e9rico");
+							        }else{
+	                               new Ajax.Updater('primaspoli', 'views02/lasprimas.php', {
+	                               parameters: {lapolizaid: varidpoliza, parentes: varparen, descrip: vardescrip, edadini: varedaini,
+												edadfin: varedafin, panual: varprimanual, psemes: varprisemes, ptrimes: varpritrimes,
+												pmensual: varprimensu},
+	                                onCreate: function(response) {
+                                    a= Ajax.activeRequestCount;
+                                    if(a>=0)
+	                                  $('spinnerPRI' ).show();
+                                    },
+	                                   onComplete: GuarPrimPoli
+                                     });
+									}
+								 }
+								}
+						  }
+						}
+					}
+				}
+		    }
+}
+function GuarPrimPoli(req){
+	  $('spinnerPRI' ).hide();
+}
+function actividprov(){
+   vartipopro=$F('tipodeprovee');
+   new Ajax.Updater('actividad', 'views03/actividadprov.php', {
+               parameters: {actprop: vartipopro}});
+}
+
+function segungen(){
+	 vartipogenero=$F('elparentesco');
+   new Ajax.Updater('paregenero', 'views03/elgeneropri.php', {
+               parameters: {elgenero: vartipogenero}});
+}
+
+function MostraFarma(tipoo){
+   varidproceso=$F('noproceso');
+   new Ajax.Updater('datafarmaex', 'views01/elifarmaexp1.php', {
+               parameters: {procesoid: varidproceso,elopera: tipoo}});
+}
+
+function montodescuento(){
+     variva=$F('ivacomp');
+      variva=(variva/100);
+      varmontogeneral=$F('montdescuent');
+      varmontosinada=$F('elmosinada');
+      vardescuento=$F('montogeneral');
+      varsumconiva=$F('montodelosiva');
+      varsumsiniva=$F('montosiniva');
+
+   if (isNaN(vardescuento)==true){
+           alert("El valor del descuento debe ser num\u00e9rico");
+   }else{
+         if(Field.present('montogeneral')==false){
+             alert('Debe calcular primero el total de la factua');
+            }else{
+                  descuento=(Number(varmontogeneral)/100);
+                  funcion1=((Number(varmontosinada))*descuento);
+                  funcion2=((Number(vardescuento))-funcion1);
+                  funciondiva=varsumconiva*descuento;
+                  funcionsiniva=varsumsiniva*descuento;
+                  totalgedesconiva1=(varsumconiva-funciondiva);
+                  totalgedesconiva2=(totalgedesconiva1*variva)+totalgedesconiva1;
+                  totalgedessiniva=(varsumsiniva-funcionsiniva);
+                  document.getElementById('tdescuento').value=Number(funcion1.toFixed(2));
+                  document.getElementById('montoglobal').value=Number(totalgedesconiva2.toFixed(2))+Number(totalgedessiniva.toFixed(2));
+                  document.getElementById('desclosiva').value=Number(funciondiva.toFixed(2));
+                  document.getElementById('desclosiniva').value=Number(funcionsiniva.toFixed(2));
+                 }
+        }
+}
+
+function BusquedadArti(){
+
+   varcodarti=$F('codartic');
+   vardependen=$F('dependencias');
+   varidinsumo=$F('insumoid');
+     if((Field.present('codartic')==true)&&(Field.present('dependencias')==true)){
+        alert('La busquedad solo se pueda hacer por una de las opciones');
+       }else{
+        if(Field.present('insumoid')==false){
+            alert('El tipo de insumo es necesario!!!');
+          }else{
+         if(Field.present('codartic')==false){
+            varopcion=$F('dependencias');
+            varbuspor='d'
+         }else{
+               varopcion=$F('codartic');
+               varbuspor='a'
+              }
+             new Ajax.Updater('muestra_articulo', 'views05/bus_articulos1.php', {
+	          parameters: {laopcion: varopcion, pabuscar: varbuspor,insumoid: varidinsumo},
+	          onCreate: function(response) {
+                  a= Ajax.activeRequestCount;
+                   if(a>=0)
+	                  $('spinnerARTI' ).show();
+                  },
+	             onComplete: GuarArtidepe
+                  });
+             }
+          }
+}
+function GuarArtidepe(req){
+	  $('spinnerARTI' ).hide();
+}
+
+function mediestadis(){
+   new Ajax.Updater('opcionemedica', 'views06/medi_estadis.php', {});
+}
+
+function Reporestadis(){
+  varfecha1=$F('Fini');
+  varfecha2=$F('Fifi');
+  varprovee=$F('proveedor');
+  varservici=$F('servicio');
+  varente=$F('ente');
+  varestaproc=$F('estaproce');
+  vartipocliente=$F('tipocliente');
+  vartipmedic=$F('codartic');
+       if((varfecha1=='') || (varfecha2=='') || (varprovee=='') || (varservici=='') || (varente=='') || (varestaproc=='')){
+          alert('Todos los campos son necesarios!');
+        }else{
+               new Ajax.Updater('reportemedi', 'views06/medi_estadis1.php', {
+	       parameters: { fechaini: varfecha1, fechafin: varfecha2, elproveedor: varprovee, elservicio: varservici, elente: varente, estproceso: varestaproc, tipcliente: vartipocliente, tipmedi: vartipmedic},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinner' ).show();
+               },
+	         onComplete: SecargoM
+               });
+             }
+}
+function estadisormeex(){
+   new Ajax.Updater('opcionemedica', 'views06/uso_estadis.php', {});
+}
+function Usoestadis(){
+  varfecha1=$F('Fini');
+  varfecha2=$F('Fifi');
+  varprovee=$F('proveedor');
+  varservici=$F('servicio');
+  varente=$F('ente');
+  vartipocliente=$F('tipocliente');
+
+       if((varfecha1=='') || (varfecha2=='') || (varprovee=='') || (varservici=='') || (varente=='') ){
+          alert('Todos los campos son necesarios!');
+        }else{
+               new Ajax.Updater('reportemedi', 'views06/uso_estadis1.php', {
+	       parameters: { fechaini: varfecha1, fechafin: varfecha2, elproveedor: varprovee,
+                              elservicio: varservici, elente: varente,
+                              tipcliente: vartipocliente },
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinner' ).show();
+               },
+	         onComplete: SecargoM
+               });
+             }
+}
+function Usoestadis1(){
+  varfecha1=$F('Fini');
+  varfecha2=$F('Fifi');
+  varprovee=$F('proveedor');
+  varservici=$F('servicio');
+  varente=$F('ente');
+  vartipocliente=$F('tipocliente');
+
+       if((varfecha1=='') || (varfecha2=='') || (varprovee=='') || (varservici=='') || (varente=='') ){
+          alert('Todos los campos son necesarios!');
+        }else{
+               url='views06/imuso_estadis1.php?fechaini='+varfecha1+'&fechafin='+varfecha2+'&elproveedor='+varprovee+
+                 '&elservicio='+varservici+'&elente='+varente+'&tipcliente='+vartipocliente;
+	        imprimir(url);
+             }
+}
+function Proveedor(){
+  vartipprove=$F('pvnp');
+   if(vartipprove==1){
+        document.getElementById('lunes1').disabled = false;
+         document.getElementById('martes1').disabled = false;
+         document.getElementById('miercoles1').disabled = false;
+         document.getElementById('jueves1').disabled = false;
+         document.getElementById('viernes1').disabled = false;
+         document.getElementById('sabado1').disabled = false;
+         document.getElementById('domingo1').disabled = false;
+   }else{
+        document.getElementById('lunes1').disabled = true;
+         document.getElementById('martes1').disabled = true;
+         document.getElementById('miercoles1').disabled = true;
+         document.getElementById('jueves1').disabled = true;
+         document.getElementById('viernes1').disabled = true;
+         document.getElementById('sabado1').disabled = true;
+         document.getElementById('domingo1').disabled = true;
+   }
+}
+function validadnume(valor){
+    if (isNaN(valor)==true){
+      alert('El campo debe ser num\u00e9rico');
+   }
+}
+function ver_entes(){
+   new Ajax.Updater('clientes', 'views02/lista_entes.php', {});
+}
+
+function ver_entes1(){
+   new Ajax.Updater('clientes', 'views02/lista_entes1.php', {});
+}
+function listaentes(){
+   varletra=$F('letra');
+   new Ajax.Updater('losentesca', 'views02/lista_entes.php', {
+	          parameters: {laletra: varletra}});
+}
+function guardarente(){
+    vnomente=$F('nomente');
+    vtipente=$F('tipo_ente');
+    vrif=$F('rifente');
+    vcorreo=$F('corrente');
+    vtelef=$F('entetelef');
+    vfax=$F('entefax');
+    vdireccion=$F('direccente');
+    vciudad=$F('ciudad');
+    vsucursal=$F('sucursal');
+    vcomisionado=$F('comisionado');
+    vfechaini=$F('Fini');
+    vffin=$F('Fifi');
+    vmontocontrato=$F('montcontrato');
+    vporcentaje=$F('porcomision');
+    vtipdescuente=$F('descuento');
+    vfpago=$F('forma_pago');
+    vnombrcontacto=$F('nombrcontacto');
+    vtelecontacto=$F('telecontacto');
+    vcorreocontacto=$F('correocontacto');
+    vdireccioncontacto=$F('direcccontacto');
+    vfechainibenefi=$F('Finiben');
+    vfechafinibenefi=$F('Fifiben');
+     vtotalcaja=$F('tocajas');
+    vpolizas=new Array();
+     posi=1;
+     for(i=1;i<vtotalcaja;i++){
+         polizactiva=$F('polizas'+i);
+           if(polizactiva>0){
+             vpolizas[posi]=polizactiva;
+             posi=posi+1;
+          }
+         }
+     if(Field.present('nomente')==false){
+      alert('El nombre del ente es necesario!!');
+    }else{
+         if(Field.present('tipo_ente')==false){
+         alert('El tipo ente es necesario!!');
+        }else{
+         if(Field.present('rifente')==false){
+          alert('El RIF del ente es necesario!!');
+         }else{
+              if(Field.present('direccente')==false){
+               alert('La direcci\u00f3n del ente es necesario!!');
+              }else{
+              if(Field.present('sucursal')==false){
+                 alert('El campo sucursal es necesario!!');
+             }else{
+              if(Field.present('comisionado')==false){
+                 alert('El campo comisionado es necesario!!');
+              }else{
+              if((Field.present('Fini')==false)||(Field.present('Fifi')==false)){
+                 alert('Los campos fecha inicial y final de contrato titular son necesaria!!');
+              }else{
+               if((Field.present('Finiben')==false)||(Field.present('Fifiben')==false)){
+                alert('Los campos fecha inicial y final de contrato beneficiario son necesaria!!');
+               }else{
+                $('enteguardado1').hide();
+                new Ajax.Request("views02/ente_guardado.php",
+                {
+                method:'post',
+                asynchronous: true,
+                postBody: 'elentenomb='+vnomente+'&eltipente='+vtipente+'&elrifente='+vrif+'&elcorrente='+vcorreo+'&eltelfente='+vtelef+
+                          '&elfaxente='+vfax+'&eldirecc='+vdireccion+'&elciudad='+vciudad+'&elsucurcont='+vsucursal+'&elcomisio='+vcomisionado+'&elinicio='+vfechaini+
+                          '&elfin='+vffin+'&elmontocon='+vmontocontrato+'&elporcentaj='+vporcentaje+'&eltpdescuento='+vtipdescuente+'&elformpago='+vfpago+
+                          '&elnomcotacto='+vnombrcontacto+'&eltlfcontacto='+vtelecontacto+'&elcorrcontac='+vcorreocontacto+'&eldirrcontacto='+vdireccioncontacto+
+                          '&arrpoliza='+vpolizas+'&elfechiniben='+vfechainibenefi+'&elfechfinben='+vfechafinibenefi,
+                onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+                                    $('spinnerP1' ).show();
+                             },
+                                   onComplete: FinEnte
+             });
+                }
+               }
+              }
+              }
+              }
+              }
+            }
+        }
+
+}
+function FinEnte(req){
+    $('enteguardado').innerHTML=req.responseText;
+    $('spinnerP1').hide();
+}
+function guardarELENTE(){
+    vnomente=$F('nomente');
+    vtipente=$F('tipo_ente');
+    vrif=$F('rifente');
+    vcorreo=$F('corrente');
+    vtelef=$F('entetelef');
+    vfax=$F('entefax');
+    vdireccion=$F('direccente');
+    vciudad=$F('ciudad');
+    vselect=$('tipo_ente')[$('tipo_ente').selectedIndex].text;
+
+    if(Field.present('nomente')==false){
+        alert('El nombre del ente es necesario!!');
+      }else{
+            if(Field.present('rifente')==false){
+                alert('El RIF del ente es necesario!!');
+              }else{
+                     if(Field.present('direccente')==false){
+                        alert('La direcci\u00f3n del ente es necesario!!');
+                      }else{
+                        new Ajax.Updater('clientes', 'views02/fin_delente.php', {
+	                  parameters: { elentenomb: vnomente,tipentees: vtipente, rifentes: vrif,
+                                        corrente: vcorreo, telefo1: vtelef,
+                                        fax1: vfax, dirccente: vdireccion, ciudadente: vciudad, elnotipente: vselect  },
+	                  onCreate: function(response) {
+                          a= Ajax.activeRequestCount;
+                          if(a>=0)
+	                    $('spinnerP1' ).show();
+                          },
+	                    onComplete: SecarPN1
+                        });
+                       }
+                   }
+           }
+
+}
+
+function validarcampo(campo){
+ if(campo=='ente'){
+  if ((Field.present('nomente')==false)){
+         $('nomdelente').update('El campo Nombre del ente es necesario!!');
+   }else{
+      $('nomdelente').update();
+         }
+  }
+  if(campo=='rif'){
+  if ((Field.present('rifente')==false)){
+         $('rifdelente').update('El campo RIF es necesario!!');
+   }else{
+      $('rifdelente').update();
+         }
+  }
+ if(campo=='direccion'){
+  if ((Field.present('direccente')==false)){
+         $('dirente').update('El campo direcci\u00f3n es necesario!!');
+   }else{
+      $('dirente').update();
+         }
+  }
+}
+function Excelp(idpedido){
+    varpedi=idpedido;
+    window.open("views05/pedidoexcel.php?numpedido="+idpedido,"","width=900,height=500,scrollbars=YES, menubar=YES");
+}
+
+function Guardarchivo(){
+new Ajax.Request("views05/montar_archivo1.php", { method:'post' });
+}
+
+function Precioarti(){
+   varaproxnombre=$F('aroxnombre');
+   varellaborator=$F('grupolabor');
+   varelgruparti=$F('grupoarti');
+
+    if( (varaproxnombre!='')&& (varellaborator!='')  &&  (varelgruparti!='') ){
+          alert('Solo debe escoger una de las opciones');
+     }
+	  else{
+		  if( (varaproxnombre!='')&& (varellaborator!='')  ){
+	    alert('Solo debe escoger una de las opciones');
+	   }else{
+	     if((varaproxnombre!='')&& (varelgruparti!='')  ){
+	    alert('Solo debe escoger una de las opciones');
+	    }else{
+			if((varellaborator!='')&& (varelgruparti!='')  ){
+				  alert('Solo debe escoger una de las opciones');
+			}else{
+          new Ajax.Request("views05/precioarticulo1.php",
+            {
+              method:'post',
+              asynchronous: true,
+              postBody: 'nombaprox='+varaproxnombre+'&loslabora='+varellaborator+'&elgruparti='+varelgruparti,
+              onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                  if(a>=0)
+		    $('spinner' ).show();
+                  },
+		  onComplete: RepBusArti
+             });
+          }
+		}
+		}
+		}
+
+}
+function CambiarPre(elinsumo,depende,preactual,elmonto){
+ varnuemonto=elmonto;
+  if (isNaN(varnuemonto)==true){
+      alert("El valor Monto nuevo debe ser num\u00e9rico");
+  }else{
+                Element.hide('cambiapre');
+                new Ajax.Updater('cambiaprecio', 'views05/precioarticulo3.php', {
+	        parameters: { idarticulo: elinsumo, ladependencia: depende, nuevomonto: varnuemonto},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinner1' ).show();
+               },
+	         onComplete: SecarPN
+               });
+
+       }
+}
+
+function SecarPN(req){
+   $('spinner1').hide();
+}
+
+function startUpload(){
+      document.getElementById('f1_upload_process').style.visibility = 'visible';
+      document.getElementById('f1_upload_form').style.visibility = 'hidden';
+      return true;
+}
+
+function stopUpload(success){
+      var result = '';
+      if (success == 1){
+         result = '<span class="msg">El archivo se ha cargado exitosamente!<\/span><br/><br/>';
+      }
+      else {
+         result = '<span class="emsg">No se pudo cargar el archivo!<\/span><br/><br/>';
+      }
+      document.getElementById('f1_upload_process').style.visibility = 'hidden';
+      document.getElementById('f1_upload_form').innerHTML = result + '<label>File: <input name="myfile" type="file" size="30" /><\/label><label><input type="submit" name="submitBtn" class="sbtn" value="Upload" /><\/label>';
+      document.getElementById('f1_upload_form').style.visibility = 'visible';
+      return true;
+}
+
+function guardaprimas(){
+  elparentesco=$F('elparentesco');
+  //arrays
+  descrprima=0;
+  edadini1=0;
+  edadfin1=0;
+  lprimanual=0;
+  lprimsemes=0;
+  lprimtri=0;
+  lprimmens=0;
+  cuantosr=$F('cuantosreg');
+  activarreg=0;
+  for(i=1;i<=cuantosr;i++)
+    { desc=$F('descriprima_'+i);
+      edini=$F('edadinicio_'+i);
+      edfin=$F('edadfin_'+i);
+      primanu=$F('primaunual_'+i);
+      primsem=$F('primsemest_'+i);
+      primtri=$F('primtrimes_'+i);
+      primmen=$F('primmes_'+i);
+      if((Field.present('primaunual_'+i)==false)&&(Field.present('primsemest_'+i)==false)
+          &&(Field.present('primtrimes_'+i)==false)&&(Field.present('primmes_'+i)==false)){
+           activarreg++;
+          }
+      if(i==1){
+        descrprima=desc;
+        edadini1=edini;
+        edadfin1=edfin;
+        lprimanual=primanu;
+        lprimsemes=primsem;
+        lprimtri=primtri;
+        lprimmens=primmen;
+
+      }else {
+        descrprima=descrprima+','+desc;
+        edadini1=edadini1+','+edini;
+        edadfin1=edadfin1+','+edfin;
+        lprimanual=lprimanual+','+primanu;
+        lprimsemes=lprimsemes+','+primsem;
+        lprimtri=lprimtri+','+primtri;
+        lprimmens=lprimmens+','+primmen;
+      }
+  }
+
+  laidpoliza=$F('elidpoliza');
+
+   if((Field.present('elparentesco')==false)){
+     alert('El campo parentesco es necesario!!');
+   }
+   else{
+     if(activarreg>=1){
+          alert('Al menos debe escojer un periodo de la prima!!');
+         }else{
+             new Ajax.Updater('lasprimaspoliza', 'views02/primascargada.php', {
+	        parameters: { parentes: elparentesco, primadescr: descrprima, iniedad: edadini1, finedad: edadfin1,anualpri: lprimanual,
+                              semespri: lprimsemes,
+                              trimpri: lprimtri, menspri: lprimmens,idpoliza: laidpoliza},
+	       onCreate: function(response) {
+               a=Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: SecarPN1
+               });
+                  document.getElementById('elparentesco').value='';
+                  $('clientes').scrollTop();
+                /* document.getElementById('primaunual').value="";
+                 document.getElementById('primsemest').value="";
+                 document.getElementById('primtrimes').value="";
+                 document.getElementById('primmes').value="";
+                 document.getElementById('descriprima').value="";
+
+                 document.getElementById('edadinicio').value='';
+                 document.getElementById('edadfin').value='';*/
+          }
+    }
+
+}
+function SecarPN1(req){
+   $('spinnerP1').hide();
+}
+
+function guarda_primas_final(){
+    $('clientes').hide();
+    $('clientes').show();
+    varfinpoli=$F('finpoliza');
+     new Ajax.Updater('clientes', 'views02/fin_de_primas.php', {
+	       parameters: {lapolizaid: varfinpoli},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerPFin' ).show();
+               },
+	         onComplete: GuardoPoliFina
+               });
+}
+///REGRESAR A PAGINA DE seleccion DE PRIMAS polizas
+function primasSelecionPolizas(elidpoli){
+    $('clientes').hide();
+  	$('clientes').show();
+          varidpoliza=elidpoli;
+          new Ajax.Updater('clientes', 'views02/modifpripoli.php', {
+         			parameters: { polizaid: varidpoliza},
+         			});
+              buslapoliza(elidpoli);
+}
+
+function titubenestado(){
+   varente=$F('elente');
+   vartpclien=$F('tipcliente');
+   varestclien=$F('estacliente');
+   varfech1=$F('Fini');
+   varfech2=$F('Fifi');
+     if ((Field.present('Fini')==false)){
+         alert('El campo fecha inicio es necesario!!!');
+     }else{
+      if ((Field.present('Fifi')==false)){
+         alert('El campo fecha final es necesario!!!');
+       }else{
+          if ((Field.present('tipcliente')==false)){
+           alert('El campo tipo de cliente es necesario!!!');
+          }else{
+             if ((Field.present('estacliente')==false)){
+               alert('El campo estado cliente es necesario!!!');
+             }else{
+                $('mostatitubene').show();
+
+                new Ajax.Updater('mostatitubene', 'views06/titubeniestados1.php', {
+	        parameters: { lfe1: varfech1,lfe2: varfech2, lente: varente,
+                              ltipclien: vartpclien,lestclien: varestclien},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinner1' ).show();
+               },
+	         onComplete: SecarPN
+               });
+                 }
+           }
+        }
+     }
+}
+
+
+function validclientetitular(){
+    varcedula=$F('cliencedula1');
+    varnombre=$F('cliennombre1');
+    varcorreo=$F('cliencorreo');
+    varapellido=$F('clienapellido1');
+    vargenero=$F('cliengenero1');
+    varteleha=$F('clientfn1');
+    varfenaci=$F('fnaci1');
+    varciud=$F('clienciudad1');
+    vardire=$F('cliendirr1');
+    varcoment=$F('cliencoment1');
+
+      var regex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+
+     if((Field.present('cliennombre1')==false)){
+       alert('El campo nombre es necesario!!!');
+     }else{
+       if((Field.present('clienapellido1')==false)){
+       alert('El campo apellido es necesario!!!');
+       }else{
+          if((Field.present('clienciudad1')==false)){
+           alert('El campo ciudad es necesario!!!');
+          }else{
+             if((Field.present('cliendirr1')==false)){
+              alert('El campo direcci\u00f3n es necesario!!!');
+             }else{
+                if(vargenero<0){
+                  alert('El campo genero es necesario!!!');
+                  }else{
+                        if (varcorreo==""){
+                          alert('El correo es Obligatorio')
+                        }else{
+                             if(!regex.test(varcorreo)){
+                              alert('Revisar correo');
+                             }
+                              else{
+                    $('titularboton').hide();
+                    new Ajax.Updater('clientes', 'views01/finclientitu.php', {
+	            parameters: {lacedula: varcedula, lanombre: varnombre, lacorreo:varcorreo, laapelli: varapellido, lagenero: vargenero, latelefono: varteleha,
+                                 lafenaci: varfenaci, laciudad: varciud, ladirecc: vardire, lacoment: varcoment},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerPT' ).show();
+                    },
+	            onComplete: GuardoCLTITU
+                   });
+                  }
+                }
+               }
+              }
+           }
+        }
+     }
+}
+
+function GuardoCLTITU(req){
+     $('spinnerPT').hide();
+}
+function modifelente(elente){
+
+    new Ajax.Updater('clientes', 'views02/modifcente.php', {
+	        parameters: { elidelente: elente},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: Modfente
+               });
+}
+function Modfente(req){
+  $('spinnerP1').hide();
+}
+function modiffinelennte(){
+    vnomente=$F('nomente');
+    vtipente=$F('tipo_ente');
+    vrif=$F('rifente');
+    vcorreo=$F('corrente');
+    vtelef=$F('entetelef');
+    vfax=$F('entefax');
+    vdireccion=$F('direccente');
+    vciudad=$F('ciudad');
+    vsucursal=$F('sucursal');
+    vcomisionado=$F('comisionado');
+    vfechaini=$F('Fini');
+    vffin=$F('Fifi');
+    vmontocontrato=$F('montcontrato');
+    vporcentaje=$F('porcomision');
+    vtipdescuente=$F('descuento');
+    vfpago=$F('forma_pago');
+    vnombrcontacto=$F('nombrcontacto');
+    vtelecontacto=$F('telecontacto');
+    vcorreocontacto=$F('correocontacto');
+    vdireccioncontacto=$F('direcccontacto');
+    vfechainibenefi=$F('Finiben');
+    vfechafinibenefi=$F('Fifiben');
+    vidente=$F('iddelente');
+     $('enteguardado1').hide();
+
+     new Ajax.Request("views02/ente_guardado1.php",
+                {
+                method:'post',
+                asynchronous: true,
+                postBody: 'elentenomb='+vnomente+'&eltipente='+vtipente+'&elrifente='+vrif+'&elcorrente='+vcorreo+'&eltelfente='+vtelef+
+                          '&elfaxente='+vfax+'&eldirecc='+vdireccion+'&elciudad='+vciudad+'&elsucurcont='+vsucursal+'&elcomisio='+vcomisionado+'&elinicio='+vfechaini+
+                          '&elfin='+vffin+'&elmontocon='+vmontocontrato+'&elporcentaj='+vporcentaje+'&eltpdescuento='+vtipdescuente+'&elformpago='+vfpago+
+                          '&elnomcotacto='+vnombrcontacto+'&eltlfcontacto='+vtelecontacto+'&elcorrcontac='+vcorreocontacto+'&eldirrcontacto='+vdireccioncontacto+
+                          '&elfechiniben='+vfechainibenefi+'&elfechfinben='+vfechafinibenefi+'&elenteid='+vidente,
+                onCreate: function(response) {
+                                  a= Ajax.activeRequestCount;
+                                  if(a>=0)
+                                    $('spinnerP1' ).show();
+                             },
+                                   onComplete: FinEnte
+             });
+}
+function modifpoliza(lapoliz,nompoliz,intermediario){
+  new Ajax.Updater('clientes', 'views02/modipolizas.php', {
+	        parameters: { polizaid: lapoliz, lapoli: nompoliz, esinter: intermediario},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: Modfente
+               });
+}
+function nuevpropoli(argument,nompoli){
+  new Ajax.Updater('clientes', 'views02/propiedad_poliza1.php', {
+	        parameters: { polizaid: argument,nombrepoliz: nompoli},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: Modfente
+               });
+}
+
+function guardacpropoli(lapropiedad,eldiv){
+ var nuevmonto=$F('caja'+eldiv);
+ var nuevadesc=$F('cajat'+eldiv);
+ new Ajax.Updater('eldiv'+eldiv, 'views02/nuevapropiedad.php', {
+	          parameters: {montonuevo: nuevmonto,idpropiedad: lapropiedad,nudescri:nuevadesc}});
+}
+
+function modifpropoli(){
+  var idpoliza=$F('lapoliza');
+  var nopoli=$F('nombpoliza');
+  new Ajax.Updater('clientes', 'views02/modifpropoliza.php', {
+	        parameters: { polizaid: idpoliza,nombrepoliz: nopoli},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: Modfente
+               });
+}
+
+function buslapoliza(p=0){
+
+  if(p==0)
+    {varidpoliz=$F('lapoliz');}
+  else
+  {varidpoliz=p; alert('Carga de primas..');}
+
+    new Ajax.Updater('primapoliza', 'views02/modifpripoli1.php', {
+	        parameters: { polizaid: varidpoliz},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: Modfpripol
+               });
+}
+function Modfpripol(req){
+  $('spinnerP1' ).hide();
+}
+function CamestproFac(fe1,fe2,prov,sucu,estpro,servi){
+             new Ajax.Updater('lasfacturas', 'views06/camfactura.php', {
+	        parameters: { rangfe1: fe1,rangfe2:fe2,cualprove:prov,fasucursal:sucu,estado:estpro,elservi:servi },
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerPPP' ).show();
+               },
+	         onComplete: Modffact
+               });
+}
+function Modffact(req){
+  $('spinnerPPP' ).hide();
+}
+function nuevprima(elidpoli){
+        $('clientes').hide();
+	$('clientes').show();
+        varidpoliza=elidpoli;
+	new Ajax.Updater('clientes', 'views02/primas_de_poliza1.php', {
+	       parameters: {lapolizaid: varidpoliza},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerPFin' ).show();
+               },
+	         onComplete: ModPrimPol
+               });
+              $('clientes').scrollTo(0);
+}
+
+function ModPrimPol(req){
+   $('spinnerPFin' ).hide();
+}
+function  ReportContArti(){
+	  url='views05/codarticontrol.php' ;
+	        imprimir(url);
+}
+function busfacturprove(){
+  varprocli=$F('procli');
+  varproper=$F('proper');
+
+   if((varprocli>0) && (varproper>0)){
+      alert("Solo debe seleccionar un tipo de proveedor");
+   }else{
+      new Ajax.Updater('lasfacturas', 'views05/contrfactura1.php', {
+	       parameters: {provclin: varprocli, propers: varproper},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+     }
+}
+function ContFactura(req){
+ $('spinnerP1' ).hide();
+}
+function ProceCFac2(){
+  fact=$F('nuevonumfac');
+  cont=$F('controlfac');
+  fecha=$F('nuefechafac');
+  orden=$F('elcontf');
+  new Ajax.Updater('finfacturas', 'views05/contrfactura3.php', {
+	       parameters: {factunum: fact, faccontr: cont, facfecha: fecha,laorden: orden},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+}
+function datfispp(){
+  lacedup=$F('cedpnu');
+  new Ajax.Updater('fiscales', 'views03/datofiscales.php', {
+	          parameters: {cedulap: lacedup}});
+}
+
+/*modificacion 02/2018 ing franklin monsalve*/
+function gucprovefiscal(){
+	//guardar mod. de datos fiscales proveedor persona
+  tcedula=$F('cedprop');
+  tnombre=$F('nompnuea');
+  tapellido=$F('appepnua');
+  tchenom=$F('cheqanom');
+  trifche=$F('cheqrifa');
+  tdiche=$F('cheqdir');
+  tidper=$F('idpepro');
+  telf=$F('telefono');
+  email=$F('correo');
+       new Ajax.Updater('fiscalguardado', 'views03/datosficales1.php', {
+	       parameters: {pcedula: tcedula, pnombre: tnombre, papell: tapellido,pche: tchenom, prif: trifche,pdir: tdiche,pridp: tidper,telf: telf,correo: email},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+}
+//fin mod.datos fiscales
+
+function salifiscal(){
+   $('fiscales').hide();
+}
+function calcularnom(){
+   varfe1=$F('Fini');
+   varfe2=$F('Fifi');
+   varente=$F('lente');
+   varsubd=$F('lasubdivi');
+   varesta=$F('lestat');
+   varcods=$F('cods');
+   varcodn=$F('codn');
+   varfpago=$F('forma_pago');
+   varptprims=$F('cobprs');
+   varptprimn=$F('cobprn');
+     if(varptprimn==1){
+       cobprtitular=1;
+     }else{
+         cobprtitular=0;
+       }
+     if(varcods==1){
+       concod=1;
+     }else{
+       concod=0;
+      }
+     if((Field.present('Fini')==false)){
+       alert("El campo fecha inicio es necesario!!");
+     }else{
+        if((Field.present('Fifi')==false)){
+            alert("El campo fecha final es necesario!!");
+        }else{
+            if((Field.present('lente')==false)){
+              alert("El ente es necesario!!");
+            }else{
+               if((Field.present('lasubdivi')==false)){
+                 alert("La sub-divisi\u00f3n es necesaria!!");
+               }else{
+                  if((Field.present('lestat')==false)){
+                    alert("El estatus es necesario!!");
+                  }else{
+                          url='views02/nomina1.php?lafecha1='+varfe1+'&lafecha2='+varfe2+'&laente='+varente+'&lasubdi='+varsubd+
+	        '&elestatu='+varesta+'&lacodig='+concod+'&lapago='+varfpago+'&pritcobro='+cobprtitular ;
+	        imprimir(url);
+                       }
+                }
+             }
+         }
+     }
+}
+function calcularnom1(){
+   varfe1=$F('Fini');
+   varfe2=$F('Fifi');
+   varente=$F('lente');
+   varsubd=$F('lasubdivi');
+   varesta=$F('lestat');
+   varcods=$F('cods');
+   varcodn=$F('codn');
+   varfpago=$F('forma_pago');
+   if(varptprimn==1){
+       cobprtitular=1;
+     }else{
+         cobprtitular=0;
+       }
+
+     if(varcods==1){
+       concod=1;
+     }else{
+       concod=0;
+      }
+     if((Field.present('Fini')==false)){
+       alert("El campo fecha inicio es necesario!!");
+     }else{
+        if((Field.present('Fifi')==false)){
+            alert("El campo fecha final es necesario!!");
+        }else{
+            if((Field.present('lente')==false)){
+              alert("El ente es necesario!!");
+            }else{
+               if((Field.present('lasubdivi')==false)){
+                 alert("La sub-divisi\u00f3n es necesaria!!");
+               }else{
+                  if((Field.present('lestat')==false)){
+                    alert("El estatus es necesario!!");
+                  }else{
+                          url='views02/nomina2.php?lafecha1='+varfe1+'&lafecha2='+varfe2+'&laente='+varente+'&lasubdi='+varsubd+
+	        '&elestatu='+varesta+'&lacodig='+concod+'&lapago='+varfpago+'&pritcobro='+cobprtitular ;
+	        imprimir(url);
+                       }
+                }
+             }
+         }
+     }
+}
+function cualnomente(){
+   var mySelect = document.getElementById("lente");
+  var text = mySelect.options[mySelect.selectedIndex].text;
+ varidente=$F('lente');
+
+              new Ajax.Updater('lasnominasente', 'views02/hnomina1.php', {
+	       parameters: {elente: varidente,nomente: text},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+}
+function RepNomina(lanomina,nente,pago,codigo){
+  pagtituno=$F('cobprn');
+  pagtitusi=$F('cobprs');
+  if(pagtituno==1){
+       pagti=1;
+    }else{
+       pagti=0;
+      }
+    url='views02/hnomina2.php?nomina='+lanomina+'&titpago='+pagti+'&nombe='+nente+'&tipago='+pago+'&concodi='+codigo;
+	        imprimir(url);
+
+
+}
+function RepNomina1(lanomina,nente,pago,codigo,comentario){
+  pagtituno=$F('cobprn');
+  pagtitusi=$F('cobprs');
+    if(pagtituno==1){
+       pagti=1;
+    }else{
+       pagti=0;
+      }
+    if(pagtituno==1){
+       pagti=1;
+    }else{
+       pagti=0;
+      }
+    url='views02/hnomina3.php?nomina='+lanomina+'&titpago='+pagti+'&nombe='+nente+'&tipago='+pago+'&concodi='+codigo+'&comentario='+comentario;
+     imprimir(url);
+
+}
+
+/* **** Inicion de moficicar nomina carlos ivan **** */
+
+function mod_com_nom(id_nomina,i,elente)
+{
+
+modificar='1';
+	if ($F('comenope_'+i)==false)
+	{
+		alert ("El Comentario es Obligatorio");
+		}
+		else
+		{
+new Ajax.Request("views02/hnomina1.php",
+    {
+       method:'post',
+       asynchronous: true,
+       postBody:
+
+
+		'id_nomina='+id_nomina+'&comentario='+$F('comenope_'+i)+'&modificar='+modificar+'&elente='+elente,
+	onComplete: mos_bus_com_nom
+
+    });
+	var1 = document.getElementById('lasnominasente');
+		var1.innerHTML = '<img src="../public/images/esperar.gif"><br><span  class="titulos">Cargando...</span>';
+}
+
+function mos_bus_com_nom(req){
+
+  $('lasnominasente').innerHTML= req.responseText;
+
+}
+}
+
+/* **** fin de moficicar nomina carlos ivan **** */
+
+
+/* **** Eliminar por ser mal cargada nomina carlos ivan **** */
+
+function eli_nom(id_nomina,i,elente)
+{
+
+eliminar='1';
+	if ($F('comenope_'+i)==false)
+	{
+		alert ("El Comentario es Obligatorio");
+		}
+		else
+		{
+new Ajax.Request("views02/hnomina1.php",
+    {
+       method:'post',
+       asynchronous: true,
+       postBody:
+
+
+		'id_nomina='+id_nomina+'&comentario='+$F('comenope_'+i)+'&eliminar='+eliminar+'&elente='+elente,
+	onComplete: mos_eli_com_nom
+
+    });
+	var1 = document.getElementById('lasnominasente');
+		var1.innerHTML = '<img src="../public/images/esperar.gif"><br><span  class="titulos">Cargando...</span>';
+}
+
+function mos_eli_com_nom(req){
+
+  $('lasnominasente').innerHTML= req.responseText;
+
+}
+}
+
+/* **** Eliminar por ser mal cargada nomina carlos ivan **** */
+
+
+
+
+function modifdaclien(){
+ varcedula=$F('cedulclien');
+ new Ajax.Updater('nuevosdatclien', 'views01/datosbasico1.php', {
+	       parameters: {lacedula: varcedula},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+}
+
+function modifdaclien1(){
+ varcedula=$F('cedulclien');
+ new Ajax.Updater('nuevosdatclien', 'views02/titularente1.php', {
+	       parameters: {lacedula: varcedula},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+}
+
+function editarbasicos(){
+  varidcliente=$F('idclien');
+  varcedula=$F('cedclien');
+  varnombre=$F('cliennombre');
+  varcorreo=$F('correoclien');
+  varapelli=$F('clienapellido');
+  vartele1=$F('telefh');
+  vartele2=$F('telefc');
+  vardirecc=$F('cliendirr');
+  
+    var regex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+
+    if(!regex.test(varcorreo)){
+      alert('Revisar correo');
+    }else{
+
+  $('datosbasicos' ).hide();
+  new Ajax.Updater('repclien', 'views01/datosbasico2.php', {
+	       parameters: {elidclien:varidcliente,lacedula: varcedula,elcorreo:varcorreo,elnombr: varnombre, elapelli: varapelli,tehab: vartele1, tecelu: vartele2, ladirecc:  vardirecc},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+   }
+}
+
+function titucambiente(){
+  var paso=3;
+  varienttitu=$F('lente');
+  lacedulc=$F('cedulclien');
+  posicion=varienttitu.indexOf('@');
+  longitud=varienttitu.length;
+  enteactual=varienttitu.substring(posicion+1,longitud);
+  titularactual=varienttitu.substring(0,posicion);
+  nuevoente=$F('nuevente');
+  psp1=$F('pagos1');
+  psp2=$F('pagos2');
+  elcomen=$F('comentitu');
+
+    if(psp1==1){
+      pasapago=1;
+     }else{
+        pasapago=2;
+      }
+  psbe1=$F('benef1');
+  psbe2=$F('benef2');
+    if(psbe1==1){
+        pasarben=1;
+     }else{
+          pasarben=2;
+        }
+
+
+
+      if((Field.present('comentitu')==false)){
+        alert('El campo comentario es necesario!!!')
+      }else{
+
+              varpoliza=$F('cajafinal');
+              acumu=0;
+              for (i=0;i<varpoliza;i++){
+              varcober=$F('caja_'+i);
+                  if (varcober>0){
+                     varfinal=varcober;
+                     acumu++;
+
+                  }
+            }
+          if(acumu>1){
+            alert('Solo debe seleccionar UNA p\u00f3liza!!!');
+          }else{
+          new Ajax.Updater('clientes', 'views02/titularente2.php', {
+	       parameters: {elentactual:enteactual,eltitular: titularactual,elnuevoente: nuevoente, gasttitu: pasapago,losbenfi: pasarben,
+                            elcomen: elcomen, lapoliz: varfinal,ceduclien: lacedulc},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+          }
+
+    }
+}
+
+function verpoliza1(){
+     new Ajax.Request("views01/polizastitu.php",
+       {
+                method:'post',
+                asynchronous: true,
+                postBody: 'elenteti='+$F('nuevente'),
+                onComplete: mostraEnte
+       });
+
+}
+
+function paraelparentesco(elgeneroes){
+    new Ajax.Updater('elotroparentesco', 'views01/losfamiliares.php', {
+	          parameters: {paragenero: elgeneroes}});
+}
+function VertipProv(valor){
+  $('elprovee').hide();
+  new Ajax.Updater('elprovee1', 'views05/losprovedoree.php', {
+	          parameters: {paraprovee: valor}});
+}
+
+function ProveeNotC(){
+   res = $LF('proveedor1');
+   varelprove=$F('tipoprovee');
+        if(varelprove==''){
+           alert('Debe seleccionar al menos un proveedor!!!');
+        }else{
+            new Ajax.Updater('lasfacturasprovee', 'views05/lasfacturaprov.php', {
+	       parameters: {elidprovee: varelprove},
+	       onCreate: function(response) {
+               a= Ajax.activeRequestCount;
+               if(a>=0)
+	         $('spinnerP1' ).show();
+               },
+	         onComplete: ContFactura
+               });
+         }
+}
+
+function $LF(element) {
+    return $$('input[type=radio][name=' + element + ']').find(function(element) { return element.checked }).value
+}
+
+function GuardNomMarca(){
+  varcomentario=$F('comentpedi');
+  varnunotaente=$F('notaentregas');
+  varcajadescu=$F('totcajaentre');
+  varcajvalida=$F('totcajvalid');
+  varordcompra=$F('ordcompra');
+  varnumcontro=$F('notacontrol');
+  var vararregldesc="";
+  var vararreglvali="";
+      for(i=1;i<=varcajadescu;i++){
+           valordescu=$F('caja'+i);
+           varvalid=$F('vali'+i);
+           if((valordescu>0) && (varvalid>0)){
+               if(i==1){
+               vararregldesc=valordescu;
+               vararreglvali=varvalid;
+               }else{
+                 vararregldesc=valordescu+','+vararregldesc;
+                 vararreglvali=varvalid+','+vararreglvali;
+                }
+           }
+      }
+       if((Field.present('notaentregas')==false)){
+        alert('El n\u00famero de la nota de credito es necesario!!!')
+      }else{
+          if((Field.present('notacontrol')==false)){
+           alert('El n\u00famero de control de la nota de credito es necesario!!!')
+           }else{
+                if((Field.present('comentpedi')==false)){
+                  alert('El comentario es necesario!!!')
+                }else{
+                 new Ajax.Updater('repnotacre', 'views06/lanotacre.php', {
+	          parameters: {arregldes: vararregldesc, arreglvalid: vararreglvali, numnota: varnunotaente, comentncre: varcomentario,
+                               lacompraid: varordcompra, controcre: varnumcontro},
+                   onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                   if(a>=0)
+	             $('spinnerP1' ).show();
+                  },
+	          onComplete: ContFactura
+                });
+               }
+              }
+      }
+}
+function guardapregunta(){
+  varpregunta=$F('preguntasalu');
+  varidpregunt=$F('idpregunta');
+  if((Field.present('preguntasalu')==false)){
+                  alert('Es necesario una pregunta!!!')
+                }else{
+                 new Ajax.Updater('laspreguntas', 'views02/laspreguntas.php', {
+	          parameters: {pregunta: varpregunta,lapregunid: varidpregunt},
+                   onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                   if(a>=0)
+	             $('spinnerP1' ).show();
+                  },
+	          onComplete: ContFactura
+                });
+               }
+ document.getElementById('preguntasalu').value ="";
+}
+
+function modifpregunta(idpregunt,pregunta){
+  document.getElementById('preguntasalu').value =pregunta;
+  document.getElementById('idpregunta').value =idpregunt;
+}
+
+function imprdeclaracion(elnombre,lacedula,tipo){
+    url='views01/impdeclaracionsalu.php?vnombre='+elnombre+'&vcedula='+lacedula+'&vcliente='+tipo;
+    imprimir(url);
+}
+
+function BuscaClienDS(){
+   vcedula=$F('ceduclien');
+    if((Field.present('ceduclien')==false)){
+      alert('El campo c\u00e9dula es necesario!!!');
+     }else{
+         new Ajax.Updater('datosclienDS', 'views02/clienteds.php', {
+	          parameters: {ceduclien: vcedula},
+                   onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                   if(a>=0)
+	             $('spinnerP1' ).show();
+                  },
+	          onComplete: ContFactura
+                });
+     }
+}
+
+function GuardaDS(){
+   vcedula=$F('ceduclien');
+   pasotb='';
+   lasrepuestas=0;
+
+    if((Field.present('ceduclien')==false)){
+      alert('El campo c\u00e9dula es necesario!!!');
+     }else{
+        cuantitu=$F('cuantitu');
+        cuanbenf=$F('cuanbenf');
+        if(cuantitu>=1){
+          vidtitular=$LF('combo');
+          pasotb=vidtitular+'-T';
+        }
+        if(cuanbenf>=1){
+          vidbenfici=$LF('combob');
+          pasotb=vidbenfici+'-B';
+        }
+
+        vcuantpre=$F('cuantpregun');
+        for(i=1;i<=vcuantpre;i++){
+            estadopregunta=document.getElementById('combo'+i).checked;
+               valopregunta=$LF('combo'+i);
+               if(i==1){
+                 lasrepuestas=valopregunta;
+               }else{
+                  lasrepuestas=valopregunta+','+lasrepuestas;
+                }
+
+        }
+
+    }if(lasrepuestas==0){
+      alert('Debe seleccionar al menos una pregunta!!!');
+    }else{
+           new Ajax.Updater('declaraciongene', 'views02/declarafinal.php', {
+	          parameters: {tipousuario: pasotb, laspregun: lasrepuestas},
+                   onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                   if(a>=0)
+	             $('spinnerP2' ).show();
+                  },
+	          onComplete: DecSalud
+                });
+       }
+}
+
+function DecSalud(req){
+ $('spinnerP2').hide();
+}
+function ModificarDS(elidtitular){
+   new Ajax.Updater('modifpregunta', 'views02/mod_preguntas.php', {
+	          parameters: {titular: elidtitular}});
+}
+function GuardaCDS(){
+   vcuantpre=$F('cuantpregun');
+   vidusuario=$F('usuarioid');
+   vtipusuario=$F('tipousuario');
+   for(i=1;i<=vcuantpre;i++){
+            estadopregunta=document.getElementById('combo'+i).checked;
+               valopregunta=$LF('combo'+i);
+               if(i==1){
+                 lasrepuestas=valopregunta;
+               }else{
+                  lasrepuestas=valopregunta+','+lasrepuestas;
+                }
+
+        }
+   new Ajax.Updater('respuestasmodif', 'views02/declaramodif.php', {
+	          parameters: {elusuario: vidusuario,tipousuario: vtipusuario, laspregun: lasrepuestas},
+                   onCreate: function(response) {
+                   a= Ajax.activeRequestCount;
+                   if(a>=0)
+	             $('spinnerP2' ).show();
+                  },
+	          onComplete: DecSalud
+                });
+}
+
+function exclulote(){
+    vartpcliente=$F('tipoexclu');
+    vartpente=$F('losente');
+    vartestado=$F('estaclien');
+    vartfecha=$F('inempre');
+    vartcomenta=$F('comentario');
+         if((Field.present('tipoexclu')==false)){
+            alert('El campo exclusi\u00f3n es necesario!!!');
+         }else{
+          if((Field.present('losente')==false)){
+             alert('El campo ente es necesario!!!');
+          }else{
+            if((Field.present('estaclien')==false)){
+             alert('El campo estado cliente es necesario!!!');
+            }else{
+              if((Field.present('inempre')==false)){
+                alert('El campo fecha es necesario!!!');
+              }else{
+                if((Field.present('comentario')==false)){
+                  alert('El campo comentario es necesario!!!');
+                }else{
+                  new Ajax.Updater('exclusiones', 'views02/exclusionl1.php', {
+	            parameters: {quien: vartpcliente, quente: vartpente, questado: vartestado, quefecha: vartfecha, quecomenta: vartcomenta},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+                }
+              }
+             }
+           }
+        }
+}
+
+function busclienexclu(){
+ varced=$F('cedulclien');
+   if((Field.present('cedulclien')==false)){
+     alert('El campo C\u00e9dula es necesario!!!');
+   }else{
+        new Ajax.Updater('exclusiones', 'views02/excluindi1.php', {
+	            parameters: {cliente: varced},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+    }
+}
+
+function procamexindi(){
+   varhijos=$F('totahijos');
+   loshijo=0;
+   for(i=1;i<=varhijos;i++){
+     estadohi=document.getElementById('hijo'+i).checked;
+     if(estadohi==true){
+       cualhijo=$F('hijo'+i);
+       elhijo=cualhijo+'-1';
+       if(i==1){
+        loshijo=elhijo;
+       }else{
+           loshijo=loshijo+','+elhijo;
+         }
+     }
+   }
+   if(Field.present('lente')==false){
+    alert('El campo ente es necesario!!!');
+   }else{
+    if(Field.present('estaclien')==false){
+      alert('El campo cambiar estado es necesario!!!');
+    }else{
+       if(Field.present('comentitu')==false){
+         alert('El campo comentario es necesario!!!');
+      }else{
+            vartitu=$F('lente');
+            pasestado=$F('estaclien');
+            elcoment=$F('comentitu');
+            new Ajax.Updater('exclusionindiv', 'views02/excluindi2.php', {
+	            parameters: {eltitular: vartitu, elpasestado: pasestado, elcomenta: elcoment, elhijo: loshijo},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+       }
+    }
+  }
+}
+function procamexindi1(){
+   varhijos=$F('totahijos');
+   loshijo=0;
+   for(i=1;i<=varhijos;i++){
+     estadohi=document.getElementById('hijo'+i).checked;
+     if(estadohi==true){
+       cualhijo=$F('hijo'+i);
+       elhijo=cualhijo+'-1';
+       if(i==1){
+        loshijo=elhijo;
+       }else{
+           loshijo=loshijo+','+elhijo;
+         }
+     }
+   }
+   if(Field.present('estaclien')==false){
+    alert('El campo cambiar estado es necesario!!!');
+   }else{
+
+       if(Field.present('comentitu')==false){
+         alert('El campo comentario es necesario!!!');
+      }else{
+            if(loshijo==0){
+              alert('Al menos debe seleccionar un beneficiario!!!');
+           }else{
+            pasestado=$F('estaclien');
+            elcoment=$F('comentitu');
+            new Ajax.Updater('exclusionindiv', 'views02/excluindib2.php', {
+	            parameters: {elpasestado: pasestado, elcomenta: elcoment, elhijo: loshijo},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+
+           }
+       }
+    }
+}
+function proceottiben(){
+  if(Field.present('lenteotb')==false){
+      alert('El campo ente cambiar estado es necesario!!!');
+   }else{
+     if(Field.present('estaclienot')==false){
+       alert('El campo estado es necesario!!!');
+     }else{
+        if(Field.present('comentituotb')==false){
+            alert('El campo comentario es necesario!!!');
+          }else{
+            elbenf=$F('lenteotb');
+            elestado=$F('estaclienot');
+            elcomentari=$F('comentituotb');
+             new Ajax.Updater('exclusionindiv', 'views02/excluindib3.php', {
+	            parameters: {elbenefi: elbenf, elstado: elestado, comenta: elcomentari},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+          }
+       }
+   }
+}
+
+function modif_las_primas(poliza){
+  new Ajax.Updater('clientes', 'views02/modif_primas.php', {
+	            parameters: {elpoliza: poliza},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerPFin' ).show();
+                    },
+	               onComplete: GuardoPoliFina
+                   });
+
+}
+function guardnprimas(edad1,edad2,paren,ma,ms,mt,mm,cm,pri){
+   polizat=$F('lapolizaes');
+   new Ajax.Updater('lasprif', 'views02/primas_modif.php', {
+	            parameters: {laeda1: edad1,laeda2: edad2,elparen: paren,elma: ma,elms: ms,elmt: mt,elmm: mm,elcom: cm,elpri: pri},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+  alert('se ha modificado exitosamente!!');
+}
+
+function eliminaprimas2(prima){
+  new Ajax.Updater('lasprif', 'views02/primas_elimina.php', {
+	            parameters: {laprima: prima},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+  alert('se ha elminado exitosamente!!');
+}
+
+////CALCULO DE COTIZACIONES modificada Franklin Monsalve
+function recalcotizindi(){
+   varcedrif=$F('cliencedula');
+   varnombr=$F('cliennombre');
+   varnapelli=$F('clienapellido');
+   vartelefono=$F('clientelefono');
+   varemail=$F('cliencorreo');
+   varpoliza=$F('clienpoliza');
+   varmaterni=$F('clienmaterni');
+   varedadti=$F('clienedad');
+   varinicial=$F('clieninicial');
+   varcuotas=$F('clienincuotas');
+   vargenero=$F('cliengenero');
+   varestitu=$F('clititula');
+   varestoma=$F('clittoma');
+   cantidaRangos=$F('cantidadrango');
+   Arredho='';
+   Arredmu='';
+   Arredra='';
+
+  for(i=1;i<=cantidaRangos;i++){
+    if(i==1){
+      Arredra=$F('edadr'+i);
+      Arredho=$F('edadh'+i);
+      Arredmu=$F('edadm'+i);
+    }else{
+      Arredra=Arredra+','+$F('edadr'+i);
+      Arredho=Arredho+','+$F('edadh'+i);
+      Arredmu=Arredmu+','+$F('edadm'+i);
+    }
+  }
+
+  if(varestitu==1){
+    varclienfinal=1;
+   }else{
+	varclienfinal=0;
+	   }
+
+     if(Field.present('cliencedula')==false){
+     alert('El campo C\u00e9dula es necesario!!!');
+    }else{
+      if(Field.present('cliennombre')==false){
+       alert('El campo Nombre es necesario!!!');
+     }else{
+       if(Field.present('cliengenero')==false){
+         alert('El campo Genero es necesario!!!');
+       }else{
+        if((Field.present('clienedad')==false)|| (varedadti==0)){
+            alert('El campo Edad es necesario!!!');
+       }else{
+         if(Field.present('clienpoliza')==false){
+            alert('El campo Tipo p\u00f3liza es necesario!!!');
+         }else{
+        if((varestitu==null)&&(varestoma==null)){
+			 alert('El campo Tipo de cliente es necesario!!!');
+		}else{
+     new Ajax.Updater('cotiindi', 'views01/clienindividual1rc.php', {
+	            parameters: {cedurif: varcedrif, cnombre: varnombr, capellido: varnapelli, ctelef: vartelefono, cemail: varemail, cpoli: varpoliza,
+                    edh:Arredho,edm:Arredmu,edr:Arredra, maternid:varmaterni, edaclien:varedadti, iniclien:varinicial,cuotclien:varcuotas,elgero:vargenero,clienfin:varclienfinal
+        },
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+            }
+           }
+         }
+        }
+      }
+    }
+}
+//FinCotizacion
+////Gaurdar Cotizacion modificacion 22-06-2023 FRANKLIN Monsalve
+function guarcotizindi(){
+   varcedrif=$F('cliencedula');
+   varnombr=$F('cliennombre');
+   varnapelli=$F('clienapellido');
+   vartelefono=$F('clientelefono');
+   varemail=$F('cliencorreo');
+   varpoliza=$F('clienpoliza');
+   varmaterni=$F('clienmaterni');
+   varedadti=$F('clienedad');
+   varinicial=$F('clieninicial');
+   varcuotas=$F('clienincuotas');
+   vargenero=$F('cliengenero');
+   varestitu=$F('clititula');
+   varestoma=$F('clittoma');
+   cantidaRangos=$F('cantidadrango');
+   Arredho='';
+   Arredmu='';
+   Arredra='';
+   for(i=1;i<=cantidaRangos;i++){
+     if(i==1){
+       Arredra=$F('edadr'+i);
+       Arredho=$F('edadh'+i);
+       Arredmu=$F('edadm'+i);
+     }else{
+       Arredra=Arredra+','+$F('edadr'+i);
+       Arredho=Arredho+','+$F('edadh'+i);
+       Arredmu=Arredmu+','+$F('edadm'+i);
+     }
+   }
+
+
+  if(varestitu==1){
+    varclienfinal=1;
+   }else{
+	varclienfinal=0;
+	   }
+
+     if(Field.present('cliencedula')==false){
+     alert('El campo C\u00e9dula es necesario!!!');
+    }else{
+      if(Field.present('cliennombre')==false){
+       alert('El campo Nombre es necesario!!!');
+     }else{
+       if(Field.present('cliengenero')==false){
+         alert('El campo Genero es necesario!!!');
+       }else{
+        if((Field.present('clienedad')==false)|| (varedadti==0)){
+            alert('El campo Edad es necesario!!!');
+       }else{
+         if(Field.present('clienpoliza')==false){
+            alert('El campo Tipo p\u00f3liza es necesario!!!');
+         }else{
+        if((varestitu==null)&&(varestoma==null)){
+			 alert('El campo Tipo de cliente es necesario!!!');
+		}else{
+     new Ajax.Updater('cotiindi', 'views01/clienindividual1.php', {
+	            parameters: {cedurif: varcedrif, cnombre: varnombr, capellido: varnapelli, ctelef: vartelefono, cemail: varemail, cpoli: varpoliza,
+                    edh:Arredho,edm:Arredmu,edr:Arredra,maternid:varmaterni,edaclien:varedadti,iniclien:varinicial,cuotclien:varcuotas,elgero:vargenero,clienfin:varclienfinal
+        },
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+            }
+           }
+         }
+        }
+      }
+    }
+}
+////Fin Gaurdar Cotizacion
+
+function planillasolicitu1(idcotiza){
+   url='views01/impcotizacionrc.php?lacotizac='+idcotiza;
+	        imprimir(url);
+}
+function planillasolicitu(idcotiza){
+   url='views01/impcotizacion.php?lacotizac='+idcotiza;
+	        imprimir(url);
+}
+function Quepaso(cedula){
+  new Ajax.Updater('siexiste', 'views01/existclientcoti.php', {
+	          parameters: {lacedula: cedula}});
+
+}
+function pasardata(data){
+  new Ajax.Updater('clientes', 'views01/clienindividual.php', {
+	          parameters: {lacedula: data}});
+}
+function coticedula(){
+ cotced=$F('ceducoti');
+ if(Field.present('ceducoti')==false){
+  alert('El n\u00famero de C\u00e9dula \u00f3 Cotizaci\u00f3n es necesario!!');
+ }else{
+        new Ajax.Updater('regicliindi', 'views01/regiscotiivindual1.php', {
+	            parameters: {lacotiza: cotced},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+   }
+
+}
+function verplanes(idplan,genro,ci){
+   varcotizacion=$F('cliencotizac');
+   new Ajax.Updater('cargafamili', 'views01/cargacotiza.php', {
+	            parameters: {lacotiza: idplan,elgenero: genro,cedula:ci,idcotizacion: varcotizacion},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+}
+
+function guardcontrato() {
+  //SE RECIBEN LOS DATOS DEL TITULAR Y EL CONTRATO
+  varcedclien = $F("lacedclien");
+  varnomtitular = $F("cliennombre");
+  varapelltitular = $F("clienapellido");
+  vartitugenero = $F("cliengenero");
+  varfechnacititu = $F("fechanaci");
+  varteleftitu = $F("clientelefo");
+  varcorreotitu = $F("cliencorreo");
+  varestadotitu = $F("clienestatu");
+  varfinclu = $F("feinc");
+  varciudatitu = $F("clienciudad");
+  vardiretitu = $F("cliendirr");
+  varcomenttitu = $F("cliencoment");
+  varcotizacititu = $F("cliencotizac");
+  varmatersititu = $F("matsi");
+  varmaternotitu = $F("matno");
+  varcuanthijos = $F("cuantohijo");
+  varotramatbeno = $F("matnoben");
+  varotramatbesi = $F("matsiben");
+  variniciocontrato = $F("fechainicontrato");
+  varfindocontrato = $F("fechfincontrato");
+  varcomision = $F("comisionado");
+  varcotifin = $F("cotifin");
+  varsubdivi = $F("cliensubd");
+  var vararrayben = new Array();
+  var ceulasbenefi = new Array();
+  arreglo = 0;
+  apunta = 1;
+  problema = 0;
+  // VALIDA QUE SE HAYA SELECCIONADO LA SUBDIVISIÓN
+  if (varsubdivi == "") {
+    alert(`Debe seleccionar la subdivisión.`);
+    problema = 1;
+  } else {
+    // VALIDA QUE SE HAYA SELECCIONADO LA COTIZACIÓN
+    if (varcotizacititu == "") {
+      alert(`Debe seleccionar una cotización.`);
+      problema = 1;
+    } else {
+      // VALIDA QUE SE HAYA SELECCIONADO UN COMISIONADO
+      if (varcomision == "") {
+        alert(`Debe seleccionar un comisionado.`);
+        problema = 1;
+      } else {
+        // VALIDA QUE LOS CAMPOS FECHA INICIO Y FIN DE CONTRATO NO ESTÉN VACÍOS
+        if (variniciocontrato == "" || varfindocontrato == "") {
+          alert(`Debe ingresar ambas fechas de inicio y fin del contrato.`);
+          problema = 1;
+        } else {
+          arrayfechafin = varfindocontrato.split("-");
+          arrayfechainicio = variniciocontrato.split("-");
+          anio = arrayfechafin[0] - arrayfechainicio[0];
+          mes = arrayfechafin[1] - arrayfechainicio[1];
+          dia = arrayfechafin[2] - arrayfechainicio[2];
+          // VALIDO QUE LA FECHA DE FIN SEA DESPUÉS DE LA FECHA DE INICIO
+          if (anio < 0) {
+            // FECHA NO VÁLIDA POR AÑO
+            alert(
+              `Verifique las fechas ingresadas. La fecha de fin (${varfindocontrato}) debe ser después de la fecha de inicio (${variniciocontrato}).`
+            );
+            problema = 1;
+          } else {
+            if (mes < 0) {
+              // FECHA NO VÁLIDA POR MES
+              alert(
+                `Verifique las fechas ingresadas. La fecha de fin (${varfindocontrato}) debe ser después de la fecha de inicio (${variniciocontrato}).`
+              );
+              problema = 1;
+            } else {
+              if (dia < 0) {
+                // FECHA NO VÁLIDA POR DÍA
+                alert(
+                  `Verifique las fechas ingresadas. La fecha de fin (${varfindocontrato}) debe ser después de la fecha de inicio (${variniciocontrato}).`
+                );
+                problema = 1;
+              } else {
+                // CICLO FOR QUE RECORRE TODAS LAS FILAS DE LOS BENEFICIARIOS CARGADOS
+                for (i = 1; i < varcuanthijos; i++) {
+                  elnombreben = $F("nomh" + i);
+                  elapelleben = $F("apell" + i);
+                  nacifecben = $F("fecha" + i);
+                  nacifecbenconsultado = $F("fechaben" + i);
+                  edadi = $F("edadi" + i);
+                  edadf = $F("edadf" + i);
+                  parentben = $F("parent" + i);
+                  generoben = $F("gener" + i);
+                  generobenconsultado = $F("generben" + i);
+                  cedulaben = $F("cedul" + i);
+                  // VALIDA QUE EL CAMPO CÉDULA NO ESTÉ VACÍO
+                  if (cedulaben == "") {
+                    alert(
+                      `El campo C\u00e9dula en los beneficiario es necesario`
+                    );
+                    problema = 1;
+                    break;
+                  } else {
+                    // VALIDA QUE EL CAMPO CÉDULA NO SEA IGUAL AL DEL TITULAR
+                    if (cedulaben == varcedclien) {
+                      alert(
+                        `La C\u00e9dula del beneficiario (#${i} ${elnombreben}${elapelleben}) no puede ser igual a la del titular`
+                      );
+                      problema = 1;
+                      break;
+                    } else {
+                      // VALIDA QUE LOS CAMPOS NOMBRE Y APELLIDO NO ESTÉN VACÍOS
+                      if (elnombreben == "" || elapelleben == "") {
+                        alert(
+                          `Nombre y Apellido del beneficiario (#${i}) son necesarios`
+                        );
+                        problema = 1;
+                        break;
+                      } else {
+                        // VALIDA QUE EL CAMPO FECHA DE NACIMIENTO NO ESTÉ VACÍO
+                        if (Field.present("fecha" + i) == false) {
+                          alert(
+                            `La fecha de nacimiento del beneficiario (#${i}) es necesaria`
+                          );
+                          problema = 1;
+                          break;
+                        } else {
+                          // VALIDA QUE LA FECHA DE NACIMIENTO INGRESADA CONCUERDE CON LA REGISTRADA PARA EL CLIENTE
+                          if (
+                            nacifecbenconsultado != "" &&
+                            nacifecbenconsultado != nacifecben
+                          ) {
+                            alert(
+                              `Error en la fecha de nacimiento del beneficiario (#${i} fecha registrada:${nacifecbenconsultado}). Vuelva a cargar los datos del beneficiario o actualice la fecha de nacimiento del cliente en Actualizar Cliente`
+                            );
+                            problema = 1;
+                            break;
+                          } else {
+                            arraynacifecben = nacifecben.split("-");
+                            // VALIDA QUE LA FECHA DE NACIMIENTO INGRESADA CONCUERDE CON LA REGISTRADA PARA EL CLIENTE
+                            if (arraynacifecben.length !== 3) {
+                              alert(
+                                `Error en la fecha de nacimiento del beneficiario (#${i} fecha ingresada: ${nacifecben}).`
+                              );
+                              problema = 1;
+                              break;
+                            } else {
+                              nacifecbendate = new Date(nacifecben);
+                              fechahoy = new Date();
+                              edadreal =
+                                fechahoy.getFullYear() -
+                                nacifecbendate.getFullYear();
+                              mes =
+                                fechahoy.getMonth() - nacifecbendate.getMonth();
+                              if (
+                                mes < 0 ||
+                                (mes === 0 &&
+                                  fechahoy.getDate() < nacifecbendate.getDate())
+                              ) {
+                                edadreal--;
+                              }
+                              // VALIDA QUE LA EDAD ESTÉ DENTRO DEL RANGO
+                              if (edadreal < edadi || edadreal > edadf) {
+                                alert(
+                                  `La edad del beneficiario (#${i}) no está en el rango de ${edadi} - ${edadf} años. Verifique la fecha de nacimiento cargada.`
+                                );
+                                problema = 1;
+                                break;
+                              } else {
+                                // VALIDA QUE EL CAMPO PARENTESCO NO ESTÉ VACÍO
+                                if (Field.present("parent" + i) == false) {
+                                  alert(
+                                    `El parentesco del beneficiario (#${i}) es necesario`
+                                  );
+                                  problema = 1;
+                                  break;
+                                } else {
+                                  // VALIDA QUE EL GÉNERO SEA EL CORRECTO
+                                  if (generobenconsultado != generoben) {
+                                    elapelleben = $F("apell" + i);
+                                    if (generoben == 1) {
+                                      genalert = "Masculino";
+                                    } else {
+                                      genalert = "Femenino";
+                                    }
+                                    alert(
+                                      `Error en el género del beneficiario ${i} (no es ${genalert}). Vuelva a cargar los datos del beneficiario o verifique los datos registrados del beneficiario en la sección Actualizar Clientes.`
+                                    );
+                                    problema = 1;
+                                    break;
+                                  } else {
+                                    vararrayben[(apunta, 1)] = elnombreben;
+                                    vararrayben[(apunta, 2)] = elapelleben;
+                                    vararrayben[(apunta, 3)] = nacifecben;
+                                    vararrayben[(apunta, 4)] = parentben;
+                                    vararrayben[(apunta, 5)] = generoben;
+                                    vararrayben[(apunta, 6)] = cedulaben;
+                                    ceulasbenefi[apunta] = cedulaben;
+                                    if (apunta == 1) {
+                                      arreglo =
+                                        elnombreben +
+                                        "," +
+                                        elapelleben +
+                                        "," +
+                                        nacifecben +
+                                        "," +
+                                        parentben +
+                                        "," +
+                                        generoben +
+                                        "," +
+                                        cedulaben;
+                                    } else {
+                                      arreglo =
+                                        arreglo +
+                                        "," +
+                                        elnombreben +
+                                        "," +
+                                        elapelleben +
+                                        "," +
+                                        nacifecben +
+                                        "," +
+                                        parentben +
+                                        "," +
+                                        generoben +
+                                        "," +
+                                        cedulaben;
+                                    }
+                                    apunta = apunta + 1;
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                elapunta = 2;
+                for (z = 1; z < varcuanthijos; z++) {
+                  for (x = elapunta; x < varcuanthijos; x++) {
+                    if (problema == 1) {
+                      break;
+                    } else {
+                      if (ceulasbenefi[z] == ceulasbenefi[x]) {
+                        alert(
+                          `Los beneficiarios (#${z} y #${x}) no pueden tener C\u00e9dulas iguales`
+                        );
+                        problema = 1;
+                        break;
+                      }
+                    }
+                  }
+                  elapunta = elapunta + 1;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (problema == 0) {
+    new Ajax.Request("views01/cargacotiza1.php", {
+      method: "post",
+      asynchronous: true,
+      postBody:
+        "arreglo=" +
+        arreglo +
+        "&frenofami=" +
+        apunta +
+        "&cedulatitu=" +
+        varcedclien +
+        "&nombtitu=" +
+        varnomtitular +
+        "&apelltitu=" +
+        varapelltitular +
+        "&fechinclutitu=" +
+        varfinclu +
+        "&ciudadtitu=" +
+        varciudatitu +
+        "&directitu=" +
+        vardiretitu +
+        "&comenttitu=" +
+        varcomenttitu +
+        "&cotipoli=" +
+        varcotizacititu +
+        "&matertitusi=" +
+        varmatersititu +
+        "&matertituno=" +
+        varmaternotitu +
+        "&maternoben=" +
+        varotramatbeno +
+        "&matersiben=" +
+        varotramatbesi +
+        "&inicontrato=" +
+        variniciocontrato +
+        "&fincontrato=" +
+        varfindocontrato +
+        "&estadotitu=" +
+        varestadotitu +
+        "&fechanactitu=" +
+        varfechnacititu +
+        "&generotitu=" +
+        vartitugenero +
+        "&cotizacion=" +
+        varcomision +
+        "&elidcoti=" +
+        varcotifin +
+        "&sudtitu=" +
+        varsubdivi,
+      onCreate: function (response) {
+        a = Ajax.activeRequestCount;
+        if (a >= 0) $("spinnerP1").show();
+      },
+      onComplete: mostraCarga,
+    });
+  }
+}
+
+function mostraCarga(req){
+  $('finalcontrato').show();
+  $('clientes').innerHTML=req.responseText;
+  $('spinnerP1').hide();
+}
+
+function isNumberKey(evt)
+{
+var charCode = (evt.which) ? evt.which : event.keyCode
+if (charCode > 31 && (charCode < 48 || charCode > 57))
+return false;
+
+return true;
+}
+
+function cuadrorecibo(numtitular,numcontrato,numrecibo,numente,numcontizacion){
+  a="Original Cliente";
+  b="Copia Administrativa";
+  c="Copia Intermediario";
+  d="Copia Operativa";
+  for(i=1;i<=4;i++){
+   if(i==1){
+    variable=a;
+   }
+   if(i==2){
+    variable=b;
+   }
+   if(i==3){
+    variable=c;
+   }
+   if(i==4){
+    variable=d;
+   }
+    url='views01/impcuadrorecibo.php?titular='+numtitular+'&contrato='+numcontrato+'&recibo='+numrecibo+'&elente='+numente+'&lacotiza='+numcontizacion+'&texo='+variable;
+    imprimir(url);
+
+  }
+
+}
+function cuadroreciboR(ceduTitular,numrecibo){
+  a="Original Cliente";
+  b="Copia Administrativa";
+  c="Copia Intermediario";
+  d="Copia Operativa";
+  for(i=1;i<=4;i++){
+   if(i==1){
+    variable=a;
+   }
+   if(i==2){
+    variable=b;
+   }
+   if(i==3){
+    variable=c;
+   }
+   if(i==4){
+    variable=d;
+   }
+    url='views01/reimcuadrorecibo.php?cedula='+ceduTitular+'&texo='+variable+'&recibo='+numrecibo;
+    imprimir(url);
+
+  }
+
+}
+function BusquedadCoti(){
+  varusuario=$F('idadmin');
+  varcedula=$F('cedulusu');
+   if((Field.present('idadmin')==true)&& (Field.present('cedulusu')==true)){
+     alert('Solo debe hacer la busquedad por uno de los campos!!');
+   }else{
+         new Ajax.Updater('lascotizacion', 'views02/reimprcotiza1.php', {
+	            parameters: {elusuario: varusuario,elcedula: varcedula},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+       }
+}
+
+function comisionados(){
+ varcomi=$F('cliencotizac');
+ posicion=varcomi.indexOf('-');
+ comisionado=varcomi.substring(0,posicion);
+  new Ajax.Updater('comisionados', 'views01/elcomisionado.php', {
+	          parameters: {lacotiza: comisionado}});
+
+}
+
+function anexos(){
+  varpregtitular=$F('titular');
+  vartitu=$F('eltitular');
+  varcuben=$F('cuanthijo');
+  varrecibo=$F('elrecibo');
+  if(varcuben>=1){
+    for(i=1;i<=varcuben;i++){
+        varbeni=$F('hijo'+i);
+        varrepues=$F('benef'+i);
+       if(i==1){
+          anexo=varbeni+','+varrepues;
+       }else{
+           anexo=anexo+','+varbeni+','+varrepues;
+        }
+    }
+  }
+
+
+   url='views01/impanexo.php?ti_tu='+vartitu+'&v_re='+varrecibo+'&re_pu='+anexo+'&pregt='+varpregtitular;
+   imprimir(url);
+}
+function buscontratos(){
+ varcedula=$F('cedulatitu');
+ new Ajax.Updater('loscontratos', 'views01/contratostitu.php', {
+	          parameters: {lacedulacoti:varcedula}});
+}
+function reimpcuadrecibo(){
+  a="Original Cliente";
+  b="Copia Administrativa";
+  c="Copia Intermediario";
+  d="Copia Operativa";
+  for(i=1;i<=4;i++){
+   if(i==1){
+    variable=a;
+   }
+   if(i==2){
+    variable=b;
+   }
+   if(i==3){
+    variable=c;
+   }
+  if(i==4){
+    variable=d;
+   }
+    varcedula=$F('cedulatitu');
+    varnumconta=$F('cliencontratos');;
+    url='views01/reimcuadrorecibo.php?cedula='+varcedula+'&texo='+variable+'&recibo='+varnumconta;
+    imprimir(url);
+  }
+}
+function estaproorden(idorden){
+   varfecha=$F('inempre');
+  if(Field.present('inempre')==false){
+	  alert('El campo fecha es necesario para el cambio!!!');
+  }else{
+     new Ajax.Updater('estadoproceso', 'views01/estadoordenes.php', {
+	          parameters: {elproceso: idorden,fechac:varfecha}});
+	  }
+}
+
+function modifdacliengeneral(){
+	varcedula=$F('cedulclien');
+	if(Field.present('cedulclien')==false){
+		  alert('El campo C\u00e9dula es necesario!!');
+		}else{
+			   new Ajax.Updater('nuevosdatclien', 'views01/act_cliente_general1.php', {
+	            parameters: {lacedula: varcedula},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+			}
+}
+function CambiosGeneral(){
+	varelcliente=$F('elcliente');
+	varcedula=$F('cedclien');
+	varnombre=$F('cliennombre');
+	varapellido=$F('clienapellido');
+	vargenero=$F('cliengenero1');
+	varfenaci=$F('fnaci1');
+	vartelefhab=$F('telefonohab');
+	varcelular=$F('telecelular');
+	vardirecci=$F('cliendirr1');
+	varhaytitu=$F('sevetitu');
+	varhaybeni=$F('sevebene');
+        varcomenta=$F('cliencoment');
+	datodeltitu=0;
+	datodelbenefi=0;
+   if(varhaytitu>=1){
+	for(i=1;i<=varhaytitu;i++){
+	   varcualtitu=$F('idtitular'+i);
+	   varcodititu=$F('eltitular'+i);
+	   varsubdivi=$F('subdivision'+i);
+           varpartida=$F('partida'+i);
+	   if(i==1){
+		   datodeltitu=varcualtitu+"|"+varcodititu+"|"+varsubdivi+"|"+varpartida
+	  }else{
+		    datodeltitu=datodeltitu+","+varcualtitu+"|"+varcodititu+"|"+varsubdivi+"|"+varpartida
+		  }
+	}
+   }
+   if(varhaybeni>=1){
+	  for(j=1;j<=varhaybeni;j++){
+		 varparentes=$F('elbenef'+j);
+		 varelbenfe=$F('idbenefi'+j);
+		 if(j==1){
+			 datodelbenefi=varelbenfe+"-"+varparentes
+	     }else{
+			  datodelbenefi=datodelbenefi+","+varelbenfe+"-"+varparentes
+			 }
+	  }
+   }
+	new Ajax.Updater('datosactualizados', 'views01/act_cliente_general2.php', {
+	            parameters: {clienteid: varelcliente,lacedula: varcedula,nombre: varnombre, apellido: varapellido, genero: vargenero,
+	                         nacimiento: varfenaci, habtelef: vartelefhab, celulartelef: varcelular,
+	                         direccion: vardirecci, sihaytitu: datodeltitu, sihaybenfi: datodelbenefi,cliencoment: varcomenta },
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+
+}
+function CargarArchi(){
+    new Ajax.Updater('clientes', 'views02/exclusionl2.php', {});
+}
+
+function redirect()
+{
+document.getElementById('my_form').target = 'my_iframe'; //'my_iframe' is the name of the iframe
+document.getElementById('my_form').submit();
+}
+function ArchivoPro(archivo) {
+  new Ajax.Updater('clientes', 'views02/procesaarchivo2.php', {
+	            parameters: {elarchivo: archivo },
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+}
+function excluloteArchivo(){
+  vararchivo=$F('nombrearchivo');
+  varestado=$F('clienestado');
+  varfechapasar=$F('inempre');
+  varcoment=$F('comentario');
+
+   if(Field.present('clienestado')==false){
+	   alert('Debe selecionar el estado a cambiar!!!');
+   }else{
+	if(Field.present('inempre')==false){
+		alert('Debe selecionar la fecha de cambio!!!');
+	}else{
+		if(Field.present('comentario')==false){
+			alert('El camp comentario es necesario!!!');
+		  }else{
+			    new Ajax.Updater('exclusionarchivo', 'views02/procesaarchivo3.php', {
+	            parameters: {elarchivo: vararchivo, elestado: varestado, elfecha: varfechapasar, elcomenta: varcoment},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+			  }
+		}
+  }
+}
+function addmessage(){
+	 varmensaje=$F('mensaje');
+	 varadmin=$F('idadmin');
+	 vardepar=$F('depart');
+	 if(Field.present('mensaje')==false){
+	   alert('El campo mensaje es necesario!!');
+	 }else{
+	  if(Field.present('depart')==false){
+		 alert('El campo departamento es necesario!!');
+	  }else{
+	     new Ajax.Updater('mesajeenviado', 'views07/add.php', {
+	            parameters: {elmensaje: varmensaje, usuario: varadmin, deparid: vardepar},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+          }
+     }
+}
+function tiempomsj(){
+	setTimeout(function(){ponerMSJ()},3000);
+}
+function ponerMSJ(){
+	new Ajax.PeriodicalUpdater('controlmsj', 'views07/losmsj.php', {
+        frequency : 3,
+        decay : 2
+      });
+}
+function Cualmsj(elmsj,usuario){
+	new Ajax.Updater('', 'views07/actmsj.php', {
+	          parameters: {elimsj: elmsj,eladmin: usuario}});
+}
+
+function buscliindi(){
+ varced=$F('cedulclien');
+   if((Field.present('cedulclien')==false)){
+     alert('El campo C\u00e9dula es necesario!!!');
+   }else{
+        new Ajax.Updater('exclusiones', 'views02/actiindvidual1.php', {
+	            parameters: {cliente: varced},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+    }
+}
+function busclieneAnexo(){
+ cedulaclien=$F('cedulclien');
+ if(Field.present('cedulclien')==false){
+	 alert('Se requiere el campo C\u00e9dula!!');
+ }else{
+	 new Ajax.Updater('anexosplanilla', 'views02/anexosplanilla1.php', {
+	            parameters: {cliente: cedulaclien},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+	}
+}
+function GeneraAnexo(idpersona){
+
+  new Ajax.Updater('lasplanillas', 'views02/anexosplanilla2.php', {
+	            parameters: {varidpersona: idpersona},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+}
+function GuardaAnexoC(){
+	var tipoclien=$F('tipoclien');
+	var elanexo=$F('clienanexo');
+	if(Field.present('clienanexo')==false){
+		alert('El campo anexo es necesario!!');
+	}else{
+	 new Ajax.Updater('finanexo', 'views02/anexosplanilla3.php', {
+          parameters: {clientetipo: tipoclien, anexocli: elanexo}
+          });
+	}
+}
+function anexos1(aneid){
+  var tipoclien=$F('tipoclien');
+   url='views01/impanexo1.php?anexid='+aneid+'&eltipoclien='+tipoclien;
+   imprimir(url);
+}
+
+function PlanillaUso(){
+ var laplanilla=$F('nopresupuesto');
+   longitud=laplanilla.length;
+   if(longitud>=3){
+	 Modalbox.show("views01/planillauso.php", {title: 'El numero de la planilla ya esta en uso!!!', width: 800, method: 'get',
+             params:{
+             planillauso: laplanilla}
+             });
+	   }
+}
+
+function SoloNumeros(e) {
+    tecla = (document.all) ? e.keyCode : e.which;
+    if (tecla==8) return true;
+    patron = /\d/;
+    te = String.fromCharCode(tecla);
+    return patron.test(te);
+}
+function busente(){
+	cedul=$F('cliencedula');
+	ente=$F('clienente');
+	new Ajax.Updater('yaesta', 'views01/yaestacliente.php', {
+		parameters: {cedula: cedul, enteid: ente}  });
+}
+
+function Bus_Informe(){
+  var procesonum=$F('proceinforme');
+  if(Field.present('proceinforme')==false){
+	  alert("Se requiere el n\u00famero de proceso!!!");
+  }else{
+	   new Ajax.Updater('infomedico', 'views01/inf_medico1.php', {
+	            parameters: {elproceso: procesonum},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+	  }
+}
+function Guardar_Informe(){
+  var idtitular=$F('eltitu');
+  var idbenefi=$F('elbeni');
+  var idproceso=$F('proceinforme');
+  var diagnostic=$F('diagnos');
+  var laboratorio=$F('labora');
+  var ultrasonic=$F('ultras');
+  var radiologi=$F('radiolog');
+  var estespe=$F('estdespe');
+  var indica=$F('indica');
+  var lpresenta=$F('presenta');
+  if(Field.present('presenta')==false){
+	  alert("El campo Paciente Presenta es necesario!!!");
+  }
+  else{
+  if(Field.present('diagnos')==false){
+	  alert("El campo diagn\u00f3stico es necesario!!!");
+  }else{
+	  var r=confirm("Desea generar el informe m\u00e9dico?");
+if (r==true)
+  {
+  new Ajax.Updater('infofinal', 'views01/inf_medico2.php', {
+	            parameters: {elproceso: idproceso, eldiagnos: diagnostic, ellabora: laboratorio, elultra: ultrasonic, elradio: radiologi,
+	                         elestudio: estespe, elindica: indica, elpresenta: lpresenta},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+  }
+
+   }
+	 }
+}
+
+function ImpInforme(proceso){
+   url='views01/plantillainforme.php?procesoid='+proceso;
+   imprimir(url)
+}
+
+function Bus_ReInforme(){
+  var procesonum=$F('proceinforme');
+  if(Field.present('proceinforme')==false){
+	  alert("Se requiere el n\u00famero de proceso!!!");
+  }else{
+	   new Ajax.Updater('rinfomedico', 'views01/reimpf_medico1.php', {
+	            parameters: {elproceso: procesonum},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+	  }
+}
+function Historial_Informe(usuarios){
+	Modalbox.show("views01/historialmedico.php", {title: 'Historial Informe Medico', width: 800, method: 'get',
+             params:{
+             quien:usuarios}
+             });
+}
+function Verel_Informe(elinforme){
+	Modalbox.show("views01/historialmedico1.php", {title: 'Informe Medico', width: 800, method: 'get',
+             params:{
+             numinforme:elinforme}
+             });
+}
+
+function auditarclienps(cliente){
+  vartipclien=cliente;
+  window.open("views01/auditarps1.php?elclient="+vartipclien,"","width=900,height=500,scrollbars=YES, menubar=YES");
+}
+function Planilla_Medica(){
+  elproceso=$F('esplanilla');
+  eltitu=$F('estitu');
+  elbenif=$F('esbeni');
+  url='views01/isolicitudmedicamento.php?id_titular='+eltitu+'&id_beneficiario='+elbenif+'&proceso='+elproceso;
+	        imprimir(url);
+}
+function buscaparenhi(cedulaapun,eldiv){
+	cedula=$F(cedulaapun);
+	new Ajax.Updater('cargafamiliar'+eldiv, 'views01/databenecotiza.php', {
+          parameters: {bencedula: cedula,ndiv: eldiv}
+          });
+}
+function verbenfcontrato(bnombre,bapelli,bfechana,bgen,ndiv){
+  document.getElementById('nomh'+ndiv).value=bnombre;
+  document.getElementById('apell'+ndiv).value=bapelli;
+  document.getElementById('fecha'+ndiv).value=bfechana;
+  document.getElementById('fechaben'+ndiv).value=bfechana;
+  document.getElementById('generben'+ndiv).value=bgen;
+}
+function buscomisionado(){
+ var numcontrato=$F('ncontrato');
+ if(Field.present('ncontrato')==false){
+	 alert('El campo No. Contrato es necesario!!!');
+ }else{
+	  new Ajax.Updater('datacontrato', 'views02/cambcomi1.php', {
+	            parameters: {elcontrato: numcontrato},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+	 }
+}
+function cambiacomi(){
+	var numrecibo=$F('idrecibo');
+	var numcomisi=$F('comiid');
+	var elcomiviejo=$F('comiviejo');
+	new Ajax.Updater('fincambcomi', 'views02/cambcomi2.php', {
+	            parameters: {elrecibo: numrecibo, elcomi: numcomisi, viejocomi: elcomiviejo},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+
+}
+function TitularRenova(){
+  var lacedul=$F('ncedula');
+  if (Field.present('ncedula')==false){
+	  alerte("El campo C\u00e9dula es necesario!!");
+  }else{
+  new Ajax.Updater('nuevocontrato', 'views02/renovacontrato1.php', {
+	            parameters: {titucedu:lacedul},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+   }
+}
+
+
+
+// Actualización Daniel 06-08-2024
+function RenovaContrato(fecha1, fecha2, cuantos, ntitular, nbenefi, poliza, lapoliqtiene, numcontrato, elem) {
+  // VARIABLES
+  // fecha1: id fecha inicio contrato
+  // fecha2: id fecha fin contrato
+  // cuantos: número de reglones
+  // ntitular: número titular
+  // nbenefi: número beneficiario
+  // poliza: ID póliza seleccionada
+  // lapoliqtiene: ID póliza actual
+  // numcontrato: ID de contrato
+  // elem: número de elemento o póliza que hizo referencia
+
+  var contenedor;
+  contenedor = document.getElementById('clientes');
+
+  var cantidad = cuantos;
+  var contraini = document.getElementById(fecha1).value;
+  var contrafin = document.getElementById(fecha2).value;
+  var nudtitu = ntitular;
+  var cuanbeni = nbenefi;
+  var polizasele = document.getElementById(poliza).value;
+  var titupoliza = lapoliqtiene;
+  var nbenefi = nbenefi - 1;
+
+  if (ntitular <= 0) {
+      ntitular = 1;
+  }
+  if (nudtitu >= 1) {
+      cuantos = nudtitu;
+  } else {
+      cuantos = cuanbeni;
+  }
+
+  var a = 1;
+  var arrenc = "";
+  for (var i = 1; i <= cantidad; i++) {
+      var iddata = 'ladata' + elem + '' + i;
+      var estaclientes = document.getElementById(iddata).checked;
+      if (estaclientes == true) {
+          var datogene = document.getElementById(iddata).value;
+          if (a == 1) {
+              arrenc = datogene;
+          } else {
+              arrenc = arrenc + ',' + datogene;
+          }
+          a = a + 1;
+      }
+  }
+
+  var parametros = new URLSearchParams({
+    elarrego : arrenc,
+    fe1 : contraini,
+    fe2 : contrafin,
+    polizaescoge : polizasele,
+    lapoltiene : titupoliza,
+    laidcontrato : numcontrato
+  });
+
+  
+  var ajax = nuevoAjax();
+  ajax.open("GET", "views02/renovacontrato2.php?" + parametros.toString(), true);
+
+  ajax.onreadystatechange = function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText
+    }
+  };
+
+  // Enviar la solicitud
+  ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  ajax.send(null);
+
+} //fin RenovaContrato
+
+
+
+
+function modifnompoli(nompoliza){
+  varintermedi=$F('intermediario');
+  varidpoliza=$F('lapoliza');
+  new Ajax.Updater('nombrepoli', 'views02/cambinombpoliz1a.php', {
+          parameters: {lapoli: nompoliza,laidpoli: varidpoliza}
+          });
+
+
+}
+
+/////Editada ing franklin monsalve 20-05-19//
+function segudnombre(){
+ varnombre=$F('elnopoliza');
+ varmoneda=$F('moneda');
+ varestatu=$LF('poliactiv');
+ vartippoliza=$LF('tipopoli');
+ varinterme=$LF('viinter');
+ varidpoliza=$F('lapoliza');
+ vardescrip=$F('descripoli');
+  new Ajax.Updater('policambio','views02/cambinombpoliza.php', {
+	            parameters: {poliid: varidpoliza,esinterme:varinterme,nuevnombre:varnombre,nuevmoneda:varmoneda,estatupoli:varestatu,eltipopoli:vartippoliza,ladescrip:vardescrip} ,
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+}
+
+function CaractPoliza(lapoliza){
+
+ if(lapoliza>=1){
+ $('caractpoliza').show();
+  $('caractpoliza').update('<br><label class="boton" style="cursor:pointer" onclick="Mostracaract('+lapoliza+')" >Caracteristicas</label>');
+ }else{
+	 $('caractpoliza').hide();
+	 }
+}
+
+////cargar rango de edades que rige la poliza en cotizador franklin mosanvle 22-06-2023
+function poliza_rangos_edad(lapoliza){
+ idpoliza=lapoliza;
+  new Ajax.Updater('rango_edades','views01/clienindividual_rango_edad.php', {
+	            parameters: {poliid: idpoliza} ,
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+}
+
+function Mostracaract(numpoliza){
+ var nompoliza= $('clienpoliza')[$('clienpoliza').selectedIndex].text;//Da el nombre de lo que se selecciona en un select
+ mensaje='Caracteristica de la Poliza ('+nompoliza+')';
+
+   Modalbox.show("views02/caractpoliza.php", {title: mensaje, width: 800, method: 'get',
+             params:{
+             idpoliza:numpoliza}
+             });
+}
+
+function PorAumento(eldiv,idrecibo,caja,numero,aumento){
+ porcentaje=contraini=$F(caja);
+ tieneaumento=$LF(aumento);
+if(Field.present(caja)==false){
+	 alert("El campo Porcentaje de aumento es necesario!!")
+ }else{
+ new Ajax.Updater(eldiv,'views02/aumentocontrato.php', {
+                    parameters: {elidrecibo: idrecibo,elporcentaje:porcentaje,elaumento:tieneaumento} ,
+                    onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+                     $('spinnerP1' ).show();
+                    },
+                       onComplete: ContFactura
+                   });
+ }
+}
+
+function losRecibosP(recprima){
+	lacelu='';
+	Modalbox.show("views04/bus_regrec_pago.php", {title: 'Contol de pagos', width: 800, method: 'post',
+             params:{
+             cedula:lacelu,numero_contrato:recprima}
+             });
+}
+function Buscarente(combo){
+	var entenombre = combo.options[combo.selectedIndex].text;
+	var elente= $F('lente');
+    new Ajax.Updater('datadelente', 'views02/ccolectivo1.php', {
+	            parameters: {nombente: entenombre, idente: elente},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+}
+
+function guardacolecente(){
+	enteid=$F('lente');
+	entetip=$F('tipente');
+	fechafin=$F('finente');
+	fechainicio=$F('inicoente');
+	elcomisio=$F('comisente');
+	ente=$F('nombreente');
+	opac=confirm("Desea generar contrato colectivo al ente "+ente+"?");
+		   if(opac==true){
+
+
+	new Ajax.Updater('elentecolectivo', 'views02/ccolectivo2.php', {
+	            parameters: {idente: enteid, tipoente: entetip, fechaf: fechafin, fechai: fechainicio, comisionado: elcomisio},
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+           }
+}
+function Impricolecente(numcontrato,numrecibo,numente){
+  a="Original Cliente";
+  b="Copia Administrativa";
+  c="Copia Intermediario";
+  d="Copia Operativa";
+  for(i=1;i<=4;i++){
+   if(i==1){
+    variable=a;
+   }
+   if(i==2){
+    variable=b;
+   }
+   if(i==3){
+    variable=c;
+   }
+   if(i==4){
+    variable=d;
+   }
+    url='views01/impcuadrorecibocolec.php?contrato='+numcontrato+'&recibo='+numrecibo+'&elente='+numente+'&texo='+variable;
+    imprimir(url);
+
+  }
+}
+
+function guardaresarti(){
+	numdarticulo=$F('numarti');
+	nomdarticulo=$F('nomarti');
+	desdarticulo=$F('descriarti');
+         nomley=$F('nomley');
+	artiid=$F('elidarti');
+     if((Field.present('numarti')==false) || (Field.present('nomarti')==false) || (Field.present('descriarti')==false)){
+       alert("Todos los campos son necesarios");
+     }else{
+		new Ajax.Updater('losarticulos','views02/articulof2.php', {
+	            parameters: {elnarticulo: numdarticulo,elnombre:nomdarticulo, eldescriarticulo: desdarticulo, eliddarti: artiid,elnomley: nomley} ,
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+		 }
+}
+
+function Modifarti(arti){
+  Modalbox.show("views02/articulof3.php", {title: 'Control de art\u00edculo', width: 800, method: 'get',
+             params:{
+             elnumarti: arti}
+             });
+}
+function contratoanular(){
+  if(Field.present('cedulclien')==false){
+	  alert("El campo c\u00e9dula es necesario!!!")
+  }else{
+	 new Ajax.Updater('datacontrato','views02/anulacioncontra2.php', {
+	            parameters: {elcedula: $F('cedulclien')} ,
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+	}
+}
+function anularcontrato(nocontrato,encabe){
+	new Ajax.Updater('anulcontrato','views02/anulacioncontra3.php', {
+	            parameters: {elidcontrato: nocontrato, elencavebe: encabe} ,
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+}
+function Losarti(){
+   Modalbox.show("views02/losarticulos.php", {title: 'Art\u00edculos creados', width: 800, method: 'get',
+             params:{}
+             });
+}
+function Findcontrato(idcontrato,encabezado){
+
+	if(Field.present('numarti')==false){
+		alert('El n\u00famero del art\u00edculo es necesario!!')
+	}else{
+		var opac=confirm("Realmente desea eliminar el contrato No."+encabezado+"?");
+		   if(opac==true){
+			url='views02/cartaanulacion.php?contrid='+idcontrato+'&artinumb='+$F('numarti')+'&cabezado='+encabezado;
+	        imprimir(url);
+		  }
+   }
+}
+
+function maternidad(genero,cedula){
+	lacotizacion=$F('cliencotizac');
+	 new Ajax.Updater('sihaymater', 'views01/regiscontiivindualmater.php', {
+          parameters: {elgenero: genero,lacotizac: lacotizacion,lacedula:cedula}
+          });
+}
+
+function reimprianulacion(){
+  if(Field.present('cedulclien')==false){
+	  alert("El campo c\u00e9dula es necesario!!!")
+  }else{
+	 new Ajax.Updater('datacontrato','views02/reimprimanulacion2.php', {
+	            parameters: {elcedula: $F('cedulclien')} ,
+	            onCreate: function(response) {
+                    a= Ajax.activeRequestCount;
+                    if(a>=0)
+	             $('spinnerP1' ).show();
+                    },
+	               onComplete: ContFactura
+                   });
+	}
+}
+
+function reimprcontrato(idcontrato,encabezado,articnum,quien){
+		url='views02/cartaanulacion2.php?contrid='+idcontrato+'&artinumb='+articnum+'&cabezado='+encabezado+'&loanulo='+quien;
+	    imprimir(url);
+}
+
+function VerCantidades(numero){
+    if (isNaN(numero)){
+        alert ("Error en campo, solo se permiten numeros!!");
+    }
+    else{
+        if (numero % 1 == 0) {
+
+        }
+        else{
+            alert ("Error en campo, solo se permiten cantidades enteras!!");
+        }
+    }
+}
+function AnulaElPed(elidpedido){
+  new Ajax.Request("views05/anulapedido.php",
+    {
+        method:'post',
+        asynchronous: true,
+        postBody: 'pedidoid='+elidpedido,
+        onComplete: mostrarAnula
+    });
+}
+
+//modificacion franklin monsalve 2022-01-01
+function mostrarAnula(req){
+  resp=req.responseText;
+  parametro=resp.split(",");
+  dep=parametro[0];
+  idPedido=parametro[1];
+  estadoped=1;
+  alert("Se ha elminado exitosamente el pedido!!!");
+  buspdepen(dep,estadoped);
+}
+
+function MontonoApro(){
+
+	elservicio     = document.oa.servicio.value;
+	eltiposervicio = document.oa.tiposerv.value;
+
+  if (eltiposervicio == 28 || eltiposervicio == 27) {
+    elcuadromedico = "";
+    elcomentario   = "Deducible vinculado al numero de planilla: " + document.oa.comenope.value;
+  } else {
+    elcuadromedico = document.oa.enfermedad.value;
+    elcomentario   = document.oa.comenope.value;
+  }
+
+	elpresupuesto  = document.oa.numpre.value;
+	elmonto        = document.oa.monto.value;
+	eldescripcion  = document.oa.decrip.value;
+	
+	eltipocliente  = document.oa.tipo_cliente.value;
+	elentees       = document.oa.bus_tip_clien.value;
+	elcobertura    = document.oa.cobertura.value;
+
+
+	   if(elcobertura==''){
+		alert('El campo Cobertura es necesario!!')
+	   }else{
+		     if(elmonto=='0'){
+			   alert('El Monto debe ser Mayor que 0')
+			 }else{
+				   if(elcuadromedico=='' && eltiposervicio !=28 && eltiposervicio !=27){
+					   alert('El campo Cuadro Medico es necesario!!')
+				   }else{
+					     if(eldescripcion==''){
+					        alert('El campo Descripci\u00f3n es necesario!!')
+				          }else{
+							  new Ajax.Updater('clientes','views01/reg_oaNAP.php', {
+	                          parameters: {fpresupuesto: elpresupuesto, fmonto: elmonto, fcuadmedico: elcuadromedico, fdescripcion: eldescripcion,
+	                                       fcmonetario: elcomentario, ftipocliente: eltipocliente, fente: elentees, fservicio: elservicio,
+	                                       ftiposervico: eltiposervicio, fcobertura: elcobertura} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+							}
+ 					   }
+				 }
+		   }
+}
+
+function GLibroCompra(){
+lafeini=$F('feini');
+lafefin=$F('feinf');
+
+url='views06/libcompra2.php?libfeini='+lafeini+'&libfefin='+lafefin;
+  imprimir(url);
+}
+function quevalija(){
+   seleccion = $F('estadovalija');
+   if(seleccion <= 0){
+     alert('El campo Estado Valija es necesario!!');
+   }else{
+	     new Ajax.Updater('misvalija','views04/auditarvalija1.php', {
+	                          parameters: {festadovalija: seleccion} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+
+	   }
+}
+
+function ProcesarValija(idvalija,estadof,serief,serialv){
+  new Ajax.Updater('misvalija','views04/auditarvalija2.php', {
+	                          parameters: {fidvalija: idvalija, festaf: estadof, fserief: serief, fserialvali: serialv} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+}
+
+function CEstadoValija(){
+  cuantasfa = $F('factutotal');
+  cadena = ',';
+  cadcome = ''
+  comentariov = $F('comentvalija');
+  estadvalifac = $F('estadofacvalija');
+ if(estadvalifac != 4){
+  for(i=1;i<=cuantasfa;i++){
+      artiseleccion=$F('factid'+i)
+      if(artiseleccion != null){
+        cadena=cadena+','+artiseleccion;
+      }
+    }
+  }else{
+	  for(i=1;i<=cuantasfa;i++){
+                artiseleccion = $F('factid'+i);
+                comentafactu  = $F('comen'+i);
+                if(artiseleccion != null){
+                   cadena=cadena+','+artiseleccion;
+                   cadcome=cadcome+','+comentafactu;
+               }
+             }
+	  }
+  if(cadena == ','){
+	  alert("Debe seleccionar al menos una factura!!")
+  }else{
+	  if((Field.present('comentvalija')==false) ){
+		  alert("El campo Comentario es necesario!!")
+	  }else{
+	     if(estadvalifac == 1){
+	     new Ajax.Updater('findevalija','views04/auditarvalija3.php', {
+	                          parameters: {fcadena: cadena, fcomentario : comentariov, festvalifact : estadvalifac} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+         }
+
+         if(estadvalifac == 2){
+		 quirecibe = $F('recibidapor');
+	     new Ajax.Updater('findevalija','views04/auditarvalija3.php', {
+	                          parameters: {fcadena: cadena, fcomentario : comentariov, festvalifact : estadvalifac, fqrecibe : quirecibe} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+         }
+
+         if(estadvalifac == 3){
+		 quirecibe = $F('recibidapor');
+		 quientre  = $F('entregdpor');
+	     new Ajax.Updater('findevalija','views04/auditarvalija3.php', {
+	                          parameters: {fcadena: cadena, fcomentario : comentariov, festvalifact : estadvalifac, fqrecibe : quirecibe,
+	                          fqentrega : quientre} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+         }
+
+         if(estadvalifac == 4){
+
+	     new Ajax.Updater('findevalija','views04/auditarvalija3.php', {
+	                          parameters: {fcadena: cadena, fcomentario : comentariov, festvalifact : estadvalifac, fcometfa : cadcome} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+         }
+	  }
+  }
+}
+
+function buscarfacturavalija(){
+  numfactura = $F('factura');
+  seriefactura = $F('serie');
+  if((Field.present('factura')==false) || (Field.present('serie')==false)){
+	  alert("Los campos No. Factura y Serie son necesarios!!!");
+  }else{
+	     new Ajax.Updater('buscarfacturavalija','views06/reportfactvalija1.php', {
+	                          parameters: {ffactura: numfactura, fserie : seriefactura} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+	  }
+}
+
+function AnularValija(idvalija,serialv,entenombre){
+
+ if (confirm("Realmente desea eliminar la valija con Serial No."+serialv+"\nDel ente "+entenombre)) {
+          new Ajax.Updater('misvalija','views04/anulavalija.php', {
+	                          parameters: {fidvalija: idvalija, fserialvali: serialv} ,
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+
+        }else{
+
+        }
+
+}
+
+function usuadepartamento(){
+    var qdpartamento = $F('iddepartamento');
+    if (qdpartamento > 0){
+		$('lusuarios').show();
+		 new Ajax.Updater('lusuarios', 'views07/cartelrausuario.php', {
+               parameters: {iddepartamento: qdpartamento}});
+		}else{
+						$('qusuarios').show();
+						$('lusuarios').hide();
+			}
+}
+
+function GuardAviso(){
+    var qdpartamento = $F('iddepartamento');
+    if (qdpartamento > 0){
+		 var fechaini = $F('feini');
+		 var fechafin = $F('feifi');
+		 var elaviso  = $F('aviso');
+		 var usuario  = $F('idusur');
+		 new Ajax.Updater('avisoguardado', 'views07/cartelraguardada.php', {
+               parameters: {iddepartamento: qdpartamento, ffechaini: fechaini, ffechafin: fechafin, faviso: elaviso, fusuario: usuario}});
+		}else{
+			var fechaini = $F('feini');
+		    var fechafin = $F('feifi');
+		    var elaviso  = $F('aviso');
+		    var usuario  = 0;
+		    new Ajax.Updater('avisoguardado', 'views07/cartelraguardada.php', {
+               parameters: {iddepartamento: qdpartamento, ffechaini: fechaini, ffechafin: fechafin, faviso: elaviso, fusuario: usuario}});
+
+			}
+
+}
+
+
+
+function Cartelera(avisotodos, avisodeparta, avisousuario){
+  Modalbox.show("views01/avisocartelera.php", {title: 'Cartelera Informativa CLINISALUD', width: 800, method: 'get',
+             params:{
+             todosaviso: avisotodos, departaviso: avisodeparta, usuarioaviso: avisousuario}
+             });
+}
+function GLibroVenta(){
+ var elmes =$F('elmes');
+ var elano =$F('elano');
+ var elsucursal =$F('sucursal');
+ var elestfactu =$F('forma_pago');
+ url='views06/libventa1.php?formes='+elmes+'&forano='+elano+'&forsucursal='+elsucursal+'&forestfact='+elestfactu;
+  imprimir(url);
+
+
+}
+
+
+function LibVentaD(){
+ var elmes =$F('elmes');
+ var elano =$F('elano');
+ var elsucursal =$F('sucursal');
+ var elestfactu =$F('forma_pago');
+ url='views06/libventad.php?formes='+elmes+'&forano='+elano+'&forsucursal='+elsucursal+'&forestfact='+elestfactu;
+  imprimir(url);
+}
+
+
+
+
+function ProcefacLote(){
+   var nomarchivo = $F('nombarchivo');
+    new Ajax.Updater('facturaslote','views04/facturaxlote1.php', {
+	                          parameters: {elarchivo: nomarchivo},
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+}
+
+function FacturarLote1(){
+   var formadpaho   = $F('forma_pago1');
+   var tipotarjeta  = $F('nom_tarjeta');
+   var fechapago    = $F('dateField5');
+   var elbanco      = $F('banco');
+   var numcheque    = $F('no_cheque');
+   var estadfact    = $F('estado_fac');
+   var nomdarchivo  = $F('nombreachivo');
+      new Ajax.Updater('clientes','views04/facturaxlote2.php', {
+	                          parameters: {elformapago: formadpaho, eltipotarjeta: tipotarjeta, elfechpago : fechapago, elnbanco: elbanco,
+	                                       elnumcheque: numcheque, elestadfact:  estadfact, elnombrearchivo: nomdarchivo},
+	                          onCreate: function(response) {
+                              a= Ajax.activeRequestCount;
+                             if(a>=0)
+	                          $('spinnerP1' ).show();
+                               },
+	                           onComplete: ContFactura
+                                });
+
+}
+
+function CarteleraHM(){
+   Modalbox.show("views01/morbcartelera.php", {title: 'Morbilidad', width: 800, method: 'get',
+             params:{}
+             });
+}
+
+function VerPacMorbi(fecha,provee,doctor){
+  Modalbox.show("views01/morbcartelera1.php", {title: 'Morbilidad', width: 800, method: 'get',
+             params:{lafecha: fecha, elprovee: provee, eldoctor: doctor}
+             });
+}
+
+function EgresosEmergencia(pag,npag){
+    	var contenedor;
+    	contenedor = document.getElementById('MostrarEgresos');
+    	ajax=nuevoAjax();
+    	ajax.open("post", "views/EgresosPorEmergencia.php",true);
+    	ajax.onreadystatechange=function() {
+    	if (ajax.readyState==4) {
+    		contenedor.innerHTML = ajax.responseText
+    		}
+    	}
+    	ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+    	ajax.send("pag="+pag+"&npag="+npag)
+    }

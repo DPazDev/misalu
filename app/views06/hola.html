@@ -1,0 +1,26 @@
+<html>
+<head><title>hola a todos</title>
+<link href="../public/stylesheets/modalbox.css"          rel="stylesheet" type="text/css">
+</head>
+<body>
+<p>From the version 1.5.4 you also may use &ldquo;Offline-mode&rdquo; to show modal dialogs without Ajax-requests and use instead pure HTML. Modalbox supports:</p>
+				<ul>
+					<li>plain HTML</li>
+
+					<li>DOM nodes</li>
+					<li>HTML JavaScript objects</li>
+				</ul>
+				<p>You can find more info and demos on each method below</p>
+				
+				<h3>Plain HTML</h3>
+				<p>Let's say you're about to show some kind of short confirmation dialog. Something like &ldquo;Are you sure to delete this item?&rdquo; Obviously, it's too much to use a separated HTML page and an additional Ajax request to do that. ModalBox is the solution:</p>
+
+				<pre>Modalbox.show('&lt;div class=\'warning\'&gt;&lt;p&gt;Are you sure to delete this&not; 
+item?&lt;/p&gt; &lt;input type=\'button\' value=\'Yes, delete!\'&not;
+onclick=\'Modalbox.hide()\' /&gt; or &lt;input type=\'button\' 
+value=\'No, leave it!\' onclick=\'Modalbox.hide()\' /&gt;&lt;/div&gt;',&not;
+
+{title: this.title, width: 300});</pre>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+.factura {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	background-repeat: repeat-x;
+}
+.xl65
+ {
+	 mso-style-parent:style0;
+ mso-number-format:"\@";
+	}
+	
+.datos_cliente {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: normal;
+	color: #000000;
+	background-repeat: repeat-y;
+}
+
+.datos_cliente4 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 23px;
+	font-weight: normal;
+	color: #000000;
+	
+	background-repeat: repeat-y;
+}
+
+.tabla_cabecera5 {
+	width:700px;
+    	border-collapse: collapse;
+}
+
+.tabla_citas {
+        width:768px;
+        margin:auto;
+        border-collapse: collapse;
+}
+
+.titulo {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	font-weight: normal;
+	text-align:center;
+	color: #000000;
+	background-image: url(pixel_vert.png);
+	background-repeat: repeat-y;
+}
+
+.titulo1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	font-weight: normal;
+	text-align:right;
+	color: #000000;
+	background-image: url(pixel_vert.png);
+	background-repeat: repeat-y;
+}
+
+.titulo2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	font-weight: normal;
+	text-align:left;
+	color: #000000;
+	background-image: url(pixel_vert.png);
+	background-repeat: repeat-y;
+}
+
+.titulo3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	text-align:center;
+	color: #000000;
+	background-image: url(pixel_vert.png);
+	background-repeat: repeat-y;
+}
+
+.datos_cliente2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: normal;
+	text-align:center;
+	color: #000000;
+	background-image: url(pixel_vert.png);
+	background-repeat: repeat-y;
+
+}
+
+.datos_cliente22 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 19px;
+	font-weight: normal;
+	
+	color: #000000;
+	background-image: url(pixel_vert.png);
+	background-repeat: repeat-y;
+}
+
+.datos_cliente3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	text-align:center;
+	font-weight: normal;
+	color: #000000;
+}
+
+.datos_cliente3r {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	text-align:center;
+	font-weight: normal;
+	color: #FC0326;
+}
+.datos_cliente33 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8px;
+        text-align:left;
+        font-weight: normal;
+        color: #000000;
+}
+
+
+.fecha {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-align:right;
+	color: #000000;
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+.descrip_main {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	text-align:center;
+	color: #000000;
+	background-image: url(pixel_descrip.png);
+	background-repeat: repeat-x;
+	background-position: top;
+}
+.cantidades {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	text-align:center;
+	background-image: url(pixel_num.png);
+	background-repeat: repeat-y;
+}
+.recibo {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #000000;
+	text-align:right;
+}
+.recibo_nota {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	text-align:right;
+	color: #000000;
+}
+.recibo_firma {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #000000;
+	text-align:center;
+}
+
+BODY, TD {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}

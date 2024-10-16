@@ -1,0 +1,27 @@
+<?php
+/* Nombre del Archivo: banco1.php
+   Descripción:FORMULARIO PARA INSERTAR un BANCO en la base de datos, para ser utilizado posteriormente 
+*/
+
+include ("../../lib/jfunciones.php");
+sesion();
+
+   $nombre1=$_REQUEST['nombre1'];
+
+?>
+<link HREF="../../public/stylesheets/estilos1.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js">
+
+</script>
+
+<form action="POST" method="POST" name="banca" id="formp">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+	<td colspan=1 class="tdtitulos">N&uacute;mero de Cuenta</td>
+	<td colspan=1 class="tdcampos"><input type="text" size="30" class="campos" name="num"></td>
+</tr>
+<br>
+<tr>
+<td colspan=1 class="tdtitulos">Tipo de Cuenta</td>
+	<td colspan=1 class="tdcampos"><input type="text" size="30" class="campos" name="tipo"></td>
+</tr>
+<br>

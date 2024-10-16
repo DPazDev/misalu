@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Crear Dependencia<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para crear una dependencia, asignar un usuario a un dependencia o ver los usuario de una dependencia, se deberá acceder al módulo <I>Compras</I> luego seleccionar <I>Crear Dependencia</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen1.jpg" WIDTH=461 HEIGHT=216 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Aparecerá una pantalla con las tres opciones: Crear dependencia, Asignar usuario(s) a dependencia, Ver usuario(s) en dependencias(s).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen2.jpg" WIDTH=615 HEIGHT=57 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Crear dependencia</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al hacer clic en <I>Crear dependencia</I>, aparece un formulario donde se registra: Nombre de la dependencia y la escogencia si es una dependencia central o no. En en el siguiente ejemplo se escribe el nombre de una nueva dependencia, el mismo debe ser representativo. (ver figura 3).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen3.jpg" WIDTH=618 HEIGHT=276 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de llenar el formulario hacer clic en <I>Guardar</I> se deplegará una lista con las Dependencias incluyendo a la que se acaba de registrar. (ver figura 4).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen4.jpg" WIDTH=617 HEIGHT=960 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Asignar usuario(s) a dependencia</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al hacer clic <I>Asignar usuario(s) a dependencia</I>, aparecerá un formulario donde se deberá escoger: Nombre de Usuario, Dependencia, y escoger la permisología que tendrá el usuario en la dependencia (Pedidos y Entregas, Pedidos, Entregas y Desactivar). (ver figura 5).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen5.jpg" WIDTH=617 HEIGHT=312 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 5</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego de llenar los datos, y haber dado un clic en <I>Guardar</I>, se mostrar un mensaje que dicho usuario ha sido registrado a la dependencia escogida anteriormente (ver figura 6).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen6.jpg" WIDTH=616 HEIGHT=30 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 6</I></div></FONT>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT COLOR="#5c8526"><I><B>Ver usuario(s) en dependencia</B></I></FONT></P>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al hacer clic <I>Ver usuario(s) en dependencia</I>, aparecerán  dos opciones, realizar búsqueda por Usuario o por Dependencia. (ver figura 7)</P>  
+<P><div align="center"><IMG SRC="imagenes/cdepen7.jpg" WIDTH=615 HEIGHT=269 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 7</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se escoge realizar la búsqueda por dependencia se mostrará un menu desplegable donde se seleccionará la dependencia que se desea consultar (ver figura 8).</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen8.jpg" WIDTH=615 HEIGHT=269 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 8</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al dar clic en <I>buscar</I> el sistema mostrará el/los usuario(s) y su(s) permisologia(s), perteneciente(s) a la dependencia seleccionada y dará la opción de modificar. (ver figura 9)</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen9.jpg" WIDTH=617 HEIGHT=226 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 9</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Al dar clic en <I>Modificar</I> el sistema mostrará de nuevo el formulario donde se podran realizar los cambios pertinentes, ya sea dependencia y/o persimologías. (ver figura 10) y se da un clic en <I>Guardar</I>, en el ejemplo se está modificando la permisogía, antes aparecia solo Pedidos, y se cambia a Pedidos y Entregas</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen10.jpg" WIDTH=617 HEIGHT=207 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 10</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego el sistema indicara que dichos cambios se han producido. (ver figura 11)</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen11.jpg" WIDTH=618 HEIGHT=296 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 11</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Si se escoge realizar la búsqueda por usuario, aparecerá un menú desplegable para seleccionar el usuario que se desea consultar. (ver figura 12)</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen12.jpg" WIDTH=615 HEIGHT=269 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 12pt"><div align="center"><I>Figura 12</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego aparecerá la(s) dependencia(s) a la que pertenece el usuario consultado, de igual manera en este caso se puede resalizar la modificación de la(s) dependencia(s) que aparezcan. (ver figura 13)</P>
+<P><div align="center"><IMG SRC="imagenes/cdepen13.jpg" WIDTH=616 HEIGHT=252 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 12pt"><div align="center"><I>Figura 13</I></div></FONT>
+
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="carticulo.html">Volver al Módulo Compras</A></U></FONT></div></P>
+</BODY>
+</HTML>

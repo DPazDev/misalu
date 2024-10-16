@@ -1,0 +1,298 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+/* propiedades para armar el reporte de excel */
+$numealeatorio=rand(2,99);//crea un numero aleatorio para el nombre del archivo
+/** Error reporting */
+error_reporting(E_ALL);
+date_default_timezone_set('Europe/London');
+/** Include PHPExcel */
+require_once '../../lib/phpexcel/Classes/PHPExcel.php';
+// Create new PHPExcel object
+$objPHPExcel = new PHPExcel();
+/* fin propiedades para armar el reporte de excel */
+// recepcion de datos enviados
+$proveedor=$_REQUEST['proveedor'];
+$proveedorc=$_REQUEST['proveedorc'];
+
+
+$fechainicio=$_REQUEST['fechainicio'];
+$fechafin=$_REQUEST['fechafin'];
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select * from admin where admin.id_admin='$id_admin'");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+if ($f_admin[id_ente]>0){
+    $condicionente="entes.id_ente=$f_admin[id_ente] and";
+    }
+/* ****  verifico que tipo de proveedor busco si medico o clinica **** */
+if ($proveedorc=='0'){
+	$tipo_proveedor="proveedores.id_s_p_proveedor=s_p_proveedores.id_s_p_proveedor and 
+                                s_p_proveedores.id_persona_proveedor=personas_proveedores.id_persona_proveedor and 
+                                s_p_proveedores.id_especialidad=especialidades_medicas.id_especialidad_medica and ";
+	$fromprove="s_p_proveedores,
+					personas_proveedores,
+					especialidades_medicas,";
+	$selectprove=" personas_proveedores.nombres_prov,
+                                personas_proveedores.apellidos_prov,
+                                personas_proveedores.cedula_prov,
+                                especialidades_medicas.especialidad_medica,";
+			
+			
+			if ($proveedor=="*")
+			{
+			$var_proveedor="and gastos_t_b.id_proveedor>'0'";	
+			$proveedor=0;
+			}
+			else
+			{
+			$var_proveedor="and gastos_t_b.id_proveedor='$proveedor'";	
+			}
+	
+								
+	}
+	else
+	{
+		$tipo_proveedor="proveedores.id_clinica_proveedor=clinicas_proveedores.id_clinica_proveedor and ";
+			$fromprove="clinicas_proveedores,";
+			$selectprove=" ";
+			
+					if ($proveedorc=="*")
+			{
+			$var_proveedor=" ";	
+			}
+			else
+			{
+			$var_proveedor=" and gastos_t_b.id_proveedor='$proveedorc' ";	
+			}  			
+		}
+/* **** busco las citas medicas *** */
+$q_morbilidad=("select 
+                                entes.id_tipo_ente,
+                                entes.nombre,
+                                clientes.nombres,
+                                clientes.apellidos,
+                                clientes.cedula,
+                                clientes.edad,
+                                clientes.sexo,
+                                clientes.fecha_nacimiento,
+                                procesos.comentarios,
+                                procesos.id_proceso,
+                                procesos.fecha_recibido,
+                                procesos.id_titular,
+                                procesos.id_beneficiario,
+								$selectprove
+                                gastos_t_b.fecha_cita,
+                                gastos_t_b.enfermedad,
+								count(gastos_t_b.id_proceso) 
+                            from 
+                                clientes,
+                                procesos,
+                                gastos_t_b,
+                                proveedores,
+                               $fromprove
+                                entes,
+                                titulares,
+                                admin 
+                            where 
+                                gastos_t_b.id_proceso=procesos.id_proceso and 
+                                gastos_t_b.id_proveedor=proveedores.id_proveedor 
+                                $var_proveedor and 
+                                gastos_t_b.fecha_cita>='$fechainicio' and 
+                                gastos_t_b.fecha_cita<='$fechafin' and 
+								$tipo_proveedor
+								procesos.id_titular=titulares.id_titular and 
+                                titulares.id_cliente=clientes.id_cliente and 
+                                titulares.id_ente=entes.id_ente and 
+                                $condicionente
+                                procesos.id_admin=admin.id_admin and 
+                                procesos.id_estado_proceso<>14
+						group by
+								  entes.id_tipo_ente,
+                                entes.nombre,
+                                clientes.nombres,
+                                clientes.apellidos,
+                                clientes.cedula,
+                                clientes.edad,
+                                clientes.sexo,
+                                clientes.fecha_nacimiento,
+                                procesos.comentarios,
+                                procesos.id_proceso,
+                                procesos.fecha_recibido,
+                                procesos.id_titular,
+                                procesos.id_beneficiario,
+								$selectprove
+                                gastos_t_b.fecha_cita,
+                                gastos_t_b.enfermedad
+						order by 
+								procesos.id_proceso
+");
+$r_morbilidad=ejecutar($q_morbilidad);
+$num_filas=num_filas($r_morbilidad);
+
+// propiedades para documentar el archivo o reporte de excel
+$objPHPExcel->getProperties()->setCreator("$f_admin[nombres] $f_admin[apellidos]")
+							 ->setLastModifiedBy("$f_admin[nombres] $f_admin[apellidos]")
+							 ->setTitle("Relacion de  Procesos de Morbilidad Medica ")
+							 ->setSubject("Office 2007 XLSX Test Document")
+							 ->setDescription("Reporte que Exportar a Excel la Morbilidad Para Auditar el Proceso")
+							 ->setKeywords("office 2007 openxml php")
+							 ->setCategory("Test result file");
+
+
+$i=9;//variable para dar la posicion de la celda;
+$objPHPExcel->getActiveSheet(0)->setCellValue("A".$i, '')
+                    ->setCellValue("B".$i, 'Orden')
+                    ->setCellValue("C".$i, 'Fecha Emision')
+                    ->setCellValue("D".$i, 'Factura')
+                    ->setCellValue("E".$i, 'Fecha Emision Factura')
+                    ->setCellValue("F".$i, 'Serie')
+                    ->setCellValue("G".$i, 'Num Control')
+                    ->setCellValue("H".$i, 'Titular')
+                    ->setCellValue("I".$i, 'Cedula')	
+					->setCellValue("J".$i, 'Beneficiario')
+                    ->setCellValue("K".$i, 'Cedula')
+                    ->setCellValue("L".$i, 'Ente')
+					->setCellValue("M".$i, 'Monto (Bs.F.)');	
+      
+$contador=0;
+		while($f_morbilidad=asignar_a($r_morbilidad,NULL,PGSQL_ASSOC)){
+			
+			$q_benerficiario=("select 
+												clientes.nombres,
+												clientes.apellidos,
+												clientes.cedula,
+												clientes.fecha_nacimiento 
+										from 
+												beneficiarios,
+												clientes 
+										where 
+												beneficiarios.id_beneficiario=$f_morbilidad[id_beneficiario] and 
+												beneficiarios.id_cliente=clientes.id_cliente");
+$r_benerficiario=ejecutar($q_benerficiario);
+$f_benerficiario=asignar_a($r_benerficiario);
+			
+			$q_factura=("select 	
+										tbl_facturas.numero_factura,
+										tbl_facturas.fecha_emision,
+										tbl_facturas.numcontrol,
+										tbl_series.nomenclatura,
+										tbl_procesos_claves.monto 
+								from 
+										tbl_facturas,
+										tbl_procesos_claves,
+										tbl_series
+								where
+										tbl_facturas.id_factura=tbl_procesos_claves.id_factura and
+										tbl_facturas.id_serie=tbl_series.id_serie and
+										tbl_procesos_claves.id_proceso=$f_morbilidad[id_proceso] and
+										tbl_facturas.id_estado_factura<3");
+$r_factura=ejecutar($q_factura);
+$f_factura=asignar_a($r_factura);
+
+$i++;
+$contador++;
+
+/* empiezo a armar la consulta para el reporte de excel en este caso como necesito validar 
+que todo sea tipo texto utilizo la siguiente funcion setCellValueExplicit y al final del campo q se va a mostrar
+coloco el tipo de archivo PHPExcel_Cell_DataType::TYPE_STRING */
+
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("A".$i, $contador, PHPExcel_Cell_DataType::TYPE_STRING);
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("B".$i, $f_morbilidad[id_proceso] , PHPExcel_Cell_DataType::TYPE_STRING);
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("C".$i, $f_morbilidad[fecha_recibido], PHPExcel_Cell_DataType::TYPE_STRING);    
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("D".$i,$f_factura[numero_factura], PHPExcel_Cell_DataType::TYPE_STRING);            
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("E".$i, $f_factura[fecha_emision], PHPExcel_Cell_DataType::TYPE_STRING);                   
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("F".$i, $f_factura[nomenclatura], PHPExcel_Cell_DataType::TYPE_STRING);
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("G".$i, $f_factura[numcontrol], PHPExcel_Cell_DataType::TYPE_STRING);                    		    $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("H".$i, "$f_morbilidad[nombres] $f_morbilidad[apellidos]", PHPExcel_Cell_DataType::TYPE_STRING);                
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("I".$i, $f_morbilidad[cedula], PHPExcel_Cell_DataType::TYPE_STRING);         $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("J".$i, "$f_benerficiario[apellidos]  $f_benerficiario[nombres]", PHPExcel_Cell_DataType::TYPE_STRING);                    		            		
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("K".$i, $f_morbilidad[cedula], PHPExcel_Cell_DataType::TYPE_STRING);                    $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("L".$i, $f_morbilidad[nombre], PHPExcel_Cell_DataType::TYPE_STRING);                    		            				
+$objPHPExcel->getActiveSheet(0)->setCellValue("M".$i, $f_factura[monto]);                    		            				
+}
+$j=$i;
+$i++;
+pg_free_result($r_factura);
+if($contador==1){
+$contador="(Una Orden)";
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("A".$i, $contador, PHPExcel_Cell_DataType::TYPE_STRING);                    		            				
+}else{
+$contador="($contador Ordenes)";
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("A".$i, $contador, PHPExcel_Cell_DataType::TYPE_STRING);                    		            				
+}
+$objPHPExcel->getActiveSheet(0)->setCellValueExplicit("L".$i, 'total', PHPExcel_Cell_DataType::TYPE_STRING);                    		            				
+$objPHPExcel->getActiveSheet(0)->setCellValue("M".$i, "=SUM(M4:M$j)");                    		            				
+
+//propiedades para darle tamaño automatico a las celdas
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(3);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+
+// Set cell number formats
+$objPHPExcel->getActiveSheet()->getStyle("M4:M$j")->getNumberFormat()
+->setFormatCode('#,##0.00');
+// Add a drawing to the worksheet
+$objDrawing = new PHPExcel_Worksheet_Drawing();
+$objDrawing->setName('Logo');
+$objDrawing->setDescription('Logo');
+$objDrawing->setPath('../../public/images/head.png');
+$objDrawing->setHeight(100);
+$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+// Set style for header row using alternative method
+
+$objPHPExcel->getActiveSheet()->getStyle('A9:M9')->applyFromArray(
+		array(
+			'font'    => array(
+				'bold'      => true
+			),
+			'alignment' => array(
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+			),
+			'borders' => array(
+				'top'     => array(
+ 					'style' => PHPExcel_Style_Border::BORDER_THIN
+ 				)
+			),
+			'fill' => array(
+	 			'type'       => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+	  			'rotation'   => 90,
+	 			'startcolor' => array(
+	 				'argb' => 'FFA0A0A0'
+	 			),
+	 			'endcolor'   => array(
+	 				'argb' => 'FFFFFFFF'
+	 			)
+	 		)
+		)
+);
+// se empieza a finalizar las propiedaes  realizacion de la hoja de excel 
+// Rename worksheet
+$objPHPExcel->getActiveSheet()->setTitle('Relacion_Morbilidad_Procesos');
+
+
+// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+$objPHPExcel->setActiveSheetIndex(0);
+
+
+// Redirect output to a client’s web browser (Excel5)
+header('Content-Type: application/vnd.ms-excel');
+header("Content-Disposition: attachment; filename=Relacion_Morbilidad_Procesos_$numealeatorio.xls");
+header('Cache-Control: max-age=0');
+
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+$objWriter->save('php://output');
+exit;
+// fin de finalizar las propiedaes  realizacion de la hoja de excel 
+
+?>

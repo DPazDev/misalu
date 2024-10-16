@@ -1,0 +1,1445 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+
+$cheque=$_REQUEST['cheque'];
+$banco=$_REQUEST['banco'];
+$proveedor=$_REQUEST['proveedor'];
+/* **** comparo si la busqueda es de un proveedor especifico si lo es muestro info para colocar datos del cheque para asignarlos a varios pagos **** */
+if ($proveedor>"0" && $cheque==0){
+?>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+
+<tr>		<td colspan=9 class="titulo_seccion">Datos del Cheque Para Asiganarlo a Varios Pagos</td>	</tr>
+
+<tr>
+<td colspan=2 class="tdtitulos">
+Numero Cheque
+</td>
+<td colspan=2 class="tdtitulos">
+<input class="campos" type="text" id="numchequeasig"  name="numchequeasig" maxlength=128 size=10 value="" >
+</td>
+<td colspan=2 class="tdcamposc">Del Banco </td>
+                <td colspan=3 class="tdcamposc"><select id="bancoasig" name="bancoasig" class="campos" style="width: 200px;" OnChange="invisiblecheque(this);" >
+<option value="0">Seleccione el Banco</option>
+
+<?php $q_bancoasig=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_ban<>7 and bancos.id_ban<>10");
+$r_bancoasig=ejecutar($q_bancoasig);
+while($f_bancoasig=asignar_a($r_bancoasig,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_bancoasig[id_banco]?>"><?php echo "$f_bancoasig[nombanco] $f_bancoasig[numero_cuenta] "?></option>
+<?php 
+}
+?>
+</select>
+</td>
+			
+</tr>
+
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+                <td colspan=2 class="tdcamposc"><select id="tipocuentaasig" name="tipocuentaasig" class="campos" style="width: 250px;"  >
+                  <?php $q_tipocuentaasig=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuentaasig=ejecutar($q_tipocuentaasig);
+while($f_tipocuentaasig=asignar_a($r_tipocuentaasig,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuentaasig[id_tipocuenta]?>"><?php echo "$f_tipocuentaasig[tipo_cuenta] "?></option>
+<?php 
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos">
+Motivo
+</td>
+<td colspan=3 class="tdtitulos">
+<input class="campos" type="text" id="motivoasig"  name="motivoasig" maxlength=128 size=30 value="" >
+			<a href="#" OnClick="guar_varios_che();" id="guardarvarche"  style="visibility:hidden"  class="boton" title="Imprimir Cheques">Guardar</a>
+
+</td>
+</tr>
+
+
+</table>
+<?php
+/* **** fin  de comparar si la busqueda es de un proveedor especifico si lo es muestro info para colocar datos del cheque para asignarlos a varios pagos **** */
+}
+/* **** comparamos si un proveedor especifico o todos para realizar la busquedad**** */
+if ($proveedor==""){
+    $elproveedor="and facturas_procesos.id_proveedor>0";
+   
+    }
+    else
+    {
+        $elproveedor="and facturas_procesos.id_proveedor=$proveedor";
+       
+        }
+/* **** fin comparamos si un proveedor especifico o todos para realizar la busquedad**** */
+
+/* variable para controlar los cheques de proveedor compra */
+$paso=0;
+/* fin variable para controlar los cheques de proveedor compra */
+$tipo_cheque=$_REQUEST['tipo_cheque'];
+
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select * from admin where admin.id_admin='$id_admin'");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+$id_tipo_admin=$f_admin[id_tipo_admin];
+$num_filas=0;
+$num_filas1=0;
+if ($tipo_cheque==0){
+   
+	$q_cheque=("select procesos.*,facturas_procesos.* from facturas_procesos,procesos,admin where facturas_procesos.id_banco='$banco' and  facturas_procesos.num_recibo='$cheque' and facturas_procesos.id_admin=admin.id_admin and admin.id_sucursal=$f_admin[id_sucursal] and facturas_procesos.id_proceso=procesos.id_proceso
+");
+$r_cheque=ejecutar($q_cheque);
+$num_filas=num_filas($r_cheque);
+if ($num_filas>0){
+$tipo="Recibo";
+}
+	else
+{
+	 echo "passsso";
+		$q_cheque=("select procesos.*,facturas_procesos.* from facturas_procesos,procesos,admin where facturas_procesos.id_banco='$banco' and  facturas_procesos.num_recibo=0 and facturas_procesos.numero_cheque='$cheque' and facturas_procesos.id_admin=admin.id_admin and admin.id_sucursal=$f_admin[id_sucursal] and facturas_procesos.id_proceso=procesos.id_proceso
+");
+$r_cheque=ejecutar($q_cheque);
+$num_filas1=num_filas($r_cheque);
+if ($num_filas>0){
+$tipo="Cheque";
+}		
+}
+if ($num_filas==0 and $num_filas1==0){?>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">No Hay Cheques o Recibos con estos Numeros Registrados</td>	</tr>
+</table>
+<?php
+	
+	}
+	else
+	{
+		
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+
+<tr>		<td colspan=7 class="titulo_seccion">Datos del <?php echo $tipo; 
+if ($banco<>8)
+{
+?> <input class="campos" type="text" id="actnumche"  name="actnumche" maxlength=10 size=10 value="<?php echo $cheque?>" > <a href="#" OnClick="act_num_recche();" class="boton" title="Actualizar Numero de Recibo o Cheque">Actualizar</a>		
+<?php
+}
+?> </td>	</tr>	
+
+
+
+<tr>
+		<td class="tdcamposc">Orden</td>
+		<td class="tdcamposc">Fecha Emision</td>
+		<td class="tdcamposc">Titular</td>
+		<td class="tdcamposc">Beneficiario</td>
+		<td class="tdcamposc">Cedula</td>
+		<td class="tdcamposc">Monto</td>
+		<td class="tdcamposc"></td>
+		
+</tr>
+	<?php		
+	$i=0;
+		while($f_cheque=asignar_a($r_cheque,NULL,PGSQL_ASSOC)){
+					$i++;
+					$q_titular=("select clientes.nombres,clientes.apellidos,clientes.cedula,clientes.fecha_nacimiento,titulares.id_ente from titulares,clientes where titulares.id_titular=$f_cheque[id_titular] and titulares.id_cliente=clientes.id_cliente");
+$r_titular=ejecutar($q_titular);
+$f_titular=asignar_a($r_titular);
+$ente=$f_titular[id_ente];
+$motivo=$f_cheque[motivo];
+			$q_benerficiario=("select clientes.nombres,clientes.apellidos,clientes.cedula,clientes.fecha_nacimiento from beneficiarios,clientes where beneficiarios.id_beneficiario=$f_cheque[id_beneficiario] and beneficiarios.id_cliente=clientes.id_cliente");
+$r_benerficiario=ejecutar($q_benerficiario);
+$f_benerficiario=asignar_a($r_benerficiario);
+
+	$monto=$monto + $f_cheque[monto_sin_retencion];
+
+?>
+		
+		<tr>
+		<td class="tdcamposcc"><?php echo $f_cheque[id_proceso]?>
+		</td>
+		<td class="tdcamposcc"><?php echo $f_cheque[fecha_creado]?></td>
+		<td class="tdcamposcc"><?php echo "$f_titular[nombres] $f_titular[apellidos]"?></td>
+		<td class="tdcamposcc"><?php echo "$f_benerficiario[nombres] $f_benerficiario[apellidos]"?></td>
+		<td class="tdcamposcc"><?php echo $f_benerficiario[cedula]?></td>
+		
+		<td class="tdcamposcc"><?php echo $f_cheque[monto_sin_retencion]?>
+		
+		</td>
+		<td class="tdcamposcc"></td>
+	</tr>
+		<?php
+		$cedula=$f_cheque[cedula];
+		$codigo=$f_cheque[codigo];
+		$id_banco=$f_cheque[id_banco];
+		}
+		echo "<input type=\"hidden\" id=\"conexa\"name=\"conexa\" value=\"$i\">
+<input type=\"hidden\" id=\"codigo\"name=\"codigo\" value=\"$codigo\">
+";
+		?>
+	
+	
+	<tr>
+		<td class="tdcamposc"></td>
+		<td class="tdcamposc"></td>
+		<td class="tdcamposc"></td>
+		<td class="tdcamposc"></td>
+		<td  class="tdtitulos">Total Monto</td>
+		<td class="tdcamposc"><?php echo $monto?></td>
+	</tr>
+		<?php $q_cliente=("select clientes.nombres,clientes.apellidos,clientes.cedula,clientes.fecha_nacimiento from clientes where cedula='$cedula'");
+$r_cliente=ejecutar($q_cliente);
+$f_cliente=asignar_a($r_cliente);
+?>
+<tr>		<td colspan=7 class="titulo_seccion"><?php echo $tipo ?> a Nombre de <?php echo "$f_cliente[nombres] $f_cliente[apellidos]";?></td>	</tr>
+<tr>
+<td colspan=1 class="tdtitulos">
+Motivo
+</td>
+<td colspan=3 class="tdtitulos">
+<input class="campos" type="text" id="motivo"  name="motivo" maxlength=128 size=50 value="<?php echo $motivo?>" >
+</td>
+<td colspan=5 class="tdtitulos">
+
+                     
+                
+				<?php if ($id_banco<>9) {?>
+				<a href="#" OnClick="anu_che_reem();" class="boton" title="Anular Recibo o Cheque">Anular</a>				<?php 
+	
+			$url="'views04/icheque_reem.php?codigo=$codigo&cedula=$cedula&ente=$ente&banco=$banco'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Cheque o Recibo"> Imprimir</a>
+			<?php }?>
+			<a href="#" OnClick="che_reembolso();" class="boton" title="Ir a Chueques Reembolsos">Crear Otro Cheque de Reembolso</a>
+				</td>
+                
+        </tr>
+</table>
+<?php
+}
+}
+if ($tipo_cheque==3 and $banco<>13)
+{
+   
+	$q_facturas=("select * from facturas_procesos where facturas_procesos.num_recibo='$cheque' 
+and facturas_procesos.id_banco='$banco' and facturas_procesos.tipo_proveedor=3 $elproveedor
+");
+$r_facturas=ejecutar($q_facturas);
+
+	$q_facturas1=("select * from facturas_procesos where facturas_procesos.num_recibo='$cheque' 
+and facturas_procesos.id_banco='$banco' and facturas_procesos.tipo_proveedor=3 $elproveedor
+");
+
+$r_facturas1=ejecutar($q_facturas1);
+$f_facturas1=asignar_a($r_facturas1);
+$num_filas=num_filas($r_facturas);
+if ($num_filas>0){
+$tipo="Recibo";
+}
+	else
+{
+	
+$q_facturas=("select * from facturas_procesos where facturas_procesos.numero_cheque='$cheque' 
+and facturas_procesos.id_banco='$banco' and facturas_procesos.tipo_proveedor=3 $elproveedor
+");
+$r_facturas=ejecutar($q_facturas);
+$q_facturas1=("select * from facturas_procesos where facturas_procesos.numero_cheque='$cheque' 
+and facturas_procesos.id_banco='$banco' and facturas_procesos.tipo_proveedor=3 $elproveedor
+");
+$r_facturas1=ejecutar($q_facturas1);
+$f_facturas1=asignar_a($r_facturas1);
+
+$num_filas1=num_filas($r_facturas);
+if ($num_filas>0){
+$tipo="Cheque";
+}		
+}
+if ($num_filas==0 and $num_filas1==0){?>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">No Hay Cheques o Recibos con estos Numeros Registrados</td>	</tr>
+</table>
+<?php
+	
+	}
+	else
+	{
+		
+$q_pc=("select clinicas_proveedores.*,proveedores.id_proveedor from clinicas_proveedores,proveedores where clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor
+                and clinicas_proveedores.prov_compra=1 and proveedores.id_proveedor=$f_facturas1[id_proveedor] order by clinicas_proveedores.nombre");
+                $r_pc=ejecutar($q_pc);
+             	$f_pc=asignar_a($r_pc);
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+			<tr>		
+<td colspan=9 class="titulo_seccion">Comprobante de Retencion IVA</td>	
+</tr>
+	</tr>
+	<tr>
+		<td colspan=1 class="tdtitulos">Fecha Emisi&oacute;n</td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas1[fecha_creado]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos">Nro. de Comprobante</td>
+		<td colspan=2 class="tdcampos"><?php echo $f_facturas1[compro_retiva_seniat]?></td>
+		<td colspan=1 class="tdtitulos">Periodo Fiscal</td>
+		<td colspan=2 class="tdcampos"><?php 
+		$compro_retiva_seniat=$f_facturas1[compro_retiva_seniat];
+$periodo=split("-",$compro_retiva_seniat);
+		echo "A&ntilde;o: $periodo[0] / Mes $periodo[1]"?></td>
+	</tr>
+    <tr>
+		<td colspan=1 class="tdtitulos">Codigo</td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas1[codigo]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=2 class="tdcampos"></td>
+		<td colspan=1 class="tdtitulos">l</td>
+		<td colspan=2 class="tdcampos"></td>
+	</tr>
+	<tr>		
+<td colspan=9 class="titulo_seccion">Datos del Agente de Retenci&oacute;n</td>	
+</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Nombre o Razon Social </td>
+		<td colspan=2 class="tdcampos">CLINISALUD C.A.</td>
+		<td colspan=2 class="tdtitulos">Rif </td>
+		<td colspan=1 class="tdcampos">J-31180863-9</td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Domicilio Fiscal </td>
+		<td colspan=6 class="tdcampos">Av. las Americas C.C. Mayeya nivel Mezanina Locales 16,17 y 24 Sector Los Sauzales Merida, estado Merida</td>
+		
+	</tr>
+	<tr>		
+<td colspan=9 class="titulo_seccion">Datos Del Proveedor</td>	
+</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Nombre o Razon Social </td>
+		<td colspan=2 class="tdcampos"><?php $nombreprov=$f_pc[nombre]; echo $f_pc[nombre]?></td>
+		<td colspan=2 class="tdtitulos">Rif </td>
+		<td colspan=1 class="tdcampos"><?php echo $f_pc[rif]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Domicilio Fiscal  </td>
+		<td colspan=6 class="tdcampos"><?php $direccionpro=$f_pc[direccion]; echo $f_pc[direccion]?></td>
+		
+	</tr>
+	
+	
+	<tr>
+		<td colspan=9 class="tdtitulos"><hr></hr></td>
+		
+	</tr>
+		<tr>
+		<td colspan=1 class="tdtitulos">Num Control de la Factura</td>
+		<td colspan=1 class="tdtitulos">Num Factura</td>
+		<td colspan=1 class="tdtitulos">Fecha Emision de la Factura</td>
+		<td colspan=1 class="tdtitulos">Monto Total de la Factura</td>
+		<td colspan=1 class="tdtitulos">Monto Exento</td>
+		<td colspan=1 class="tdtitulos">Base Imponible</td>
+		<td colspan=1 class="tdtitulos">I.V.A. Facturado</td>
+		<td colspan=1 class="tdtitulos">I.V.A. Retenido</td>
+		<td colspan=1 class="tdtitulos">Total Neto A Pagar</td>
+	</tr>
+
+<?php 
+while($f_facturas=asignar_a($r_facturas,NULL,PGSQL_ASSOC)){
+	$total_iva_ret= 	$total_iva_ret + $f_facturas[iva_retenido];
+	$total_neto=$total_neto +  (($f_facturas[monto_sin_retencion] + $f_facturas[monto_con_retencion] + $f_facturas[iva]) - $f_facturas[iva_retenido]);
+	$fecha_emision
+	?>
+	<tr>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas[no_control_fact]?></td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas[factura]?></td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas[fecha_emision_fact]?></td>
+	<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas[monto_sin_retencion] + $f_facturas[monto_con_retencion] + $f_facturas[iva],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas[monto_sin_retencion],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas[monto_con_retencion],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas[iva],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas[iva_retenido],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format(($f_facturas[monto_sin_retencion] + $f_facturas[monto_con_retencion] + $f_facturas[iva]) - $f_facturas[iva_retenido],2,',','') ?></td>
+	</tr>
+	
+	<?php
+	}
+?>
+</tr>
+		<tr>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"><?php echo number_format($total_iva_ret,2,',','')?></td>
+		<td colspan=1 class="tdtitulos"><?php echo number_format($total_neto,2,',','')?></td>
+	</tr>
+	<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos">Ley IVA - Art. 11: "Seran responsables del pago del impuesto en calidad de agentes de retencion los compradores o adquirientes de determinados bienes inmuebles y los receptores de ciertos servicios, a quienes la Administracion Tributaria designe como tal"</td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=4 class="tdtitulos">
+<td colspan=5 class="tdtitulos">
+			
+<?php
+
+			$url="'views04/icheque_prov.php?codigo=$f_facturas1[codigo]&numcheque=$f_facturas1[numero_cheque]&banco=$f_facturas1[id_banco]&nombreprov=$nombreprov&cedula=$f_pc[rif]&prov=3&id_proveedor=$f_pc[id_proveedor]'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Cheque o Recibo"> Imprimir Cheque</a>
+<?php
+	
+			$url="'views04/icom_ret_iva.php?codigo=$f_facturas1[codigo]&banco=$f_facturas1[id_banco]&nombreprov=$nombreprov&cedula=$f_pc[rif]&prov=3&fecha_emision=$f_facturas1[fecha_creado]&compro_retiva_seniat=$f_facturas1[compro_retiva_seniat]&direccionpro=$direccionpro&id_proveedor=$f_pc[id_proveedor]'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Comprobante"> Imprimir Comprobante</a>
+			
+			</td>
+			
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr>
+<input class="campos" type="hidden" id="codigo"  name="codigo" maxlength=128 size=30 value="<?php echo $f_facturas1[codigo]?>" >
+</td>
+<input class="campos" type="hidden" id="numerocheque"  name="numerocheque" maxlength=128 size=30 value="<?php echo $f_facturas1[numero_cheque]?>" >
+<input class="campos" type="hidden" id="id_banco"  name="id_banco" maxlength=128 size=30 value="<?php echo $f_facturas1[id_banco]?>" >
+
+</tr>
+<?php 
+if ($banco<>9 and ($id_tipo_admin==7 || $id_tipo_admin==11 || $id_tipo_admin==1)) {
+?>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">
+Motivo
+</td>
+<td colspan=6 class="tdtitulos">
+<input class="campos" type="text" id="motivo"  name="motivo" maxlength=128 size=70 value="<?php echo $f_facturas1[motivo]?>" >
+</td>
+<td colspan=2 class="tdtitulos">
+<a href="#" OnClick="anu_che_prov();" class="boton" title="Anula el Cheque de Manera Directa sin Dejar la Opcion de Generarlo Nuevamente">Anular sin dejar datos</a>				
+</td>
+			
+</tr>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr>
+</td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">
+
+</td>
+<td colspan=6 class="tdtitulos">
+
+</td>
+<td colspan=2 class="tdtitulos">
+<a href="#" OnClick="anu_che_prov1();" class="boton_2" title="Anula el Cheque y Vuelve a Cargar Datos Dejando la Opcion de Generarlo Nuevamente">Anular dejando datos</a>				
+</td>
+			
+</tr>
+<?php
+}
+?>
+
+</table>
+<?php
+}
+}
+
+		
+if ($tipo_cheque==3 and $banco==13)
+
+{
+
+/* variable control proveedor compra */
+$paso=1;
+/* fin variable control proveedor compra */
+
+	$q_facturas=("select facturas_procesos.id_proveedor,facturas_procesos.codigo,
+count(facturas_procesos.codigo) from 
+facturas_procesos where facturas_procesos.tipo_proveedor=3 $elproveedor
+and facturas_procesos.id_banco='$banco' group by facturas_procesos.id_proveedor,facturas_procesos.codigo
+");
+$r_facturas=ejecutar($q_facturas);
+$num_filas=num_filas($r_facturas);
+
+if ($num_filas==0) {
+	?>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">No Hay Cheques o Recibos con estos Numeros Registrados</td>	</tr>
+</table>
+<?php
+	
+	}
+	else
+	{
+$i=0;	
+
+		
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+<?php
+while($f_facturas=asignar_a($r_facturas,NULL,PGSQL_ASSOC)){
+$i++;
+$q_facturas1=("select * from facturas_procesos where facturas_procesos.codigo='$f_facturas[codigo]' ");
+$r_facturas1=ejecutar($q_facturas1);
+$f_facturas1=asignar_a($r_facturas1);
+$q_facturas2=("select * from facturas_procesos where facturas_procesos.codigo='$f_facturas[codigo]' ");
+$r_facturas2=ejecutar($q_facturas2);
+
+$q_pc=("select clinicas_proveedores.*,
+                        proveedores.id_proveedor
+            from 
+                    clinicas_proveedores,
+                    proveedores 
+            where 
+                    clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor and
+                    clinicas_proveedores.prov_compra=1 and 
+                    proveedores.id_proveedor=$f_facturas[id_proveedor] 
+            order by clinicas_proveedores.nombre");
+                $r_pc=ejecutar($q_pc);
+             	$f_pc=asignar_a($r_pc);
+
+
+?>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+<tr>		
+<td colspan=9 class="titulo_seccion">Datos Del Proveedor 
+<input class="campos"  style="visibility:hidden"  type="checkbox" checked id="check_<?php echo $i?>" name="checkl" size=20 value=""> </td>	
+</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Nombre o Razon Social </td>
+		<td colspan=2 class="tdcampos"><?php $nombreprov=$f_pc[nombre]; echo $f_pc[nombre]?></td>
+		<td colspan=2 class="tdtitulos">Rif </td>
+		<td colspan=1 class="tdcampos"><?php echo $f_pc[rif]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Domicilio Fiscal  </td>
+		<td colspan=6 class="tdcampos"><?php $direccionpro=$f_pc[direccion]; echo $f_pc[direccion]?></td>
+		
+	</tr>
+			<tr>		
+<td colspan=9 class="tdtitulos"><hr></hr></td>	
+</tr>
+	</tr>
+	<tr>
+		<td colspan=1 class="tdtitulos">Fecha Emisi&oacute;n</td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas1[fecha_creado]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos">Nro. de Comprobante</td>
+		<td colspan=2 class="tdcampos"><?php echo $f_facturas1[compro_retiva_seniat]?></td>
+		<td colspan=1 class="tdtitulos">Periodo Fiscal</td>
+		<td colspan=2 class="tdcampos"><?php 
+
+
+		$compro_retiva_seniat=$f_facturas1[compro_retiva_seniat];
+$periodo=split("-",$compro_retiva_seniat);
+		echo "A&ntilde;o: $periodo[0] / Mes $periodo[1]"?></td>
+	</tr>
+    
+    
+	<tr>
+		<td colspan=1 class="tdtitulos">Codigo</td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas[codigo]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=2 class="tdcampos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=2 class="tdcampos">
+</td>
+	</tr>
+	
+
+	
+	
+	
+	<tr>
+		<td colspan=9 class="tdtitulos"><hr></hr></td>
+		
+	</tr>
+		<tr>
+
+
+
+		<td colspan=1 class="tdtitulos">Num Control de la Factura</td>
+		<td colspan=1 class="tdtitulos">Num Factura</td>
+		<td colspan=1 class="tdtitulos">Fecha Emision de la Factura</td>
+		<td colspan=1 class="tdtitulos">Monto Total de la Factura</td>
+		<td colspan=1 class="tdtitulos">Monto Exento</td>
+		<td colspan=1 class="tdtitulos">Base Imponible</td>
+		<td colspan=1 class="tdtitulos">I.V.A. Facturado</td>
+		<td colspan=1 class="tdtitulos">I.V.A. Retenido</td>
+		<td colspan=1 class="tdtitulos">Total Neto A Pagar</td>
+	</tr>
+
+<?php 
+$total_iva_re=0;
+$total_neto=0;
+
+while($f_facturas2=asignar_a($r_facturas2,NULL,PGSQL_ASSOC)){
+	$total_iva_ret= 	$total_iva_ret + $f_facturas2[iva_retenido];
+	$total_neto=$total_neto +  (($f_facturas2[monto_sin_retencion] + $f_facturas2[monto_con_retencion] + $f_facturas2[iva]) - $f_facturas2[iva_retenido]);
+	$fecha_emision;
+	
+?>
+
+<?php 
+	$buscarseparador=strpos($f_facturas2[no_control_fact],'-');
+if($buscarseparador==false) {	//no hay resultados
+$NumeroControl='00-'.$f_facturas2[no_control_fact];
+}else {
+$NumeroControl=$f_facturas2[no_control_fact];
+}
+
+?>
+	<tr>
+		<td colspan=1 class="tdcampos"><?php echo $NumeroControl?></td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas2[factura]?></td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas2[fecha_emision_fact]?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas2[monto_sin_retencion] + $f_facturas2[monto_con_retencion] + $f_facturas2[iva],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas2[monto_sin_retencion],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas2[monto_con_retencion],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas2[iva],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format($f_facturas2[iva_retenido],2,',','')?></td>
+		<td colspan=1 class="tdcampos"><?php echo number_format(($f_facturas2[monto_sin_retencion] + $f_facturas2[monto_con_retencion] + $f_facturas2[iva]) - $f_facturas2[iva_retenido],2,',','') ?></td>
+	</tr>
+	
+	<?php
+	}
+?>
+</tr>
+		<tr>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos"><?php echo number_format($total_iva_ret,2,',','')?></td>
+		<td colspan=1 class="tdtitulos"><?php echo number_format($total_neto,2,',','')?></td>
+	</tr>
+	<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos">Ley IVA - Art. 11: "Seran responsables del pago del impuesto en calidad de agentes de retencion los compradores o adquirientes de determinados bienes inmuebles y los receptores de ciertos servicios, a quienes la Administracion Tributaria designe como tal"</td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>	
+			<td colspan=2 class="tdtitulos">	Fecha Emision 
+			</td>
+				<td colspan=4 class="tdcampos"><input class="campos" disabled type="text" id="fechaemision_<?php echo $i ?>"  name="fechaemision_<?php echo $i ?>" maxlength=128 size=10 value="<?php echo $f_facturas1[fecha_creado]?>" >
+			</td>
+			<td colspan=1 class="tdtitulos">	
+			</td>
+				<td colspan=2 class="tdcampos"> 
+			</td>
+		
+		</tr>
+<tr>
+<td colspan=2 class="tdtitulos">
+Numero Cheque
+</td>
+<td colspan=2 class="tdtitulos">
+<input class="campos" type="text" id="numcheque_<?php echo $i ?>"  name="numcheque_<?php echo $i ?>" maxlength=128 size=10 value="" >
+
+</td>
+<td colspan=2 class="tdcamposc">Del Banco </td>
+                <td colspan=2 class="tdcamposc"><select id="banco_<?php echo $i ?>" name="banco_<?php echo $i ?>" class="campos" style="width: 250px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_ban<>7 and bancos.id_ban<>10");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php 
+}
+?>
+</select>
+</td>
+			
+</tr>
+
+
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+                <td colspan=2 class="tdcamposc"><select id="tipocuenta_<?php echo $i?>" name="tipocuenta_<?php echo$i?>" class="campos" style="width: 250px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php 
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos">
+Motivo
+</td>
+<td colspan=2 class="tdtitulos">
+<input class="campos" type="text" id="motivo_<?php echo$i?>"  name="motivo_<?php echo$i?>" maxlength=128 size=30 value="" >
+<input class="campos" type="hidden" id="codigo_<?php echo$i?>"  name="codigo_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $f_facturas1[codigo]?>" >
+<input class="campos" type="hidden" id="nombreprov_<?php echo$i?>"  name="nombreprov_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $nombreprov?>" >
+<input class="campos" type="hidden" id="id_proveedor_<?php echo$i?>"  name="id_proveedor_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $f_facturas1[id_proveedor]?>" >
+<input class="campos" type="hidden" id="cedula_<?php echo$i?>"  name="cedula_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $f_pc[rif]?>" >
+</td>
+</tr>
+<tr>
+<td colspan=7 class="tdtitulos">
+
+</td>
+<td colspan=1 class="tdtitulos">
+			<a href="#" OnClick="imp_che_ge(<?php echo $i?>);" id="imprimir_<?php echo$i?>" class="boton" title="Imprimir Cheques">Imprimir</a>
+<?php 
+if ($id_tipo_admin==7 || $id_tipo_admin==11 || $id_tipo_admin==2 ) {?>
+			<a href="#" OnClick="anu_che_prov2(<?php echo $i?>);" id="anular_<?php echo$i?>" class="boton" title="Anular Comprobante">Anular</a>
+<?php
+}
+?>
+			
+			</td>
+			
+</tr>
+
+</table>
+<?php
+}
+?>
+<input class="campos" type="hidden" id="conche"  name="conche" maxlength=128 size=30 value="<?php echo $i?>" >
+<?php
+
+}
+}
+		
+		
+/* **** buscar cheques de proveedores medicos o clinicas o otros**** */
+	if (($tipo_cheque==1 || $tipo_cheque==2  || $tipo_cheque==4)and $banco<>13)
+{
+    
+	$q_facturas=("select * 
+                            from 
+                                    facturas_procesos
+                            where 
+                                    facturas_procesos.num_recibo='$cheque' and 
+                                    facturas_procesos.id_banco='$banco' and 
+                                    facturas_procesos.tipo_proveedor<>3 $elproveedor
+");
+$r_facturas=ejecutar($q_facturas);
+
+	$q_facturas1=("select * 
+                                from 
+                                        facturas_procesos 
+                                where 
+                                        facturas_procesos.num_recibo='$cheque' and 
+                                        facturas_procesos.id_banco='$banco' and 
+                                        facturas_procesos.tipo_proveedor<>3 $elproveedor
+");
+
+$r_facturas1=ejecutar($q_facturas1);
+$f_facturas1=asignar_a($r_facturas1);
+$num_filas=num_filas($r_facturas);
+if ($num_filas>0){
+$tipo="Recibo";
+}
+	else
+{
+	
+		$q_facturas=("select * 
+                                from 
+                                        facturas_procesos 
+                                where 
+                                        facturas_procesos.numero_cheque='$cheque' and 
+                                        facturas_procesos.id_banco='$banco' and 
+                                        facturas_procesos.tipo_proveedor<>3 $elproveedor
+");
+$r_facturas=ejecutar($q_facturas);
+	$q_facturas1=("select * 
+                                from 
+                                        facturas_procesos 
+                                where 
+                                        facturas_procesos.numero_cheque='$cheque' and 
+                                        facturas_procesos.id_banco='$banco' and 
+                                        facturas_procesos.tipo_proveedor<>3 $elproveedor
+");
+$r_facturas1=ejecutar($q_facturas1);
+$f_facturas1=asignar_a($r_facturas1);
+
+$num_filas1=num_filas($r_facturas);
+if ($num_filas>0){
+$tipo="Cheque";
+}		
+}
+if ($num_filas==0 and $num_filas1==0){
+    
+    ?>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">No Hay Cheques o Recibos con estos Numeros Registrados</td>	</tr>
+</table>
+<?php
+	
+	}
+	else
+	{
+		
+/* **** compraro si busco proveedor persona o proveedor clinica **** */
+if ($tipo_cheque==1){
+$q_proveedor=("select   personas_proveedores.*,actividades_pro.codigo,actividades_pro.porcentaje,actividades_pro.sustraendo
+		                from personas_proveedores,actividades_pro,facturas_procesos where personas_proveedores.id_persona_proveedor='$f_facturas1[id_proveedor]' and personas_proveedores.id_act_pro=actividades_pro.id_act_pro");
+$r_proveedor=ejecutar($q_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nomcheque]";
+$rifpro=$f_proveedor[rifcheque];
+$direccionpro=$f_proveedor[direccioncheque];
+$telefonospro=$f_proveedor[celular_pro];
+$sustraendo=$f_proveedor[sustraendo];
+$id_proveedor=$f_proveedor[id_persona_proveedor];
+	
+	
+	}
+	
+if	($tipo_cheque==2 || $tipo_cheque==4 )
+	{
+
+$q_pc=("select clinicas_proveedores.*,proveedores.id_proveedor,actividades_pro.codigo,
+actividades_pro.porcentaje,actividades_pro.sustraendo from clinicas_proveedores,
+proveedores,actividades_pro where clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor
+                and clinicas_proveedores.prov_compra>=0 and 
+proveedores.id_proveedor=$f_facturas1[id_proveedor] 
+and clinicas_proveedores.id_act_pro=actividades_pro.id_act_pro
+order by clinicas_proveedores.nombre");
+                $r_pc=ejecutar($q_pc);
+             	$f_pc=asignar_a($r_pc);
+$nombrepro=$f_pc[nomcheque];
+$rifpro=$f_pc[rifcheque];
+$direccionpro=$f_pc[direccioncheque];
+$telefonospro=$f_pc[telefonos];
+$sustraendo=$f_pc[sustraendo];
+$id_proveedor=$f_pc[id_proveedor];
+}
+
+
+/* **** FIN DE BUSCAR PROVEEDOR **** */
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+	
+	<tr>		
+<td colspan=9 class="titulo_seccion">Datos Del Proveedor</td>	
+</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Nombre o Razon Social </td>
+		<td colspan=2 class="tdcampos"><?php echo $nombrepro?></td>
+		<td colspan=2 class="tdtitulos">Rif </td>
+		<td colspan=1 class="tdcampos"><?php echo $f_pc[rif]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+	</tr>
+	<tr>
+		<td colspan=3 class="tdtitulos">Domicilio Fiscal  </td>
+		<td colspan=6 class="tdcampos"><?php echo $direccionpro?></td>
+		
+	</tr>
+	
+	
+	<tr>
+		<td colspan=9 class="tdtitulos"><hr></hr></td>
+		
+	</tr>
+    <?php
+    /* busco si son varias retenciones con un solo cheque realizo el count de codigo para multiplicarlo con el sutraendo*/
+$q_coun_cod=("select facturas_procesos.codigo,count(codigo) from facturas_procesos where facturas_procesos.numero_cheque='$cheque' and
+                                facturas_procesos.id_banco='$banco' goup by facturas_procesos.codigo");
+$r_coun_cod=ejecutar($q_coun_cod);
+$f_coun_cod=asignar_a($r_coun_cod);
+
+/* fin busco si son varias retenciones con un solo cheque realizo el count de codigo para multiplicarlo con el sutraendo*/
+		$i++;
+$q_facturap=("  select * from facturas_procesos where facturas_procesos.numero_cheque='$cheque' and facturas_procesos.id_banco='$banco' and facturas_procesos.tipo_proveedor<>3
+");
+	
+$r_facturap=ejecutar($q_facturap);
+$gastosclinicos=0;
+$gastosmedicos=0;
+$totalgastos=0;
+$retencion=0;
+$monto_final=0;
+$iva=0;
+$ivaret=0;
+$total_ret=0;
+$montoexento=0;
+while($f_facturap=asignar_a($r_facturap,NULL,PGSQL_ASSOC)){
+    $ret_individual=$f_facturap[ret_individual];
+	$banco=$f_facturap[id_banco];
+	$iva=$iva + $f_facturap[iva];
+	$ivaret=$ivaret + $f_facturap[iva_retenido];
+	$total_ret=	$total_ret + $f_facturap[retencion];
+	if ($tipo_cheque==4 and $f_facturap[iva]==0)
+{
+$montoexento= $montoexento + $f_facturap[monto_sin_retencion];
+$montoexentot= $montoexentot + $f_facturap[monto_sin_retencion];
+}
+	$gastosclinicos=$gastosclinicos + $f_facturap[monto_sin_retencion];
+    $gastosmedicos=$gastosmedicos + $f_facturap[monto_con_retencion];
+       
+    
+	$totalgastos=$gastosclinicos  + $gastosmedicos;
+	$totaldescuento=0;
+	$retencion=$retencion + $f_facturap[retencion];
+    $comprobante=$f_facturap[comprobante];
+	$comprobanteislr=$f_facturap[corre_compr_islr];
+	$compro_retiva_seniat=$f_facturap[compro_retiva_seniat];
+	$comprobanteiva=$f_facturap[corre_retiva_seniat];
+	$cheque=$f_facturap[numero_cheque];
+	$recibo=$f_facturap[num_recibo];
+	$nombre=$f_facturap[anombre];
+	$cedula=$f_facturap[ci];
+	$fecha_emision=$f_facturap[fecha_creado];
+}
+if ($retencion==0){
+    $retencion=$sustraendo;
+        $retencion=$retencion - $sustraendo;
+    }
+    else
+    {
+        if ($f_coun_cod[count]==0){
+        $retencion=$retencion - ($sustraendo);
+        
+       }
+       else
+       {
+           
+           $retencion=$retencion - ($sustraendo * $f_coun_cod[count]);
+           }
+        }
+        
+        if ($ret_individual==1)
+        {
+            $retencion=$retencion + $sustraendo;
+        }
+$monto_f= (($gastosclinicos + $gastosmedicos)  - $retencion);
+$monto_final= ($monto_f) - ($ivaret);
+
+$subtotal=$subtotal + $totalgastos - $totaldescuento;
+/* fin de buscar los datos de este cheque para los proveedores compras con retencion de iva*/
+/* busco el banco */
+$q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos  where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=$banco");
+
+$r_banco=ejecutar($q_banco);
+$f_banco=asignar_a($r_banco);
+/* busco el admin*/
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+$fecha=date("Y-m-d");
+$hora=date("h:i:s");
+$fechaimpreso=date("d-m-Y");
+//echo numeros_a_letras($monto);
+                                $cantidad=explode(".",$monto_final);
+                                $cadenas=count($cantidad);
+								 if ($cantidad[1]<=9) {
+									$cero=0;}
+									else
+									{$cero="";}
+								$cantidad[1]=substr($cantidad[1],0,2);
+								$cantida[1]=substr($cantidad[1],0,1);
+								if ($cantida[1]==0){
+									$cero="";
+									}
+                                if($cadenas==2){
+                                        $monto_escrito= ucwords(numtolet($cantidad[0],"os"))." con ".$cantidad[1]."$cero/100 ";
+                                }else{
+                                       $monto_escrito= ucwords(numtolet($cantidad[0],"os"))."  ";
+				$cero="";
+                                }
+                                //echo numeros_a_letras($total);
+?>
+<table cellpadding=0 cellspacing=0 width="100%">
+			<tr>		
+<td colspan=9 class="titulo_seccion">Informacion del Pago</td>	
+</tr>
+	</tr>
+	<tr>
+		<td colspan=1 class="tdtitulos">Fecha Emisi&oacute;n</td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas1[fecha_creado]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos">Nro. de Comprobante IVA</td>
+		<td colspan=2 class="tdcampos"><?php echo $f_facturas1[compro_retiva_seniat]?></td>
+		<td colspan=1 class="tdtitulos">Periodo Fiscal</td>
+		<td colspan=2 class="tdcampos"><?php 
+		$compro_retiva_seniat=$f_facturas1[compro_retiva_seniat];
+$periodo=split("-",$compro_retiva_seniat);
+		echo "A&ntilde;o: $periodo[0] / Mes $periodo[1]"?></td>
+	</tr>
+    	<tr>
+		<td colspan=1 class="tdtitulos">Numero Cheque</td>
+		<td colspan=1 class="tdcampos"><?php echo $f_facturas1[numero_cheque]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=1 class="tdtitulos">Nro. de Comprobante ISLR</td>
+		<td colspan=2 class="tdcampos"><?php echo $f_facturas1[corre_compr_islr]?></td>
+		<td colspan=1 class="tdtitulos"></td>
+		<td colspan=2 class="tdcampos"></td>
+	</tr>
+    </tr>
+    	<tr>
+		<td colspan=1 class="tdtitulos">Motivo</td>
+		<td colspan=9 class="tdcampos"><?php echo $f_facturas1[motivo]?></td>
+	</tr>
+
+
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+		
+	
+<tr>
+	<td colspan=2 class="tdtitulos"> Monto </td>
+	<td colspan=1 class="tdcampos"><?php echo montos_print($gastosclinicos + $gastosmedicos) ?></td>
+	<td colspan=2 class="tdtitulos"> Base Imponible </td>
+	<td colspan=1 class="tdcampos"> <?php echo montos_print((($gastosclinicos + $gastosmedicos)-$iva) - $montoexentot)?> </td>
+	<td colspan=2 class="tdtitulos">Iva</td>
+	<td colspan=1 class="tdcampos"><?php echo montos_print($iva)?> </td>
+	</tr>
+<tr>
+	
+	<td colspan=2 class="tdtitulos"><b>Iva Retenido Descuento</b></td>
+	<td colspan=1 class="tdcampos"><b><?php echo montos_print($ivaret) ?></b></td>
+
+	<td colspan=2 class="tdtitulos"><b>ISLR </b></td>
+	<td colspan=1 class="tdcampos"><b><?php echo montos_print($retencion)?></b></td>
+
+	<td colspan=2 class="tdtitulos">Monto Neto a Pagar </td>
+	<td colspan=1 class="tdcamposr"><?php echo montos_print($monto_final) ?>
+	</td></tr>
+	<tr>
+	<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos">
+<?php
+			$url="'views04/icheque_prov_islr.php?codigo=$f_facturas1[codigo]&numcheque=$f_facturas1[numero_cheque]&banco=$f_facturas1[id_banco]&nombreprov=$nombreprov&cedula=$f_pc[rif]&prov=$tipo_cheque&id_proveedor=$id_proveedor'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Cheque o Recibo"> Cheque</a>
+<?php
+            $url="'views04/icom_ret_islr.php?codigo=$f_facturas1[codigo]&banco=$f_facturas1[id_banco]&nombreprov=$nombreprov&cedula=$f_pc[rif]&prov=$tipo_cheque&fecha_emision=$f_facturas1[fecha_creado]&compro_retiva_islr=$f_facturas1[corre_compr_islr]&direccionpro=$direccionpro&id_proveedor=$id_proveedor&personaprov=2'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Comprobante Retencion ISLR con Honorarios Medicos y Clinicos"> Comprobante Ret. I.S.L.R. formato 1</a>
+<?php
+            $url="'views04/icom_ret_islr2.php?codigo=$f_facturas1[codigo]&banco=$f_facturas1[id_banco]&nombreprov=$nombreprov&cedula=$f_pc[rif]&prov=$tipo_cheque&fecha_emision=$f_facturas1[fecha_creado]&compro_retiva_islr=$f_facturas1[corre_compr_islr]&direccionpro=$direccionpro&id_proveedor=$id_proveedor&personaprov=2'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Comprobante Retencion ISLR para otros y medicos"> Comprobante Ret. I.S.L.R. formato 2</a>
+
+<?php
+			$url="'views04/icom_ret_iva2.php?codigo=$f_facturas1[codigo]&banco=$f_facturas1[id_banco]&nombreprov=$nombreprov&cedula=$f_pc[rif]&prov=$tipo_cheque&fecha_emision=$f_facturas1[fecha_creado]&compro_retiva_seniat=$f_facturas1[compro_retiva_seniat]&id_proveedor=$id_proveedor&direccionpro=$direccionpro'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Imprimir Comprobante Retencion IVA "> Comprobante Ret IVA</a>
+			</td>
+			
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr>
+<input class="campos" type="hidden" id="codigo"  name="codigo" maxlength=128 size=30 value="<?php echo $f_facturas1[codigo]?>" >
+<input class="campos" type="hidden" id="numerocheque"  name="numerocheque" maxlength=128 size=30 value="<?php echo $f_facturas1[numero_cheque]?>" >
+<input class="campos" type="hidden" id="id_banco"  name="id_banco" maxlength=128 size=30 value="<?php echo $f_facturas1[id_banco]?>" >
+</td>
+</tr>
+<?php 
+if ($banco<>9 and ($id_tipo_admin==7 || $id_tipo_admin==11 || $id_tipo_admin==1)) {
+?>
+
+<tr>
+<td colspan=1 class="tdtitulos">
+Motivo
+</td>
+<td colspan=7 class="tdtitulos">
+<input class="campos" type="text" id="motivo"  name="motivo" maxlength=128 size=70 value="<?php echo $f_facturas[motivo]?>" >
+</td>
+<td colspan=1 class="tdtitulos">
+<a href="#" OnClick="anu_che_prov();" class="boton" title="Anula el Cheque de Manera Directa sin Dejar la Opcion de Generarlo Nuevamente">Anular sin dejar datos</a>				
+</td>
+			
+</tr>
+<tr>
+<td colspan=9 class="tdtitulos"><hr></hr>
+</td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">
+
+</td>
+<td colspan=6 class="tdtitulos">
+
+</td>
+<td colspan=2 class="tdtitulos">
+<a href="#" OnClick="anu_che_prov1();" class="boton_2" title="Anula el Cheque y Vuelve a Cargar Datos Dejando la Opcion de Generarlo Nuevamente">Anular dejando datos</a>				
+</td>
+			
+</tr>
+<?php
+}
+?>
+</table>
+<?php
+}
+}
+
+/* **** buscar cheques por generar de proveedores medicos y proveedores clinicas y otros **** */
+if ($paso==0) {
+if (($tipo_cheque==1 || $tipo_cheque==2  || $tipo_cheque==3 || $tipo_cheque==4) and $banco==13)
+{
+	
+	$q_facturas=("select 
+                                    facturas_procesos.id_proveedor,
+                                    facturas_procesos.codigo,
+                                    count(facturas_procesos.codigo) 
+                            from 
+                                    facturas_procesos 
+                            where 
+                                    facturas_procesos.tipo_proveedor='$tipo_cheque' and 
+                                    facturas_procesos.id_banco='$banco' 
+                                    $elproveedor
+                            group by 
+                                    facturas_procesos.id_proveedor,
+                                    facturas_procesos.codigo
+");
+$r_facturas=ejecutar($q_facturas);
+$num_filas=num_filas($r_facturas);
+
+if ($num_filas==0) {
+	?>
+<table class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">No Hay Cheques o Recibos con estos Numeros Registrados</td>	</tr>
+</table>
+<?php
+	}
+	else
+	{
+	
+/* busco los datos de este cheque para los proveedores medicos */
+while($f_facturas=asignar_a($r_facturas,NULL,PGSQL_ASSOC)){
+	
+	$montoexentot=0;
+/* **** compraro si busco proveedor persona o proveedor clinica **** */
+if ($tipo_cheque==1){
+$q_proveedor=("select   personas_proveedores.*,actividades_pro.codigo,actividades_pro.porcentaje,actividades_pro.sustraendo
+		                from personas_proveedores,actividades_pro where personas_proveedores.id_persona_proveedor='$f_facturas[id_proveedor]' and personas_proveedores.id_act_pro=actividades_pro.id_act_pro");
+$r_proveedor=ejecutar($q_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nombres_prov] $f_proveedor[apellidos_prov]";
+$rifpro=$f_proveedor[cedula_prov];
+$direccionpro=$f_proveedor[direccion_prov];
+$telefonospro=$f_proveedor[celular_pro];
+$sustraendo=$f_proveedor[sustraendo];
+	}
+	
+if	($tipo_cheque==2 || $tipo_cheque==4 )
+	{
+
+$q_pc=("select clinicas_proveedores.*,proveedores.id_proveedor,actividades_pro.codigo,
+actividades_pro.porcentaje,actividades_pro.sustraendo from clinicas_proveedores,
+proveedores,actividades_pro where clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor
+                and clinicas_proveedores.prov_compra>=0 and 
+proveedores.id_proveedor=$f_facturas[id_proveedor] 
+and clinicas_proveedores.id_act_pro=actividades_pro.id_act_pro
+order by clinicas_proveedores.nombre");
+                $r_pc=ejecutar($q_pc);
+             	$f_pc=asignar_a($r_pc);
+$nombrepro=$f_pc[nomcheque];
+$rifpro=$f_pc[rifcheque];
+$direccionpro=$f_pc[direccioncheque];
+$telefonospro=$f_pc[telefonos];
+$sustraendo=$f_pc[sustraendo];
+}
+
+
+/* **** FIN DE BUSCAR PROVEEDOR **** */
+  /* busco si son varias retenciones con un solo cheque realizo el count de codigo para multiplicarlo con el sutraendo*/
+$q_coun_cod=("select facturas_procesos.codigo,count(codigo) from facturas_procesos where facturas_procesos.numero_cheque='$cheque' and
+                                facturas_procesos.id_banco='$banco' goup by facturas_procesos.codigo");
+$r_coun_cod=ejecutar($q_coun_cod);
+$f_coun_cod=asignar_a($r_coun_cod);
+
+/* fin busco si son varias retenciones con un solo cheque realizo el count de codigo para multiplicarlo con el sutraendo*/
+$i++;
+$q_facturap=("select * from facturas_procesos where facturas_procesos.codigo='$f_facturas[codigo]' ");
+	
+$r_facturap=ejecutar($q_facturap);
+$gastosclinicos=0;
+$gastosmedicos=0;
+$totalgastos=0;
+$retencion=0;
+$monto_final=0;
+$iva=0;
+$ivaret=0;
+$total_ret=0;
+$montoexento=0;
+while($f_facturap=asignar_a($r_facturap,NULL,PGSQL_ASSOC)){
+    $ret_individual=$f_facturap[ret_individual];
+	$banco=$f_facturap[id_banco];
+	$iva=$iva + $f_facturap[iva];
+	$ivaret=$ivaret + $f_facturap[iva_retenido];
+	$total_ret=	$total_ret + $f_facturap[retencion];
+	if ($tipo_cheque==4 and $f_facturap[iva]==0)
+{
+$montoexento= $montoexento + $f_facturap[monto_sin_retencion];
+$montoexentot= $montoexentot + $f_facturap[monto_sin_retencion];
+}
+	$gastosclinicos=$gastosclinicos + $f_facturap[monto_sin_retencion];
+    $gastosmedicos=$gastosmedicos + $f_facturap[monto_con_retencion];
+       
+    
+	$totalgastos=$gastosclinicos  + $gastosmedicos;
+	$totaldescuento=0;
+	$retencion=$retencion + $f_facturap[retencion];
+    $comprobante=$f_facturap[comprobante];
+	$comprobanteislr=$f_facturap[corre_compr_islr];
+	$compro_retiva_seniat=$f_facturap[compro_retiva_seniat];
+	$comprobanteiva=$f_facturap[corre_retiva_seniat];
+	$cheque=$f_facturap[numero_cheque];
+	$recibo=$f_facturap[num_recibo];
+	$nombre=$f_facturap[anombre];
+	$cedula=$f_facturap[ci];
+	$fecha_emision=$f_facturap[fecha_creado];
+}
+if ($retencion==0){
+    $retencion=$sustraendo;
+        $retencion=$retencion - $sustraendo;
+    }
+    else
+    {
+        if ($f_coun_cod[count]==0){
+        $retencion=$retencion - ($sustraendo);
+        
+       }
+       else
+       {
+           
+           $retencion=$retencion - ($sustraendo * $f_coun_cod[count]);
+           }
+        }
+        
+        if ($ret_individual==1)
+        {
+            $retencion=$retencion + $sustraendo;
+        }
+$monto_f= (($gastosclinicos + $gastosmedicos)  - $retencion);
+$monto_final= ($monto_f) - ($ivaret);
+
+$subtotal=$subtotal + $totalgastos - $totaldescuento;
+/* fin de buscar los datos de este cheque para los proveedores compras con retencion de iva*/
+/* busco el banco */
+$q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos  where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=$banco");
+
+$r_banco=ejecutar($q_banco);
+$f_banco=asignar_a($r_banco);
+/* busco el admin*/
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+$fecha=date("Y-m-d");
+$hora=date("h:i:s");
+$fechaimpreso=date("d-m-Y");
+//echo numeros_a_letras($monto);
+                                $cantidad=explode(".",$monto_final);
+                                $cadenas=count($cantidad);
+								 if ($cantidad[1]<=9) {
+									$cero=0;}
+									else
+									{$cero="";}
+								$cantidad[1]=substr($cantidad[1],0,2);
+								$cantida[1]=substr($cantidad[1],0,1);
+								if ($cantida[1]==0){
+									$cero="";
+									}
+                                if($cadenas==2){
+                                        $monto_escrito= ucwords(numtolet($cantidad[0],"os"))." con ".$cantidad[1]."$cero/100 ";
+                                }else{
+                                       $monto_escrito= ucwords(numtolet($cantidad[0],"os"))."  ";
+				$cero="";
+                                }
+                                //echo numeros_a_letras($total);
+?>
+<table cellpadding=0 cellspacing=0 width="100%">
+<tr>		
+<td colspan=9 class="titulo_seccion">Datos Del Proveedor 
+<input class="campos"  style="visibility:hidden"  type="checkbox" checked id="check_<?php echo $i?>" name="checkl" size=20 value=""></td>	
+</tr>
+<tr>	
+			<td colspan=2 class="tdtitulos">	Fecha Emision 
+			</td>
+				<td colspan=4 class="tdcampos"><input class="campos" type="text" disabled id="fechaemision_<?php echo $i ?>"  name="fechaemision_<?php echo $i ?>" maxlength=128 size=10 value="<?php echo $fecha_emision?>" >
+			</td>
+			<td colspan=1 class="tdtitulos">	
+            Codigo
+			</td>
+				<td colspan=2 class="tdcampos"> 
+                <?php echo $f_facturas[codigo]?>
+			</td>
+            
+		
+		</tr>
+
+		<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>	
+			<td colspan=2 class="tdtitulos">	A Nombre de: 
+			</td>
+				<td colspan=4 class="tdcampos"><?php echo $nombrepro ?>
+			</td>
+			<td colspan=1 class="tdtitulos">	C.I. o Rif: 
+			</td>
+				<td colspan=2 class="tdcampos"> <?php echo $rifpro ?>
+			</td>
+		
+		</tr>
+		<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+	        <tr>
+		        <td colspan=2 class="tdtitulos">COMPROBANTE </td>
+				<td colspan=1 class="tdcampos"><?php echo $comprobante ?></td>
+
+		        <td colspan=2 class="tdtitulos"> RETENCION I.S.L.R</td>
+				<td colspan=1 class="tdcampos"><?php echo $comprobanteislr ?></td>
+
+		        <td colspan=2 class="tdtitulos"> RETENCION IVA</td>
+				<td colspan=1 class="tdcampos"><input class="campos" type="text" disabled id="comproretiva_<?php echo $i ?>"  name="comproretiva_<?php echo $i ?>" maxlength=128 size=19 value="<?php echo $compro_retiva_seniat ?>" ></td>
+		</tr>
+		<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+		
+	
+<tr>
+	<td colspan=2 class="tdtitulos"> Monto </td>
+	<td colspan=1 class="tdcampos"><?php echo montos_print($gastosclinicos + $gastosmedicos) ?></td>
+	<td colspan=2 class="tdtitulos"> Base Imponible </td>
+	<td colspan=1 class="tdcampos"> <?php echo montos_print((($gastosclinicos + $gastosmedicos)-$iva) - $montoexentot)?> </td>
+	<td colspan=2 class="tdtitulos">Iva</td>
+	<td colspan=1 class="tdcampos"><?php echo montos_print($iva)?> </td>
+	</tr>
+<tr>
+	
+	<td colspan=2 class="tdtitulos"><b>Iva Retenido Descuento</b></td>
+	<td colspan=1 class="tdcampos"><b><?php echo montos_print($ivaret) ?></b></td>
+
+	<td colspan=2 class="tdtitulos"><b>ISLR </b></td>
+	<td colspan=1 class="tdcampos"><b><?php echo montos_print($retencion)?></b></td>
+
+	<td colspan=2 class="tdtitulos">Monto Neto a Pagar </td>
+	<td colspan=1 class="tdcamposr"><?php echo montos_print($monto_final) ?>
+	</td></tr>
+	<tr>
+<td colspan=9 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=2 class="tdtitulos">
+Numero Cheque
+</td>
+<td colspan=1 class="tdtitulos">
+<input class="campos" type="text" id="numcheque_<?php echo $i ?>"  name="numcheque_<?php echo $i ?>" maxlength=128 size=10 value="" >
+</td>
+<td colspan=2 class="tdcamposc">Del Banco </td>
+                <td colspan=3 class="tdcamposc"><select id="banco_<?php echo $i ?>" name="banco_<?php echo $i ?>" class="campos" style="width: 250px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_ban<>7 and bancos.id_ban<>10");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php 
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos">
+			
+</td>
+			
+</tr>
+	<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+                <td colspan=1 class="tdcamposc"><select id="tipocuenta_<?php echo$i?>" name="tipocuenta_<?php echo$i?>" class="campos" style="width: 150px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php 
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos">
+Motivo
+</td>
+<td colspan=3 class="tdtitulos">
+<textarea class="campos"  id="motivo_<?php echo$i?>"  name="motivo_<?php echo$i?>" cols=30 rows=4></textarea>
+
+<input class="campos" type="hidden" id="codigo_<?php echo$i?>"  name="codigo_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $f_facturas[codigo]?>" >
+<input class="campos" type="hidden" id="nombreprov_<?php echo$i?>"  name="nombreprov_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $nombrepro?>" >
+<input class="campos" type="hidden" id="cedula_<?php echo$i?>"  name="cedula_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $f_pc[rif]?>" >
+<input class="campos" type="hidden" id="id_proveedor_<?php echo$i?>"  name="id_proveedor_<?php echo$i?>" maxlength=128 size=30 value="<?php echo $f_facturas[id_proveedor]?>" >
+<input class="campos" type="hidden" id="personaprov_<?php echo$i?>"  name="personaprov_<?php echo$i?>" maxlength=128 size=30 value="0" >
+</td>
+
+
+
+<td colspan=1 class="tdtitulos">
+<?php 
+if ($id_tipo_admin==7 || $id_tipo_admin==11 || $id_tipo_admin==1) {?>
+			<a href="#" OnClick="imp_che_gemco(<?php echo $i?>);" id="imprimir_<?php echo$i?>" class="boton" title="Imprimir Cheques">Imprimir</a>
+<?php
+}
+?>
+<?php 
+if ($id_tipo_admin==7 || $id_tipo_admin==11 || $id_tipo_admin==2) {?>
+			<a href="#" OnClick="anu_che_prov2(<?php echo $i?>);" id="anular_<?php echo$i?>"  class="boton" title="Anular Comprobante">Anular</a>
+<?php
+}
+?>
+
+</td>
+			
+</tr>
+
+<?php
+}
+?>
+<input class="campos" type="hidden" id="conche"  name="conche" maxlength=128 size=30 value="<?php echo $i?>" >
+<?php
+}
+}
+?>
+
+</table>
+<?php
+}
+?>
+	

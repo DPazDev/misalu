@@ -1,0 +1,97 @@
+<?php
+include ("../../lib/jfunciones.php");
+
+$tipo_paragrafo1=noacento($_REQUEST['tipo_paragrafo1']);
+$paragrafo1=noacento($_REQUEST['paragrafo1']);
+$proceso=noacento($_REQUEST['proceso']);
+$conexa=noacento($_REQUEST['conexa']);
+$decrips1=noacento($_REQUEST['decrips1']);
+$id_gasto_t_b1=noacento($_REQUEST['id_gasto_t_b1']);
+$monto_aceptado1=noacento($_REQUEST['monto_aceptado1']);
+$preforma1=noacento($_REQUEST['preforma1']);
+$porcentaje=noacento($_REQUEST['porcentaje']);
+$con1=noacento($_REQUEST['con1']);
+$decrips2=split("@",$decrips1);
+$id_gasto_t_b2=split("@",$id_gasto_t_b1);
+$monto_aceptado2=split("@",$monto_aceptado1);
+$preforma2=split("@",$preforma1);
+$tipo_paragrafo2=split("@",$tipo_paragrafo1);
+$paragrafo2=split("@",$paragrafo1);
+$admin= $_SESSION['id_usuario_'.empresa];
+$fechacreado=date("Y-m-d");
+
+for($i=0;$i<=$con1;$i++){
+	$preforma=$preforma2[$i];
+	$decrips=$decrips2[$i];
+    $id_gasto_t_b=$id_gasto_t_b2[$i];
+    $monto_aceptado=$monto_aceptado2[$i];
+    $motivo .=" factura ". $preforma. " ". $decrips. ", ";
+	$montoaceptado=$monto_aceptado - ($monto_aceptado * ($porcentaje / 100)); 
+    $mod_gasto="update gastos_t_b set monto_aceptado='$montoaceptado',monto_pagado='$montoaceptado' where
+gastos_t_b.id_gasto_t_b=$id_gasto_t_b and gastos_t_b.id_proceso=$proceso";
+$fmod_gasto=ejecutar($mod_gasto);
+    }
+    
+for($i=0;$i<=$conexa;$i++){
+	$tipo_paragrafo=$tipo_paragrafo2[$i];
+	$paragrafo=$paragrafo2[$i];
+    $comentario .=$tipo_paragrafo. " ". $paragrafo. " ";
+	}
+
+
+        $q_proceso = "select clientes.nombres,clientes.apellidos,clientes.cedula,entes.nombre,
+procesos.fecha_recibido,procesos.comentarios,procesos.comentarios_gerente,
+procesos.comentarios_medico,procesos.id_beneficiario,procesos.id_titular from 
+clientes,entes,procesos,titulares,estados_t_b where procesos.id_proceso=$proceso and 
+procesos.id_titular=titulares.id_titular and titulares.id_ente=entes.id_ente and 
+titulares.id_cliente=clientes.id_cliente and titulares.id_titular=estados_t_b.id_titular and 
+estados_t_b.id_estado_cliente=4 and estados_t_b.id_beneficiario=0";
+$r_proceso = ejecutar($q_proceso);
+$f_proceso = asignar_a($r_proceso);
+$cliente="$f_proceso[nombres] $f_proceso[apellidos]";
+$nomente="$f_proceso[nombre]";
+$fecha_recibido="$f_proceso[fecha_recibido]";
+
+/* **** se registra la carta de rechazo **** */
+ $r_control_cartas="insert into tbl_control_cartas 
+(id_proceso,id_titular,id_beneficiario,id_tipo_control,motivo,comentario,fecha_creado) 
+values ('$proceso','$f_proceso[id_titular]','$f_proceso[id_beneficiario]','3','$motivo',' $comentario','$fechacreado');"; 
+$f_control_cartas=ejecutar($r_control_cartas);
+
+ $mod_proceso="update procesos set id_estado_proceso='7',comentarios='$comentario' where
+procesos.id_proceso=$proceso";
+$fmod_proceso=ejecutar($mod_proceso);
+
+
+/* **** Se registra lo que hizo el usuario**** */
+$admin= $_SESSION['id_usuario_'.empresa];
+
+$log="LA ORDEN NUMERO $proceso recibida $fecha_recibido FUE CANCELADA POR PAGO DE UNICO DE GRACIA del $porcentaje porciento";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+
+	
+<tr>
+		<td class="tdtitulos"><?php
+			$url="'views01/ipago_gracia.php?proceso=$proceso&motivo=$motivo&comentario=$comentario&cliente=$cliente&nomente=$nomente&porcentaje=$porcentaje&fecha_recibido=$fecha_recibido'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton"> Imprimir Pago Unico de Gracia</a>
+            <?php
+			$url="'views01/ifiniquito.php?proceso=$proceso&si=1'";
+			?> <a href="javascript: iop(<?php echo $url; ?>);" class="boton"> Finiquito </a>
+            <a href="#" OnClick="reg_oa();" class="boton">Registrar Orden</a>
+            <a href="#" 	OnClick="act_orden();" class="boton">Actualizar Orden</a><a href="#" OnClick="ir_principal();" class="boton">salir</a>
+			</td>
+	</tr>
+
+</table>
+
+

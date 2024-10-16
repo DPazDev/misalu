@@ -1,0 +1,49 @@
+<?
+include ("../../lib/jfunciones.php");
+sesion();
+$ceduladeltib=$_POST['cedutit'];
+$cedulabelbenefi=$_POST['cedubenif'];
+if(!empty($ceduladeltib)){
+  $buscarelti=("select clientes.id_cliente from clientes where cedula='$ceduladeltib'");	
+  $repbuscarelti=ejecutar($buscarelti);  
+  $cuantobuscarelti=num_filas($repbuscarelti);  
+  if($cuantobuscarelti>=1){
+	$databuscarelti=assoc_a($repbuscarelti);  
+	$elidclientes=$databuscarelti['id_cliente'];
+     $buscarcuantos=("select
+          entes.nombre,titulares.id_titular,polizas.nombre_poliza
+        from
+          entes,titulares,estados_t_b,polizas,polizas_entes
+       where
+            titulares.id_ente=entes.id_ente and titulares.id_cliente=$elidclientes and
+            titulares.id_titular=estados_t_b.id_titular and
+            estados_t_b.id_beneficiario=0 and
+            estados_t_b.id_estado_cliente=4 and
+            entes.id_ente=polizas_entes.id_ente and
+            polizas_entes.id_poliza=polizas.id_poliza
+      order by entes.nombre;");
+	$repbuscarcuantos=ejecutar($buscarcuantos);
+ }  
+}
+?>
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr> 
+         <td colspan=4 class="titulo_seccion">Ente(s) del titular</td>  
+     </tr>
+	<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+     <tr>
+      <td class="tdtitulos">Seleccione un ente:</td>
+	 <td class="tdcampos"  colspan="1"><select id="losentestitulares" class="campos" style="width: 260px;">
+                              <option value=""></option>
+			   <?php  while($entestitulare=asignar_a($repbuscarcuantos,NULL,PGSQL_ASSOC)){?>
+                              <option value="<?php echo $entestitulare[id_titular]?>"> <?php echo "$entestitulare[nombre]---Poliza->($entestitulare[nombre_poliza]) "?></option>
+			   <?php
+			  }
+			  ?>
+			 </select>  </td>   
+	<tr>
+	   <td> <label class="boton" title="Buscar el titular" style="cursor:pointer" onclick="$('cuantostitulare').hide(),$('dataclienteTB').hide(),nuevobenf1(); return false;" >Buscar</label>  </td>
+	</tr>		 
+</table>
+<input type='hidden' id='ceduladelbenefi' value='<?echo $ceduladeltib?>'>
+<input type='hidden' id='ceduladeltitular' value='<?echo $cedulabelbenefi?>'>

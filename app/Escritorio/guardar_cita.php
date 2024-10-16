@@ -1,0 +1,355 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+$id_cobertura=$_REQUEST['id_cobertura'];
+$formp=$_REQUEST['formp'];
+$monto=$_REQUEST['monto'];
+$id_proveedor=$_REQUEST['id_proveedor'];
+$fechacita=$_REQUEST['fechacita'];
+$tipcon=$_REQUEST['tipcon'];
+$tlf1=$_REQUEST['tlf1'];
+$tlf2=$_REQUEST['tlf2'];
+$comenope=strtoupper($_REQUEST['comenope']);
+$paso=1;
+$admin= $_SESSION['id_usuario_'.empresa];
+$codigot=time();
+$codigo=$admin . $codigot;
+
+/* **** busco si el usuario registra factura**** */
+$q_factura="select * from tbl_003 where tbl_003.id_modulo='4' and tbl_003.id_usuario='$admin'";
+$r_factura=ejecutar($q_factura);
+$num_filasf=num_filas($r_factura);
+/* **** fin  busco si el usuario registra factura**** */
+
+if ($tipcon==0){
+$descripcion='CONSULTA MEDICA';
+}
+if ($tipcon==24){
+$descripcion='VALORACION PRE OPERATORIA';
+}
+if ($tipcon==25){
+$descripcion='CONSULTA MEDICA + CITOLOGIA';
+}
+if ($tipcon==28){
+$descripcion='CONSULTA POR ESPECIALIDAD EMERGENCIA';
+}
+if ($tipcon==30){
+$descripcion='CONSULTA POS OPERATORIA';
+}
+if ($tipcon==29){
+$descripcion='CITOLOGIA';
+}
+if ($tipcon==32){
+$descripcion='CONSULTA MEDICA + LECTURA DE EXAMEN';
+}
+if ($tipcon==31){
+$descripcion='LECTURA DE EXAMEN';
+}
+
+
+$fecha=date("Y");
+$fechacreado=date("Y-m-d");
+$hora=date("H:i:s");
+
+/*echo $fechacreado;
+echo "****";*/
+$q_cobertura="select 	
+									entes.id_ente,
+									entes.id_tipo_ente,
+									entes.fecha_inicio_contratob,
+									entes.fecha_renovacion_contratob,
+									entes.fecha_inicio_contrato,
+									entes.fecha_renovacion_contrato,
+									coberturas_t_b.*,
+									clientes.id_cliente
+							from 
+									entes,
+									titulares,
+									coberturas_t_b ,
+									clientes 
+							where 
+									entes.id_ente=titulares.id_ente and 
+									titulares.id_titular=coberturas_t_b.id_titular and 
+									coberturas_t_b.id_cobertura_t_b='$id_cobertura' and 
+									titulares.id_cliente=clientes.id_cliente";
+$r_cobertura=ejecutar($q_cobertura);
+$f_cobertura=asignar_a($r_cobertura);
+
+if ($f_cobertura[id_beneficiario]==0){
+$fechainicio="$f_cobertura[fecha_inicio_contrato]";
+$fechafinal="$f_cobertura[fecha_renovacion_contrato]";
+$q_cliente="update clientes set telefono_hab='$tlf1',telefono_otro='$tlf2' where clientes.id_cliente='$f_cobertura[id_cliente]'";
+$r_cliente=ejecutar($q_cliente);
+
+}
+else
+{
+$q_clientebene="select clientes.id_cliente from clientes,beneficiarios where clientes.id_cliente=beneficiarios.id_cliente and beneficiarios.id_beneficiario='$f_cobertura[id_beneficiario]'";
+$r_clientebene=ejecutar($q_clientebene);
+$f_clientebene=asignar_a($r_clientebene);
+$q_cliente="update clientes set telefono_hab='$tlf1',telefono_otro='$tlf2' where clientes.id_cliente='$f_clientebene[id_cliente]'";
+$r_cliente=ejecutar($q_cliente);
+	
+	
+$fechainicio="$f_cobertura[fecha_inicio_contratob]";
+$fechafinal="$f_cobertura[fecha_renovacion_contratob]";
+}
+
+/*echo $fechainicio;
+echo $fechafinal;*/
+
+/*
+echo $f_cobertura[id_titular];
+echo $f_cobertura[id_beneficiario];
+*/
+$q_variables="select * from variables_globales where variables_globales.id_variable_global='$tipcon'";
+$r_variables=ejecutar($q_variables);
+$f_variables=asignar_a($r_variables); 
+/*
+echo $f_variables[cantidad];
+*/
+/* ***** Ver el tipo de ente Juan Pablo ***** */
+$vertipoente = ("select entes.id_tipo_ente from entes where id_ente=$f_cobertura[id_ente]");
+$repvetipoente = ejecutar($vertipoente);
+$dattipoente   = assoc_a($repvetipoente);
+$elidtipoentees = $dattipoente['id_tipo_ente'];
+/* ***** Fin de Ver el tipo de ente Juan Pablo ***** */
+
+$q_especialidad="select 
+										especialidades_medicas.id_especialidad_medica,
+										especialidades_medicas.especialidad_medica,
+										especialidades_medicas.monto,
+										tbl_baremos_precios.precio
+								from 
+										especialidades_medicas,
+										s_p_proveedores,
+										tbl_baremos_entes,
+										tbl_baremos_precios,
+										proveedores 
+								where 
+										especialidades_medicas.id_especialidad_medica=s_p_proveedores.id_especialidad and 
+										s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and
+										tbl_baremos_entes.id_ente=$f_cobertura[id_ente] and
+										tbl_baremos_entes.id_baremo=tbl_baremos_precios.id_baremo and
+									tbl_baremos_precios.id_especialidad_medica=especialidades_medicas.id_especialidad_medica and
+										 proveedores.id_proveedor='$id_proveedor'";
+$r_especialidad=ejecutar($q_especialidad);
+$num_filase=num_filas($r_especialidad);
+
+if ($num_filase==0){
+       if(($elidtipoentees <> 7) || ($elidtipoentees <> 2)){
+
+					$q_especialidad="select 
+														especialidades_medicas.id_especialidad_medica,
+														especialidades_medicas.especialidad_medica,
+														especialidades_medicas.monto
+												from 
+														especialidades_medicas,
+														s_p_proveedores,
+														proveedores 
+												where 
+														especialidades_medicas.id_especialidad_medica=s_p_proveedores.id_especialidad and 
+														s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and
+														 proveedores.id_proveedor='$id_proveedor'";
+					$r_especialidad=ejecutar($q_especialidad);
+					$f_especialidad=asignar_a($r_especialidad); 
+					$montototal=$f_especialidad[monto];
+	}
+         if(($elidtipoentees == 7) || ($elidtipoentees == 2)){ 
+
+	     $buscidentebare = "select entes.id_ente from entes,tbl_baremos_entes where
+                                 entes.id_tipo_ente = 7 and 
+                                 entes.id_ente = tbl_baremos_entes.id_ente;";
+             $repbuscidentebare = ejecutar($buscidentebare);    
+             $datdelidentbare = assoc_a($repbuscidentebare);        
+             $identebares =  $datdelidentbare['id_ente'];   
+             $q_especialidad="select 
+		      especialidades_medicas.id_especialidad_medica,
+  		      especialidades_medicas.especialidad_medica,
+		      especialidades_medicas.monto,
+		      tbl_baremos_precios.precio
+		from 
+		      especialidades_medicas,
+		      s_p_proveedores,
+		      tbl_baremos_entes,
+		      tbl_baremos_precios,
+		      proveedores 
+		where 
+		      especialidades_medicas.id_especialidad_medica=s_p_proveedores.id_especialidad and 
+		      s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and
+		      tbl_baremos_entes.id_ente=$identebares and
+		      tbl_baremos_entes.id_baremo=tbl_baremos_precios.id_baremo and
+		      tbl_baremos_precios.id_especialidad_medica=especialidades_medicas.id_especialidad_medica and
+		      proveedores.id_proveedor='$id_proveedor'";
+             $r_especialidad=ejecutar($q_especialidad);
+             $f_especialidad=asignar_a($r_especialidad); 
+	     $montototal=$f_especialidad[precio];
+	    }
+ 
+     }
+	else
+	{
+$f_especialidad=asignar_a($r_especialidad); 
+$montototal=$f_especialidad[precio];
+	}
+
+
+
+$especialidad=$f_especialidad[especialidad_medica];
+/*echo $especialidad;
+echo $f_especialidad[monto];
+*/
+
+
+/*echo $montototal;
+echo "-------";*/
+$admin= $_SESSION['id_usuario_'.empresa];
+/*echo $admin;
+*/
+
+
+if ($tipcon==26)
+{
+$descripcion='CONSULTA PREVENTIVA';
+/* **** Si es Igual a Consulta Preventiva Cargar Orden **** */
+$r_proceso="insert into procesos (id_titular,id_beneficiario,id_estado_proceso,fecha_recibido,fecha_creado,hora_creado,comentarios,comentarios_gerente,comentarios_medico,id_admin,codigo) 
+values ('$f_cobertura[id_titular]','$f_cobertura[id_beneficiario]','2','$fechacreado','$fechacreado','$hora','$comenope',' ',' ','$admin','$codigo');";
+$f_proceso=ejecutar($r_proceso);
+
+$q_cproceso="select * from procesos where procesos.codigo='$codigo'";
+$r_cproceso=ejecutar($q_cproceso);
+$f_cproceso=asignar_a($r_cproceso);
+
+
+$r_gastos="insert into gastos_t_b 
+(id_proceso,nombre,descripcion,fecha_creado,hora_creado,id_cobertura_t_b,enfermedad,
+id_proveedor,id_tipo_servicio,id_servicio,monto_reserva,monto_aceptado,monto_pagado,fecha_cita) 
+values ('$f_cproceso[id_proceso]','$especialidad','$descripcion','$fechacreado','$hora','0',' 
+','$id_proveedor','5','4','$f_especialidad[monto]','$f_especialidad[monto]','$f_especialidad[monto]','$fechacita');"; 
+$f_gastos=ejecutar($r_gastos);
+
+
+$r_preventiva="insert into consultas_preventivas (id_titular,id_beneficiario,id_especialidad_medica,especialidad_medica,fecha_creado,hora_creado,id_proceso) 
+values ('$f_cobertura[id_titular]','$f_cobertura[id_beneficiario]','$f_especialidad[id_especialidad_medica]','$f_especialidad[especialidad_medica]','$fechacreado','$hora','$f_cproceso[id_proceso]');";
+$f_preventiva=ejecutar($r_preventiva);
+
+}
+else
+{
+/* **** Fin de Cargar Consulta Preventiva **** */
+
+
+$q_monto="select * from coberturas_t_b where id_cobertura_t_b='$id_cobertura'";
+$r_monto=ejecutar($q_monto); 
+$f_monto=asignar_a($r_monto);
+
+if ($f_monto[monto_actual]<$montototal)
+{	
+$paso=0;
+?>
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+<tr>		
+<td colspan=4 class="titulo_seccion">El Monto de la Orden es Mayor al de la Cobertura Seleccionada
+		<a href="#" OnClick="reg_cita();" class="boton">Registrar otra Cita</a>
+			<a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>	
+</tr>	
+</table>
+
+
+
+
+
+<?php
+}
+else
+{
+$paso=1;
+
+
+$r_proceso="insert into procesos (id_titular,id_beneficiario,id_estado_proceso,fecha_recibido,fecha_creado,hora_creado,comentarios,comentarios_gerente,comentarios_medico,id_admin,codigo) 
+values ('$f_cobertura[id_titular]','$f_cobertura[id_beneficiario]','2','$fechacreado','$fechacreado','$hora','$comenope',' ',' ','$admin','$codigo');";
+$f_proceso=ejecutar($r_proceso);
+
+$q_cproceso="select * from procesos where procesos.codigo='$codigo'";
+$r_cproceso=ejecutar($q_cproceso);
+$f_cproceso=asignar_a($r_cproceso);
+
+
+$r_gastos="insert into gastos_t_b (id_proceso,nombre,descripcion,fecha_creado,hora_creado,id_cobertura_t_b,enfermedad,id_proveedor,id_tipo_servicio,id_servicio,monto_reserva,monto_aceptado,monto_pagado,fecha_cita) 
+values ('$f_cproceso[id_proceso]','$especialidad','$descripcion','$fechacreado','$hora','$id_cobertura',' ','$id_proveedor','10','4','$montototal','$montototal','$montototal','$fechacita');";
+$f_gastos=ejecutar($r_gastos);
+
+$q_propiedad="select * from propiedades_poliza,coberturas_t_b where propiedades_poliza.id_propiedad_poliza=coberturas_t_b.id_propiedad_poliza 
+and coberturas_t_b.id_cobertura_t_b=$id_cobertura";
+$r_propiedad=ejecutar($q_propiedad);
+$f_propiedad=asignar_a($r_propiedad);
+/*echo $f_propiedad[cualidad];
+*/
+$q_cgastos="select * from gastos_t_b,procesos where gastos_t_b.id_proceso=procesos.id_proceso and procesos.gasto_viejo='0' and procesos.fecha_recibido>='$fechainicio' and procesos.fecha_recibido<='$fechafinal' and gastos_t_b.id_cobertura_t_b=$id_cobertura";
+$r_cgastos=ejecutar($q_cgastos);
+while($f_cgastos=asignar_a($r_cgastos,NULL,PGSQL_ASSOC)){
+$monto_gastos= $monto_gastos + $f_cgastos[monto_aceptado];
+}
+$monto_actual= $f_propiedad[monto_nuevo] - $monto_gastos;
+/*echo $monto_actual;
+*/
+$mod_cobertura="update coberturas_t_b set monto_actual='$monto_actual' where coberturas_t_b.id_cobertura_t_b='$id_cobertura' and coberturas_t_b.id_titular='$f_cobertura[id_titular]' and coberturas_t_b.id_beneficiario='$f_cobertura[id_beneficiario]'";
+$fmod_cobertura=ejecutar($mod_cobertura); 
+}
+}
+if ($paso==1){
+$log="REGISTRO LA CITA CON ORDEN NUMERO $f_cproceso[id_proceso]";
+logs($log,$ip,$admin);
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+
+<tr>		
+<td colspan=4 class="titulo_seccion">La Orden  Numero <?php echo $f_cproceso[id_proceso] ?> se Registro con Exito <a href="#" OnClick="reg_cita();" class="boton">Registrar otra Cita</a>
+			<a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>	
+</tr>	
+<tr>		
+<td colspan=4 class="titulo_seccion">Imprimir </td>	
+</tr>	
+
+	<tr>
+		<td class="tdtitulos"></td>
+		<td class="tdtitulos"><?php
+			$url="'views01/iorden.php?proceso=$f_cproceso[id_proceso]&si=1'";
+			?> <a href="javascript: iop(<?php echo $url; ?>);" class="boton"> Orden Con Monto </a><?php
+			$url="'views01/iorden.php?proceso=$f_cproceso[id_proceso]&si=0'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton"> Orden Sin Monto  </a><?php
+			$url="'views01/irevision.php?proceso=$f_cproceso[id_proceso]'";
+			?><a href="javascript: imprimir(<?php echo $url; ?>);"class="boton"> Comentarios</a>
+			<?php
+			$url="'views01/iordenb.php?proceso=$f_cproceso[id_proceso]&si=1'";
+			?> <a href="javascript: iop(<?php echo $url; ?>);" class="boton"> Orden ente privado  </a><?php
+			$url="'views01/iordenb.php?proceso=$_cproceso[id_proceso]&si=0'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton"> Orden ente privado logo viejo  </a>
+			
+	</td>
+	<?php
+if ($num_filasf>0){
+?>
+	</tr>
+	<tr> <td colspan=4 class="titulo_seccion"><a href="#" OnClick="reg_factura();" class="boton">Facturacion</a></td></tr>
+	<?php
+	}
+	?>
+</table>
+
+<?php
+}
+?>
+
+
+
+

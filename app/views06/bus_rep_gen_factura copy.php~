@@ -1,0 +1,261 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+
+$fechaini=$_REQUEST[dateField1];
+$fechafin=$_REQUEST[dateField2];
+$forma_pago=$_REQUEST[forma_pago];
+$sucursal=$_REQUEST[sucursal];
+$servicio=$_REQUEST[servicios];
+$num_cheque=$_REQUEST[num_cheque];
+
+if ($num_cheque>0){
+    $andnumcheque="and tbl_facturas.numero_cheque='$num_cheque' ";
+    }
+    else
+    {
+         $andnumcheque="";
+        }
+
+
+list($ente,$nom_ente)=explode("@",$_REQUEST['ente']);
+list($tipo_ente,$nom_tipo_ente)=explode("@",$_REQUEST['tipo_ente']);
+if  ($servicio==0){
+	$servicios="and gastos_t_b.id_servicio<>12";
+    $serviciosp="and g.id_servicio<>12";
+	$servicios1="servicios.id_servicio<>12";
+	}
+	else
+	{
+		$servicios="and gastos_t_b.id_servicio=$servicio";
+        $serviciosp="and g.id_servicio=$servicio";
+		$servicios1="servicios.id_servicio=$servicio";
+    }
+
+if ($forma_pago==0){
+	$tipo_pago="and tbl_facturas.id_estado_factura>=0";
+	}
+if ($forma_pago=='*'){
+	$tipo_pago="and tbl_facturas.id_estado_factura>=1 and tbl_facturas.id_estado_factura<=2";
+	
+	}
+	if ($forma_pago>0){
+	$tipo_pago="and tbl_facturas.id_estado_factura=$forma_pago";
+	}
+	
+	
+	
+if ($ente==0)
+{
+	$elente="and entes.id_ente>=$ente"; 
+    $elentep="e.id_ente>=$ente and";
+	}
+	else
+	{
+		$elente="and entes.id_ente=$ente";
+        $elentep="e.id_ente=$ente and";
+		}
+        
+        if ($ente=='*')
+{
+    $elente="and entes.id_ente!=53";
+    }
+	
+	if ($tipo_ente==0)
+{
+	$eltipo_ente="tbl_tipos_entes.id_tipo_ente>=$tipo_ente"; 
+	}
+	else
+	{
+
+		$eltipo_ente="tbl_tipos_entes.id_tipo_ente=$tipo_ente";
+     }
+        
+       
+        
+		if ($sucursal==0)
+{
+	$id_serie="and tbl_series.id_serie>0";
+    $id_seriep="and ts.id_serie>0";
+	}
+	else
+	{
+	$id_serie="and tbl_series.id_serie=$sucursal";
+    $id_seriep="and ts.id_serie=$sucursal";
+		}
+?>
+
+
+
+
+
+<table   border=0 class="tabla_citas"  cellpadding=0 cellspacing=0>
+
+
+    <tr>
+   
+      <?php 
+$r_ente=pg_query("select  * from entes where id_ente=$ente");
+($f_ente=pg_fetch_array($r_ente, NULL, PGSQL_ASSOC))
+?>
+       
+    </tr>
+   
+     
+   <tr>
+  <td height="21" colspan="12" class="titulo_seccion"><div align="center"><strong>
+  Monto General de Facturas  Sin Proceso de Auditoria</tr>
+    
+   	 <tr>
+    <td  class="tdcamposc" >Serie</td>
+    <td  class="tdcamposc" >Nombre</td>
+    <td  class="tdcamposc" >Monto</td>
+	</tr>
+
+ <?php
+ if ($forma_pago==4){
+     /* $r_factura=pg_query("select 
+                                                    p.id_proceso,
+                                                    g.fecha_cita,
+                                                    count(g.id_proceso)
+                                        from 
+                                                    procesos p,
+                                                    titulares t,
+                                                    entes e,
+                                                    gastos_t_b g,
+                                                    admin a,
+                                                    tbl_series ts
+                                        where 
+                                        p.id_proceso=g.id_proceso 
+                                        $serviciosp and
+                                        g.fecha_cita>='$fechaini' and 
+                                        g.fecha_cita<='$fechafin' and 
+                                        p.id_titular=t.id_titular and 
+                                        t.id_ente=e.id_ente and 
+                                       $elentep
+                                        e.id_tipo_ente=$tipo_ente  and 
+                                        p.id_admin=a.id_admin and
+                                        a.id_sucursal=ts.id_sucursal
+                                        $id_seriep and
+                                        not exists
+                                                    (select
+                                                                * 
+                                                    from 
+                                                                tbl_procesos_claves t
+                                                    where  
+                                                                p.id_proceso=t.id_proceso)  
+                                                    group by  
+                                                                p.id_proceso,
+                                                                g.fecha_cita");
+     */
+     }
+     else
+     {
+        
+ $r_factura=pg_query("select 
+                                           tbl_facturas.id_factura, 
+                                           tbl_series.nomenclatura,
+                                            tbl_series.nombre,
+                                            tbl_facturas.id_serie,
+											tbl_facturas.id_estado_factura,
+                                            sum(tbl_procesos_claves.monto),
+											sum(tbl_procesos_claves.fac_deducible) as sum_deducible
+                                    from 
+                                            tbl_facturas,
+                                            tbl_procesos_claves,
+                                            procesos,
+                                            titulares,
+                                            entes,
+											tbl_tipos_entes,
+                                            tbl_series
+                                    where 
+                                            tbl_facturas.id_factura=tbl_procesos_claves.id_factura and 
+                                            tbl_facturas.id_serie=tbl_series.id_serie
+                                            $id_serie and
+                                            tbl_facturas.fecha_emision>='$fechaini' and 
+                                            tbl_facturas.fecha_emision<='$fechafin' and 
+                                            tbl_procesos_claves.id_proceso=procesos.id_proceso and 
+                                            procesos.id_titular=titulares.id_titular and 
+                                            titulares.id_ente=entes.id_ente 
+                                            $elente and
+											entes.id_tipo_ente=tbl_tipos_entes.id_tipo_ente and
+                                            $eltipo_ente 
+                                            $tipo_pago  
+											$andnumcheque
+                                    group by 
+                                            tbl_series.nomenclatura,
+                                            tbl_series.nombre,
+                                            tbl_facturas.id_serie,
+ 											tbl_facturas.id_estado_factura,
+ 											tbl_facturas.id_factura 
+                                    order by 
+                                            tbl_series.nomenclatura");
+                                  
+}
+?>
+
+
+
+   
+    <?php    
+
+
+while($f_factura=pg_fetch_array($r_factura, NULL, PGSQL_ASSOC)) 
+{
+	$i++;
+
+$lafacturaes=$f_factura['id_factura'];
+	
+$montonoa=("SELECT gastos_t_b.id_proceso,monto_reserva as  noaprobado
+FROM gastos_t_b,tbl_procesos_claves
+WHERE tbl_procesos_claves.id_factura='$lafacturaes'
+AND gastos_t_b.id_proceso=tbl_procesos_claves.id_proceso AND gastos_t_b.id_tipo_servicio=27; ");
+
+$montonoasql=ejecutar($montonoa);
+
+ if ($cuantosnap=num_filas($montonoasql)>0)
+			{
+				$r_montonoa=asignar_a($montonoasql);
+            $noaprobado=$r_montonoa['noaprobado'];
+			
+			}
+	else
+			{	
+			$noaprobado=0;
+            		   	
+			}
+
+
+
+ if ($f_factura[id_estado_factura]==3)
+			{
+				$montofactura=0;
+			}
+			else
+			{
+			  $montofactura=($f_factura[sum] - $f_factura[sum_deducible] - $noaprobado ) ;
+			}
+	
+    $totalmontpag1=$totalmontpag1 + $montofactura;
+
+?>
+  	 <tr>
+    <td  class="tdcamposc" ><?php  echo $f_factura[nomenclatura];?></td>
+     <td  class="tdcamposc" ><?php  echo $f_factura[nombre];?></td>
+    <td  class="tdcamposc" ><?php  echo montos_print($montofactura);?></td>
+	</tr>
+    	
+<?php
+}
+?>
+<tr>
+  <td  class="tdcamposc" ></td>
+  <td  class="tdcamposc">Total</td>
+	<td class="tdcamposc" ><?php echo  montos_print($totalmontpag1)?></td>
+</tr>
+   
+
+
+    
+  </table>
+

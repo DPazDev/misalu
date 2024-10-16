@@ -1,0 +1,39 @@
+<?
+   include ("../../lib/jfunciones.php");
+   sesion();
+   $rifdf=$_POST['verif'];
+   $buscardatclin=("select clinicas_proveedores.id_clinica_proveedor,clinicas_proveedores.nombre
+                               from clinicas_proveedores
+                            where 
+                                  clinicas_proveedores.rif='$rifdf';");
+    $respbuscarcli=ejecutar($buscardatclin);                                  
+    $datbuscli=assoc_a($respbuscarcli);
+    $elidclin=$datbuscli['id_clinica_proveedor'];
+    $nomactual=$datbuscli['nombre']; 
+   $rifpc=$_POST['ricamb'];
+   $nitpc=$_POST['nitcamb'];
+   $nompc=$_POST['nomcamb'];
+   $dirpc=$_POST['dircamb'];
+   $tefpc=$_POST['tefcamb'];
+   $corrpc=$_POST['corrcamb'];
+   $pagpc=$_POST['pagcamb'];
+   $estactivo=$_POST['opciacti'];
+   $actprovee=$_POST['laactivipro'];
+   $nocheque=$_POST['elcheanom'];
+   $rifcheque=$_POST['elcherif'];
+   $direcheque=$_POST['elchedir'];
+   $modcli=("update clinicas_proveedores set rif='$rifpc',nit='$nitpc',nombre=upper('$nompc'),
+                    direccion=upper('$dirpc'),telefonos='$tefpc',email=upper('$corrpc'),url=upper('$pagpc'),
+                     activar=$estactivo,id_act_pro=$actprovee,nomcheque=upper('$nocheque'),rifcheque=upper('$rifcheque'),
+                     direccioncheque=upper('$direcheque') where rif='$rifdf';");
+   $modclifinal=ejecutar($modcli);
+   
+$fecha=date("Y-m-d");
+$hora=date("H:i:s");
+$elid=$_SESSION['id_usuario_'.empresa];
+$elus=$_SESSION['nombre_usuario_'.empresa];
+//Guardar los datos en la tabla logs;
+$mensaje="$elus, ha modificado al proveedor con el id_clinica_proveedor=$elidclin de nombre $nomactual";
+$relog=("insert into logs(log,id_admin,fecha_creado,hora_creado,ip) values (upper('$mensaje'),'$elid','$fecha','$hora','$ip');");
+$inrelo=ejecutar($relog);
+?>

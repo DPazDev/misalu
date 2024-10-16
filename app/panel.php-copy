@@ -1,0 +1,1757 @@
+<?php
+header("Content-Type: text/html;charset=utf-8");
+include("../lib/jfunciones.php");
+sesion();
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select * from admin where admin.id_admin='$id_admin'");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+/* **** verifico de tiene activado el permiso de refrezcar panel automaticamente **** */
+$q_refrescar=("select * from permisos where permisos.id_admin='$id_admin' and permisos.id_modulo=10");
+$r_refrescar=ejecutar($q_refrescar);
+$f_refrescar=asignar_a($r_refrescar);
+
+if ($f_refrescar[permiso]=='1'){
+$self = $_SERVER['PHP_SELF']; //Obtenemos la página en la que nos encontramos
+header("refresh:5; url=$self"); //Refrescamos en  segundos
+}
+/* **** fin verificar de tiene activado el permiso de refrezcar panel automaticamente **** */
+$fecha_pro=date("Y-m-d");
+$fecha = date("Y-m-d");
+$fechaviso = date("Y-m-d");
+$mes=date("m");
+$fecha = date("l");
+if($fecha == "Sunday")
+	$fecha = "domingo";
+elseif($fecha == "Monday")
+	$fecha = "lunes";
+elseif($fecha == "Tuesday")
+	$fecha = "martes";
+elseif($fecha == "Wednesday")
+	$fecha = "miercoles";
+elseif($fecha == "Thursday")
+	$fecha = "jueves";
+elseif($fecha == "Friday")
+	$fecha = "viernes";
+elseif($fecha == "Saturday")
+	$fecha = "sabado";
+
+$fecha = $fecha.",".date("d/m/Y");
+echo cabecera(sistema);
+?>
+<DIV id="container-principal">
+<script type="text/javascript" src="../public/javascripts/ajax.js"></script>
+<script type="text/javascript" src="../public/javascripts/general.js"></script>
+<script type="text/javascript" src="../public/javascripts/fparaproto.js"></script>
+<script type="text/javascript" src="../public/javascripts/fcparaproto.js"></script>
+<script type="text/javascript" src="../public/javascripts/fhparaproto.js"></script>
+<script type="text/javascript" src="../public/javascripts/ffparaproto.js"></script>
+<script type="text/javascript" src="../public/javascripts/events.js"></script>
+<script type="text/javascript" src="../public/javascripts/calpopup.js"></script>
+<script type="text/javascript" src="../public/javascripts/dateparse.js"></script>
+<script type="text/javascript" src="../public/javascripts/prototype.js"></script>
+<script type="text/javascript" src="../public/javascripts/scriptaculous.js"></script>
+<script type="text/javascript" src="../public/javascripts/effects.js"></script>
+<script type="text/javascript" src="../public/javascripts/validation.js"></script>
+<script type="text/javascript" src="../public/javascripts/webtoolkit.aim.js"></script>
+<script type="text/javascript" src="../public/javascripts/fabtabulous.js"></script>
+<script type="text/javascript" src="../public/javascripts/autocomplete.js"></script>
+<script type="text/javascript" src="../public/javascripts/modalbox.js"> </script>
+<script type="text/javascript" src=".../public/javascripts/debug.js"> </script>
+<?php
+//buscar si el aviso es para todo el mundo!!
+$buscaraviso = ("select admin.nombres,admin.apellidos,cartelera.aviso
+from
+admin,cartelera
+where
+admin.id_admin = cartelera.id_admin and
+admin.activar  = '1' and
+(cartelera.fechaini between '$fechaviso' and '$fechaviso' or
+cartelera.fechafin between '$fechaviso' and '$fechaviso') and
+cartelera.id_usuarios = 0 and
+cartelera.id_departamento = 0");
+$repbuscaraviso = ejecutar($buscaraviso);
+$cuantosaviso = num_filas($repbuscaraviso);
+$buscarusariodepartamento = ("select admin.id_departamento from admin where id_admin=$id_admin");
+$repbuscarusuariodepartamento = ejecutar($buscarusariodepartamento);
+$datodepartamento = assoc_a($repbuscarusuariodepartamento);
+$eldepatamento = $datodepartamento['id_departamento'];
+
+//buscar si el aviso es para un departamento en particular!!
+$buscaravisosdepartamento = ("select admin.nombres,admin.apellidos,cartelera.aviso
+from
+admin,cartelera
+where
+admin.id_admin = cartelera.id_admin and
+admin.activar  = '1' and
+(cartelera.fechaini between '$fechaviso' and '$fechaviso' or
+cartelera.fechafin between '$fechaviso' and '$fechaviso') and
+admin.id_departamento = cartelera.id_departamento and
+cartelera.id_departamento = $eldepatamento and
+cartelera.id_departamento > 0 and
+cartelera.id_usuarios = 0");
+$repavisosdepartamento = ejecutar($buscaravisosdepartamento);
+$cuantosavisdepartamento = num_filas($repavisosdepartamento);
+
+//buscar si el aviso es para un usuario en particular!!
+$buscaravisousuario = ("select admin.nombres,admin.apellidos,cartelera.aviso
+from
+admin,cartelera
+where
+admin.id_admin = cartelera.id_admin and
+admin.activar  = '1' and
+(cartelera.fechaini between '$fechaviso' and '$fechaviso' or
+cartelera.fechafin between '$fechaviso' and '$fechaviso') and
+cartelera.id_usuarios = $id_admin and
+cartelera.id_departamento = $eldepatamento");
+$repbusavisousuario = ejecutar($buscaravisousuario);
+$cuantoavisousuario = num_filas($repbusavisousuario);
+if(($cuantosaviso >= 1) or ($cuantosavisdepartamento >= 1) or ($cuantoavisousuario >= 1)){
+echo "<script>";
+
+echo "Cartelera('$cuantosaviso','$cuantosavisdepartamento', '$cuantoavisousuario');";
+
+echo "</script>";
+}
+
+$cartelerahismed = ("select admin.id_admin from admin where admin.id_admin=$id_admin and admin.id_departamento=17");
+$repcartelerahis = ejecutar($cartelerahismed);
+$datacatelehis   = num_filas($repcartelerahis);
+if($datacatelehis >= 1){
+echo "<script>";
+
+echo "CarteleraHM();";
+
+echo "</script>";
+}
+
+?>
+<!----EJECUTA CADA 30MINUTOS EL CAMBIO DE MONEDA ------>
+<script>
+  setInterval(MuestraCambio, 1800000);
+
+</script>
+
+<script LANGUAGE="JavaScript">
+function iop(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function imprimir(url){
+        window.open(url,'','location=0,status=0,scrollbars=1,width=800,height=800,resizable=1');
+}
+
+
+function changeF(){
+      document.forms['panel']['cednom'].focus();
+}
+function sumar(elem){
+
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var oa = document.getElementById("oa");
+			var j=0;
+			var montot=0;
+			for(var i=0; i<oa.elements.length; i++) {
+  var elemento = oa.elements[i];
+var monto,montot;
+
+ var num;
+  if(elemento.type == "checkbox") {
+	j++;
+	   if(elemento.checked) {
+		monto=document.getElementById("honorarios_"+[j]);
+		montot=Number(montot)+ Number(monto.value);
+		montot=formatoNumeroDec(montot);
+
+    }
+  }
+document.forms['oa']['monto'].value=montot;
+}
+//alert("El Monto Aceptado que lleva Hasta el Momento es:"+montot);
+}
+
+
+function changeF(){
+      document.forms['panel']['cednom'].focus();
+}
+
+function sumar2(elem){
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var oa = document.getElementById("oa");
+			var j=0;
+			var montot=0;
+			for(var i=0; i<oa.elements.length; i++) {
+  var elemento = oa.elements[i];
+var monto,montot;
+
+ var num;
+  if(elemento.type == "checkbox") {
+	j++;
+	   if(elemento.checked) {
+		monto=document.getElementById("honorariosr_"+[j]);
+		montot=Number(montot)+ Number(monto.value);
+
+    }
+  }
+document.forms['oa']['montor'].value=montot;
+}
+//alert("El Monto Reserva que lleva Hasta el Momento es:"+montot);
+}
+
+function multiplicar(elem){
+
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var oa = document.getElementById("oa");
+			var j=0;
+			var valort=0;
+for(var i=0; i<oa.elements.length; i++) {
+  var elemento = oa.elements[i];
+var valor,valor2;
+
+ var num;
+  if(elemento.type == "checkbox") {
+	j++;
+	   if(elemento.checked) {
+		valor=document.getElementById("valor_"+[j]);
+		valor2=document.getElementById("factor_"+[j]);
+		valort=Number(valor2.value) * Number(valor.value);
+		//document.forms['oa']['monto'].value=montot;
+
+//		document.forms["oa"]["honorarios_"+[j]].value=valort;
+		document.getElementById("honorarios_"+[j]).value=valort;
+
+    }
+  }
+
+}
+
+}
+
+function calcular_cobertura(elem)
+{
+	var oa = document.getElementById("oa");
+	var jfinal=document.forms['oa']['conj'].value
+	var monto,montot,cobertura,k;
+	k=0;
+	for(var j=1; j<jfinal+1; j++)
+	{
+		cobertura=0;
+		montot=0;
+		i_inicial=document.getElementById("i_inicial_"+[j]);
+		i_final=document.getElementById("i_final_"+[j]);
+		ifinal=Number(i_final.value)+Number(1);
+
+		for(var i=i_inicial.value; i<ifinal; i++)
+		{
+
+			chequeo=document.getElementById("check_"+[i]);
+			if(chequeo.checked)
+			{
+				monto=document.getElementById("honorarios_"+[i]);
+				montot=Number(montot)+ Number(monto.value);
+				montot=formatoNumeroDec(montot);
+			}
+		}
+		cobertura=document.getElementById("cobertura_"+[j]);
+		subcob=document.getElementById("cob_"+[j]) ;
+
+		cobertura=(Number(cobertura.value) + Number(subcob.value))- Number(montot);
+
+		document.getElementById("cob_"+[j]).value=montot;
+		document.getElementById("cobertura_"+[j]).value=cobertura;
+		negativo=document.getElementById("cobertura_"+[j])
+		negativo2=Number(negativo.value);
+		cero=0;
+		if (negativo2<0)
+		{
+					k++;
+		}
+		if (k>0)
+		{
+			document.getElementById("actualizar").style.visibility='hidden';
+			}
+			else
+			{
+				document.getElementById("actualizar").style.visibility='visible';
+			}
+	}
+}
+
+function verificarproc(elem){
+var proveedorp,proveedorc;
+	proveedorc=document.getElementById("id_proveedorc");
+	pc=proveedorc.value;
+				document.getElementById("id_proveedorp").value=0;
+
+		document.getElementById("id_proveedor").value=proveedorc.value;
+
+
+}
+
+
+function verificarprop(elem){
+var proveedorp,proveedorc;
+		proveedorp=document.getElementById("id_proveedorp");
+		pp=proveedorp.value;
+
+
+		document.getElementById("id_proveedorc").value=0;
+
+		document.getElementById("id_proveedor").value=proveedorp.value;
+
+}
+
+// solo campos numericos
+  function Solo_Numerico(variable){
+        Numer=Number(variable);
+        if (isNaN(Numer)){
+
+            return "";
+        }
+        return Numer;
+    }
+    function ValNumero(Control){
+        Control.value=Solo_Numerico(Control.value);
+    }
+// fin de solo campos numerico
+
+// calcular tratamiento continuo
+function cal(elem){
+
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var oa = document.getElementById("oa");
+			var j=0;
+			var montot=0;
+			for(var i=0; i<oa.elements.length; i++) {
+  var elemento = oa.elements[i];
+var monto,montot;
+
+ var num;
+  if(elemento.type == "checkbox") {
+	j++;
+	   if(elemento.checked) {
+		fechaci=document.getElementById("fechaci_"+[j]);
+		fechaci1 = fechaci.value.split('-');
+		fechacf=document.getElementById("fechacf_"+[j]);
+		fechacf1 = fechacf.value.split('-');
+		fecha1=new Date(fechaci1[0],fechaci1[1]-1,fechaci1[2]);
+		fecha2=new Date(fechacf1[0],fechacf1[1]-1,fechacf1[2]);
+		var resta=(fecha2-fecha1)/1000/3600/24;
+		monto=document.getElementById("dd_"+[j]);
+		montot=Number(monto.value) * (Number(resta)+1);
+		document.forms['oa']["t_"+[j]].value=montot;
+	}
+  }
+
+}
+//alert("El Monto Aceptado que lleva Hasta el Momento es:"+montot);
+}
+
+function restar(dia1,mes1,ano1,dia2,mes2,ano2)
+{
+ fecha1=new Date(2011,03-1,22);
+ fecha2=new Date(2011,04-1,29);
+alert (fecha1)
+ var resta=(fecha2-fecha1)/1000/3600/24;
+ alert (resta)
+}
+
+// fin calcular tratamiento continuo
+
+// colocar todos los checkbox de honorarios medicos en verdadero
+function honoverdad(elem){
+	var oa = document.getElementById("oa");
+			var j=0;
+			for(var i=0; i<oa.elements.length; i++) {
+				var elemento = oa.elements[i];
+				if(elemento.type == "checkbox") {
+				j++;
+				document.forms['oa']["checkh_"+[j]].click();
+
+				}
+				}
+}
+// fin de colocar todos los checkbox de honorarios medicos en verdadero
+
+
+// colocar todos los checkbox de honorarios medicos en verdadero
+function gastosverdad(elem){
+	var j=1;
+	document.querySelectorAll('#oa input[type=checkbox]').forEach(function(checkElement) {
+		idElment='checkg_'+j;
+		if(document.getElementById("checkg_"+j) !== null){
+			document.getElementById("checkg_"+j).click();
+			j++;
+		}
+	});
+
+}
+// fin de colocar todos los checkbox de honorarios medicos en verdadero
+
+// colocar todos los checkbox de proveedores clinicas en verdadero para cancelar facturas
+function todos(elem){
+	var oa = document.getElementById("oa");
+			var j=0;
+			for(var i=0; i<oa.elements.length; i++) {
+				var elemento = oa.elements[i];
+				if(elemento.type == "checkbox") {
+				j++;
+				document.forms['oa']["check_"+[j]].click();
+
+				}
+				}
+}
+// fin de colocar todos los checkbox de proveedores clinicas en verdadero para cancelar facturas
+
+
+// colocar todos los checkbox de iva
+function ivatodos(elem){
+	var oa = document.getElementById("oa");
+			var j=0;
+			for(var i=0; i<oa.elements.length; i++) {
+				var elemento = oa.elements[i];
+				if(elemento.type == "checkbox") {
+				j++;
+				document.forms['oa']["checkiva"+[j]].click();
+
+				}
+				}
+}
+// fin de colocar todos los checkbox iva
+
+
+
+// funcion para calcular retencion iva de compras  en verdadero
+function sumarfac(elem){
+
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var oa = document.getElementById("oa");
+			var j=0;
+			var montot=0;
+            var ivarett=0;
+			for(var i=0; i<oa.elements.length; i++) {
+			  var elemento = oa.elements[i];
+
+
+if(elemento.type == "checkbox") {
+	j++;
+	   if(document.forms['oa']["check_"+[j]].checked) {
+		monto=document.getElementById("honorarios_"+[j]);
+        ivaret=document.getElementById("iva_ret_"+[j]);
+		montot= Number(montot) + Number(monto.value);
+        ivarett= Number(ivarett) + Number(ivaret.value);
+    }
+  }
+document.forms['oa']['monto'].value=montot.toFixed(2);
+document.forms['oa']['iva_rettt'].value=ivarett.toFixed(2);
+}
+//alert("El Monto Aceptado que lleva Hasta el Momento es:"+montot);
+}
+
+// funcion para calcular los gastos clinicos y honorarios medicos
+function sumarfacpro(elem){
+
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var oa = document.getElementById("oa");
+		var j=0;
+		var monto,montot,monto_ret,montot_ret,total_pagar,debe,ret,montohm,montohmt,montogc,montogct,montogchm,montogchmt;
+		montohm=0;
+		montohmt=0;
+		montogc=0;
+		montogct=0;
+		montogchm=0;
+		montogchmt=0;
+		monto=0;
+		montot=0;
+		monto_ret=0;
+		montot_ret=0;
+		monto_iva=0;
+		montot_iva=0;
+		total_pagar=0;
+		monto_retiva=0;
+		montot_retiva=0;
+		diferenciaiva=0;
+		CantMinimaSustraendo=Number($F("sustraendoCantidad"));
+		debe=0;
+		conexa=document.getElementById("conexa");
+
+		for(var i=0; i<conexa.value; i++) {//Reglones Facturas recorrido de Check
+		  var elemento = oa.elements[i];
+			ret=0;
+			debe=0;
+			iva=0;
+		 	var num;
+			j++;
+
+			if(document.forms['oa']["check_"+[j]].checked) {
+					// aqui  verificamos si tiene seleccionado honorarios medicos mas gastos clinicos
+					if((document.forms['oa']["checkh_"+[j]].checked) && (document.forms['oa']["checkg_"+[j]].checked)) {
+								hm=document.getElementById("honorarios_medicos_"+[j]);
+								gc=document.getElementById("gastos_clinicos_"+[j]);
+								variable=document.getElementById("variable");
+								ret=(Number(hm.value)+ Number(gc.value)) * (Number(variable.value)) ;
+								document.forms['oa']["ret_"+[j]].value=ret.toFixed(2);
+								debe= (Number(hm.value)+ Number(gc.value)) -   (ret)
+								document.forms['oa']["honorarios_"+[j]].value=debe.toFixed(2);
+
+								if(document.forms['oa']["checkiva"+[j]].checked)
+								{
+									variableiva=document.getElementById("variableiva");
+									variableretiva=document.getElementById("variableretiva");
+									baseimponible= (Number(hm.value)+ Number(gc.value)) / (((Number(variableiva.value) * 100 ) + 100) / 100) ;
+									document.forms['oa']["gc_hm_"+[j]].value=baseimponible.toFixed(2);
+									ret=(Number(baseimponible)) * (Number(variable.value)) ;
+									document.forms['oa']["ret_"+[j]].value=ret.toFixed(2);
+									iva=((Number(hm.value)+ Number(gc.value)) - ((Number(hm.value)+ Number(gc.value)) / (((Number(variableiva.value) * 100 ) + 100) / 100))) ;
+									document.forms['oa']["iva_"+[j]].value=iva.toFixed(2);
+									retiva=(Number(iva) * Number(variableretiva.value)) ;
+									document.forms['oa']["retiva_"+[j]].value=retiva.toFixed(2);
+									debe= (Number(baseimponible) + (Number(iva) -   Number(retiva)))
+									document.forms['oa']["honorarios_"+[j]].value=debe.toFixed(2);
+
+								}
+								else
+								{
+									baseimponible= (Number(hm.value)+ Number(gc.value));
+									document.forms['oa']["gc_hm_"+[j]].value=baseimponible.toFixed(2);
+									document.forms['oa']["iva_"+[j]].value=0;
+									document.forms['oa']["retiva_"+[j]].value=0;
+								}
+
+						}
+
+					// aqui  verificamos si tiene seleccionado solo gastos clinicos
+					if((document.forms['oa']["checkh_"+[j]].checked==false) && (document.forms['oa']["checkg_"+[j]].checked)) {
+
+							hm=document.getElementById("honorarios_medicos_"+[j]);
+							gc=document.getElementById("gastos_clinicos_"+[j]);
+							variable=document.getElementById("variable");
+							ret_indi=document.getElementById("ret_indi");
+							sustraendo=document.getElementById("sustraendo").value;
+							if (ret_indi.value==0){//retencion Completa
+								ret=(Number(gc.value)) * (Number(variable.value)) ;
+							}
+							else
+							{//calcular retencion individual calculo de cada reglon
+								if(CantMinimaSustraendo>=(Number(gc.value))) {sustraendo=0;}
+								//alert(CantMinimaSustraendo+'>='+Number(gc.value)+'='+sustraendo)
+								ret=((Number(gc.value) * Number(variable.value)) - Number(sustraendo)) ;
+							}
+							document.forms['oa']["ret_"+[j]].value=ret.toFixed(2);
+							debe= (Number(hm.value)+ Number(gc.value)) -   (ret)
+							document.forms['oa']["honorarios_"+[j]].value=debe.toFixed(2);
+
+							if(document.forms['oa']["checkiva"+[j]].checked)
+							{
+								variableiva=document.getElementById("variableiva");
+								variableretiva=document.getElementById("variableretiva");
+								baseimponible= (Number(hm.value)+ Number(gc.value)) / (((Number(variableiva.value) * 100 ) + 100) / 100) ;
+								document.forms['oa']["gc_hm_"+[j]].value=baseimponible.toFixed(2);
+								if (ret_indi.value==0){
+									ret=(Number(baseimponible)) * (Number(variable.value)) ;
+								}
+								else
+								{	if(CantMinimaSustraendo>=(Number(baseimponible))) {sustraendo=0;}
+									//alert(CantMinimaSustraendo+'>='+baseimponible+'='+sustraendo)
+									ret=((Number(baseimponible) * Number(variable.value))- Number(sustraendo)) ;
+								}
+								document.forms['oa']["ret_"+[j]].value=ret.toFixed(2);
+								iva=((Number(hm.value)+ Number(gc.value)) - ((Number(hm.value)+ Number(gc.value)) / (((Number(variableiva.value) * 100 ) + 100) / 100))) ;
+								document.forms['oa']["iva_"+[j]].value=iva.toFixed(2);
+								retiva=(Number(iva) * Number(variableretiva.value)) ;
+								document.forms['oa']["retiva_"+[j]].value=retiva.toFixed(2);
+								debe= (Number(baseimponible) + (Number(iva) -   Number(retiva)))
+								document.forms['oa']["honorarios_"+[j]].value=debe.toFixed(2);
+							}
+							else
+							{
+								baseimponible= (Number(hm.value)+ Number(gc.value));
+								document.forms['oa']["gc_hm_"+[j]].value=baseimponible.toFixed(2);
+								document.forms['oa']["iva_"+[j]].value=0;
+								document.forms['oa']["retiva_"+[j]].value=0;
+
+							}
+					}
+					//aqui  verificamos si no tiene  seleccionado ni honorarios medicos ni gastos clinicos	pero si el iva
+					if((document.forms['oa']["checkh_"+[j]].checked==false) && (document.forms['oa']["checkg_"+[j]].checked==false)) {
+
+							hm=document.getElementById("honorarios_medicos_"+[j]);
+							gc=document.getElementById("gastos_clinicos_"+[j]);
+							variable=document.getElementById("variable");
+							ret=0 ;
+							document.forms['oa']["ret_"+[j]].value=ret.toFixed(2);
+							debe= (Number(hm.value)+ Number(gc.value))
+							document.forms['oa']["honorarios_"+[j]].value=debe.toFixed(2);
+							if(document.forms['oa']["checkiva"+[j]].checked)
+							{
+								variableiva=document.getElementById("variableiva");
+								variableretiva=document.getElementById("variableretiva");
+								baseimponible= (Number(hm.value)+ Number(gc.value)) / (((Number(variableiva.value) * 100 ) + 100) / 100) ;
+								document.forms['oa']["gc_hm_"+[j]].value=baseimponible.toFixed(2);
+								ret=0;
+								document.forms['oa']["ret_"+[j]].value=ret.toFixed(2);
+								iva=((Number(hm.value)+ Number(gc.value)) - ((Number(hm.value)+ Number(gc.value)) / (((Number(variableiva.value) * 100 ) + 100) / 100))) ;
+								document.forms['oa']["iva_"+[j]].value=iva.toFixed(2);
+								retiva=(Number(iva) * Number(variableretiva.value)) ;
+								document.forms['oa']["retiva_"+[j]].value=retiva.toFixed(2);
+								debe= (Number(baseimponible) + (Number(iva) -   Number(retiva)))
+								document.forms['oa']["honorarios_"+[j]].value=debe.toFixed(2);
+							}
+							else
+							{
+								baseimponible= (Number(hm.value)+ Number(gc.value));
+								document.forms['oa']["gc_hm_"+[j]].value=baseimponible.toFixed(2);
+								document.forms['oa']["iva_"+[j]].value=0;
+								document.forms['oa']["retiva_"+[j]].value=0;
+							}
+					}
+
+					montohm=document.getElementById("honorarios_medicos_"+[j]);
+					montohmt=Number(montohmt)+ Number(montohm.value);
+					montogc=document.getElementById("gastos_clinicos_"+[j]);
+					montogct=Number(montogct)+ Number(montogc.value);
+					montogchm=document.getElementById("gc_hm_"+[j]);
+					montogchmt=Number(montogchmt)+ Number(montogchm.value);
+					monto=document.getElementById("honorarios_"+[j]);
+					montot=Number(montot)+ Number(monto.value);
+					monto_ret=document.getElementById("ret_"+[j]);
+					montot_ret=Number(montot_ret)+ Number(monto_ret.value);
+					monto_iva=document.getElementById("iva_"+[j]);
+					montot_iva=Number(montot_iva)+ Number(monto_iva.value);
+					monto_retiva=document.getElementById("retiva_"+[j]);
+					montot_retiva=Number(montot_retiva)+ Number(monto_retiva.value);
+				}
+
+	}//fin Reglones Facturas recorrido de Check
+
+	document.forms['oa']['total_h_m'].value=montohmt.toFixed(2);
+	document.forms['oa']['total_g_c'].value=montogct.toFixed(2);
+	document.forms['oa']['total_g_h'].value=montogchmt.toFixed(2);
+	document.forms['oa']['total_iva'].value=montot_iva.toFixed(2);
+	document.forms['oa']['total_retiva'].value=montot_retiva.toFixed(2);
+	document.forms['oa']['total_ret'].value=montot_ret.toFixed(2);
+
+	total_iva=document.getElementById("total_iva");
+	total_retiva=document.getElementById("total_retiva");
+	total_ret=document.getElementById("total_ret");
+	sustraendo=document.getElementById("sustraendo").value;
+
+	if (total_retiva.value==0 && total_ret.value==0){
+		document.forms['oa']['monto'].value=montot.toFixed(2);
+		document.forms['oa']['total_pagar'].value=montot.toFixed(2);
+	}
+
+	if (total_retiva.value>0 && total_ret.value==0){
+			montot=(Number(montogchmt) + (Number(total_iva.value)-  Number(total_retiva.value) ));
+			document.forms['oa']['monto'].value=montot.toFixed(2);
+			document.forms['oa']['total_pagar'].value=montot.toFixed(2);
+
+	}
+
+	if (total_retiva.value==0 && total_ret.value>0){
+			if (ret_indi.value==0){
+				if(CantMinimaSustraendo>=(Number(montogchmt))) {sustraendo=0;}
+				montot=(Number(montogchmt) - (Number(total_ret.value) - Number(sustraendo)));
+				document.forms['oa']['monto'].value=montot.toFixed(2);
+				document.forms['oa']['total_pagar'].value=montot.toFixed(2);
+			}
+			else
+			{
+				montot=(Number(montogchmt) - (Number(total_ret.value)));
+				document.forms['oa']['monto'].value=montot.toFixed(2);
+				document.forms['oa']['total_pagar'].value=montot.toFixed(2);
+			}
+	}
+	if (total_retiva.value>0 && total_ret.value>0){
+		if (ret_indi.value==0){
+			if(CantMinimaSustraendo>=(Number(montogchmt))) {sustraendo=0;}
+			montot=((Number(montogchmt) + Number(total_iva.value) - Number(total_retiva.value))- (Number(total_ret.value) - Number(sustraendo)) );
+		}
+		else
+		{
+			montot=((Number(montogchmt) + Number(total_iva.value) - Number(total_retiva.value))	- (Number(total_ret.value)));
+		}
+		document.forms['oa']['monto'].value=montot.toFixed(2);
+		document.forms['oa']['total_pagar'].value=montot.toFixed(2);
+
+	}
+
+}
+///////// franklin Monsalve FIN funcion para calcular los gastos clinicos y honorarios medicos///
+
+// funcion para calcular montos de operaciones multiple formulario de facturacion
+function sumarom(elem){
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var factura = document.getElementById("factura");
+			var j=0;
+			var montot=0;
+       
+       	forma_pago1=document.getElementById("forma_pago1");
+		document.getElementById("banco1").style.visibility='hidden';
+		document.getElementById("no_cheque1").style.visibility='hidden';
+		document.getElementById("nom_tarjeta1").style.visibility='hidden';
+		document.getElementById("tipo_moneda1").style.visibility='hidden';
+		document.getElementById("nombre_p_pago1").style.visibility='hidden';
+		document.getElementById("cedula_p_pago1").style.visibility='hidden';
+		document.getElementById("telf_p_pago1").style.visibility='hidden';
+		document.getElementById("correo_p_pago1").style.visibility='hidden';
+		document.getElementById("servicio-nombre1").style.visibility='hidden';
+		document.getElementById("servicio-cedula1").style.visibility='hidden';
+		document.getElementById("servicio-telefono1").style.visibility='hidden';
+		document.getElementById("servicio-descripcion1").style.visibility='hidden';
+		document.getElementById("correo_p_pago1").style.display='none';
+		document.getElementById("servicio-descripcion1").innerHTML='Banco';
+    document.getElementById("datoscliente_tp1").style.visibility='hidden';	
+
+		if  (forma_pago1.value==3 || forma_pago1.value==4 || forma_pago1.value==10 || forma_pago1.value==5 || forma_pago1.value==7 ||  forma_pago1.value==11){
+				document.getElementById("no_cheque1").style.visibility='visible';
+				document.getElementById("monto1").style.visibility='visible';
+				document.getElementById("tipo_moneda1").style.visibility='visible';
+		}
+     
+		if  (forma_pago1.value==1 ){
+		document.getElementById("monto1").style.visibility='visible';
+		document.getElementById("tipo_moneda1").style.visibility='visible';
+		}
+
+		if  (forma_pago1.value==3 || forma_pago1.value==4 || forma_pago1.value==10 || forma_pago1.value==5 || forma_pago1.value==7){
+			document.getElementById("servicio-descripcion1").style.visibility='visible';
+			document.getElementById("banco1").style.visibility='visible';
+		}
+
+    if  (forma_pago1.value==5){
+			document.getElementById("nom_tarjeta1").style.visibility='visible';
+		}
+
+		if(forma_pago1.value==11){
+			document.getElementById("servicio-nombre1").style.visibility='visible';
+			document.getElementById("nombre_p_pago1").style.visibility='visible';
+			document.getElementById("servicio-telefono1").style.visibility='visible';	
+			document.getElementById("telf_p_pago1").style.visibility='visible';
+			document.getElementById("correo_p_pago1").style.display='block';
+			document.getElementById("correo_p_pago1").style.visibility='visible';
+			document.getElementById("servicio-descripcion1").style.visibility='visible';
+			document.getElementById("servicio-descripcion1").innerHTML='Correo';
+			document.getElementById("datoscliente_tp1").style.visibility='visible';
+		}
+
+		if  (forma_pago1.value==7 || forma_pago1.value==10){
+			document.getElementById("servicio-nombre1").style.visibility='visible';
+			document.getElementById("servicio-cedula1").style.visibility='visible';
+			document.getElementById("servicio-telefono1").style.visibility='visible';
+			document.getElementById("nombre_p_pago1").style.visibility='visible';
+			document.getElementById("cedula_p_pago1").style.visibility='visible';
+			document.getElementById("telf_p_pago1").style.visibility='visible';
+			document.getElementById("datoscliente_tp1").style.visibility='visible';
+		}
+
+			if  (forma_pago1.value==0){
+		document.getElementById("banco1").style.visibility='hidden';
+		document.getElementById("no_cheque1").style.visibility='hidden';
+		document.getElementById("monto1").style.visibility='hidden';
+		document.getElementById("nom_tarjeta1").style.visibility='hidden';
+		document.getElementById("tipo_moneda1").style.visibility='hidden';
+		document.getElementById("nombre_p_pago1").style.visibility='hidden';
+		document.getElementById("cedula_p_pago1").style.visibility='hidden';
+		document.getElementById("telf_p_pago1").style.visibility='hidden';
+
+		}
+
+		/******FORMA DE PAGO 2*******/
+
+		   forma_pago2=document.getElementById("forma_pago2");
+    document.getElementById("banco2").style.visibility='hidden';
+    document.getElementById("no_cheque2").style.visibility='hidden';
+		document.getElementById("nom_tarjeta2").style.visibility='hidden';
+		document.getElementById("tipo_moneda2").style.visibility='hidden';
+		document.getElementById("nombre_p_pago2").style.visibility='hidden';
+		document.getElementById("cedula_p_pago2").style.visibility='hidden';
+		document.getElementById("telf_p_pago2").style.visibility='hidden';
+		document.getElementById("correo_p_pago2").style.visibility='hidden';
+		document.getElementById("servicio-nombre2").style.visibility='hidden';
+		document.getElementById("servicio-cedula2").style.visibility='hidden';
+		document.getElementById("servicio-telefono2").style.visibility='hidden';
+		document.getElementById("servicio-descripcion2").style.visibility='hidden';
+		document.getElementById("correo_p_pago2").style.display='none';
+		document.getElementById("servicio-descripcion2").innerHTML='Banco';
+		document.getElementById("datoscliente_tp2").style.visibility='hidden';	
+
+		if  (forma_pago2.value==3 || forma_pago2.value==4 || forma_pago2.value==10 || forma_pago2.value==5 || forma_pago2.value==7 ||  forma_pago2.value==11){
+				document.getElementById("no_cheque2").style.visibility='visible';
+				document.getElementById("monto2").style.visibility='visible';
+				document.getElementById("tipo_moneda2").style.visibility='visible';
+		}
+     
+		if  (forma_pago2.value==1 ){
+		document.getElementById("monto2").style.visibility='visible';
+		document.getElementById("tipo_moneda2").style.visibility='visible';
+		}
+
+		if  (forma_pago2.value==3 || forma_pago2.value==4 || forma_pago2.value==10 || forma_pago2.value==5 || forma_pago2.value==7){
+			document.getElementById("servicio-descripcion2").style.visibility='visible';
+			document.getElementById("banco2").style.visibility='visible';
+		}
+
+    if  (forma_pago2.value==5){
+			document.getElementById("nom_tarjeta2").style.visibility='visible';
+		}
+
+		if(forma_pago2.value==11){
+			document.getElementById("servicio-nombre2").style.visibility='visible';
+			document.getElementById("nombre_p_pago2").style.visibility='visible';
+			document.getElementById("servicio-telefono2").style.visibility='visible';	
+			document.getElementById("telf_p_pago2").style.visibility='visible';
+			document.getElementById("correo_p_pago2").style.display='block';
+			document.getElementById("correo_p_pago2").style.visibility='visible';
+			document.getElementById("servicio-descripcion2").style.visibility='visible';
+			document.getElementById("servicio-descripcion2").innerHTML='Correo';
+			document.getElementById("datoscliente_tp2").style.visibility='visible';
+		}
+
+		if  (forma_pago2.value==7 || forma_pago2.value==10){
+			document.getElementById("servicio-nombre2").style.visibility='visible';
+			document.getElementById("servicio-cedula2").style.visibility='visible';
+			document.getElementById("servicio-telefono2").style.visibility='visible';
+			document.getElementById("nombre_p_pago2").style.visibility='visible';
+			document.getElementById("cedula_p_pago2").style.visibility='visible';
+			document.getElementById("telf_p_pago2").style.visibility='visible';
+      document.getElementById("datoscliente_tp2").style.visibility='visible';
+		}
+
+			if  (forma_pago2.value==0){
+		document.getElementById("banco2").style.visibility='hidden';
+		document.getElementById("no_cheque2").style.visibility='hidden';
+		document.getElementById("monto2").style.visibility='hidden';
+		document.getElementById("nom_tarjeta2").style.visibility='hidden';
+		document.getElementById("tipo_moneda2").style.visibility='hidden';
+		document.getElementById("nombre_p_pago2").style.visibility='hidden';
+		document.getElementById("cedula_p_pago2").style.visibility='hidden';
+		document.getElementById("telf_p_pago2").style.visibility='hidden';
+
+		}
+		/******FORMA DE PAGO 3*******/
+
+		   forma_pago3=document.getElementById("forma_pago3");
+    document.getElementById("banco3").style.visibility='hidden';
+    document.getElementById("no_cheque3").style.visibility='hidden';
+		document.getElementById("nom_tarjeta3").style.visibility='hidden';
+		document.getElementById("tipo_moneda3").style.visibility='hidden';
+		document.getElementById("nombre_p_pago3").style.visibility='hidden';
+		document.getElementById("cedula_p_pago3").style.visibility='hidden';
+		document.getElementById("telf_p_pago3").style.visibility='hidden';
+		document.getElementById("correo_p_pago3").style.visibility='hidden';
+		document.getElementById("servicio-nombre3").style.visibility='hidden';
+		document.getElementById("servicio-cedula3").style.visibility='hidden';
+		document.getElementById("servicio-telefono3").style.visibility='hidden';
+		document.getElementById("servicio-descripcion3").style.visibility='hidden';
+		document.getElementById("correo_p_pago3").style.display='none';
+		document.getElementById("servicio-descripcion3").innerHTML='Banco';
+		document.getElementById("datoscliente_tp3").style.visibility='hidden';	
+
+
+		if  (forma_pago3.value==3 || forma_pago3.value==4 || forma_pago3.value==10 || forma_pago3.value==5 || forma_pago3.value==7 ||  forma_pago3.value==11){
+				document.getElementById("no_cheque3").style.visibility='visible';
+				document.getElementById("monto3").style.visibility='visible';
+				document.getElementById("tipo_moneda3").style.visibility='visible';
+		}
+     
+		if  (forma_pago3.value==1 ){
+		document.getElementById("monto3").style.visibility='visible';
+		document.getElementById("tipo_moneda3").style.visibility='visible';
+		}
+
+		if  (forma_pago3.value==3 || forma_pago3.value==4 || forma_pago3.value==10 || forma_pago3.value==5 || forma_pago3.value==7){
+			document.getElementById("servicio-descripcion3").style.visibility='visible';
+			document.getElementById("banco3").style.visibility='visible';
+		}
+
+    if  (forma_pago3.value==5){
+			document.getElementById("nom_tarjeta3").style.visibility='visible';
+		}
+
+		if(forma_pago3.value==11){
+			document.getElementById("servicio-nombre3").style.visibility='visible';
+			document.getElementById("nombre_p_pago3").style.visibility='visible';
+			document.getElementById("servicio-telefono3").style.visibility='visible';	
+			document.getElementById("telf_p_pago3").style.visibility='visible';
+			document.getElementById("correo_p_pago3").style.display='block';
+			document.getElementById("correo_p_pago3").style.visibility='visible';
+			document.getElementById("servicio-descripcion3").style.visibility='visible';
+			document.getElementById("servicio-descripcion3").innerHTML='Correo';
+			document.getElementById("datoscliente_tp3").style.visibility='visible';
+
+		}
+
+		if  (forma_pago3.value==7 || forma_pago3.value==10){
+			document.getElementById("servicio-nombre3").style.visibility='visible';
+			document.getElementById("servicio-cedula3").style.visibility='visible';
+			document.getElementById("servicio-telefono3").style.visibility='visible';
+			document.getElementById("nombre_p_pago3").style.visibility='visible';
+			document.getElementById("cedula_p_pago3").style.visibility='visible';
+			document.getElementById("telf_p_pago3").style.visibility='visible';
+		  document.getElementById("datoscliente_tp3").style.visibility='visible';
+		}
+
+			if  (forma_pago3.value==0){
+		document.getElementById("banco3").style.visibility='hidden';
+		document.getElementById("no_cheque3").style.visibility='hidden';
+		document.getElementById("monto3").style.visibility='hidden';
+		document.getElementById("nom_tarjeta3").style.visibility='hidden';
+		document.getElementById("tipo_moneda3").style.visibility='hidden';
+		document.getElementById("nombre_p_pago3").style.visibility='hidden';
+		document.getElementById("cedula_p_pago3").style.visibility='hidden';
+		document.getElementById("telf_p_pago3").style.visibility='hidden';
+
+		}
+				/******FORMA DE PAGO 4*******/
+
+		   forma_pago4=document.getElementById("forma_pago4");
+    document.getElementById("banco4").style.visibility='hidden';
+    document.getElementById("no_cheque4").style.visibility='hidden';
+		document.getElementById("nom_tarjeta4").style.visibility='hidden';
+		document.getElementById("tipo_moneda4").style.visibility='hidden';
+		document.getElementById("nombre_p_pago4").style.visibility='hidden';
+		document.getElementById("cedula_p_pago4").style.visibility='hidden';
+		document.getElementById("telf_p_pago4").style.visibility='hidden';
+		document.getElementById("correo_p_pago4").style.visibility='hidden';
+		document.getElementById("servicio-nombre4").style.visibility='hidden';
+		document.getElementById("servicio-cedula4").style.visibility='hidden';
+		document.getElementById("servicio-telefono4").style.visibility='hidden';
+		document.getElementById("servicio-descripcion4").style.visibility='hidden';
+		document.getElementById("correo_p_pago4").style.display='none';
+		document.getElementById("servicio-descripcion4").innerHTML='Banco';
+		document.getElementById("datoscliente_tp4").style.visibility='hidden';	
+
+
+		if  (forma_pago4.value==3 || forma_pago4.value==4 || forma_pago4.value==10 || forma_pago4.value==5 || forma_pago4.value==7 ||  forma_pago4.value==11){
+				document.getElementById("no_cheque4").style.visibility='visible';
+				document.getElementById("monto4").style.visibility='visible';
+				document.getElementById("tipo_moneda4").style.visibility='visible';
+		}
+     
+		if  (forma_pago4.value==1 ){
+		document.getElementById("monto4").style.visibility='visible';
+		document.getElementById("tipo_moneda4").style.visibility='visible';
+		}
+
+		if  (forma_pago4.value==3 || forma_pago4.value==4 || forma_pago4.value==10 || forma_pago4.value==5 || forma_pago4.value==7){
+			document.getElementById("servicio-descripcion4").style.visibility='visible';
+			document.getElementById("banco4").style.visibility='visible';
+		}
+
+    if  (forma_pago4.value==5){
+			document.getElementById("nom_tarjeta4").style.visibility='visible';
+		}
+
+		if(forma_pago4.value==11){
+			document.getElementById("servicio-nombre4").style.visibility='visible';
+			document.getElementById("nombre_p_pago4").style.visibility='visible';
+			document.getElementById("servicio-telefono4").style.visibility='visible';	
+			document.getElementById("telf_p_pago4").style.visibility='visible';
+			document.getElementById("correo_p_pago4").style.display='block';
+			document.getElementById("correo_p_pago4").style.visibility='visible';
+			document.getElementById("servicio-descripcion4").style.visibility='visible';
+			document.getElementById("servicio-descripcion4").innerHTML='Correo';
+			document.getElementById("datoscliente_tp4").style.visibility='visible';
+
+		}
+
+		if  (forma_pago4.value==7 || forma_pago4.value==10){
+			document.getElementById("servicio-nombre4").style.visibility='visible';
+			document.getElementById("servicio-cedula4").style.visibility='visible';
+			document.getElementById("servicio-telefono4").style.visibility='visible';
+			document.getElementById("nombre_p_pago4").style.visibility='visible';
+			document.getElementById("cedula_p_pago4").style.visibility='visible';
+			document.getElementById("telf_p_pago4").style.visibility='visible';
+			document.getElementById("datoscliente_tp4").style.visibility='visible';
+		}
+
+			if  (forma_pago4.value==0){
+		document.getElementById("banco4").style.visibility='hidden';
+		document.getElementById("no_cheque4").style.visibility='hidden';
+		document.getElementById("monto4").style.visibility='hidden';
+		document.getElementById("nom_tarjeta4").style.visibility='hidden';
+		document.getElementById("tipo_moneda4").style.visibility='hidden';
+		document.getElementById("nombre_p_pago4").style.visibility='hidden';
+		document.getElementById("cedula_p_pago4").style.visibility='hidden';
+		document.getElementById("telf_p_pago4").style.visibility='hidden';
+
+		}
+ 
+monto1=document.getElementById("monto1");
+//alert("El Monto Aceptado que lleva Hasta el Momento es:"+monto1.value);
+document.forms['factura']['calculo'].value=monto1.value;
+
+}
+
+
+
+
+function formatoNumeroDec(n){
+	/*devuelve un numero con 2 decimas	*/
+  let t=n.toString();
+  let regex=/(\d*.\d{0,2})/;
+  num=Number(t.match(regex)[0]);
+  return num;
+}
+
+function truncarDecimales(n,d=2){
+	/*trucar un nuemro devuel con decimales:
+	quita los decimales sin hacer hacercamento
+	solo corta la parte decimal*/
+	let s = n.toString();
+	posicionp=s.indexOf('.');
+	NumEntero=s.substring(0,posicionp);
+	dec=d;
+	decposicion=posicionp+1;
+	decimales=decposicion+dec;
+	NumDecimal=s.substring(decposicion,decimales);
+	num=NumEntero+'.'+NumDecimal;
+	num=Number(num);
+	return num;
+}
+
+function sumarom1(elem){
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var factura = document.getElementById("factura");
+			var j=0;
+			var montot=0;
+monto=document.getElementById("monto");
+monto1=document.getElementById("monto1");
+monto2=document.getElementById("monto2");
+monto3=document.getElementById("monto3");
+monto4=document.getElementById("monto4");
+montoom=Number(monto1.value) + Number(monto2.value) + Number(monto3.value) + Number(monto4.value);
+montoom=formatoNumeroDec(montoom);//trucar a 2 decimales
+monto=formatoNumeroDec(monto.value);//trucar a 2 decimales
+if  (monto != montoom){
+alert("El Monto es Incorrecto Verifique la Cuenta");
+document.getElementById("guardar").style.visibility='hidden';
+}
+else
+{
+	document.getElementById("guardar").style.visibility='visible';
+	}
+document.forms['factura']['calculo'].value=montoom;
+}
+
+// validar que solo sea numero con decimal de punto
+     function validarSiNumero(numero)
+     {
+        var contador=0;
+         for (var i = 0; i< numero.length; i++)
+         {
+                var caracter = numero.charAt(i);
+
+                if (!/^([0-9])*$/.test(caracter) && i==0 )
+                {
+                 alert("El Primer Valor Debe ser Númerico" );
+                 return "0";
+                 }
+                 else
+                 {
+
+                        if (caracter=="." && i>0)
+                        {
+                         contador++;
+                         }
+                         else
+                         {
+                            if (contador>1)
+                            {
+                               alert("No puede Haber Dos Puntos decimales");
+                                return "0";
+
+
+                            }
+                            else
+                            {
+                                 if (!/^([0-9])*$/.test(caracter))
+                                {
+                                alert("El valor " + caracter + " no es un número");
+                                return "0";
+                                }
+                                }
+
+                           }
+                    }
+        }
+           return numero;
+  }
+
+   function validarNumero(Control){
+        Control.value=validarSiNumero(Control.value);
+    }
+// fin de  validar que solo sea numero con decimal de punto
+
+// poner visible un boton
+
+function visibleono(elem){
+
+    if (elem.value==3){
+document.getElementById("bus_rep_excel_islr").style.visibility='visible';
+}
+else
+{
+    document.getElementById("bus_rep_excel_islr").style.visibility='hidden';
+    }
+        if (elem.value==2){
+document.getElementById("bus_rep_excel_iva").style.visibility='visible';
+}
+else
+{
+    document.getElementById("bus_rep_excel_iva").style.visibility='hidden';
+    }
+}
+// fin de poner visible un boton
+// poner visible el text de bus_che_proveedor text de factura afectada
+
+function visiblefactafec(elem,i){
+
+    if (elem.value==1){
+document.getElementById("fac_afectada_"+[i]).style.visibility='visible';
+}
+else
+{
+    document.getElementById("fac_afectada_"+[i]).style.visibility='hidden';
+    }
+
+}
+// fin de poner visible un boton
+
+
+function ver_reg_bene(elem){
+    if (elem.value=="*"){
+document.getElementById("eti_reg_ben").style.visibility='visible';
+document.getElementById("eti_cedula").style.visibility='visible';
+document.getElementById("cedulab").style.visibility='visible';
+document.getElementById("eti_nombre").style.visibility='visible';
+document.getElementById("nombreb").style.visibility='visible';
+document.getElementById("eti_apelllido").style.visibility='visible';
+document.getElementById("apellidob").style.visibility='visible';
+document.getElementById("eti_boton").style.visibility='visible';
+document.getElementById("eti_buscarexal").style.visibility='hidden';
+document.getElementById("examenes").style.visibility='hidden';
+document.getElementById("eti_buscarexae").style.visibility='hidden';
+document.getElementById("eti_cita").style.visibility='hidden';
+}
+else
+{
+
+document.getElementById("eti_reg_ben").style.visibility='hidden';
+document.getElementById("eti_cedula").style.visibility='hidden';
+document.getElementById("cedulab").style.visibility='hidden';
+document.getElementById("eti_nombre").style.visibility='hidden';
+document.getElementById("nombreb").style.visibility='hidden';
+document.getElementById("eti_apelllido").style.visibility='hidden';
+document.getElementById("apellidob").style.visibility='hidden';
+document.getElementById("eti_boton").style.visibility='hidden';
+document.getElementById("eti_buscarexal").style.visibility='visible';
+document.getElementById("examenes").style.visibility='visible';
+document.getElementById("eti_buscarexae").style.visibility='visible';
+document.getElementById("eti_cita").style.visibility='visible';
+    }
+}
+
+function ver_gua_ord_par(elem){
+    if (elem.value=="0"){
+document.getElementById("eti_gua_ord_par").style.visibility='hidden';
+
+}
+else
+{
+   if (document.getElementById("monto").value=="0")
+{
+
+}
+else
+{
+document.getElementById("eti_gua_ord_par").style.visibility='visible';
+}
+    }
+}
+
+
+// funcion para colocar invisible los campos de num cheques bancos motivo cuenta al realizar pagos de varios comprobante a un cheque
+function invisiblecheque(elem){
+
+	//if (document.u.p.value.length == 0 || document.u.l.value.length == 0){
+		var oa = document.getElementById("oa");
+		var j=0;
+		conche=document.getElementById("conche");
+
+if (elem.value=="0"){
+for(var i=0; i<=conche.value; i++) {
+    j++;
+  var elemento = oa.elements[i];
+	document.getElementById("numcheque_"+[j]).style.visibility='visible';
+    document.getElementById("banco_"+[j]).style.visibility='visible';
+    document.getElementById("tipocuenta_"+[j]).style.visibility='visible';
+    document.getElementById("motivo_"+[j]).style.visibility='visible';
+    document.getElementById("fechaemision_"+[j]).style.visibility='visible';
+     document.getElementById("imprimir_"+[j]).style.visibility='visible';
+     document.getElementById("check_"+[j]).style.visibility='hidden';
+    document.getElementById("guardarvarche").style.visibility='hidden';
+    //document.getElementById("anular_"+[j]).style.visibility='visible';
+
+}
+}
+else
+{
+    for(var i=0; i<=conche.value; i++) {
+    j++;
+  var elemento = oa.elements[i];
+	document.getElementById("numcheque_"+[j]).style.visibility='hidden';
+    document.getElementById("banco_"+[j]).style.visibility='hidden';
+    document.getElementById("tipocuenta_"+[j]).style.visibility='hidden';
+    document.getElementById("motivo_"+[j]).style.visibility='hidden';
+    document.getElementById("fechaemision_"+[j]).style.visibility='hidden';
+     document.getElementById("imprimir_"+[j]).style.visibility='hidden';
+    document.getElementById("check_"+[j]).style.visibility='visible';
+    document.getElementById("guardarvarche").style.visibility='visible';
+   //document.getElementById("anular_"+[j]).style.visibility='hidden';
+
+
+}
+    }
+}
+
+function pago_recibo(elem){
+    document.getElementById("monto").value=elem.toFixed(2);
+    document.getElementById("cancelar").style.visibility='visible';
+}
+
+</SCRIPT>
+
+
+<table  class="tabla_cabecera" >
+  <tr>
+      <tr>
+		<td class="logo"><div style="position:relative"><img src="../public/images/banner.png" width="100%" hspace="" height="" vspace="" /></div> </td>
+    </tr>
+   </tr>
+</table>
+<body onload="changeF();tiempomsj()">
+
+	<!-- desde aqui para el cambio de contraseña por Hummaira -->
+
+<table   class="tabla_cabecera3">
+<?
+/*  calcular fecha para cambiar password   */
+	$dias = (strtotime($fecha_mod)-strtotime($fecha_i))/86400;
+	$dias = abs($dias);
+	$dias = floor($dias);
+	/*echo $dias; */
+
+
+
+	$q_pregunta=("select
+			tbl_preguntas.id_pregunta,
+			tbl_preguntas.pregunta,
+			tbl_respuestas.respuesta,
+			tbl_respuestas.id_admin,
+			tbl_respuestas.id_pregunta
+		from
+			tbl_preguntas,
+			tbl_respuestas
+		where
+			tbl_preguntas.id_pregunta=tbl_respuestas.id_pregunta and
+			tbl_respuestas.id_admin='$id_admin'
+		ORDER BY
+			RANDOM() LIMIT 1;");
+$r_pregunta=ejecutar($q_pregunta);
+$f_pregunta=asignar_a($r_pregunta);
+
+/*echo $f_pregunta[respuesta];*/
+
+
+
+
+if($num==1){
+
+?>
+
+<table  class="tabla_cabecera3">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+	<tr>
+
+		<td colspan=2 class="tdtitulos">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?echo $f_pregunta[pregunta];?> </td>
+
+		<td colspan=1 class="tdcampos">
+		<input class="campos" type="text" name="respuesta" id="respuesta" maxlength=128 size=20 value="">
+		<!--<input class="campos" type="hidden" name="resp" id="resp" maxlength=128 size=20 value="<?echo $f_pregunta[pregunta];?>">-->
+		<input class="campos" type="hidden" name="valor" id="valor" maxlength=128 size=20 value="1">
+		<input class="campos" type="hidden" name="id" id="id" maxlength=128 size=20 value="<?echo $id_admin;?>">
+		<input class="campos" type="hidden" name="id_pre" id="id_pre" maxlength=128 size=20 value="<?echo $f_pregunta[id_pregunta];?>">
+		</td>
+
+
+		<td colspan=1 class="tdtitulos">
+		<a href="#" OnClick="pregunta_pass()" class="boton">Modificar Password</a>
+		<a href="logout.php" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+<div id="clientes"></div>
+
+<?}
+
+
+else if ($dias >= "90") { ?>
+
+<table  class="tabla_cabecera3">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+
+		<td colspan=4 class="tdcamposcc">
+
+<? echo "SU PASSWORD HA CADUCADO, DEBE MODIFICARLO PARA CONTINUAR TRABAJANDO";?> </td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+<?if($f_pregunta[id_admin]!==$id_admin){?>
+
+		<td colspan=4 class="tdcamposcc">
+		<a href="#" OnClick="r_pregun_seg()" class="boton">Modificar Password </a>
+		<a href="logout.php" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+
+<? }
+
+else if($f_pregunta[id_admin]==$id_admin){?>
+
+		<td colspan=4 class="tdcamposcc">
+		<input class="campos" type="hidden" name="valor" id="valor" maxlength=128 size=20 value="0">
+		<a href="#" OnClick="mod_pass()" class="boton">Modificar Password </a>
+		<a href="logout.php" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+
+<? }?>
+
+
+
+<tr><td>&nbsp;</td></tr>
+</table>
+<div id="clientes"></div>
+<? /*echo $dias."fsffdsfsf";*/  }
+
+else if($f_pregunta[id_admin]!==$id_admin){?>
+<table  class="tabla_cabecera3">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+		<td colspan=4 class="tdcamposcc">
+		<a href="#" OnClick="r_pregun_seg()" class="boton">Preguntas de Seguridad</a>
+		<a href="logout.php" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+<div id="clientes"></div>
+<? }
+
+else  //  hasta aqui colocar en el panel..... cambio de contraseña
+
+
+ if ($f_admin[id_tipo_admin]==18){
+
+	?>
+
+
+<form id="panel" onsubmit="return false;"  name="panel">
+	<script LANGUAGE="JavaScript">
+		window.onload = MuestraCambio;
+	</script>
+<table class="tabla_cabecera2">
+  <tr>
+         <td   class="menu_intermediario">"
+                <?php echo $_SESSION['bienvenida_'.empresa]?>", <?php echo $fecha ?>,<div id='CambioyHora'></div>
+	 </td>
+
+	</tr>
+	</tablet>
+<table class="tabla_citas">
+   <tr>
+     <td>
+        <div align="center" id="controlmsj"></div>
+     </td>
+   </tr>
+</table>
+</form>
+
+	<table class="tabla_cabecera2">
+	  <tr>
+         <td  colspan=1 class="menu_intermediario">
+           <a href="#"  OnClick="cliente_individuales();" title="Ir al Cotizador" onMouseOver="this.className='boton_7'"
+        onMouseOut="this.className='boton_4'" class="boton_3">Cotizador
+        <img title="Ir al Cotizador" src="../public/images/cotizador.png" border=0></a>
+	 </td>
+
+         <td  colspan=1 class="menu_intermediario">
+
+	           <a href="#"  OnClick="Reimpr_cotizacion();" title="Ir a Consultar Cotizaciones" onMouseOver="this.className='boton_7'"
+        onMouseOut="this.className='boton_4'" class="boton_3">Consultar
+        <img title="Ir a Consultar Cotizaciones" src="../public/images/reportes.png" border=0></a>
+	 </td>
+	 <td  colspan=1 class="menu_intermediario">
+                 <a href="#"  	OnClick="pass();" title="Ir a Cambiar Clave" onMouseOver="this.className='boton_7'"
+        onMouseOut="this.className='boton_4'" class="boton_3">Seguridad
+        <img title="Ir a Cambiar Clave" src="../public/images/clave.png" border=0></a>
+	 </td>
+
+         <td  colspan=1 class="menu_intermediario">
+	       <a href="logout.php"   title="Salir del Sistema" onMouseOver="this.className='boton_7'"
+        onMouseOut="this.className='boton_4'" class="boton_3">Salir
+        <img title="Salir del Sistema" src="../public/images/salir.png" border=0></a>
+
+	 </td>
+
+	</tr>
+
+  </table>
+
+<table  class="tabla_cabecera4">
+		<tr>
+		<td >
+
+				<div id="clientes" align="center">
+
+				<table  class="tabla_cabecera5" >
+	<tr>
+		<td >
+
+	</td>
+	</tr>
+				</table>
+
+				</div>
+		</td>
+		</tr>
+</table>
+
+
+<?php
+
+	}
+	else
+	{
+
+
+		?>
+
+<form id="panel" onsubmit="return false;"  name="panel">
+<script LANGUAGE="JavaScript">
+	window.onload = MuestraCambio;
+	</script>
+<table class="tabla_cabecera2">
+  <tr>
+         <td  class="menu_intermediario">"
+                <?php echo $_SESSION['bienvenida_'.empresa]?>", <?php echo $fecha ?>,<div id='CambioyHora'></div>
+	 </td>
+	<?php     if ($f_admin[id_ente]>0){
+        }
+        else
+        {
+            ?>
+         <td class="menu_intermediario" align="right">
+	        Buscar por
+	          <LABEL>C&eacute;dula &oacute; Nombre:</LABEL>
+	           <input  class="campos"  type="text" name="cednom" id="cednom" style="width: 130px;" />
+                   <img src="../public/images/Bus.png" width="20" height="20" onclick="busClien()"  style="cursor:pointer">
+                   <br>
+             <LABEL>Tipo de cliente:</LABEL>
+             <input type="radio" id="eltipclien" name="eltipclien" value="1" checked> Afiliado
+             <input type="radio" id="eltipclien" name="eltipclien" value="2" > Particular&nbsp;&nbsp;&nbsp;
+	 </td>
+
+     <?php
+     }
+     ?>
+  </table>
+
+
+
+ <table class="tabla_citas">
+   <tr>
+     <td>
+        <div align="center" id="controlmsj"></div>
+     </td>
+   </tr>
+</table>
+</form>
+
+
+
+<table   class="tabla_cabecera3">
+ <tr>
+	 <td  align="center">
+
+  <ul id="navmenu-h">
+    <li><a href="#">Clientes <img src="../public/images/abajo.png" border=0></a>
+        <ul>
+           <?php menud(CLIENTES);?>
+	</ul>
+    </li>
+	<li><a href="#">Entes <img src="../public/images/abajo.png" border=0></a>
+          <ul>
+            <?php menud(ENTES);?>
+         </ul>
+       </li>
+    <li><a href="#">Proveedores <img src="../public/images/abajo.png" border=0></a>
+      <ul>
+	<?php menud(PROVEEDORES);?>
+       </ul>
+	</li>
+   <li><a href="#">Administrativo <img src="../public/images/abajo.png" border=0></a>
+	<ul>
+	 <?php menud(ADMINISTRATIVO);?>
+	</ul>
+	</li>
+   <li><a href="#">Compras <img src="../public/images/abajo.png" border=0></a>
+        <ul>
+         <?php menud(COMPRAS);?>
+        </ul>
+        </li>
+   <li><a href="#">Reportes <img src="../public/images/abajo.png" border=0></a>
+        <ul>
+         <?php menud(REPORTES);?>
+        </ul>
+        </li>
+   <li><a href="#">Seguridad <img src="../public/images/abajo.png" border=0></a>
+        <ul>
+         <?php menud(SEGURIDAD);?>
+        </ul>
+        </li>
+		<li><a href="#">Ayuda <img src="../public/images/abajo.png" border=0></a>
+        <ul>
+         <?php menud(AYUDA);?>
+        </ul>
+        </li>
+		<li><a href="logout.php">Salir </a>
+        <ul>
+
+        </ul>
+        </li>
+
+
+  </ul>
+
+	 </td>
+    </tr>
+</table>
+
+<table  class="tabla_cabecera4" border="2">
+
+<tr>
+<td >
+	 <img alt="spinner" id="spinner" src="../public/images/esperar.gif" style="display:none;" >
+	<div id="clientes" align="center">
+
+
+<?php
+	if ($fecha_pro=="2014-09-17")
+	{
+	?>
+	<tr>
+ <td colspan=9 class="logo"><img src="../public/images/aniversario.png" alt="" title=""></td>
+</tr>
+<?php
+}
+$q_ver_ingre=("select * from permisos where permisos.id_admin='$id_admin' and permisos.id_modulo=8");
+$r_ver_ingre=ejecutar($q_ver_ingre);
+$f_ver_ingre=asignar_a($r_ver_ingre);
+
+if ($f_ver_ingre[permiso]=='1'){
+?>
+	<table  class="tabla_cabecera5 colortable" border='0'>
+<?php
+$q_procesos=("select
+								procesos.id_proceso,
+								procesos.nu_planilla,
+								procesos.id_beneficiario,
+								procesos.fecha_recibido,
+								clientes.nombres,
+								clientes.apellidos,
+								clientes.cedula,
+								gastos_t_b.fecha_cita,
+								entes.nombre,
+								count(gastos_t_b.id_proceso)
+						from
+								procesos,
+								gastos_t_b,
+								admin,
+								titulares,
+								entes,
+								clientes
+						where
+								procesos.id_proceso=gastos_t_b.id_proceso and
+								gastos_t_b.id_tipo_servicio='9' and
+								gastos_t_b.fecha_cita='1900-01-01' and
+								procesos.id_admin=admin.id_admin and
+								procesos.id_estado_proceso=2 and
+								admin.id_sucursal='$f_admin[id_sucursal]' and
+								procesos.fecha_recibido>='2014-01-01' and
+								procesos.id_titular=titulares.id_titular and
+								titulares.id_ente=entes.id_ente and
+								titulares.id_cliente=clientes.id_cliente
+						group by
+								procesos.id_proceso,
+								procesos.nu_planilla,
+								procesos.id_beneficiario,
+								procesos.fecha_recibido,
+								clientes.nombres,
+								clientes.apellidos,
+								clientes.cedula,
+								gastos_t_b.fecha_cita,
+								entes.nombre
+						order by
+								procesos.id_proceso");
+$r_procesos=ejecutar($q_procesos);
+?>
+ <tr>		<td colspan=9 class="titulo_seccion"> Ingresos Por Emergencia </td>	</tr>
+<tr>
+	<td colspan=1 class="tdtitulos">Titular </td>
+	<td colspan=1 class="tdtitulos">Cedula T </td>
+	<td colspan=1 class="tdtitulos"> Beneficiario</td>
+	<td colspan=1 class="tdtitulos">Cedula B </td>
+	<td colspan=1 class="tdtitulos"> Ente</td>
+	<td colspan=1 class="tdtitulos">Planilla </td>
+	<td colspan=1 class="tdtitulos">Proceso </td>
+	<td colspan=1 class="tdtitulos">Fecha Ingreso </td>
+</tr>
+<?php
+$i=0;
+     while($f_procesos=asignar_a($r_procesos,NULL,PGSQL_ASSOC)){
+
+		$q_bene=("select
+								clientes.nombres,
+								clientes.apellidos,
+								clientes.cedula
+						from
+								beneficiarios,
+								clientes
+						where
+								beneficiarios.id_beneficiario=$f_procesos[id_beneficiario] and
+								beneficiarios.id_cliente=clientes.id_cliente
+						");
+$r_bene=ejecutar($q_bene);
+$f_bene=asignar_a($r_bene);
+$i++;
+
+?>
+
+<tr>
+<td colspan=1 class="tdcampos"><?php echo "$f_procesos[nombres] $f_procesos[apellidos]"?> </td>
+<td colspan=1 class="tdcampos"><?php echo $f_procesos[cedula]?> </td>
+<td colspan=1 class="tdcampos"><?php echo "$f_bene[nombres] $f_bene[apellidos]"?> </td>
+<td colspan=1 class="tdcampos"><?php echo "$f_bene[cedula]"?> </td>
+<td colspan=1 class="tdcampos"> <?php echo $f_procesos[nombre]?></td>
+<td colspan=1 class="tdcamposr">
+<?php
+        if($f_admin[id_tipo_admin]<>9){
+  	    $url="'views01/ipresupuestop.php?proceso=$f_procesos[nu_planilla]&si=1'";
+        }else{
+	     $url="";
+	    }
+
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" title="Ver Registros de la Planilla" class="tdcamposr"> <?php echo $f_procesos[nu_planilla]?></a>
+</td>
+<td colspan=1 class="tdcamposr">
+<?php
+/* **** Verifico si es Asesor Medico Para Activarle la opcion de Informe Medico**** */
+if ($f_admin[id_tipo_admin]==9){
+
+?>
+
+ <input type="hidden" size="10" id="id_proceso_<?php echo $i?>" name="id_proceso_<?php echo $i?>" class="campos" maxlength="15" value="<?php echo $f_procesos[id_proceso]?> ">
+<a href="#" OnClick="inf_medico(<?php echo $f_procesos[id_proceso]?>);" class="tdcamposr" title="Realizar Informe Medico"><?php echo $f_procesos[id_proceso]?></a>
+<?php
+}
+else
+{
+echo $f_procesos[id_proceso];
+}
+
+/* **** FIN Verifico si es Asesor Medico Para Activarle la opcion de Informe Medico**** */
+?>
+
+</td>
+
+<td colspan=1 class="tdcamposr">
+
+<?php echo $f_procesos[fecha_recibido]?>
+</td>
+
+<td colspan=1 class="tdcamposr">
+<?php
+/* **** Verifico si es Asesor Medico Para Activarle la opcion de planilla de solicitud de medicamento**** */
+if ($f_admin[id_tipo_admin]==9){
+
+
+
+	$url="'views01/isolicitudmedicamento.php?proceso=$f_procesos[nu_planilla]&si=1'";
+        $urlab="'views01/isolicitudlaborat.php?proceso=$f_procesos[nu_planilla]&si=1'";
+
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton" title="Planilla de Solicitud de Medicamentos"> PM </a>
+<a href="javascript: imprimir(<?php echo $urlab; ?>);" class="boton" title="Planilla de Solicitud de Laboratorios"> PL </a>
+ <?php
+ }
+$q_ver_info=("select * from tbl_informedico where tbl_informedico.id_proceso=$f_procesos[id_proceso]");
+$r_ver_info=ejecutar($q_ver_info);
+$num_filas=num_filas($r_ver_info);
+if ($num_filas>0){
+$f_ver_info=asignar_a($r_ver_info);
+
+ $url="'views01/plantillainforme.php?procesoid=$f_ver_info[id_proceso]'";
+
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" title="Ver Informe Medico" class="tdcamposr"> Informe</a>
+<?php
+}
+?></td>
+
+
+</tr>
+
+<?php
+}
+?>
+	</table> <!----- FIN TABLA INGRESOS POR EMERGENCIA--->
+<?php
+}
+
+//permisos de egresos POR EMERGENCIA
+$q_ver_ingre=("select * from permisos where permisos.id_admin='$id_admin' and permisos.id_modulo=9");
+$r_ver_ingre=ejecutar($q_ver_ingre);
+$f_ver_ingre=asignar_a($r_ver_ingre);
+
+$q_p_c=("select * from permisos where permisos.id_admin='$id_admin' and permisos.id_modulo=11");
+$r_p_c=ejecutar($q_p_c);
+$f_p_c=asignar_a($r_p_c);
+
+
+if ($f_ver_ingre[permiso]=='1'){
+	include 'views/EgresosPorEmergencia.php';
+
+	echo"<br>";
+
+} //FIN permisos de egresos
+
+?>
+
+	</div>
+
+</td>
+</tr>
+</table>
+
+<?php
+}
+echo pie();
+?>

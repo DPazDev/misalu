@@ -1,0 +1,1896 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+header('Content-Type: text/xml; charset=ISO-8859-1');
+$dateField1=$_REQUEST['dateField1'];
+$dateField2=$_REQUEST['dateField2'];
+$proveedor=$_REQUEST['proveedor'];
+$prov=$_REQUEST['prov'];
+$des_gasto=$_REQUEST['des_gasto'];
+
+/* **** busco el usuario **** */
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select * from admin where admin.id_admin='$id_admin'");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+/* si $prov = 1 busco los procesos que pertenecen a algun medico*/
+
+if ($prov==1){
+$q_procesos=("select procesos.control_factura,procesos.fecha_factura_final,
+procesos.fecha_emision_factura,gastos_t_b.id_servicio,procesos.id_proceso,
+procesos.id_estado_proceso,procesos.factura_final,count(gastos_t_b.id_proceso) from procesos,
+gastos_t_b,proveedores,s_p_proveedores,personas_proveedores where
+procesos.id_proceso=gastos_t_b.id_proceso   and gastos_t_b.id_proveedor=proveedores.id_proveedor
+and proveedores.id_s_p_proveedor=s_p_proveedores.id_s_p_proveedor and
+personas_proveedores.id_persona_proveedor=s_p_proveedores.id_persona_proveedor and
+personas_proveedores.id_persona_proveedor=$proveedor and
+procesos.fecha_factura_final>='$dateField1' and procesos.fecha_factura_final<='$dateField2'  and
+ (procesos.id_estado_proceso=7 or procesos.id_estado_proceso=16)   group by procesos.control_factura,procesos.fecha_factura_final,
+procesos.fecha_emision_factura,gastos_t_b.id_servicio,procesos.id_proceso,procesos.id_estado_proceso,
+procesos.factura_final  order by procesos.id_proceso ");
+$r_procesos=ejecutar($q_procesos);
+	$num_filas=num_filas($r_procesos);
+if ($num_filas==0){
+?>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+
+<tr>
+<td colspan=6 class="titulo_seccion">No hay Facturas en esta Fecha</td>
+</tr>
+</table>
+<?
+}
+	else
+	{
+			/* **** Busco las variables globales de iva y retencion**** */
+		/* **** Busco las variables globales de iva y retencion**** */
+		/* **** variable iva**** */
+		$q_variable_iva=("select * from variables_globales where id_variable_global=26");
+$r_variable_iva=ejecutar($q_variable_iva);
+$f_variable_iva=asignar_a($r_variable_iva);
+/* **** variable retencion iva**** */
+$q_variable_ivaret=("select * from variables_globales where id_variable_global=34");
+$r_variable_ivaret=ejecutar($q_variable_ivaret);
+$f_variable_ivaret=asignar_a($r_variable_ivaret);
+/* **** variable retencion del proveedor**** */
+		$q_variable_ret=("select * from actividades_pro,personas_proveedores where personas_proveedores.id_persona_proveedor=$proveedor and personas_proveedores.id_act_pro=actividades_pro.id_act_pro");
+$r_variable_ret=ejecutar($q_variable_ret);
+$f_variable_ret=asignar_a($r_variable_ret);
+/* **** Fin de buscar las variables globales de iva y retencion**** */
+
+		?>
+			<table border="0" class="tabla_citas"  cellpadding=0 cellspacing=0>
+			<tr>
+<td colspan=12 class="titulo_seccion">Facturas Para Este Intervalo de Fechas  % Ret
+<input class="campos" type="hidden" id="id_variable"  name="id_variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_act_pro]?>" >
+<input class="campos" type="text" id="variable"  name="variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[porcentaje]?>" >
+<input class="campos" type="text" id="sustraendo"  name="sustraendo" maxlength=128 size=5 value="<?php echo $f_variable_ret[sustraendo]?>" >
+<input class="campos" type="text" id="sustraendoCantidad"  name="sustraendoCantidad" maxlength=128 size=5 value="<?php echo $f_variable_ret[cantidad]?>" >
+<input class="campos" type="hidden" id="id_tipo_pro"  name="	id_tipo_pro" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_tipo_pro]?>" >
+RET IVA
+<input class="campos" type="hidden" id="variableiva"  name="variableiva" maxlength=128 size=5 value="<?php echo $f_variable_iva[cantidad]?>" >
+<input class="campos" type="hidden" id="id_variableretiva"  name="id_variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ivaret[id_variable_global]?>" >
+<input class="campos" type="text" id="variableretiva"  name="variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ivaret[cantidad]?>" >
+<a href="#" OnClick="act_var_glo();" class="boton" title="Actualiza Porcentaje de Calculo de Gastos Clinicos ">Actualizar</a></td>
+</tr>
+<tr>
+<td colspan=12 class="tdtitulos"><div id="act_var_glo"></div> </td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">Proceso </td>
+<td colspan=1 class="tdtitulos">Factura</td>
+<td colspan=1 class="tdtitulos">Cheque</td>
+<td colspan=2 class="tdtitulos"><a href="javascript: honoverdad(this);">Honorarios Medicos </a></td>
+<td colspan=2 class="tdtitulos"><a href="javascript: gastosverdad(this);">Gastos Clinicos</a></td>
+<td colspan=1 class="tdtitulos">Total H+G</td>
+<td colspan=1 class="tdtitulos"><a href="javascript: ivatodos(this);">Iva</a></td>
+<td colspan=1 class="tdtitulos">Ret</td>
+<td colspan=1 class="tdtitulos">Debe</td>
+<td colspan=1 class="tdtitulos"><a href="javascript: todos(this);">Todos</a></td>
+</tr>
+		<?php
+$i=0;
+while($f_procesos=asignar_a($r_procesos,NULL,PGSQL_ASSOC)){
+$i++;
+
+?>
+<tr>
+<td colspan=1 class="tdcampos"><?php echo $f_procesos[id_proceso]?>
+<input class="campos" type="hidden" id="proceso_<?php echo $i?>"  name="proceso" maxlength=128 size=10 value="<?php echo $f_procesos[id_proceso]?>" >
+<input class="campos" type="hidden" id="idservicio_<?php echo $i?>"  name="idservicio" maxlength=128 size=10 value="<?php echo $f_procesos[id_servicio]?>" >
+<input class="campos" type="hidden" id="fecha_emision_<?php echo $i?>"  name="fecha_emision" maxlength=128 size=10 value="<?php echo $f_procesos[fecha_emision_factura]?>" >
+</td>
+<td colspan=1 class="tdcampos"><?php echo $f_procesos[factura_final]?>
+<input class="campos" type="hidden" id="factura_<?php echo $i?>"  name="factura" maxlength=128 size=10 value="<?php echo $f_procesos[factura_final]?>" >
+<input class="campos" type="hidden" id="controlfactura_<?php echo $i?>"  name="controlfactura" maxlength=128 size=10 value="<?php echo $f_procesos[control_factura]?>" >
+</td>
+<td colspan=1 class="tdcampos"><?php echo $cheque?></td>
+<?php
+$q_gastos=("select personas_proveedores.*,gastos_t_b.* from gastos_t_b,proveedores,personas_proveedores,s_p_proveedores where gastos_t_b.id_proceso=$f_procesos[id_proceso] and gastos_t_b.id_proveedor=proveedores.id_proveedor and proveedores.id_s_p_proveedor=s_p_proveedores.id_s_p_proveedor and s_p_proveedores.id_persona_proveedor=personas_proveedores.id_persona_proveedor and personas_proveedores.id_persona_proveedor=$proveedor");
+$r_gastos=ejecutar($q_gastos);
+$gastos_clinicos=0;
+$honorarios_medicos=0;
+while($f_gastos=asignar_a($r_gastos,NULL,PGSQL_ASSOC)){
+$rif=$f_gastos[rif];
+$nombrepro=$f_gastos[nombre];
+$direccionpro=$f_gastos[direccion];
+if ($f_gastos[descripcion]=="HONORARIOS MEDICOS"){
+$honorarios_medicos= $honorarios_medicos + $f_gastos[monto_reserva];
+$total_h_m=$total_h_m + $f_gastos[monto_reserva];
+}
+else
+{
+if ($f_gastos[descripcion]=="GASTOS CLINICOS"){
+$gastos_clinicos=  $gastos_clinicos + $f_gastos[monto_reserva];
+$total_g_c=$total_g_c + $f_gastos[monto_reserva];
+}
+else
+{
+if ($f_gastos[descripcion]!="GASTOS CLINICOS" || $f_gastos[descripcion]!="HONORARIOS MEDICOS"){
+$gastos_clinicos= $gastos_clinicos + $f_gastos[monto_reserva];
+$total_g_c=$total_g_c + $f_gastos[monto_reserva];
+}
+}
+}
+if ($f_gastos[retencion]=="1"){
+$ban1="checked";
+}
+
+if ($f_procesos[id_estado_proceso]==7 || $f_procesos[id_estado_proceso]==16)
+{
+
+	$debe=(($honorarios_medicos + $gastos_clinicos));
+
+	$ret=0;
+	$pagar=(($honorarios_medicos + $gastos_clinicos) - ($ret));
+
+	}
+	else
+	{
+		$debe=0;
+
+	$ret=0;
+	$pagar=0;
+		}
+
+}
+	$total_ret=0;;
+	$total_pagar=(($total_h_m + $total_g_c) - ($total_ret));
+$iva=0;
+$total_iva=0;
+?>
+
+<td colspan=1 class="tdcampos"><?php echo  formato_montos($honorarios_medicos)?>
+<input class="camposr" type="hidden" id="honorarios_medicos_<?php echo $i?>"  disabled name="honorarios_medicos" maxlength=128 size=10 value="<?php echo $honorarios_medicos?>">
+</td>
+<td colspan=1 class="tdcampos">
+
+<input class="campos" type="checkbox" <?php echo $ban ?> id="checkh_<?php echo $i?>" name="checklh" size=20 value="">
+
+</td>
+<td colspan=1 class="tdcampos"><?php echo  formato_montos($gastos_clinicos)?><input class="camposr" type="hidden" id="gastos_clinicos_<?php echo $i?>"  disabled name="gastos_clinicos" maxlength=128 size=10 value="<?php echo $gastos_clinicos?>"></td>
+<td colspan=1 >
+
+<input class="campos" type="checkbox" <?php echo $ban1 ?> id="checkg_<?php echo $i?>" name="checklg" size=20 value="">
+
+</td>
+<td colspan=1 class="tdcampos"><?php echo formato_montos($debe);?>
+<input class="camposr" type="hidden" id="gc_hm_<?php echo $i?>"  disabled name="gc_hm_" maxlength=128 size=10 value="<?php echo $debe?>">
+</td>
+<td colspan=1 class="tdcampos">
+<input class="camposr" type="text" id="iva_<?php echo $i?>"  disabled name="iva" maxlength=128 size=5 value="<?php echo $iva?>">
+<input class="camposr" type="hidden" id="retiva_<?php echo $i?>"  disabled name="retiva" maxlength=128 size=5 value="<?php echo $iva?>">
+<input class="campos" type="checkbox"  id="checkiva<?php echo $i?>" name="checkiva" size=20 value="">
+</td>
+<td colspan=1 class="tdcampos">
+<input class="camposr" type="text" id="ret_<?php echo $i?>"  disabled name="ret" maxlength=128 size=10 value="<?php echo $ret?>">
+</td>
+<td colspan=1 class="tdcamposr">
+<input class="camposr" type="text" id="honorarios_<?php echo $i?>"  disabled name="honorarios" maxlength=128 size=10 value="<?php echo $pagar?>">
+</td>
+<td colspan=1 class="tdcamposr">
+<input class="campos" type="checkbox" checked id="check_<?php echo $i?>" name="checkl" size=20 value="">
+<input class="camposr" type="hidden" id="tipo_documento_<?php echo $i?>"   name="tipo_documento_" maxlength=128 size=10 value="0">
+<input class="camposr" type="hidden" id="fac_afectada_<?php echo $i?>"   name="fac_afectada_" maxlength=128 size=10 value="0">
+</td>
+</tr>
+
+
+		<?php
+		}
+		echo "<input type=\"hidden\" id=\"conexa\"name=\"conexa\" id=\"conexa\" value=\"$i\">";
+		?>
+		<tr>
+
+<td colspan=12 class="tdtitulos"><hr></hr></td>
+</tr>
+		<tr>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos">Total</td>
+<td colspan=2 class="tdtitulos"><input class="campos" type="text" id="total_h_m"  disabled name="total_h_m" maxlength=128 size=10 value="<?php echo  formato_montos($total_h_m)?>"></td>
+<td colspan=2 class="tdtitulos"><input class="campos" type="text" id="total_g_c"  disabled name="total_g_c" maxlength=128 size=10 value="<?php echo  formato_montos($total_g_c)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_g_h"  disabled name="total_g_h" maxlength=128 size=10 value="<?php echo  formato_montos($total_g_c + $total_h_m)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_iva"  disabled name="total_iva" maxlength=128 size=10 value="<?php echo  formato_montos($total_iva)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_ret"  disabled name="total_ret" maxlength=128 size=10 value="<?php echo  formato_montos($total_ret)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_pagar"  disabled name="total_pagar" maxlength=128 size=10 value="<?php echo  formato_montos($total_pagar)?>"></td>
+<td colspan=1 class="tdtitulos"></td>
+</tr>
+
+
+<tr>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos">Total</td>
+<td colspan=2 class="tdtitulos"></td>
+<td colspan=2 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_retiva"  disabled name="total_retiva" maxlength=128 size=10 value="<?php echo  formato_montos($total_iva)?>"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+</tr>
+<tr>
+
+<td colspan=12 class="tdtitulos"><hr></hr></td>
+</tr>
+
+<?php
+if ($f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11) {?>
+
+<tr>
+<td colspan=4  class="tdtitulos">Colocar Datos si el Cheque Sale a Nombre de otra Persona </td>
+<td colspan=2  class="tdtitulos">A Nombre de </td>
+<td colspan=2 class="tdcamposc">
+<input class="campos" type="text" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=2 class="tdtitulos">C.I./Rif.</td>
+                        <td  colspan=2 class="tdcampos"><input class="campos" type="text" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+
+</tr>
+		<tr>
+<td colspan=2 class="tdtitulos">Del Banco </td>
+                <td colspan=3 class="tdcamposc"><select id="banco" name="banco" class="campos" style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco<>9");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos">Num Che</td>
+<td colspan=1 class="tdcampos"><input class="campos" type="text" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+						<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" >
+<input class="campos" type="hidden" id="personaprov" size=10 name="personaprov" value="0">
+</td>
+<td colspan=1 class="tdtitulos">Total Fact </td>
+<td colspan=1><input class="campos" type="text" id="monto" size=10 name="monto" value=""> </td>
+	<td colspan=2>
+			<a href="javascript: sumarfacpro(this);" class="boton">      Cal</a></td>
+</tr>
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+                <td colspan=3 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos" style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos">Motivo </td>
+<td colspan=4 class="tdtitulos"><input class="campos" type="text" id="motivo" size=50 name="motivo" value=""> </td>
+<td colspan=2 class="tdcamposc"><a href="#" OnClick="gua_che_prov_cli();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+		<?php
+		}
+		else
+		{
+		?>
+		<tr>
+<td colspan=4  class="tdtitulos"></td>
+<td colspan=2  class="tdtitulos"></td>
+<td colspan=2 class="tdcamposc">
+<input class="campos" type="hidden" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=2 class="tdtitulos"></td>
+                        <td  colspan=2 class="tdcampos"><input class="campos" type="hidden" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+
+</tr>
+		<tr>
+<td colspan=2 class="tdtitulos"></td>
+                <td colspan=3 class="tdcamposc"><select id="banco" name="banco" class="campos"  style="visibility:hidden"  style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=13");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos"></td>
+<td colspan=1 class="tdcampos"><input class="campos" type="hidden" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+						<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" >
+<input class="campos" type="hidden" id="personaprov" size=10 name="personaprov" value="0">
+</td>
+<td colspan=1 class="tdtitulos">Total Fact </td>
+<td colspan=1><input class="campos" type="text" id="monto" size=10 name="monto" value=""> </td>
+	<td colspan=2>
+			<a href="javascript: sumarfacpro(this);" class="boton">      Cal</a></td>
+</tr>
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+                <td colspan=3 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos"  style="visibility:hidden"  style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos"> </td>
+<td colspan=4 class="tdtitulos"><input class="campos" type="hidden" id="motivo" size=50 name="motivo" value=""> </td>
+<td colspan=2 class="tdcamposc"><a href="#" OnClick="gua_che_prov_cli();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+
+		<?
+		}
+	}
+	}
+	if ($prov==2){
+        	if ($des_gasto==0){
+$q_procesos=("select procesos.control_factura,procesos.fecha_factura_final,
+procesos.fecha_emision_factura,gastos_t_b.id_servicio,procesos.id_proceso,procesos.id_estado_proceso,
+procesos.factura_final,count(gastos_t_b.id_proceso) from procesos,gastos_t_b,proveedores,
+clinicas_proveedores where procesos.id_proceso=gastos_t_b.id_proceso  and
+gastos_t_b.id_proveedor=$proveedor and gastos_t_b.id_proveedor=proveedores.id_proveedor and
+proveedores.id_clinica_proveedor=clinicas_proveedores.id_clinica_proveedor and
+procesos.fecha_factura_final>='$dateField1' and procesos.fecha_factura_final<='$dateField2'
+and
+ (procesos.id_estado_proceso=7 or procesos.id_estado_proceso=16)
+group by procesos.control_factura,procesos.fecha_factura_final,procesos.fecha_emision_factura,
+gastos_t_b.id_servicio,procesos.id_proceso,procesos.id_estado_proceso,
+procesos.factura_final  order by procesos.id_proceso ");
+$r_procesos=ejecutar($q_procesos);
+$num_filas=num_filas($r_procesos);
+    }
+    else
+    {
+        $q_procesos=("select procesos.control_factura,procesos.fecha_factura_final,
+procesos.fecha_emision_factura,gastos_t_b.id_gasto_t_b,gastos_t_b.id_servicio,procesos.id_proceso,procesos.id_estado_proceso,
+procesos.factura_final from procesos,gastos_t_b,proveedores,
+clinicas_proveedores where procesos.id_proceso=gastos_t_b.id_proceso  and
+gastos_t_b.id_proveedor=$proveedor and gastos_t_b.id_proveedor=proveedores.id_proveedor and
+proveedores.id_clinica_proveedor=clinicas_proveedores.id_clinica_proveedor and
+procesos.fecha_factura_final>='$dateField1' and procesos.fecha_factura_final<='$dateField2'
+and
+ (procesos.id_estado_proceso=7 or procesos.id_estado_proceso=16)
+  order by procesos.id_proceso ");
+$r_procesos=ejecutar($q_procesos);
+$num_filas=num_filas($r_procesos);
+        }
+if ($num_filas==0){
+
+?>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+
+<tr>
+<td colspan=12 class="titulo_seccion">No hay Facturas en esta Fecha</td>
+</tr>
+</table>
+<?
+}
+	else
+	{
+			/* **** Busco las variables globales de iva y retencion**** */
+		/* **** variable iva**** */
+		$q_variable_iva=("select * from variables_globales where id_variable_global=26");
+$r_variable_iva=ejecutar($q_variable_iva);
+$f_variable_iva=asignar_a($r_variable_iva);
+/* **** variable retencion iva**** */
+$q_variable_ivaret=("select * from variables_globales where id_variable_global=34");
+$r_variable_ivaret=ejecutar($q_variable_ivaret);
+$f_variable_ivaret=asignar_a($r_variable_ivaret);
+/* **** variable retencion del proveedor**** */
+		$q_variable_ret=("select * from actividades_pro,clinicas_proveedores,proveedores where clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor and proveedores.id_proveedor=$proveedor and clinicas_proveedores.id_act_pro=actividades_pro.id_act_pro");
+$r_variable_ret=ejecutar($q_variable_ret);
+$f_variable_ret=asignar_a($r_variable_ret);
+/* **** Fin de buscar las variables globales de iva y retencion**** */
+
+		?>
+			<table border="0" class="tabla_citas"  cellpadding=0 cellspacing=0>
+			<tr>
+<td colspan=12 class="titulo_seccion">Retencion
+<input class="campos" type="hidden" id="id_variable"  name="id_variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_act_pro]?>" >
+<input class="campos" type="text" id="variable"  name="variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[porcentaje]?>" > Sustraendo
+<input class="campos" type="text" id="sustraendo"  name="sustraendo" maxlength=128 size=5 value="<?php echo $f_variable_ret[sustraendo]?>" >
+<input class="campos" type="text" id="sustraendoCantidad"  name="sustraendoCantidad" maxlength=128 size=5 value="<?php echo $f_variable_ret[cantidad]?>" >
+<input class="campos" type="hidden" id="	id_tipo_pro"  name="	id_tipo_pro" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_tipo_pro]?>" >
+RET IVA
+<input class="campos" type="hidden" id="variableiva"  name="variableiva" maxlength=128 size=5 value="<?php echo $f_variable_iva[cantidad]?>" >
+<input class="campos" type="hidden" id="id_variableretiva"  name="id_variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ivaret[id_variable_global]?>" >
+<input class="campos" type="text" id="variableretiva"  name="variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ivaret[cantidad]?>" >
+<a href="#" OnClick="act_var_glo();" class="boton" title="Actualiza Porcentaje de Retencion de IVA ">Actualizar Ret IVA</a></td>
+</tr>
+<tr>
+<td colspan=12 class="tdtitulos"><div id="act_var_glo"></div> </td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">Proceso </td>
+<td colspan=1 class="tdtitulos">Factura</td>
+<td colspan=1 class="tdtitulos">Cheque</td>
+<td colspan=2 class="tdtitulos"><a href="javascript: honoverdad(this);">Honorarios Medicos </a></td>
+<td colspan=2 class="tdtitulos"><a href="javascript: gastosverdad(this);">Gastos Clinicos</a></td>
+<td colspan=1 class="tdtitulos">Total H+G</td>
+<td colspan=1 class="tdtitulos"><a href="javascript: ivatodos(this);">Iva</a></td>
+<td colspan=1 class="tdtitulos">Ret</td>
+<td colspan=1 class="tdtitulos">Debe</td>
+<td colspan=1 class="tdtitulos"><a href="javascript: todos(this);">Todos</a></td>
+</tr>
+		<?php
+$i=0;
+while($f_procesos=asignar_a($r_procesos,NULL,PGSQL_ASSOC)){
+$i++;
+?>
+<tr>
+<td colspan=1 class="tdcampos"><?php echo $f_procesos[id_proceso]?>
+<input class="campos" type="hidden" id="proceso_<?php echo $i?>"  name="proceso" maxlength=128 size=10 value="<?php echo $f_procesos[id_proceso]?>" >
+<input class="campos" type="hidden" id="idservicio_<?php echo $i?>"  name="idservicio" maxlength=128 size=10 value="<?php echo $f_procesos[id_servicio]?>" >
+<input class="campos" type="hidden" id="fecha_emision_<?php echo $i?>"  name="fecha_emision" maxlength=128 size=10 value="<?php echo $f_procesos[fecha_emision_factura]?>" >
+</td>
+<td colspan=1 class="tdcampos"><?php echo $f_procesos[factura_final]?>
+<input class="campos" type="hidden" id="factura_<?php echo $i?>"  name="factura" maxlength=128 size=10 value="<?php echo $f_procesos[factura_final]?>" >
+<input class="campos" type="hidden" id="controlfactura_<?php echo $i?>"  name="controlfactura" maxlength=128 size=10 value="<?php echo $f_procesos[control_factura]?>" >
+</td>
+<td colspan=1 class="tdcampos"><?php echo $cheque?></td>
+<?php
+        	if ($des_gasto==0){
+$q_gastos=("select clinicas_proveedores.*,gastos_t_b.* from gastos_t_b,proveedores,
+clinicas_proveedores where gastos_t_b.id_proceso=$f_procesos[id_proceso] and
+gastos_t_b.id_proveedor=proveedores.id_proveedor and
+proveedores.id_clinica_proveedor=clinicas_proveedores.id_clinica_proveedor");
+$r_gastos=ejecutar($q_gastos);
+}
+else
+{
+    $q_gastos=("select clinicas_proveedores.*,gastos_t_b.* from gastos_t_b,proveedores,
+clinicas_proveedores where gastos_t_b.id_gasto_t_b=$f_procesos[id_gasto_t_b] and
+gastos_t_b.id_proveedor=proveedores.id_proveedor and
+proveedores.id_clinica_proveedor=clinicas_proveedores.id_clinica_proveedor");
+$r_gastos=ejecutar($q_gastos);
+    }
+
+$honorarios_medicos=0;
+$gastos_clinicos=0;
+
+while($f_gastos=asignar_a($r_gastos,NULL,PGSQL_ASSOC)){
+$proceso= $f_procesos[id_proceso];
+$rif=$f_gastos[rif];
+$nombrepro=$f_gastos[nombre];
+$direccionpro=$f_gastos[direccion];
+if ($f_gastos[descripcion]=="HONORARIOS MEDICOS"){
+$honorarios_medicos= $honorarios_medicos + $f_gastos[monto_reserva];
+$total_h_m=$total_h_m + $f_gastos[monto_reserva];
+}
+else
+{
+if ($f_gastos[descripcion]=="GASTOS CLINICOS"){
+$gastos_clinicos=$gastos_clinicos + $f_gastos[monto_reserva];
+$total_g_c=$total_g_c + $f_gastos[monto_reserva];
+}
+else
+{
+if ($f_gastos[descripcion]!="GASTOS CLINICOS" || $f_gastos[descripcion]!="HONORARIOS MEDICOS")
+{
+$gastos_clinicos= $gastos_clinicos + $f_gastos[monto_reserva];
+$total_g_c=$total_g_c + + $f_gastos[monto_reserva];;
+}
+}
+}
+if ($f_gastos[retencion]=="1"){
+$ban1="checked";
+}
+
+if ($f_procesos[id_estado_proceso]==7 || $f_procesos[id_estado_proceso]==16)
+{
+
+	$debe=(($honorarios_medicos + $gastos_clinicos));
+
+	$ret=($gastos_clinicos * $f_variable_ret[porcentaje]);
+	$pagar=(($honorarios_medicos + $gastos_clinicos) - ($ret));
+
+	}
+	else
+	{
+		$debe=0;
+
+	$ret=0;
+	$pagar=0;
+		}
+
+}
+	$total_ret=($total_g_c * $f_variable_ret[porcentaje]);;
+	$total_pagar=(($total_h_m + $total_g_c) - ($total_ret));
+?>
+
+<td colspan=1 class="tdcampos"><?php echo  formato_montos($honorarios_medicos)?>
+<input class="camposr" type="hidden" id="honorarios_medicos_<?php echo $i?>"  disabled name="honorarios_medicos" maxlength=128 size=10 value="<?php echo $honorarios_medicos?>">
+</td>
+<td colspan=1 class="tdcampos">
+
+
+
+<input class="campos" type="checkbox" <?php echo $ban ?> id="checkh_<?php echo $i?>" name="checklh" size=20 value="">
+
+</td>
+<td colspan=1 class="tdcampos"><?php echo  formato_montos($gastos_clinicos)?><input class="camposr" type="hidden" id="gastos_clinicos_<?php echo $i?>"  disabled name="gastos_clinicos" maxlength=128 size=10 value="<?php echo $gastos_clinicos?>"></td>
+<td colspan=1 >
+
+<input class="campos" type="checkbox" <?php echo $ban1 ?> id="checkg_<?php echo $i?>" name="checklg" size=20 value="">
+
+</td>
+<td colspan=1 class="tdcampos"><?php echo formato_montos($debe);?>
+<input class="camposr" type="hidden" id="gc_hm_<?php echo $i?>"  disabled name="gc_hm_" maxlength=128 size=10 value="<?php echo $debe?>">
+</td>
+<td colspan=1 class="tdcampos">
+<input class="camposr" type="text" id="iva_<?php echo $i?>"  disabled name="iva" maxlength=128 size=5 value="<?php echo $iva?>">
+<input class="camposr" type="hidden" id="retiva_<?php echo $i?>"  disabled name="retiva" maxlength=128 size=5 value="<?php echo $iva?>">
+<input class="campos" type="checkbox"  id="checkiva<?php echo $i?>" name="checkiva" size=20 value="">
+</td>
+<td colspan=1 class="tdcampos"><input class="camposr" type="text" id="ret_<?php echo $i?>"  disabled name="ret" maxlength=128 size=10 value="<?php echo $ret?>"></td>
+<td colspan=1 class="tdcamposr"><input class="camposr" type="text" id="honorarios_<?php echo $i?>"  disabled name="honorarios" maxlength=128 size=10 value="<?php echo $pagar?>"></td>
+
+<td colspan=1 class="tdcamposr"><input class="campos" type="checkbox" checked id="check_<?php echo $i?>" name="checkl" size=20 value=""> </td>
+<input class="camposr" type="hidden" id="tipo_documento_<?php echo $i?>"   name="tipo_documento_" maxlength=128 size=10 value="0">
+<input class="camposr" type="hidden" id="fac_afectada_<?php echo $i?>"   name="fac_afectada_" maxlength=128 size=10 value="0">
+</tr>
+
+
+		<?php
+		}
+		echo "<input type=\"hidden\" id=\"conexa\"name=\"conexa\" value=\"$i\">";
+		?>
+		<tr>
+
+<td colspan=12 class="tdtitulos"><hr></hr></td>
+</tr>
+			<tr>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos">Total</td>
+<td colspan=2 class="tdtitulos"><input class="campos" type="text" id="total_h_m"  disabled name="total_h_m" maxlength=128 size=10 value="<?php echo  formato_montos($total_h_m)?>"></td>
+<td colspan=2 class="tdtitulos"><input class="campos" type="text" id="total_g_c"  disabled name="total_g_c" maxlength=128 size=10 value="<?php echo  formato_montos($total_g_c)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_g_h"  disabled name="total_g_h" maxlength=128 size=10 value="<?php echo  formato_montos($total_g_c + $total_h_m)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_iva"  disabled name="total_iva" maxlength=128 size=10 value="<?php echo  formato_montos($total_iva)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_ret"  disabled name="total_ret" maxlength=128 size=10 value="<?php echo  formato_montos($total_ret)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_pagar"  disabled name="total_pagar" maxlength=128 size=10 value="<?php echo  formato_montos($total_pagar)?>"></td>
+<td colspan=1 class="tdtitulos"></td>
+</tr>
+
+
+<tr>
+<td colspan=1 class="tdtitulos"> <?php echo "$i Ordenes"?></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos">Total</td>
+<td colspan=2 class="tdtitulos"></td>
+<td colspan=2 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_retiva"  disabled name="total_retiva" maxlength=128 size=10 value="<?php echo  formato_montos($total_iva)?>"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+</tr>
+
+<td colspan=12 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=6  class="tdtitulos">Colocar Datos si el Cheque Sale a Nombre de otra Persona </td>
+<td colspan=1  class="tdtitulos">Nombre </td>
+<td colspan=2 class="tdcamposc">
+<input class="campos" type="text" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=1 class="tdtitulos">C.I./Rif.</td>
+                        <td  colspan=2 class="tdcampos"><input class="campos" type="text" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+
+</tr>
+		<tr>
+<td colspan=2 class="tdtitulos">Del Banco </td>
+                <td colspan=3 class="tdcamposc"><select id="banco" name="banco" class="campos" style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco<>9");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos">Num Che</td>
+<td colspan=1 class="tdcampos"><input class="campos" type="text" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+						<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" >
+<input class="campos" type="hidden" id="personaprov" size=10 name="personaprov" value="1">
+</td>
+<td colspan=1 class="tdtitulos">Total Fact </td>
+<td colspan=1><input class="campos" type="text" id="monto" size=10 name="monto" value=""> </td>
+	<td colspan=2>
+			<a href="javascript: sumarfacpro(this);" class="boton">      Cal</a></td>
+
+</tr>
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+                <td colspan=3 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos" style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=2 class="tdtitulos">Motivo </td>
+<td colspan=4 class="tdtitulos"><input class="campos" type="text" id="motivo" size=50 name="motivo" value=""> </td>
+<td colspan=2 class="tdcamposc"><a href="#" OnClick="gua_che_prov_cli();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+
+		<?php
+		}
+	}
+
+	if ($prov==3){
+		/* **** Busco las variables globales de iva y retencion**** */
+		$q_variable_iva=("select * from variables_globales where id_variable_global=26");
+$r_variable_iva=ejecutar($q_variable_iva);
+$f_variable_iva=asignar_a($r_variable_iva);
+if (($f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11 || $f_admin[id_tipo_admin]==2) and $f_admin[id_sucursal]==1) {
+
+		$q_variable_ret=("select * from variables_globales where id_variable_global=34");
+$r_variable_ret=ejecutar($q_variable_ret);
+$f_variable_ret=asignar_a($r_variable_ret);
+}
+else
+{
+
+$q_variable_ret=("select * from variables_globales where id_variable_global=35");
+$r_variable_ret=ejecutar($q_variable_ret);
+$f_variable_ret=asignar_a($r_variable_ret);
+}
+/* **** Fin de buscar las variables globales de iva y retencion**** */
+	$q_facturas=("select clinicas_proveedores.nombre,clinicas_proveedores.rif,
+clinicas_proveedores.direccion,tbl_ordenes_compras.* from tbl_ordenes_compras,clinicas_proveedores,
+proveedores where tbl_ordenes_compras.fecha_compra>='$dateField1' and
+tbl_ordenes_compras.fecha_compra<='$dateField2' and
+tbl_ordenes_compras.id_proveedor_insumo=proveedores.id_proveedor and
+proveedores.id_proveedor=$proveedor and
+clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor
+order by tbl_ordenes_compras.fecha_compra
+");
+$r_facturas=ejecutar($q_facturas);
+$num_filas=num_filas($r_facturas);
+if ($num_filas==0){
+?>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+
+<tr>
+<td colspan=6 class="titulo_seccion">No hay Facturas en esta Fecha</td>
+</tr>
+</table>
+<?
+		}
+		else
+		{
+	?>
+			<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+			<tr>
+<td colspan=7 class="titulo_seccion">Facturas Para Este Intervalo de Fechas con
+retenci&oacute;n de iva <input class="campos" type="hidden" id="id_variableretiva"
+name="id_variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_variable_global]?>" >
+<input class="campos" type="text" id="variableretiva"  name="variableretiva" maxlength=128 size=5
+value="<?php echo $f_variable_ret[cantidad]?>" >
+<a href="#" OnClick="act_var_glo();" class="boton" title="Actualiza El Valor de Retencion de Iva">
+Actualizar</a></td>
+</tr>
+<tr>
+<td colspan=7 class="tdtitulos"><div id="act_var_glo"></div> </td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">Factura </td>
+<td colspan=1 class="tdtitulos">Fecha de Compra</td>
+<td colspan=1 class="tdtitulos">Monto</td>
+<td colspan=1 class="tdtitulos">Pagos</td>
+<td colspan=1 class="tdtitulos">Cheque</td>
+<td colspan=1 class="tdtitulos">Comprobante</td>
+<td colspan=1 class="tdtitulos">Debe</td>
+</tr>
+<?php
+$i=0;
+while($f_facturas=asignar_a($r_facturas,NULL,PGSQL_ASSOC)){
+$i++;
+$rif=$f_facturas[rif];
+$nombrepro=$f_facturas[nombre];
+$direccionpro=$f_facturas[direccion];
+
+?>
+
+<tr>
+<td colspan=1 class="tdcampos">
+<?php
+				    $url="views04/iver_fac_com.php?id_orden_compra=$f_facturas[id_orden_compra]";
+                        ?> <a href="<?php echo $url; ?>" title="Relacion de Gastos de la Factura"  onclick="Modalbox.show(this.href, {title: this.title, width: 800, height: 400, overlayClose: false}); return false;" class="tdcampos"><?php echo $f_facturas[no_factura]?></a>
+<input class="campos" type="hidden" id="factura_<?php echo $i?>"  name="factura" maxlength=128 size=10 value="<?php echo $f_facturas[no_factura]?>" >
+<input class="campos" type="hidden" id="confactura_<?php echo $i?>"  name="confactura" maxlength=128 size=10 value="<?php echo $f_facturas[no_control_fact]?>" >
+<input class="campos" type="hidden" id="idordcom_<?php echo $i?>"  name="idordcom_" maxlength=128 size=10 value="<?php echo $f_facturas[id_orden_compra]?>" >
+
+
+</td>
+<td colspan=1 class="tdcampos"><?php echo $f_facturas[fecha_compra]?><input class="campos" type="hidden" id="fecha_emision_<?php echo $i?>"  name="fecha_emision" maxlength=128 size=10 value="<?php echo $f_facturas[fecha_emi_factura]?>" ></td>
+<td colspan=1 class="tdcampos">
+<?php
+$q_compra=("select * from tbl_insumos_ordenes_compras,tbl_ordenes_compras where
+tbl_ordenes_compras.id_orden_compra=tbl_insumos_ordenes_compras.id_orden_compra and
+tbl_ordenes_compras.id_orden_compra=$f_facturas[id_orden_compra]
+");
+$r_compra=ejecutar($q_compra);
+$monto_factura=0;
+$mon_fac_con_iva=0;
+$mon_fac_sin_iva=0;
+$base_imponible=0;
+$iva_fact=0;
+$iva_ret=0;
+while($f_compra=asignar_a($r_compra,NULL,PGSQL_ASSOC)){
+if ($f_compra [iva]==1){
+	if($f_compra['ivausado']==NULL or $f_compra['ivausado']=='NULL' or $f_compra['ivausado']=='') {//si el iva es nulo usar iva por defecto
+	$ivaglobal=$f_variable_iva['comprasconfig'];
+	$iva=$ivaglobal/100;
+	}else {
+	$iva=$f_compra['ivausado'];
+	}
+
+	$mon_fac_con_iva= $mon_fac_con_iva + (($f_compra [monto_producto] * $iva) + $f_compra [monto_producto]);
+$base_imponible= $base_imponible + $f_compra [monto_producto];
+$iva_fact=$iva_fact + ($f_compra [monto_producto] * ($iva));
+}
+	else
+	{
+$mon_fac_sin_iva= $mon_fac_sin_iva + $f_compra [monto_producto];
+}
+$iva_ret= $iva_fact * $f_variable_ret[cantidad];
+$monto_fac_pag=$mon_fac_sin_iva +$mon_fac_con_iva - $iva_ret;
+$montodescuento=$f_compra[montodescuento];
+$descuento=$f_compra[descuento];
+$monto_factura=($mon_fac_sin_iva + $mon_fac_con_iva) ;
+}
+if ($montodescuento>'0'){
+		if($f_facturas['ivausado']==NULL or $f_facturas['ivausado']=='NULL' or $f_facturas['ivausado']=='') {//si el iva es nulo usar iva por defecto
+	$ivaglobal=$f_variable_iva['comprasconfig'];
+	$iva=$ivaglobal/100;
+	}else {
+	$iva=$f_facturas['ivausado'];
+
+	}
+$mon_fac_sin_iva = $mon_fac_sin_iva -(($mon_fac_sin_iva * $descuento)/100);
+$base_imponible = $base_imponible -(($base_imponible * $descuento)/100);
+$iva_fact=$base_imponible * $iva;
+$iva_ret= $iva_fact * $f_variable_ret[cantidad];
+$monto_fac_pag=$base_imponible +$iva_fact - $iva_ret + $mon_fac_sin_iva;
+$monto_factura=($base_imponible + $iva_fact + $mon_fac_sin_iva) ;
+}
+
+
+?>
+<?php echo number_format($monto_factura ,2,',','')?>
+</td>
+</tr>
+
+<?php
+/* ****  busco todas los abonos realizdos a las facturas **** */
+	$q_fac_pro=("select * from facturas_procesos where facturas_procesos.id_orden_compra=$f_facturas[id_orden_compra]");
+$r_fac_pro=ejecutar($q_fac_pro);
+$num_filas1=num_filas($r_fac_pro);
+if ($num_filas1==0){
+	?>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Monto Exento
+</td>
+<td colspan=1 class="tdcampos">
+<?php echo number_format($mon_fac_sin_iva  ,2,',','');?>
+
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Base Imponible
+</td>
+<td colspan=1 class="tdcampos">
+<?php
+
+
+
+echo number_format($base_imponible  ,2,',','');
+
+?>
+
+
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Iva Facturado
+</td>
+<td colspan=1 class="tdcampos">
+<?php
+
+echo number_format($iva_fact,2,',','');
+
+?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Iva Retenido
+</td>
+<td colspan=1 class="tdcampos">
+<?php echo number_format($iva_ret,2,',','');?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+% Descuento
+</td>
+<td colspan=1 class="tdcampos">
+<?php
+
+echo number_format($descuento,2,',','');
+
+?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Descuento
+</td>
+<td colspan=1 class="tdcampos">
+<?php
+
+echo number_format($montodescuento,2,',','');
+
+?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdcamposr">
+Total a Pagar
+</td>
+<td colspan=1 class="tdcamposr">
+<input class="camposr" type="hidden" id="montoexento_<?php echo $i?>"  name="montoexento_" maxlength=128 size=10 value="<?php echo $mon_fac_sin_iva?>">
+<input class="camposr" type="hidden" id="baseimponible_<?php echo $i?>"  name="baseimponible_" maxlength=128 size=10 value="<?php echo $base_imponible?>">
+<input class="camposr" type="hidden" id="iva_fact_<?php echo $i?>"  name="iva_fact_" maxlength=128 size=10 value="<?php echo $iva_fact?>">
+<input class="camposr" type="hidden" id="iva_ret_<?php echo $i?>"  name="iva_ret_" maxlength=128 size=10 value="<?php echo $iva_ret?>">
+<input class="camposr" readonly="readonly" type="text" id="honorarios_<?php echo $i?>"  name="honorarios" maxlength=128 size=10 value="<?php echo $monto_fac_pag?>">
+
+<input class="campos" type="checkbox" <?php echo $ban ?> id="check_<?php echo $i?>" name="checkl" maxlength=128 size=20 value="">
+</td>
+
+</tr>
+
+	<?php
+	}
+	else
+	{
+		    $pagos=0;
+			$debe=0;
+			$i=$i;
+		while($f_fac_pro=asignar_a($r_fac_pro,NULL,PGSQL_ASSOC)){
+		$pagos= $pagos + $f_fac_pro[monto_sin_retencion] + $f_fac_pro[monto_con_retencion] + $f_fac_pro[iva] - $f_fac_pro[iva_retenido];
+
+		$debe= number_format($monto_fac_pag,2,',','') - number_format($pagos,2,',','');
+		$debe1= ($monto_fac_pag) - ($pagos);
+	?>
+
+	<tr>
+
+<td colspan=3 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdcamposr"> <?php
+	echo formato_montos($pagos);
+?></td>
+<td colspan=1 class="tdcampos"><?php
+				    $url="views04/iver_che_com.php?codigo=$f_fac_pro[codigo]&banco=$f_fac_pro[id_banco]&nombreprov=$nombrepro&cedula=$rif&prov=$prov";
+                        ?> <a href="<?php echo $url; ?>" title="Ver Cheque Para Imprimir"  onclick="Modalbox.show(this.href, {title: this.title, width: 800, height: 400, overlayClose: false}); return false;" class="tdcampos">
+<?php
+	echo "$f_fac_pro[numero_cheque]";
+?>
+</td>
+<td colspan=1 class="tdcampos"><?php
+				    $url="views04/iver_com_ret_iva.php?codigo=$f_fac_pro[codigo]&banco=$f_fac_pro[id_banco]&nombreprov=$nombrepro&cedula=$rif&prov=$prov&fecha_emision=$f_fac_pro[fecha_creado]&compro_retiva_seniat=$f_fac_pro[compro_retiva_seniat]&direccionpro=$direccionpro&id_proveedor=$proveedor";
+                        ?> <a href="<?php echo $url; ?>" title="Ver Comprobante"  onclick="Modalbox.show(this.href, {title: this.title, width: 800, height: 400, overlayClose: false}); return false;" class="tdcampos">
+<?php
+	echo "$f_fac_pro[compro_retiva_seniat]";
+?>
+</td>
+<td colspan=1 class="tdcamposr">
+</td>
+
+</tr>
+
+	<?php
+	}
+	?>
+
+	<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Monto Exento
+</td>
+<td colspan=1 class="tdcampos">
+<?php echo formato_montos($mon_fac_sin_iva);?>
+
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Base Imponible
+</td>
+<td colspan=1 class="tdcampos">
+<?php
+
+
+echo number_format($base_imponible  ,2,',','');
+
+?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Iva Facturado
+</td>
+<td colspan=1 class="tdcampos">
+<?php echo formato_montos($iva_fact)?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Iva Retenido
+</td>
+<td colspan=1 class="tdcampos">
+<?php echo formato_montos($iva_ret)?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+% Descuento
+</td>
+<td colspan=1 class="tdcampos">
+<?php
+
+echo number_format($descuento,2,',','');
+
+?>
+</td>
+
+</tr>
+<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos">
+Descuento
+</td>
+<td colspan=1 class="tdcampos">
+<?php
+
+echo number_format($montodescuento,2,',','');
+
+?>
+</td>
+
+</tr>
+<tr>
+	<tr>
+
+<td colspan=4 class="tdcamposr">
+
+</td>
+<td colspan=1 class="tdcamposr"> </td>
+<td colspan=1 class="tdcampos">
+
+</td>
+<td colspan=1 class="tdcamposr">
+<?php
+if ($debe==0){
+	echo formato_montos($debe);
+	?>
+	<input class="camposr" type="hidden" id="montoexento_<?php echo $i?>"  name="montoexento_" maxlength=128 size=10 value="0">
+<input class="camposr" type="hidden" id="baseimponible_<?php echo $i?>"  name="baseimponible_" maxlength=128 size=10 value="0">
+<input class="camposr" type="hidden" id="iva_fact_<?php echo $i?>"  name="iva_fact_" maxlength=128 size=10 value="0">
+<input class="camposr" type="hidden" id="iva_ret_<?php echo $i?>"  name="iva_ret_" maxlength=128 size=10 value="0">
+
+
+	<input class="camposr" type="hidden" id="honorarios_<?php echo $i?>"  name="honorarios" maxlength=128 size=10 value="<?php echo $debe1?>">
+
+<input class="campos" style="visibility:hidden" type="checkbox" <?php echo $ban ?> id="check_<?php echo $i?>" name="checkl" maxlength=128 size=20 value="">
+	<?php
+
+
+	}
+	else
+	{
+
+?>
+<input class="camposr" type="hidden" id="montoexento_<?php echo $i?>"  name="montoexento_" maxlength=128 size=10 value="<?php echo $mon_fac_sin_iva?>">
+<input class="camposr" type="hidden" id="baseimponible_<?php echo $i?>"  name="baseimponible_" maxlength=128 size=10 value="<?php echo $base_imponible?>">
+<input class="camposr" type="hidden" id="iva_fact_<?php echo $i?>"  name="iva_fact_" maxlength=128 size=10 value="<?php echo $iva_fact?>">
+<input class="camposr" type="hidden" id="iva_ret_<?php echo $i?>"  name="iva_ret_" maxlength=128 size=10 value="<?php echo $iva_ret?>">
+<input class="camposr" type="text" id="honorarios_<?php echo $i?>"  name="honorarios" maxlength=128 size=10 value="<?php echo $debe?>">
+
+<input class="campos" type="checkbox" <?php echo $ban ?> id="check_<?php echo $i?>" name="checkl" maxlength=128 size=20 value="">
+<?php
+}
+?>
+
+</td>
+
+</tr>
+
+
+
+	<?php
+	}
+	?>
+
+<tr>
+
+<td colspan=7 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=7 class="tdtitulos"><hr></hr></td>
+</tr>
+<?php
+}
+echo "<input type=\"hidden\" id=\"conexa\"name=\"conexa\" value=\"$i\">";
+?>
+
+<tr>
+<td colspan=7 class="tdtitulos"><hr></hr></td>
+</tr>
+<?php
+if (($f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11)and $f_admin[id_sucursal]==1) {?>
+<tr>
+<td colspan=3  class="tdtitulos">Cheque a Nombre de otra Persona </td>
+<td colspan=2 class="tdtitulos">
+<input class="campos" type="text" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=1 class="tdtitulos">C.I./Rif.</td>
+                        <td  colspan=1 class="tdcampos"><input class="campos" type="text" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">Del Banco </td>
+                <td colspan=2 class="tdcamposc"><select id="banco" name="banco" class="campos" style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco<>9");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos">Num Che</td>
+                        <td  class="tdcampos"><input class="campos" type="text" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+						<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" ></td>
+<td colspan=2 class="tdtitulos">Total Fact <input class="campos" type="text" id="monto" size=10 name="monto" value="">
+<input class="campos" type="hidden" id="iva_rettt" size=10 name="iva_rettt" value="">
+			<a href="javascript: sumarfac(this);" class="boton">  Cal</a> </td>
+			<td colspan=1 class="tdtitulos">
+			</td>
+
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">Tipo de Cuenta </td>
+                <td colspan=2 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos" style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos">Motivo </td>
+<td colspan=3 class="tdtitulos"><input class="campos" type="text" id="motivo" size=40 name="motivo" value=""><a href="#" OnClick="gua_che_prov();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+<?php
+}
+else
+{
+?>
+<tr>
+<td colspan=3  class="tdtitulos</td>
+<td colspan=2 class="tdtitulos">
+<input class="campos" type="hidden" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=1 class="tdtitulos"></td>
+                        <td  colspan=1 class="tdcampos"><input class="campos" type="hidden" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos"> </td>
+                <td colspan=2 class="tdcamposc"><select id="banco" name="banco" class="campos" style="visibility:hidden" style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=13");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos"></td>
+                        <td  class="tdcampos"><input class="campos" type="hidden" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+						<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" ></td>
+<td colspan=2 class="tdtitulos">Total Fact
+<input class="campos" type="hidden" id="iva_rettt" size=10 name="iva_rettt" value="">
+<input class="campos" type="text" id="monto" size=10 name="monto" value="">
+			<a href="javascript: sumarfac(this);" class="boton">      Cal</a> </td>
+			<td colspan=1 class="tdtitulos">
+			</td>
+
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos"></td>
+                <td colspan=2 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos" style="visibility:hidden" style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=3 class="tdtitulos"><input class="campos" type="hidden" id="motivo" size=40 name="motivo" value=""><a href="#" OnClick="gua_che_prov();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+
+<?php
+}
+?>
+</table>
+
+
+	<?php
+	}
+		}
+
+if ($prov==4){
+
+/* **** Busco las variables globales de iva y retencion**** */
+/* **** variable iva**** */
+$q_variable_iva=("select * from variables_globales where id_variable_global=26");
+$r_variable_iva=ejecutar($q_variable_iva);
+$f_variable_iva=asignar_a($r_variable_iva);
+/* **** variable retencion iva**** */
+$q_variable_ivaret=("select * from variables_globales where id_variable_global=34");
+$r_variable_ivaret=ejecutar($q_variable_ivaret);
+$f_variable_ivaret=asignar_a($r_variable_ivaret);
+/* **** variable retencion del proveedor**** */
+$q_variable_ret=("select * from actividades_pro,clinicas_proveedores,proveedores where clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor and proveedores.id_proveedor=$proveedor and clinicas_proveedores.id_act_pro=actividades_pro.id_act_pro");
+$r_variable_ret=ejecutar($q_variable_ret);
+$f_variable_ret=asignar_a($r_variable_ret);
+/* **** Fin de buscar las variables globales de iva y retencion**** */
+if($f_variable_ret['id_tipo_pro']==1){$TipoProv='PNR';}
+if($f_variable_ret['id_tipo_pro']==2){$TipoProv='PJR';}
+		?>
+<!-- TABLA DE DATOS FACTURAS-->
+<table border="0" id='masCampos' class="tabla_citas colortable" cellpadding=0 cellspacing=0>
+  <tr>
+    <td colspan=10 class="titulo_seccion">
+      Registrar Facturas Otros Proveedores,  <?php echo $f_variable_ret['actividad']."($TipoProv)";?>
+    </td>
+  </tr>
+  <tr class="titulo_seccion">
+    <th colspan=3></th>
+    <th colspan=2 class="tdtitulos">
+      <input class="campos" type="hidden" id="id_variable"  name="id_variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_act_pro]?>">
+      % Ret<br>
+      <input class="campos" type="text" id="variable"  name="variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[porcentaje]?>" >
+
+    </th>
+    <th colspan=2 class="tdtitulos">
+      <input class="campos" type="hidden" id="sustraendoCantidad"  name="sustraendoCantidad" maxlength=128 size=5 value="<?php echo $f_variable_ret[cantidad]?>" >
+      sustraendo<br>
+      <input class="campos" type="text" id="sustraendo"  name="sustraendo" maxlength=128 size=9 value="<?php echo $f_variable_ret[sustraendo]?>" >
+    </th>
+    <th colspan=1 class="tdtitulos">
+      IVA<br>
+      <input class="campos" type="hidden" id="id_tipo_pro"  name="id_tipo_pro" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_tipo_pro]?>" >
+      <input class="campos" type="text" id="variableiva"  name="variableiva" maxlength=128 size=5 value="<?php echo $f_variable_iva[cantidad]?>" >
+    </th>
+    <th colspan=3 class="tdtitulos">
+      <?php $ivaRet=$f_variable_ivaret['cantidad'];?>
+      RET IVA (<span id='piva'><?php echo $ivaRet*100;?></span>%)<br>
+      <input class="campos" type="hidden" id="id_variableretiva"  name="id_variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ivaret[id_variable_global]?>" >
+      <input class="campos" type="text" id="variableretiva"  name="variableretiva" maxlength=128 size=5 value="<?php echo $ivaRet;?>" OnChange="rpiva=100*this.value;$('piva').innerHTML=rpiva;">
+
+      <a href="#" OnClick="act_var_glo();" class="boton" title="Actualiza Porcentaje de Calculo de Gastos Clinicos ">Actualizar</a>
+    </th>
+  </tr>
+  <tr>
+    <td colspan=10 class="tdtitulos"><div id="act_var_glo"></div> </td>
+  </tr>
+  <tr>
+    <td colspan=1 class="tdtitulos">Factura </td>
+    <td colspan=1 class="tdtitulos">Control</td>
+    <td colspan=1 class="tdtitulos">Fecha Emision</td>
+    <td colspan=1 class="tdtitulos">Montos</td>
+    <td colspan=1 class="tdtitulos"><a href="javascript: gastosverdad(this);"> RET </a></td>
+    <td colspan=2 class="tdtitulos" style="text-align: center;"><a href="javascript: ivatodos(this);">IVA</a></td>
+    <td colspan=1 class="tdtitulos">Ret</td>
+    <td colspan=1 class="tdtitulos">Debe</td>
+    <td colspan=1 class="tdtitulos"><a href="javascript: todos(this);">Todos</a></td>
+  </tr>
+
+
+<?php
+	for( $i=1; $i<=5; $i++){ ?>
+  <tr>
+      <td colspan=1 class="tdcampos">
+        <input class="campos" type="hidden" id="proceso_<?php echo $i?>"  name="proceso" maxlength=128 size=10 value="<?php echo $i ?>" >
+        <input class="campos" type="hidden" id="idservicio_<?php echo $i?>"  name="idservicio" maxlength=128 size=10 value="0" >
+        <input class="campos" type="text" size=8 id="factura_<?php echo $i?>"  name="factura" maxlength=128 size=10 value="" >
+      </td>
+
+      <td colspan=1 class="tdcampos">
+        <input class="campos" type="text" size=8 id="controlfactura_<?php echo $i?>"  name="controlfactura" maxlength=128 size=10 value="" >
+      </td>
+
+      <td colspan=1 class="tdcampos">
+       <input type="text" class="campos" name="fecha_emision" id="fecha_emision_<?php echo $i?>" onkeyup="contenidocampo(this)" onKeyPress="return fechasformato(event,this);" size="10" maxlength="10" >
+      </td>
+    <input class="camposr" type="hidden" id="honorarios_medicos_<?php echo $i?>"  disabled name="honorarios_medicos"  maxlength=128 size=10 value="0">
+    <input class="campos" type="checkbox" <?php echo $ban ?> style="visibility:hidden" id="checkh_<?php echo $i?>" name="checklh" size=20 value="">
+      <td colspan=1 class="tdcampos">
+        <input class="camposr" type="text" size=8 id="gastos_clinicos_<?php echo $i?>"   name="gastos_clinicos" maxlength=128 size=10 value="">
+      </td>
+      <td  class="tdcampos">
+        <input class="campos" type="checkbox" <?php echo $ban1 ?> id="checkg_<?php echo $i?>" name="checklg" size=20 value="">
+        <input class="camposr" type="hidden" id="gc_hm_<?php echo $i?>"  disabled name="gc_hm_" maxlength=128 size=10 value="0">
+      </td>
+      <td colspan=2 class="tdcampos">
+        <input class="camposr" type="text" id="iva_<?php echo $i?>"  disabled name="iva" maxlength=128 size=5 value="<?php echo $iva?>">
+        <input class="camposr" type="hidden" id="retiva_<?php echo $i?>"  disabled name="retiva" maxlength=128 size=5 value="<?php echo $iva?>">
+        <input class="campos" type="checkbox"  id="checkiva<?php echo $i?>" name="checkiva" size=20 value="">
+      </td>
+      <td colspan=1 class="tdcampos">
+        <input class="camposr" type="text" id="ret_<?php echo $i?>"  disabled name="ret" maxlength=128 size=10 value="<?php echo $ret?>">
+      </td>
+      <td colspan=1 class="tdcamposr">
+        <input class="camposr" type="text" id="honorarios_<?php echo $i?>"  disabled name="honorarios" maxlength=128 size=10 value="0">
+      </td>
+      <td colspan=1 class="tdcamposr">
+        <input class="campos" type="checkbox" id="check_<?php echo $i?>" name="checkl" size=20 value="">
+          <?php if ($f_admin[id_tipo_admin]==2 || $f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11)
+          {
+            ?>
+          <select id="tipo_documento_<?php echo $i?>" <?php echo $type;?> name="tipo_documento_<?php echo $i?>" class="campos" style="width: 30px;" OnChange="visiblefactafec(this,<?php echo $i?>);"  >
+                           <option value="0">F</option>
+                          <option value="1">NC</option>
+
+          </select>
+          <input class="camposr" type="text" id="fac_afectada_<?php echo $i?>"  style="visibility:hidden"  name="fac_afectada_" maxlength=128 size=10 value="0">
+          <?php
+          }
+          else
+          {
+              ?>
+          <input class="camposr" type="hidden" id="tipo_documento_<?php echo $i?>"   name="tipo_documento_" maxlength=128 size=10 value="0">
+          <input class="camposr" type="hidden" id="fac_afectada_<?php echo $i?>"   name="fac_afectada_" maxlength=128 size=10 value="0">
+              <?php
+              }
+              ?>
+      </td>
+    </tr>
+<?php
+
+}
+echo"<tr ><td colspan=10 class='tdcamposr'><table id='' width='100%' ></table></td></tr>";
+
+$i=$i-1;
+echo "<input type=\"hidden\" id=\"conexa\" name=\"conexa\" id=\"conexa\" value=\"$i\">";
+?>
+</table>
+<table border="0" class="tabla_citas" with='100%' cellpadding=0 cellspacing=0>
+<tr><td><a href="#" class="boton" OnClick="bus_che_prov_AgregarFacturas()"> MAS FACTURAS <img src="../public/images/add_16.png" width="2%" height="2%" ></a></td></tr>
+</table>
+
+
+<!-- TABLA DE DATOS FACTURAS-->
+<table border="0" class="tabla_citas"  cellpadding=0 cellspacing=0>
+<tr>
+  <td colspan=10 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+  <td colspan=1 class="tdtitulos"> </td>
+  <td colspan=1 class="tdtitulos"></td>
+  <td colspan=1 class="tdtitulos">Total
+    <input class="campos" type="hidden" id="total_h_m"  disabled name="total_h_m" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+  <td colspan=3 class="tdtitulos">
+    <input class="campos" type="text" id="total_g_c"  disabled name="total_g_c" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>">
+    <input class="campos" type="hidden" id="total_g_h"  disabled name="total_g_h" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+  <td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_iva"  disabled name="total_iva" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+  <td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_ret"  disabled name="total_ret" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+  <td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_pagar"  disabled name="total_pagar" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+  <td colspan=1 class="tdtitulos"></td>
+</tr>
+
+
+<tr>
+  <td colspan=1 class="tdtitulos"> </td>
+  <td colspan=1 class="tdtitulos"></td>
+  <td colspan=1 class="tdtitulos">Total</td>
+  <td colspan=3 class="tdtitulos"></td>
+  <td colspan=1 class="tdtitulos"></td>
+  <td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_retiva"  disabled name="total_retiva" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+  <td colspan=1 class="tdtitulos"></td>
+  <td colspan=1 class="tdtitulos"></td>
+</tr>
+
+<td colspan=10 class="tdtitulos"><hr></hr></td>
+</tr>
+<?php
+if ($f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11) {?>
+
+<tr>
+  <td colspan=5  class="tdtitulos">Colocar Datos si el Cheque Sale a Nombre de otra Persona </td>
+  <td colspan=1  class="tdtitulos">A Nombre de </td>
+  <td colspan=2 class="tdcamposc">
+    <input class="campos" type="text" id="anombrede" size=10 name="anombrede" value="">
+  </td>
+  <td colspan=1 class="tdtitulos">C.I./Rif.</td>
+  <td  colspan=1 class="tdcampos"><input class="campos" type="text" id="cedularif" size=10 name="cedularif" value=""></td>
+  </td>
+</tr>
+<tr>
+  <td colspan=2 class="tdtitulos">Del Banco </td>
+  <td colspan=2 class="tdcamposc">
+    <select id="banco" name="banco" class="campos" style="width: 100px;"  >
+    <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco<>9");
+    $r_banco=ejecutar($q_banco);
+    while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){ ?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+    <?php
+      }
+    ?>
+    </select>
+  </td>
+  <td colspan=1 class="tdtitulos">Num Che</td>
+  <td colspan=1 class="tdcampos"><input class="campos" type="text" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+		 <input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" >
+     <input class="campos" type="hidden" id="personaprov" size=10 name="personaprov" value="1">
+  </td>
+  <td colspan=1 class="tdtitulos">Total Fact </td>
+  <td colspan=1><input class="campos" type="text" id="monto" size=10 name="monto" value=""> </td>
+  <td colspan=2>
+			<a href="javascript: sumarfacpro(this);" class="boton" OnClick="">      Cal</a>
+  </td>
+</tr>
+<tr>
+  <td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+  <td colspan=2 class="tdcamposc">
+    <select id="tipocuenta" name="tipocuenta" class="campos" style="width: 100px;"  >
+      <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+      $r_tipocuenta=ejecutar($q_tipocuenta);
+      while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){			?>
+    			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+      <?php
+      }
+      ?>
+    </select>
+  </td>
+  <td colspan=1 class="tdtitulos">Motivo </td>
+  <td colspan=4 class="tdtitulos">
+      <textarea class="campos" id="motivo" name="motivo" cols=18 rows=3>  </textarea>
+  </td>
+  <td colspan=1 class="tdcamposc"><a href="#" OnClick="gua_che_prov_cli();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+		<?php
+		}
+		else
+		{
+		?>
+		<tr>
+<td colspan=5 class="tdtitulos"></td>
+<td colspan=1  class="tdtitulos"></td>
+<td colspan=2 class="tdcamposc">
+<input class="campos" type="hidden" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=1 class="tdtitulos"></td>
+<td  colspan=1 class="tdcampos"><input class="campos" type="hidden" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+
+</tr>
+		<tr>
+<td colspan=2 class="tdtitulos"></td>
+<td colspan=2 class="tdcamposc"><select id="banco" name="banco" class="campos"  style="visibility:hidden"  style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=13");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdcampos"><input class="campos" type="hidden" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" >
+<input class="campos" type="hidden" id="personaprov" size=10 name="personaprov" value="1">
+</td>
+<td colspan=1 class="tdtitulos">Total Fact </td>
+<td colspan=1><input class="campos" type="text" id="monto" size=10 name="monto" value=""> </td>
+<td colspan=2>
+			<a href="javascript: sumarfacpro(this);" class="boton">      Cal</a></td>
+</tr>
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+<td colspan=2 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos"  style="visibility:hidden"  style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=4 class="tdtitulos"><input class="campos" type="hidden" id="motivo" size=50 name="motivo" value=""> </td>
+<td colspan=1 class="tdcamposc"><a href="#" OnClick="gua_che_prov_cli();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+<?php
+}
+?>
+</table>
+
+			<?php
+			}
+
+   	if ($prov==6){
+
+$q_procesos=("select
+                                    tbl_recibo_contrato.id_recibo_contrato,
+                                    tbl_recibo_contrato.num_recibo_prima,
+                                    tbl_contratos_entes.id_contrato_ente,
+                                    tbl_recibo_contrato.fecha_emision,
+                                    tbl_recibo_contrato.condicion_pago,
+                                    entes_comisionados.porcentaje_comision,
+                                    sum(tbl_caract_recibo_prima.monto_prima)
+                        from
+                                    tbl_recibo_contrato,
+                                    tbl_contratos_entes,
+                                    entes,
+                                    comisionados,
+                                    entes_comisionados,
+                                    tbl_caract_recibo_prima
+                        where  tbl_recibo_contrato.id_contrato_ente=tbl_contratos_entes.id_contrato_ente and
+                                    tbl_contratos_entes.id_ente=entes.id_ente and
+                                    entes.id_ente=entes_comisionados.id_ente and
+                                    entes_comisionados.id_comisionado=comisionados.id_comisionado and
+                                    tbl_caract_recibo_prima.id_recibo_contrato=tbl_recibo_contrato.id_recibo_contrato   and
+                                    comisionados.id_comisionado='$proveedor' and
+                                    tbl_recibo_contrato.comision_paga=0
+                        group by
+                                    tbl_recibo_contrato.id_recibo_contrato,
+                                    tbl_recibo_contrato.num_recibo_prima,
+                                    tbl_contratos_entes.id_contrato_ente,
+                                    tbl_recibo_contrato.fecha_emision,
+                                    tbl_recibo_contrato.condicion_pago,
+                                    entes_comisionados.porcentaje_comision");
+    $r_procesos=ejecutar($q_procesos);
+	$num_filas=num_filas($r_procesos);
+if ($num_filas==0){
+?>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+
+<tr>
+<td colspan=6 class="titulo_seccion">No hay Comisiones por Pagar en esta Fecha</td>
+</tr>
+</table>
+<?
+}
+	else
+	{
+
+			/* **** Busco las variables globales de iva y retencion**** */
+		/* **** variable iva**** */
+		$q_variable_iva=("select * from variables_globales where id_variable_global=26");
+$r_variable_iva=ejecutar($q_variable_iva);
+$f_variable_iva=asignar_a($r_variable_iva);
+/* **** variable retencion iva**** */
+$q_variable_ivaret=("select * from variables_globales where id_variable_global=34");
+$r_variable_ivaret=ejecutar($q_variable_ivaret);
+$f_variable_ivaret=asignar_a($r_variable_ivaret);
+/* **** variable retencion del proveedor**** */
+		$q_variable_ret=("select *
+                                    from
+                                            actividades_pro,
+                                            comisionados
+                                    where
+                                            comisionados.id_comisionado=$proveedor and
+                                            comisionados.id_act_pro=actividades_pro.id_act_pro");
+$r_variable_ret=ejecutar($q_variable_ret);
+$f_variable_ret=asignar_a($r_variable_ret);
+/* **** Fin de buscar las variables globales de iva y retencion**** */
+
+		?>
+			<table border="0" class="tabla_citas"  cellpadding=0 cellspacing=0>
+			<tr>
+<td colspan=10 class="titulo_seccion">Registrar Facturas Otros Proveedores,  % Ret
+<input class="campos" type="text" id="id_variable"  name="id_variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_act_pro]?>">
+<input class="campos" type="text" id="variable"  name="variable" maxlength=128 size=5 value="<?php echo $f_variable_ret[porcentaje]?>" >
+<input class="campos" type="text" id="sustraendo"  name="sustraendo" maxlength=128 size=5 value="<?php echo $f_variable_ret[sustraendo]?>" >
+<input class="campos" type="text" id="sustraendoCantidad"  name="sustraendoCantidad" maxlength=128 size=5 value="<?php echo $f_variable_ret[cantidad]?>" >
+<input class="campos" type="hidden" id="id_tipo_pro"  name="id_tipo_pro" maxlength=128 size=5 value="<?php echo $f_variable_ret[id_tipo_pro]?>" >
+RET IVA
+<input class="campos" type="hidden" id="variableiva"  name="variableiva" maxlength=128 size=5 value="<?php echo $f_variable_iva[cantidad]?>" >
+<input class="campos" type="hidden" id="id_variableretiva"  name="id_variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ivaret[id_variable_global]?>" >
+<input class="campos" type="text" id="variableretiva"  name="variableretiva" maxlength=128 size=5 value="<?php echo $f_variable_ivaret[cantidad]?>" >
+<a href="#" OnClick="act_var_glo();" class="boton" title="Actualiza Porcentaje de Calculo de Gastos Clinicos ">Actualizar</a></td>
+</tr>
+<tr>
+<td colspan=10 class="tdtitulos"><div id="act_var_glo"></div> </td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos">Factura </td>
+<td colspan=1 class="tdtitulos">Control</td>
+<td colspan=1 class="tdtitulos">Fecha Emision</td>
+<td colspan=3 class="tdtitulos"><a href="javascript: gastosverdad(this);">Montos </a></td>
+<td colspan=1 class="tdtitulos"><a href="javascript: ivatodos(this);">Iva</a></td>
+<td colspan=1 class="tdtitulos">Ret</td>
+<td colspan=1 class="tdtitulos">Debe</td>
+<td colspan=1 class="tdtitulos"><a href="javascript: todos(this);">Todos</a></td>
+</tr>
+
+
+<?php
+$i=0;
+while($f_procesos=asignar_a($r_procesos,NULL,PGSQL_ASSOC)){
+    $i++;
+
+    if($f_procesos[condicion_pago]==0){
+      $monto_calculado=($f_procesos[sum] * ($f_procesos[porcentaje_comision] / 100));
+    }
+    else
+    {
+      $monto_calculado=($f_procesos[sum] * (($f_procesos[porcentaje_comision] + 2) / 100));
+    }
+?>
+
+
+    <tr>
+      <td colspan=1 class="tdcampos">
+        <input class="campos" type="hidden" id="proceso_<?php echo $i?>"  name="proceso" maxlength=128 size=10 value="<?php echo $i ?>" >
+        <input class="campos" type="hidden" id="idservicio_<?php echo $i?>"  name="idservicio" maxlength=128 size=10 value="0" >
+        <input class="campos" type="text" size=8 id="factura_<?php echo $i?>"  name="factura" maxlength=128 size=10 value="" >
+      </td>
+
+      <td colspan=1 class="tdcampos">
+        <input class="campos" type="text" size=8 id="controlfactura_<?php echo $i?>"  name="controlfactura" maxlength=128 size=10 value="<?php echo $f_procesos[num_recibo_prima]?>" >
+      </td>
+
+      <td colspan=1 class="tdcampos">
+        <input class="campos" type="text" size=8 id="fecha_emision_<?php echo $i?>"  name="fecha_emision" maxlength=128 size=10 value="<?php echo $f_procesos[fecha_emision]?>" >
+      </td>
+      <td colspan=3 class="tdcampos">
+        <input class="camposr" type="hidden" id="honorarios_medicos_<?php echo $i?>"  disabled name="honorarios_medicos" maxlength=128 size=10 value="">
+        <input class="campos" type="checkbox" <?php echo $ban ?> style="visibility:hidden" id="checkh_<?php echo $i?>" name="checklh" size=20 value="">
+        <input class="camposr" type="text" size=8 id="gastos_clinicos_<?php echo $i?>"   name="gastos_clinicos" maxlength=128 size=10 value="<?php echo $monto_calculado?>">
+        <input class="campos" type="checkbox" <?php echo $ban1 ?> id="checkg_<?php echo $i?>" name="checklg" size=20 value="">
+        <input class="camposr" type="hidden" id="gc_hm_<?php echo $i?>"  disabled name="gc_hm_" maxlength=128 size=10 value="0">
+      </td>
+      <td colspan=1 class="tdcampos">
+        <input class="camposr" type="text" id="iva_<?php echo $i?>"  disabled name="iva" maxlength=128 size=5 value="<?php echo $iva?>">
+        <input class="camposr" type="hidden" id="retiva_<?php echo $i?>"  disabled name="retiva" maxlength=128 size=5 value="<?php echo $iva?>">
+        <input class="campos" type="checkbox"  id="checkiva<?php echo $i?>" name="checkiva" size=20 value="">
+      </td>
+      <td colspan=1 class="tdcampos">
+        <input class="camposr" type="text" id="ret_<?php echo $i?>"  disabled name="ret" maxlength=128 size=10 value="<?php echo $ret?>">
+      </td>
+      <td colspan=1 class="tdcamposr">
+        <input class="camposr" type="text" id="honorarios_<?php echo $i?>"  disabled name="honorarios" maxlength=128 size=10 value="0">
+      </td>
+      <td colspan=1 class="tdcamposr">
+        <input class="campos" type="checkbox" id="check_<?php echo $i?>" name="checkl" size=20 value="">
+        <?php
+        if ($f_admin[id_tipo_admin]==2 || $f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11)
+          {
+            ?>
+            <select id="tipo_documento_<?php echo $i?>" <?php echo $type;?> name="tipo_documento_<?php echo $i?>" class="campos" style="width: 30px;" OnChange="visiblefactafec(this,<?php echo $i?>);"  >
+              <option value="0">F</option>
+              <option value="1">NC</option>
+            </select>
+            <input class="camposr" type="text" id="fac_afectada_<?php echo $i?>"  style="visibility:hidden"  name="fac_afectada_" maxlength=128 size=10 value="0">
+        <?php
+          }
+          else
+          {
+            ?>
+            <input class="camposr" type="hidden" id="tipo_documento_<?php echo $i?>"   name="tipo_documento_" maxlength=128 size=10 value="0">
+            <input class="camposr" type="hidden" id="fac_afectada_<?php echo $i?>"   name="fac_afectada_" maxlength=128 size=10 value="0">
+            <?php
+          }
+            ?>
+      </td>
+    </tr>
+<?php
+}
+
+echo "<input type=\"hidden\" id=\"conexa\"name=\"conexa\" id=\"conexa\" value=\"$i\">";
+?>
+
+<tr>
+<td colspan=10 class="tdtitulos"><hr></hr></td>
+</tr>
+			<tr>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos">Total
+<input class="campos" type="hidden" id="total_h_m"  disabled name="total_h_m" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+<td colspan=3 class="tdtitulos"><input class="campos" type="text" id="total_g_c"  disabled name="total_g_c" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>">
+<input class="campos" type="hidden" id="total_g_h"  disabled name="total_g_h" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_iva"  disabled name="total_iva" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_ret"  disabled name="total_ret" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_pagar"  disabled name="total_pagar" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+<td colspan=1 class="tdtitulos"></td>
+</tr>
+
+
+<tr>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos">Total</td>
+<td colspan=3 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"><input class="campos" type="text" id="total_retiva"  disabled name="total_retiva" maxlength=128 size=10 value="<?php echo  formato_montos(0)?>"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+</tr>
+
+<td colspan=10 class="tdtitulos"><hr></hr></td>
+</tr>
+<?php
+if ($f_admin[id_tipo_admin]==7 || $f_admin[id_tipo_admin]==11) {?>
+
+<tr>
+<td colspan=5  class="tdtitulos">Colocar Datos si el Cheque Sale a Nombre de otra Persona </td>
+<td colspan=1  class="tdtitulos">A Nombre de </td>
+<td colspan=2 class="tdcamposc">
+<input class="campos" type="text" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=1 class="tdtitulos">C.I./Rif.</td>
+<td  colspan=1 class="tdcampos"><input class="campos" type="text" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+
+</tr>
+		<tr>
+<td colspan=2 class="tdtitulos">Del Banco </td>
+<td colspan=2 class="tdcamposc"><select id="banco" name="banco" class="campos" style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco<>9");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos">Num Che</td>
+<td colspan=1 class="tdcampos"><input class="campos" type="text" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+						<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" >
+
+
+<input class="campos" type="hidden" id="personaprov" size=10 name="personaprov" value="1">
+</td>
+<td colspan=1 class="tdtitulos">Total Fact </td>
+<td colspan=1><input class="campos" type="text" id="monto" size=10 name="monto" value=""> </td>
+<td colspan=2>
+			<a href="javascript: sumarfacpro(this);" class="boton">      Cal</a></td>
+</tr>
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+<td colspan=2 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos" style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos">Motivo </td>
+<td colspan=4 class="tdtitulos">
+<textarea class="campos" id="motivo" name="motivo" cols=18 rows=3>  </textarea> </td>
+<td colspan=1 class="tdcamposc"><a href="#" OnClick="gua_che_prov_cli();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+		<?php
+		}
+		else
+		{
+		?>
+		<tr>
+<td colspan=5 class="tdtitulos"></td>
+<td colspan=1  class="tdtitulos"></td>
+<td colspan=2 class="tdcamposc">
+<input class="campos" type="hidden" id="anombrede" size=10 name="anombrede" value="">
+</td>
+<td colspan=1 class="tdtitulos"></td>
+<td  colspan=1 class="tdcampos"><input class="campos" type="hidden" id="cedularif" size=10 name="cedularif" value=""></td>
+</td>
+
+</tr>
+		<tr>
+<td colspan=2 class="tdtitulos"></td>
+<td colspan=2 class="tdcamposc"><select id="banco" name="banco" class="campos"  style="visibility:hidden"  style="width: 100px;"  >
+                  <?php $q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=13");
+$r_banco=ejecutar($q_banco);
+while($f_banco=asignar_a($r_banco,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_banco[id_banco]?>"><?php echo "$f_banco[nombanco] $f_banco[numero_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdcampos"><input class="campos" type="hidden" id="numcheque" size=10 name="numcheque" value="0"><input class="campos" type="hidden" id="rif"  name="rif" maxlength=128 size=10 value="<?php echo $rif?>" >
+<input class="campos" type="hidden" id="nombreprov"  name="nombreprov" maxlength=128 size=10 value="<?php echo $nombrepro?>" ><input class="campos" type="hidden" id="direccionprov"  name="direccionprov" maxlength=128 size=10 value="<?php echo $direccionpro?>" >
+<input class="campos" type="hidden" id="personaprov" size=10 name="personaprov" value="1">
+</td>
+<td colspan=1 class="tdtitulos">Total Fact </td>
+<td colspan=1><input class="campos" type="text" id="monto" size=10 name="monto" value=""> </td>
+<td colspan=2>
+			<a href="javascript: sumarfacpro(this);" class="boton">      Cal</a></td>
+</tr>
+<tr>
+<td colspan=2 class="tdtitulos">Tipo de Cuenta </td>
+<td colspan=2 class="tdcamposc"><select id="tipocuenta" name="tipocuenta" class="campos"  style="visibility:hidden"  style="width: 100px;"  >
+                  <?php $q_tipocuenta=("select * from tbl_tiposcuentas order by tipo_cuenta");
+$r_tipocuenta=ejecutar($q_tipocuenta);
+while($f_tipocuenta=asignar_a($r_tipocuenta,NULL,PGSQL_ASSOC)){
+
+			?>
+			<option value="<?php echo $f_tipocuenta[id_tipocuenta]?>"><?php echo "$f_tipocuenta[tipo_cuenta] "?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td colspan=1 class="tdtitulos"> </td>
+<td colspan=4 class="tdtitulos"><input class="campos" type="hidden" id="motivo" size=50 name="motivo" value=""> </td>
+<td colspan=1 class="tdcamposc"><a href="#" OnClick="gua_che_prov_cli();" class="boton" title="Guardar Cheque">Guardar</a></td>
+</tr>
+<?php
+}
+?>
+</table>
+
+			<?php
+			}
+}
+    ?>

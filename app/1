@@ -1,0 +1,195 @@
+<?php
+include("../lib/jfunciones.php");
+sesion();
+$fecha = date("Y-m-d");
+$mes=date("m");
+$fecha = date("l");
+if($fecha == "Sunday")
+	$fecha = "domingo";
+elseif($fecha == "Monday")
+	$fecha = "lunes";
+elseif($fecha == "Tuesday")
+	$fecha = "martes";
+elseif($fecha == "Wednesday")
+	$fecha = "miercoles";
+elseif($fecha == "Thursday")
+	$fecha = "jueves";
+elseif($fecha == "Friday")
+	$fecha = "viernes";
+elseif($fecha == "Saturday")
+	$fecha = "sabado";
+
+$fecha = $fecha.",".date("d/m/Y");
+
+echo cabecera(sistema);
+?>
+
+<script type="text/javascript" src="../public/javascripts/ajax.js"></script>
+<script type="text/javascript" src="../public/javascripts/general.js"></script>
+<script type="text/javascript" src="../public/javascripts/events.js"></script>
+<script type="text/javascript" src="../public/javascripts/calpopup.js"></script>
+<script type="text/javascript" src="../public/javascripts/dateparse.js"></script>
+<script type="text/javascript" src="../public/javascripts/prototype.js"></script>
+<script type="text/javascript" src="../public/javascripts/scriptaculous.js"></script>
+<script LANGUAGE="JavaScript">
+function iop(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function iop1(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function ifactura(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function itraspaso(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function inota(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function iproducto(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function isaldo(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}	
+function isaldoc(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}
+function irop(url){
+	window.open(url,'','location=0,status=0,scrollbars=1,width=650,height=600,resizable=1');
+}	
+function changeF(){
+      document.forms['panel']['cednom'].focus();
+}
+function busClien(){
+   new Ajax.Request("views01/bsc_cliente.php",
+               {
+	           method:'post',
+		   asynchronous: true,
+		   postBody: 'cedulaclien='+$F('cednom'),
+		   onComplete: mostrarClien
+	       });
+ }
+function mostrarClien(req){
+     $('clientes').innerHTML= req.responseText;
+}
+function VerCob1(){
+     var a=1;
+     new Ajax.Request("views01/ver_cobt.php",
+         {
+             method: 'post',
+             asynchronous: true,
+             postBody: 'idtitular='+$F('idcott_2'),
+            onComplete: verCoClien
+          });
+}
+ function verCoClien(req)
+    {
+    $('titcober').innerHTML=req.responseText;
+     }
+
+
+
+</SCRIPT>
+<table  class="tabla_cabecera" >
+  <tr>
+      <tr>
+      <td class="logo"><img src="../public/images/MSS.png" alt="" title=""></td>
+     
+    </tr>
+   </tr>
+</table>
+<body onload="changeF()">
+<form id="panel" onsubmit="return false;"  name="panel">
+<table class="tabla_cabecera2">
+  <tr>
+         <td  class="usuario">" 
+                <?php echo $_SESSION['bienvenida_'.empresa]?>", <?php echo $fecha ?>, 
+	 </td>
+	
+         <td class="usuario" align="right">
+	        Buscar por:
+	          <select class="campos" name="buscliente" id="buscliente" class="usuario" style="width: 90px;">		
+		     <option value="1">C&eacute;dula</option> 
+		     <option value="2">Nombre</option>
+		  </select>   
+	           <input  class="campos"  type="text" name="cednom" id="cednom" style="width: 180px;" onblur="busClien()"/>
+	 </td>
+   </tr>
+  </table>
+</form>
+
+
+
+<table   class="tabla_cabecera3">
+ <tr>
+	 <td  align="center">
+	
+  <ul id="navmenu-h">
+    <li><a href="#">Clientes <img src="../public/images/abajo.png" border=0></a>
+        <ul>
+           <?php menud(CLIENTES);?>
+	</ul>
+    </li>
+	<li><a href="#">Entes <img src="../public/images/abajo.png" border=0></a>
+          <ul>
+            <?php menud(ENTES);?>
+         </ul>
+       </li>
+    <li><a href="#">Proveedores <img src="../public/images/abajo.png" border=0></a>
+      <ul>
+	<?php menud(PROVEEDORES);?>
+       </ul>
+	</li>
+   <li><a href="#">Administrativo <img src="../public/images/abajo.png" border=0></a>
+	<ul>
+	 <?php menud(ADMINISTRATIVO);?>
+	</ul>
+	</li>
+   <li><a href="#">Compras <img src="../public/images/abajo.png" border=0></a> 
+        <ul>
+         <?php menud(COMPRAS);?>
+        </ul>
+        </li>
+   <li><a href="#">Reportes <img src="../public/images/abajo.png" border=0></a> 
+        <ul>
+         <?php menud(REPORTES);?>
+        </ul>
+        </li> 
+   <li><a href="#">Seguridad <img src="../public/images/abajo.png" border=0></a> 
+        <ul>
+         <?php menud(SEGURIDAD);?>
+        </ul>
+        </li>
+
+	
+  </ul>
+	
+	 </td>
+    </tr>
+</table>
+
+
+<table  class="tabla_cabecera4">
+
+<tr>
+<td >
+	<div id="clientes" align="center">
+	<table  class="tabla_cabecera5" >
+
+      <tr>
+      <td colspan=4 align="center"></td>
+     
+    </tr>
+   
+</table>
+	</div>
+</td>
+</tr>
+ 
+</table>
+
+<?php
+echo pie();
+?>

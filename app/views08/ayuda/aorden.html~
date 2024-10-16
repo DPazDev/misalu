@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.4  (Linux)">
+	<META NAME="AUTHOR" CONTENT="sistemas">
+	<META NAME="CREATED" CONTENT="20110214;8141900">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; text-align: left; widows: 0; orphans: 0 }
+		P.western { font-family: "Nimbus Roman No9 L", "Times New Roman", serif; font-size: 12pt; so-language: es-VE }
+		P.cjk { font-family: "DejaVu Sans"; font-size: 12pt; so-language: zxx }
+		P.ctl { font-family: "DejaVu Sans"; font-size: 12pt; so-language: he-IL }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-VE" TEXT="#000000" BGCOLOR="#ffffff" DIR="LTR">
+<P><div align="center"><IMG SRC="imagenes/logo.png" NAME="gráficos1" ALIGN=BOTTOM WIDTH=236 HEIGHT=73 BORDER=0><div></P>
+<div align="center"><FONT SIZE=2><B>J-31180863-9</B><div></FONT><BR>
+<BR>
+<BR>
+<P><FONT COLOR="#7da647" FACE="Cambria, serif" FONT SIZE=6 STYLE="font-size: 28pt"><div align="center"><B>Actualizar una Orden<div></B></FONT></P>
+<BR>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Para actualizar una orden en espera debe accederse al Módulo <I>Clientes</I>, y seleccionar <I>Act Orden</I>. (ver figura 1)</P>
+<P><div align="center"><IMG SRC="imagenes/aorden1.jpg" WIDTH=594 HEIGHT=407 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 1</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Luego se deberá escribir el número de orden y dar un clic en <I>Buscar</I>. (Ver figura 2)</P>
+<P><div align="center"><IMG SRC="imagenes/aorden2.jpg" WIDTH=773 HEIGHT=78 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 2</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Se mostrarán los datos de la orden correspondiente al número de orden ingresado. En éste paso se modifica o inserta información adicional de la orden y se da Clic en  <I>Actualizar Orden</I>. En el ejemplo se muestra un reembolso ambulatorio el cual será modificado a <I>CANDIDATO A PAGO</I>, luego de haber estado en <I>APROBADO POR OPERADOR</I>, también se realiza la exclusión de uno de los medicamentos que no corresponden al cuadro médico, y se justifica la no revisión médica por ser menor a un monto establecido por la Gerencia Operativa. (Ver figura 3)</P>
+<P><div align="center"><IMG SRC="imagenes/aorden3.jpg" WIDTH=771 HEIGHT=609 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 3</I></div></FONT>
+<P CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">El sistema mostrará en pantalla que la Orden se actualizó con éxito. (ver figura 4)</P>
+<P><div align="center"><IMG SRC="imagenes/aorden4.jpg" WIDTH=771 HEIGHT=111 BORDER=0></div></P>
+<FONT CLASS="western" STYLE="font-size: 10pt"><div align="center"><I>Figura 4</I></div></FONT>
+<BR>
+<P CLASS="western" STYLE="margin-bottom: 0cm"><div align="center"><FONT COLOR="#000080"><U><A HREF="clientes.html">Volver al Módulo Clientes</A></U></FONT></div></P>
+</BODY>
+</HTML>

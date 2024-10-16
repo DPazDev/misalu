@@ -1,0 +1,30 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+
+$id_proveedor=$_REQUEST['id_proveedor'];
+$id_admin= $_SESSION['id_usuario_'.empresa];
+$q_admin=("select * from admin where admin.id_admin='$id_admin'");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+$fecha=date;
+$q_proveedor=("select * from s_p_proveedores,proveedores where s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and proveedores.id_proveedor=$id_proveedor");
+
+$r_proveedor=ejecutar($q_proveedor) or mensaje(ERROR_BD);
+$num_filas=num_filas($r_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+
+$q_cita=("select gastos_t_b.fecha_cita,count(gastos_t_b.fecha_cita) from gastos_t_b where gastos_t_b.id_proveedor=$id_proveedor and gastos_t_b.fecha_cita>='' group by gastos_t_b.fecha_cita order by gastos_t_b.fecha_cita");
+$r_cita=ejecutar($q_cita) or mensaje(ERROR_BD);
+$num_filasb=num_filas($r_cita);
+?>
+
+
+		<td class="tdtitulos"></td>
+		<td class="tdtitulos"><a href="#" OnClick="reg_cita();" class="boton">Registrar Citas</a></td>
+		<td class="tdtitulos"></td>
+		<td class="tdtitulos"><a href="#" OnClick="ir_principal();" class="boton">salir</a></td>
+		<td class="tdtitulos"></td>
+
+
+

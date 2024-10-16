@@ -1,0 +1,56 @@
+<?php
+
+/* Nombre del Archivo: modificar_depart.php
+   Descripción: Solicita los datos para MODIFICAR un DEPARTAMENTO en la base de datos
+*/
+
+include("../../lib/jfunciones.php");
+sesion();
+
+$id_depart1 = $_REQUEST['depart0'];
+
+/*echo "******************* <br>";
+echo $id_depart1."<br>"; 
+echo "******************* <br>";*/
+
+$q_depart = "select departamentos.departamento,departamentos.comentarios from departamentos where departamentos.id_departamento='$id_depart1';";
+$r_depart = ejecutar($q_depart);
+$f_depart = asignar_a($r_depart);
+
+?>
+<script>
+
+</script>
+<form method="POST" action="guardar_depart1.php" name="departamento">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+
+<tr>		<td colspan=4 class="titulo_seccion">Modificar Departamento</td>	</tr>		
+	<tr> <td>&nbsp;</td>
+	<tr>
+
+		<td colspan=1 class="tdtitulos">* Nuevo Nombre del Departamento</td>
+
+		<td colspan=1 class="tdcampos"><input class="campos" type="text" name="depart_nuevo" maxlength=128 size=20 value="<?php echo $f_depart['departamento']; ?>"></td>
+		<input type="hidden" name="id_depart2" value="<?php echo $id_depart1;?>">
+		
+	</tr>
+	<tr> <td>&nbsp;</td>		
+	<tr>
+		<td colspan=1 class="tdtitulos">* Comentarios</td>
+
+	        <td colspan=1><textarea class="campos" name="coment_nuevo" cols="40" rows="3"><?php echo $f_depart['comentarios'];?></textarea></td>
+	
+	</tr>
+
+	<tr> <td>&nbsp;</td>
+
+	<tr>
+		<td colspan=2 class="tdcamposcc"><a href="#" OnClick="guardar_depart1();" class="boton">Guardar</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+
+	</tr>
+
+	<tr> <td>&nbsp;</td>
+</table>
+
+</form>
+										

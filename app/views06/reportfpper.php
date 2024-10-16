@@ -1,0 +1,202 @@
+<?php
+   include ("../../lib/jfunciones.php");
+   sesion();
+   $fecre1=$_REQUEST['fechainicio'];
+   $fecre2=$_REQUEST['fechafin'];
+   $sucrepo=$_REQUEST['sucursal'];
+   $repservi=$_REQUEST['servi'];      
+   $repprove=$_REQUEST['proveedor'];   
+   $replogo=$_REQUEST['logo'];   
+   $restpro=$_REQUEST['estado'];
+   $cualesp=$_REQUEST['cualpro'];
+   $buscarservi=("select servicios.servicio from servicios where servicios.id_servicio=$repservi;");
+   $repbuscarservi=ejecutar($buscarservi);  
+   $elservies=assoc_a($repbuscarservi); 
+   $nomservies=$elservies['servicio'];  
+ if($sucrepo==100){
+      $querysucursal="";
+      $lasucur="TODAS LAS SUCURSALES";
+    }else{
+         $querysucursal="and admin.id_sucursal=$sucrepo";
+         $querysucur=("select sucursal from sucursales where id_sucursal=$sucrepo");
+         $ressucur=ejecutar($querysucur);
+         $datasucur=assoc_a($ressucur);
+         $lasucur=$datasucur[sucursal];
+    }
+   if($repservi<100){
+	  $queryservi="and gastos_t_b.id_servicio=$repservi ";
+	}  else{
+		   $queryservi="and (gastos_t_b.id_servicio=4 or gastos_t_b.id_servicio=6 or gastos_t_b.id_servicio=9 or gastos_t_b.id_servicio=11)";
+		} 
+ 
+if ($cualesp==1){
+        $var1="procesos.comentarios";
+        $var3="comentarios";
+        $var2="select personas_proveedores.nombres_prov,personas_proveedores.apellidos_prov from personas_proveedores,s_p_proveedores,proveedores where proveedores.id_proveedor=$repprove and proveedores.id_s_p_proveedor=s_p_proveedores.id_s_p_proveedor and  s_p_proveedores.id_persona_proveedor=personas_proveedores.id_persona_proveedor";
+    }else{
+        $var1="gastos_t_b.descripcion";
+        $var3="descripcion";
+        $var2="select clinicas_proveedores.nombre from clinicas_proveedores,proveedores where proveedores.id_proveedor=$repprove and proveedores.id_clinica_proveedor=clinicas_proveedores.id_clinica_proveedor"; 
+    }   
+   $queryreporte=("select
+procesos.id_proceso,procesos.fecha_creado,gastos_t_b.id_proveedor,procesos.id_titular,procesos.id_beneficiario,
+procesos.factura_final,procesos.control_factura,procesos.fecha_emision_factura,count(gastos_t_b.id_proceso)
+from
+procesos,gastos_t_b,admin
+where
+procesos.fecha_factura_final between '$fecre1' and '$fecre2' and
+procesos.id_proceso=gastos_t_b.id_proceso and
+procesos.id_estado_proceso=$restpro and
+procesos.id_admin=admin.id_admin
+$querysucursal
+$queryservi and gastos_t_b.id_proveedor=$repprove group by procesos.id_proceso,procesos.fecha_creado,gastos_t_b.id_proveedor,procesos.id_titular,
+procesos.id_beneficiario,procesos.factura_final,procesos.control_factura,procesos.fecha_emision_factura ORDER BY id_proceso DESC;;
+");
+
+$resultarepor=ejecutar($queryreporte);
+$totalfi=num_filas($resultarepor);
+$queryprove=($var2);
+$resulprove=ejecutar($queryprove);
+$dataprove=assoc_a($resulprove);
+   if ($cualesp==1){
+    $nompr=$dataprove[nombres_prov];
+    $apepr=$dataprove[apellidos_prov];
+   }else{
+     $nompr=$dataprove[nombre];
+    }
+$querysucur=("select sucursal from sucursales where id_sucursal=$sucrepo");
+$ressucur=ejecutar($querysucur);
+$datasucur=assoc_a($ressucur);
+$lasucur=$datasucur[sucursal];
+//echo "$totalfi-----$nompr-----$apepr";
+//echo "$fecre1-----$fecre2-----$sucrepo----$repservi---$repprove----$replogo----$restpro---$cualesp";      
+?>
+<LINK REL="StyleSheet" HREF="../../public/stylesheets/impresiones.css" >
+<?php
+if ($replogo==1){
+?>
+<body><img src="../../public/images/head.png">&nbsp;<span class="datos_cliente33"> RIF: J-31180863-9<br>
+&nbsp;&nbsp;&nbsp; </span>
+<?php
+}
+else{
+?>
+<body><img src="../../public/images/head1.png">&nbsp;<span class="datos_cliente33"> RIF: J-31180863-9<br>
+&nbsp;&nbsp;&nbsp;</span>
+<?php
+}
+?>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+     <tr>
+       <td class="datos_cliente3" colspan="7"><b>Relaci&oacute;n de <? echo $nomservies;?> del provedor <?echo $nompr;?> </b></td>     
+     </tr>
+</tale>	 
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 border=1> 
+	<tr> 
+	      <td class="fecha">Relaci&oacute;n de <?php echo "$fecre1 al $fecre2";?></td>
+	</tr> 
+	
+	<tr> 
+	   <td class="datos_cliente33"><strong><?php echo $lasucur;?></strong></td>
+	</tr>
+</tale>	 	
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 border=1> 
+	<tr> 
+	   <td class="datos_cliente3">No.</td>
+	   <td class="datos_cliente3">Orden</td>
+	    <td class="datos_cliente3">Fecha ord. Creada</td>   
+	  <td class="datos_cliente3">Factura</td>
+
+       <td class="datos_cliente3">Control</td> 
+           <td class="datos_cliente3">Fecha emisi&oacute;n factura</td>
+	  <td class="datos_cliente3">Titular</td>   
+	  <td class="datos_cliente3">Beneficiario</td>
+	  <td class="datos_cliente3">Ente</td>
+	  <td class="datos_cliente3">Descripci&oacute;n</td>   
+	  <td class="datos_cliente3">Monto (Bs.S.)</td>      
+	</tr>
+	<?
+	    
+	    $i=1;
+	    $bsf=0; 
+            $aa=0;
+	     while($repprov=asignar_a($resultarepor,NULL,PGSQL_ASSOC)){
+			$querytitular=("select clientes.nombres,clientes.apellidos,entes.nombre from clientes,titulares,entes where titulares.id_titular=$repprov[id_titular] and titulares.id_cliente=clientes.id_cliente and titulares.id_ente=entes.id_ente"); 
+			$restitular=ejecutar($querytitular);
+			$lainftitular=assoc_a($restitular);
+			   if ($repprov[id_beneficiario]>0){
+				  $querybenf=("select clientes.nombres,clientes.apellidos from clientes,beneficiarios where beneficiarios.id_beneficiario=$repprov[id_beneficiario] and beneficiarios.id_cliente=clientes.id_cliente;");
+				  $resulbenf=ejecutar($querybenf);
+				  $infoben=assoc_a($resulbenf);  
+				  $nomben="$infoben[nombres] $infoben[apellidos]";  
+			  }else{$nomben='';}
+			 $totalespro= $repprov['count']; 
+			 $cualproceso=$repprov['id_proceso'];  
+			  if($totalespro==1){
+				$totmontores=0;  
+				$selectmontores=("select gastos_t_b.monto_reserva,gastos_t_b.descripcion from gastos_t_b where gastos_t_b.id_proceso=$cualproceso;");  
+				$repselectmontores=ejecutar($selectmontores);
+				$datamontores=assoc_a($repselectmontores);
+				$totmontores=$datamontores['monto_reserva'];
+				$descrip=$datamontores['descripcion'];
+			  } else{
+				$totmontores=0;  
+				 $selectmontores=("select gastos_t_b.monto_reserva,gastos_t_b.descripcion from gastos_t_b where gastos_t_b.id_proceso=$cualproceso;"); 
+				 $repselectmontores=ejecutar($selectmontores);
+				 while($losmontores=asignar_a($repselectmontores,NULL,PGSQL_ASSOC)){
+				     $totmontores=$totmontores+$losmontores['monto_reserva'];	 
+					$descrip="$descrip, $losmontores[descripcion]";  
+					} 
+				} 
+			  $bsf=$bsf+$totmontores;
+		  echo"
+            <tr> 
+	             <td class=\"cantidades\">$i</td>
+		    <td class=\"cantidades\">$repprov[id_proceso]</td> 
+		    <td class=\"cantidades\">$repprov[fecha_creado]</td>  
+	            <td class=\"cantidades\">$repprov[factura_final]</td>     
+                     <td class=\"cantidades\">$repprov[control_factura]</td> 
+                  <td class=\"cantidades\">$repprov[fecha_emision_factura]</td>
+	            <td class=\"cantidades\">$lainftitular[nombres]  $lainftitular[apellidos]</td>   
+	            <td class=\"cantidades\">$nomben</td>
+	             <td class=\"cantidades\">$lainftitular[nombre]</td>    
+	           <td class=\"cantidades\">$descrip</td>   
+	             <td class=\"cantidades\">$totmontores</td>      
+	        </tr>";
+		$i++;
+                $aa++;
+                 $descrip=""; 
+		}
+                       
+	?>
+	
+	   <tr>
+	        <td colspan=6 class="tdtitulosd" >Total Bs.S  </td>
+	        <td  class="tdtitulosd"><?php echo formato_montos($bsf); ?></td>
+     </tr>
+	<tr>
+	        <td colspan=7 class="tdtituloss" >Yo <? echo "$apepr $nompr ";?>He recibido de CliniSalud C.A., por conceptos arriba mencionados (<? echo $i-1; ?> ordenes), la cantidad de: <?echo formato_montos($bsf); ?> Bs.S.
+</td>
+     </tr> 
+	<tr>
+	        <td colspan=5 class="tdtituloss" ></td>
+	        <td colspan=2 class="tdtitulosd" >Firma del proveedor:_______________________________</td>
+     </tr> 
+	<tr>
+	        <td  class="tdtituloss" ></td>
+	        <td  class="tdtituloss" ></td>
+			<td  class="tdtituloss" ></td>
+			<td  class="tdtituloss" ></td>
+			<td  class="tdtituloss" ></td>
+			<td  class="tdtituloss" ></td>
+			<td  class="tdtituloss" ></td>
+                      
+     </tr>  
+	<tr>
+	        <td  colspan=2 class="tdtituloss" >Elaborado Por:____________________</td>
+	        <td  colspan=2 class="tdtituloss" >Aprobado Por:____________________</td>
+			<td  colspan=3 class="tdtituloss" >Recibido Por:____________________</td>
+			
+     </tr>   
+</table>

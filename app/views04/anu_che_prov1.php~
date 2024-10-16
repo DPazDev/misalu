@@ -1,0 +1,134 @@
+<?php
+include ("../../lib/jfunciones.php");
+
+$codigo=$_REQUEST['codigo'];
+$motivo=strtoupper($_REQUEST['motivo']);
+
+
+$fecha=date("Y");
+$fechacreado=date("Y-m-d");
+$hora=date("H:i:s");
+/* **** busco el usuario admin **** */
+$admin= $_SESSION['id_usuario_'.empresa];
+$q_admin="select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+/* **** se buscan los datos para volverlos a registrar **** */
+$q_facturas_procesos="select * from facturas_procesos where facturas_procesos.codigo='$codigo'";
+$r_facturas_procesos=ejecutar($q_facturas_procesos);
+$codigot=time();
+$codigo1=$admin . $codigot;
+/* **** busco el ultimo comprobante **** */
+$q_facturap="select * from facturas_procesos order by facturas_procesos.id_factura_proceso desc limit 1;";
+$r_facturap=ejecutar($q_facturap);
+
+if(num_filas($r_facturap)==0){
+	$no_comprobante="1";
+}
+else
+{
+	$f_facturap=asignar_a($r_facturap);
+	$no_comprobante=$f_facturap[comprobante];
+	$no_comprobante++;
+}
+/* **** fin buscar el ultimo comprobante **** */
+while($f_facturas_procesos=asignar_a($r_facturas_procesos,NULL,PGSQL_ASSOC)){ 
+$banco=$f_facturas_procesos[id_banco];
+$motivoante = $f_facturas_procesos[motivo];
+$r_factura_pro="insert into facturas_procesos 
+                            (id_proceso,
+                            fecha_creado,
+                            hora_creado,
+                            id_admin,
+                            id_servicio,
+                            codigo,
+                            id_proveedor,
+                            numero_cheque,
+                            comprobante,
+                            monto_con_retencion,
+                            retencion,
+                            descuento,
+                            iva,
+                            monto_sin_retencion,
+                            id_banco,
+                            cedula,
+                            tipo_proveedor,
+                            factura,
+                            num_recibo,
+                            id_orden_compra,
+                            compro_retiva_seniat,
+                            corre_retiva_seniat,
+                            iva_retenido,
+                            no_control_fact,
+                            fecha_emision_fact,
+                            corre_compr_islr,
+                            corre_ret_islr,
+                            anombre,
+                            ci,
+                            motivo,
+                            ret_individual,
+                            id_tipo_cuenta,
+                            id_banco_anulado) 
+values ($f_facturas_procesos[id_proceso],
+            '$fechacreado',
+            '$hora',
+            $admin,
+            $f_facturas_procesos[id_servicio],
+            '$codigo1',
+            $f_facturas_procesos[id_proveedor],
+            '0',
+            '$no_comprobante',
+            '$f_facturas_procesos[monto_con_retencion]',
+             '$f_facturas_procesos[retencion]',
+            '0',
+           '$f_facturas_procesos[iva]',
+             '$f_facturas_procesos[monto_sin_retencion]',
+            13,
+            '$f_facturas_procesos[cedula]',
+            $f_facturas_procesos[tipo_proveedor],
+            '$f_facturas_procesos[factura]',
+            $f_facturas_procesos[num_recibo],
+           $f_facturas_procesos[id_orden_compra],
+             '$f_facturas_procesos[compro_retiva_seniat]',
+              '$f_facturas_procesos[corre_retiva_seniat]',
+           '$f_facturas_procesos[iva_retenido]',
+            '$f_facturas_procesos[no_control_fact]',
+           '$f_facturas_procesos[fecha_emision_fact]',
+            '$f_facturas_procesos[corre_compr_islr]',
+             '$f_facturas_procesos[corre_ret_islr]',
+            '$f_facturas_procesos[anombre]',
+            '$f_facturas_procesos[ci]',
+            '$f_facturas_procesos[motivo]',
+            $f_facturas_procesos[ret_individual],
+            $f_facturas_procesos[id_tipo_cuenta],
+            $f_facturas_procesos[id_banco]);";
+	$f_factura_pro=ejecutar($r_factura_pro);
+}
+
+
+    
+/* **** Actualizo la tabla facturas_procesos los procesos a anulados **** */
+$mod_fpro="update facturas_procesos set id_banco=9,id_banco_anulado=$banco,motivo='$motivo' where  facturas_procesos.codigo='$codigo'";
+$fmod_fpro=ejecutar($mod_fpro);
+
+/* **** Se registra lo que hizo el usuario**** */
+$log="Se Anulo el Cheque  con el  codigo numero $codigo motivo $motivo y motivo anterior $motivoante";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+?>
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+<tr>		<td colspan=7 class="titulo_seccion">Cheque o Recibo Anulado Con Exito</td>	</tr>
+<tr>
+		<td class="tdtitulos">
+			
+			<a href="#" OnClick="che_reembolso();" class="boton" title="Ir a Chueques Reembolsos">Crear Otro Cheque de Reembolso</a><a href="#" OnClick="ir_principal();" class="boton">salir</a>
+			</td>
+	</tr>
+
+</table>
+
+

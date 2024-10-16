@@ -1,0 +1,64 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+//busco todos usuarios
+$q_admin1="select admin.id_admin,admin.cedula,admin.nombres,admin.apellidos,tipos_admin.tipo_admin,sucursales.sucursal,departamentos.departamento from admin,tipos_admin,sucursales,departamentos where admin.id_tipo_admin=tipos_admin.id_tipo_admin 
+and admin.activar='1' and admin.id_sucursal=sucursales.id_sucursal and departamentos.id_departamento=admin.id_departamento order by  admin.nombres";
+$r_admin1=ejecutar($q_admin1);
+$q_admin="select admin.id_admin,admin.cedula,admin.nombres,admin.apellidos,tipos_admin.tipo_admin,sucursales.sucursal,departamentos.departamento from admin,tipos_admin,sucursales,departamentos where admin.id_tipo_admin=tipos_admin.id_tipo_admin 
+and admin.activar='1' and admin.id_sucursal=sucursales.id_sucursal and departamentos.id_departamento=admin.id_departamento order by  admin.nombres";
+$r_admin=ejecutar($q_admin);
+?>
+<link HREF="../../public/stylesheets/estilos1.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js">
+
+</script>
+
+<form action="POST" method="POST" name="permiso" id="formp">
+<table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+<tr>		<td align="right" colspan=4 class="titulo_seccion"><b>Duplicar Permisologia del Usuario</b></td>	
+	</tr>
+
+
+	
+	<tr>
+	<td  class="tdtitulos">El Usuario</td>
+<td  class="tdcampos">
+		<select name="tmodulos" style="width: 200px;" class="campos" OnChange="buscar_permisos2();">
+	
+		<option value=""> Nombre Usuario1</option>
+		<?php		
+		while($f_admin=asignar_a($r_admin,NULL,PGSQL_ASSOC)){
+		?>
+		<option value="<?php echo $f_admin[id_admin]?>"> <?php echo "$f_admin[nombres] $f_admin[apellidos] ($f_admin[tipo_admin]  $f_admin[departamento]  $f_admin[sucursal])"?></option>
+		<?php
+		}
+		?>
+		</select>
+	
+		</td>
+	
+	<td  class="tdtitulos">Asigna Permiso a</td>
+<td  class="tdcampos">
+		<select name="tmodulos" style="width: 200px;" class="campos" OnChange="buscar_permisos2();">
+	
+		<option value=""> Nombre Usuario2</option>
+		<?php		
+		while($f_admin1=asignar_a($r_admin1,NULL,PGSQL_ASSOC)){
+		?>
+		<option value="<?php echo $f_admin1[id_admin]?>"> <?php echo "$f_admin1[nombres] $f_admin1[apellidos]  ($f_admin1[tipo_admin]  $f_admin1[departamento]  $f_admin1[sucursal])"?></option>
+		<?php
+		}
+		?>
+		</select>
+		<a href="#" OnClick="dup_permisos2();" class="boton">Guardar</a><a href="#" OnClick="ir_principal();" class="boton">Salir</a>
+		</td>
+	
+	
+	</tr>	
+
+
+</table>
+<div id="dupli_permisos"></div>
+</form>
+

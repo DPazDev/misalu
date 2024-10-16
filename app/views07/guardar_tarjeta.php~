@@ -1,0 +1,34 @@
+<?php
+/* Nombre del Archivo: guardar_tarjeta.php
+   Descripción: Inserta una TARJETA en la base de datos, para utilizarlo posteriormente
+*/
+
+
+include("../../lib/jfunciones.php");
+sesion();
+
+$tar2 = $_REQUEST['tar2'];
+$tar2 = strtoupper($tar2);
+$pago=$_REQUEST['pago'];
+$fecha_creado = date("Y-m-d");
+$hora_creado = date("h:m:s");
+
+$q_tarj = "insert into tbl_nombre_tarjetas (nombre_tar,fecha_creado,id_tipo_pago) values('$tar2','$fecha_creado''$hora_creado','$pago')";
+$r_tarj = ejecutar($q_tarj);
+
+?>
+
+<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+<table class="tabla_cabecera4"  cellpadding=0 cellspacing=0>
+
+<tr>		
+<td colspan=4 class="titulo_seccion"> Se Registro con Exito la Tarjeta <?php echo $tar2;?></td>	
+</tr>	
+
+	<tr>
+		<td colspan=4 class="tdcamposcc"><a href="#" OnClick="reg_tarjeta();" class="boton">Insertar otra Tarjeta</a> <a href="#" OnClick="ir_principal();" class="boton">Salir</a></td>
+	</tr>
+
+</table>

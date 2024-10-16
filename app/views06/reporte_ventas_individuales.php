@@ -1,0 +1,231 @@
+<?php
+/* Nombre del Archivo: reporte_ventas_individuales.php
+   Descripción: Realiza la busqueda en la base de datos, para el Reporte de Impresión: Ventas de Polizas Individuales
+*/  
+header("Content-Type: text/html;charset=utf-8");
+ include ("../../lib/jfunciones.php");
+ sesion();
+
+//codigo para auditar titulares subdivision repetidos
+$q_titu_sub= "select
+                                    titulares.id_titular,
+                                    count(titulares_subdivisiones.id_titular),
+                                    titulares_subdivisiones.id_subdivision
+                        from
+                                    titulares,
+                                    titulares_subdivisiones
+                        where
+                                    titulares.id_titular=titulares_subdivisiones.id_titular 
+                        group by
+                                    titulares.id_titular,
+                                    titulares_subdivisiones.id_subdivision 
+                        order by
+                                    count";
+$r_titu_sub = ejecutar($q_titu_sub);
+
+
+while($f_titu_sub = asignar_a($r_titu_sub)){
+            if ($f_titu_sub[count]>1){
+/* **** eliminar resultados para ser**** */
+$q_eli_titu_sub=("delete  from
+                                                titulares_subdivisiones
+                                        where
+                                                titulares_subdivisiones.id_titular='$f_titu_sub[id_titular]'");
+$r_eli_titu_sub=ejecutar($q_eli_titu_sub);
+
+$q_iner_titu_sub = "insert
+                            into
+                    titulares_subdivisiones
+                            (id_titular,
+                            id_subdivision)
+                    values
+                            ('$f_titu_sub[id_titular]',
+                            '$f_titu_sub[id_subdivision]')";
+$r_iner_titu_sub = ejecutar($q_iner_titu_sub);
+
+}
+}
+
+
+
+
+$fecha = date("Y-m-d");
+
+	$fecre1=$_REQUEST['fecha1'];
+	$fecre2=$_REQUEST['fecha2'];
+
+?>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+	<tr> <td colspan=4>&nbsp;</td></tr>
+	<tr> <td colspan=4>&nbsp;</td></tr>
+	<tr>
+		<td class="titulo_seccion" colspan="19">REPORTE VENTA DE POLIZAS INDIVIDUALES  POR FECHA DE VIGENCIA DE CONTRATO DESDE EL <?php echo "$fecre1 AL $fecre2";?>  </td>
+
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>	
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0  border=3> 
+
+
+
+	<tr> 
+	<td class="tdcampos">&nbsp;TITULAR&nbsp;</td>
+	<td class="tdcampos">&nbsp;CEDULA&nbsp;</td>
+	<td class="tdcampos">&nbsp;TIPO CLIENTE&nbsp;</td>
+	<td class="tdcampos">&nbsp;NUMERO CONTRATO&nbsp;</td>
+	<td class="tdcampos">&nbsp;SERIE&nbsp;</td>
+	<td class="tdcampos">&nbsp;NUMERO FACTURA&nbsp;</td>
+	<td class="tdcampos">&nbsp;FECHA INICIO &nbsp;</td>
+	<td class="tdcampos">&nbsp;FECHA FIN &nbsp;</td>
+	<td class="tdcampos">&nbsp;COMISIONADO&nbsp;</td>
+	<td class="tdcampos">&nbsp;RECIBO PRIMA&nbsp;</td>
+	<td class="tdcampos">&nbsp;MONTO POLIZA&nbsp;</td>
+	<td class="tdcampos">&nbsp;MONTO CANCELADO &nbsp;</td>
+	<td class="tdcampos">&nbsp;MONTO DEUDOR &nbsp;</td>
+	<td class="tdcampos">&nbsp;FECHA PROXIMA DE PAGO &nbsp;</td>
+
+</tr>
+
+<?php
+
+$q_venta=("select 
+	entes.nombre, 
+	clientes.cedula,
+	titulares.tipocliente,
+	tbl_contratos_entes.numero_contrato, 
+	tbl_contratos_entes.id_contrato_ente,
+	tbl_recibo_contrato.id_recibo_contrato,
+	tbl_recibo_contrato.fecha_ini_vigencia, 
+	tbl_recibo_contrato.fecha_fin_vigencia,
+	tbl_recibo_contrato.num_recibo_prima,
+	comisionados.nombres, comisionados.apellidos,
+	sum(tbl_caract_recibo_prima.monto_prima)
+	from entes, clientes,titulares, tbl_contratos_entes, tbl_recibo_contrato, comisionados, tbl_caract_recibo_prima, primas, polizas 
+	where 
+	tbl_recibo_contrato.fecha_ini_vigencia between '$fecre1' and '$fecre2' and 
+	entes.id_tipo_ente=7 and 
+	tbl_caract_recibo_prima.id_titular=titulares.id_titular and
+	titulares.id_cliente=clientes.id_cliente and
+	entes.id_ente=tbl_contratos_entes.id_ente and tbl_contratos_entes.id_contrato_ente=tbl_recibo_contrato.id_contrato_ente and
+	tbl_recibo_contrato.id_comisionado=comisionados.id_comisionado and
+	tbl_recibo_contrato.id_recibo_contrato=tbl_caract_recibo_prima.id_recibo_contrato and 
+	tbl_caract_recibo_prima.id_prima=primas.id_prima and 
+	primas.id_poliza=polizas.id_poliza 
+	group by
+	entes.nombre, clientes.cedula,	titulares.tipocliente, tbl_contratos_entes.numero_contrato,tbl_contratos_entes.id_contrato_ente, 
+	tbl_recibo_contrato.fecha_ini_vigencia, tbl_recibo_contrato.fecha_fin_vigencia,	tbl_recibo_contrato.num_recibo_prima,
+	comisionados.nombres, comisionados.apellidos,tbl_recibo_contrato.id_recibo_contrato  
+	order by tbl_contratos_entes.id_contrato_ente");
+$r_venta=ejecutar($q_venta);
+$cont=0;
+
+	while($f_venta=asignar_a($r_venta)){
+$cont++;
+
+$q_montopagado=("select sum(tbl_recibo_pago.monto) from tbl_recibo_pago where tbl_recibo_pago.id_recibo_contrato=$f_venta[id_recibo_contrato]");
+$r_montopagado=ejecutar($q_montopagado);
+$f_montopagado=asignar_a($r_montopagado);
+
+
+
+$q_cuota=("select tbl_recibo_pago.saldo_deudor, tbl_recibo_pago.fecha_proxima_pago from tbl_recibo_pago where tbl_recibo_pago.id_recibo_contrato=$f_venta[id_recibo_contrato] and tbl_recibo_pago.estado_recibo=1 order by tbl_recibo_pago.id_recibo_pago DESC limit 1");
+$r_cuota=ejecutar($q_cuota);
+$f_cuota=asignar_a($r_cuota);
+
+
+
+$a=$f_venta[sum];
+$b=$f_montopagado[sum];
+$c=$a-$b;
+
+if($f_venta[tipocliente]=='0'){
+$tip="TOMADOR"; $conto++;}
+else{
+$tip="TITULAR"; $conti++;}
+
+
+if($f_cuota[saldo_deudor]!="0"){
+if($fecha > $f_cuota[fecha_proxima_pago]){
+$cuota="CUOTA VENCIDA";
+}else {$cuota=$f_cuota[fecha_proxima_pago]; }
+
+}else $cuota="  ";
+
+$q_factura=("select tbl_facturas.numero_factura,tbl_series.nomenclatura from tbl_facturas,tbl_series where $f_venta[id_recibo_contrato]=tbl_facturas.id_recibo_contrato and tbl_facturas.id_serie=tbl_series.id_serie and tbl_facturas.id_estado_factura<3 ");
+$r_factura=ejecutar($q_factura);
+$f_factura=asignar_a($r_factura);
+
+
+
+
+echo  " 
+		<tr>
+		<td class=\"tdtitulos\">$f_venta[nombre] </td>  
+		<td class=\"tdtitulos\">$f_venta[cedula] </td> 
+		<td class=\"tdcamposr\">$tip</td>  
+		<td class=\"tdtitulos\">$f_venta[numero_contrato] </td>
+		<td class=\"tdcamposc\">$f_factura[nomenclatura] </td>
+		<td class=\"tdcamposc\">$f_factura[numero_factura] </td>
+		<td class=\"tdtitulos\">$f_venta[fecha_ini_vigencia] </td>
+		<td class=\"tdtitulos\">$f_venta[fecha_fin_vigencia] </td>
+		<td class=\"tdtitulos\">$f_venta[nombres] $f_venta[apellidos]  </td>
+		<td class=\"tdtitulos\">$f_venta[num_recibo_prima] </td>
+		<td class=\"tdtitulos\">$f_venta[sum] </td>
+		<td class=\"tdtitulos\">$f_montopagado[sum] </td>
+		<td class=\"tdtitulos\">$c </td>
+		<td class=\"tdcamposr\">$cuota </td>
+"; 
+
+
+
+$totalpago=$b+$totalpago;
+$totaldeuda=$c+$totaldeuda;
+?>	              
+	        </tr>
+<?php  
+}
+
+
+
+?>
+
+</table>
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+<tr><td colspan=4>&nbsp;</td></tr>
+<?php
+
+echo  " 
+		<tr>
+
+		<td colspan=4 class=\"tdcampos\"> MONTO TOTAL CANCELADO &nbsp;$totalpago Bs.S </td>  
+		<td colspan=4 class=\"tdcampos\"> MONTO TOTAL DEUDOR &nbsp;$totaldeuda Bs.S </td>  
+
+		  ";?>
+
+
+
+
+<tr><td colspan=4>&nbsp;</td></tr>
+
+	<tr>
+	        <td colspan=4 class="tdcampos">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Hay un total de <?php echo  $cont ."  Clientes Titulares " . "  ($conti son TITULARES y $conto son TOMADORES)    " ; 
+
+?>
+	<tr> <td colspan=4>&nbsp;</td></tr>
+</table>
+<table>
+ 
+	<tr> <td colspan=4>&nbsp;</td></tr>
+	<tr>
+	        <td colspan=4 class="tdcamposs" title="Imprimir reporte">
+			  <?php
+			 $url="'views06/excel_ventas_individuales.php?fecha1=$fecre1&fecha2=$fecre2'";
+			?> <a href="javascript: imprimir(<?php echo $url; ?>);" class="boton">Excel</a>
+		</td>
+		</td>
+	</tr>
+	<tr> <td colspan=4>&nbsp;</td></tr>
+</table>

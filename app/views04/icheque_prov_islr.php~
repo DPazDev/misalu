@@ -1,0 +1,945 @@
+<?php header("Content-Type: text/html;charset=utf-8");
+include ("../../lib/jfunciones.php");
+$numcheque=$_REQUEST[numcheque];
+$banco=$_REQUEST[banco];
+$codigo=$_REQUEST[codigo];
+$cedula=$_REQUEST[cedula];
+$nombreprov=$_REQUEST[nombreprov];
+$prov=$_REQUEST[prov];
+$ente=$_REQUEST[ente];
+$id_proveedor=$_REQUEST[id_proveedor];
+$personaprov=$_REQUEST['personaprov'];
+
+$motivo=$_REQUEST[motivo];
+$mod=$_REQUEST[mod];
+$numcheque=$_REQUEST[numcheque];
+$fechaemision=$_REQUEST[fechaemision];
+$comproretiva=$_REQUEST[comproretiva];
+$tipocuenta=$_REQUEST[tipocuenta];
+$fecha_imp_che=date("Y-m-d");
+
+$admin= $_SESSION['id_usuario_'.empresa];
+
+if ($mod==1)
+	{
+/* **** Modifico la tabla facturas procesos dejando todo para generar el cheque **** */ 
+$r_mod_fac = "update 
+                                facturas_procesos 
+                        set 
+                                compro_retiva_seniat='$comproretiva', 
+                                fecha_creado='$fechaemision',numero_cheque='$numcheque', 
+                                id_banco=$banco,motivo='$motivo',
+                                id_tipo_cuenta='$tipocuenta',
+                                fecha_imp_che='$fecha_imp_che',
+                                id_admin_cheque='$admin' 
+                        where 
+                                facturas_procesos.codigo='$codigo' ";
+	$f_mod_fac = ejecutar($r_mod_fac);
+	if ($prov<>4)
+	{
+	/* **** Modifico la tabla procesos dejando todo como pago Emitido **** */
+	$r_facturas=pg_query("select * from facturas_procesos where codigo='$codigo'");
+$total_procesos=num_filas($r_facturas); 
+	
+	while($f_proceso=pg_fetch_array($r_facturas, NULL, PGSQL_ASSOC))
+		{
+$procesot .=$f_proceso[id_proceso] .",";
+$r_mproceso = "update procesos set id_estado_proceso=11 where procesos.id_proceso='$f_proceso[id_proceso]' ";
+		$f_mproceso = ejecutar($r_mproceso);
+		}
+	}
+}
+/* **** compraro si busco proveedor persona o proveedor clinica **** */
+
+/* **** BUSCO EL PROVEEDOR  persona**** */
+if ($prov==6){
+    $q_proveedor=("select   
+                                        comisionados.nombres,
+                                        comisionados.apellidos,
+                                        comisionados.cedula,
+                                        actividades_pro.codigo,
+                                        actividades_pro.porcentaje,
+                                        actividades_pro.actividad,
+                                        actividades_pro.sustraendo
+                            from
+                                        comisionados,actividades_pro,facturas_procesos 
+                            where
+                                        comisionados.id_comisionado='$id_proveedor' and 
+                                        comisionados.id_comisionado=facturas_procesos.id_proveedor ' and 
+                                        facturas_procesos.id_act_pro=actividades_pro.id_act_pro
+");
+$r_proveedor=ejecutar($q_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nombres] $f_proveedor[apellidos] ";
+$rifpro=$f_proveedor[cedula];
+$direccionpro=$f_proveedor[direccioncheque];
+$telefonospro=$f_proveedor[celular_pro];
+$objetoretencion=$f_proveedor[actividad];
+$porcentaje=100 * $f_proveedor[porcentaje];
+$sustraendo=$f_proveedor[sustraendo];
+    
+    }
+    else
+    {
+if ($prov==1){
+$q_proveedor=("select   personas_proveedores.*,actividades_pro.codigo,actividades_pro.porcentaje,actividades_pro.sustraendo
+		                from personas_proveedores,actividades_pro where personas_proveedores.id_persona_proveedor='$id_proveedor' and personas_proveedores.id_act_pro=actividades_pro.id_act_pro");
+$r_proveedor=ejecutar($q_proveedor);
+$num_filas2=num_filas($r_proveedor);
+if ($num_filas2>0){
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nomcheque]";
+$rifpro=$f_proveedor[rifcheque];
+$direccionpro=$f_proveedor[direccioncheque];
+$telefonospro=$f_proveedor[celular_pro];
+}
+}
+else
+{
+
+
+
+/* **** BUSCO EL PROVEEDOR  clinica**** */
+
+$q_proveedor="select clinicas_proveedores.*,actividades_pro.codigo,actividades_pro.porcentaje
+,actividades_pro.sustraendo from clinicas_proveedores,proveedores,actividades_pro  
+where clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor and 
+proveedores.id_proveedor=$id_proveedor and 
+clinicas_proveedores.id_act_pro=actividades_pro.id_act_pro";
+$r_proveedor=ejecutar($q_proveedor);
+$f_proveedor=asignar_a($r_proveedor);
+$nombrepro="$f_proveedor[nomcheque]";
+$rifpro=$f_proveedor[rifcheque];
+$direccionpro=$f_proveedor[direccioncheque];
+$telefonospro=$f_proveedor[telefonos];
+
+
+/* **** FIN DE BUSCAR PROVEEDOR **** */
+}
+}
+
+/* **** FIN DE BUSCAR PROVEEDOR **** */
+/* busco si son varias retenciones con un solo cheque realizo el count de codigo para multiplicarlo con el sutraendo*/
+$q_coun_cod=("select facturas_procesos.id_codigo,count(codigo) from facturas_procesos where facturas_procesos.numero_cheque='$numcheque' and
+                                facturas_procesos.id_banco='$banco' goup by facturas_procesos.id_codigo");
+$r_coun_cod=ejecutar($q_coun_cod);
+$f_coun_cod=asignar_a($r_coun_cod);
+
+/* fin busco si son varias retenciones con un solo cheque realizo el count de codigo para multiplicarlo con el sutraendo*/
+/* busco los datos de este cheque para los proveedores compras con retencion de iva*/
+$q_facturap=("select * from facturas_procesos where facturas_procesos.numero_cheque='$numcheque' and
+                                facturas_procesos.id_banco='$banco'");
+$r_facturap=ejecutar($q_facturap);
+$gastosclinicos=0;
+$gastosmedicos=0;
+$totalgastos=0;
+$retencion=0;
+$monto_final=0;
+$iva=0;
+$ivaret=0;
+$total_ret=0;
+while($f_facturap=asignar_a($r_facturap,NULL,PGSQL_ASSOC)){
+    $ret_individual=$f_facturap[ret_individual];
+	$banco=$f_facturap[id_banco];
+	$iva=$iva + $f_facturap[iva];
+	$ivaret=$ivaret + $f_facturap[iva_retenido];
+	$total_ret=	$total_ret + $f_facturap[retencion];
+	if ($f_facturap[iva]==0){
+
+$montoexento= $montoexento +$f_facturap[monto_sin_retencion];
+$montoexentot= $montoexentot +$f_facturap[monto_sin_retencion];
+}
+	$gastosclinicos=$gastosclinicos + $f_facturap[monto_sin_retencion];
+		$gastosmedicos=$gastosmedicos + $f_facturap[monto_con_retencion];
+	$totalgastos=$gastosclinicos  + $gastosmedicos;
+	$totaldescuento=0;
+	$retencion=$retencion + $f_facturap[retencion];
+    $retencionpp=$retencion + $f_facturap[retencion];
+	$comprobante=$f_facturap[comprobante];
+	$comprobanteislr=$f_facturap[corre_compr_islr];
+	$compro_retiva_seniat=$f_facturap[compro_retiva_seniat];
+	$comprobanteiva=$f_facturap[corre_retiva_seniat];
+	$cheque=$f_facturap[numero_cheque];
+	$recibo=$f_facturap[num_recibo];
+	$motivo=$f_facturap[motivo];
+	/*$nombrepro=$f_facturap[anombre];
+	$cedula=$f_facturap[ci];*/
+}
+
+if ($retencion==0){
+    $retencion=$f_proveedor[sustraendo];
+    $retencion=$retencion - $f_proveedor[sustraendo];
+    }
+    else
+    {
+        if ($f_coun_cod[count]==0){
+        $retencion=$retencion - ($f_proveedor[sustraendo]);
+       }
+       else
+       {
+           $retencion=$retencion - ($f_proveedor[sustraendo] * $f_coun_cod[count]);
+           }
+        }
+         if ($ret_individual==1 )
+        {
+            $retencion=$retencion + $f_proveedor[sustraendo];
+        
+            }
+            
+            
+
+if ($prov<>4){
+$monto_f= ($gastosclinicos + $gastosmedicos)  - ($retencion);
+$monto_final= ($monto_f)  - ($ivaret);
+
+
+}
+else
+{
+$monto_f= ($gastosclinicos + $gastosmedicos)  - ($retencion );
+$monto_final= ($monto_f)  - ($ivaret);
+$retencion= $retencion;
+}
+
+$subtotal=$subtotal + $totalgastos - $totaldescuento;
+/* fin de buscar los datos de este cheque para los proveedores compras con retencion de iva*/
+/* busco el banco */
+$q_banco=("select tbl_bancos.*,bancos.* from tbl_bancos,bancos  where tbl_bancos.id_ban=bancos.id_ban and bancos.id_banco=$banco");
+
+$r_banco=ejecutar($q_banco);
+$f_banco=asignar_a($r_banco);
+/* busco el admin*/
+
+$admin= $_SESSION['id_usuario_'.empresa];
+
+$q_admin="select admin.*,sucursales.* from admin,sucursales where admin.id_admin='$admin' and admin.id_sucursal=sucursales.id_sucursal";
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+
+$fecha=date("Y-m-d");
+$hora=date("h:i:s");
+$fechaimpreso=date("d-m-Y");
+//echo numeros_a_letras($monto);
+                                $cantidad=explode(".",$monto_final);
+                                $cadenas=count($cantidad);
+								 if ($cantidad[1]<=9) {
+									$cero=0;}
+									else
+									{$cero="";}
+								$cantidad[1]=substr($cantidad[1],0,2);
+								$cantida[1]=substr($cantidad[1],0,1);
+								if ($cantida[1]==0){
+									$cero="";
+									}
+                                if($cadenas==2){
+                                        $monto_escrito= ucwords(numtolet($cantidad[0],"os"))." con ".$cantidad[1]."$cero/100 ";
+                                }else{
+                                       $monto_escrito= ucwords(numtolet($cantidad[0],"os"))."  ";
+				$cero="";
+                                }
+
+                                //echo numeros_a_letras($total);
+	
+	
+	
+
+
+
+$dia=date("d");
+$mes=date("m");
+$ano=date("Y");
+if($mes == '01')
+	$mes = "Enero";
+elseif($mes == '02')
+	$mes = "Febrero";
+elseif($mes == '03')
+	$mes = "Marzo";
+elseif($mes == '04')
+	$mes = "Abril";
+elseif($mes == '05')
+	$mes = "Mayo";
+elseif($mes == '06')
+	$mes = "Junio";
+elseif($mes == '07')
+	$mes = "Julio";
+elseif($mes == '08')
+	$mes = "Agosto";
+elseif($mes == '09')
+	$mes = "Septiembre";
+elseif($mes == '10')
+	$mes = "Octubre";
+elseif($mes == '11')
+	$mes = "Noviembre";
+elseif($mes == '12')
+	$mes = "Diciembre";
+
+//$fecha=fecha_espanol(date("Y-M-d"));
+if ($banco<>8){
+echo "
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
+<html>
+	<head>
+	<title></title>
+	<script language=\"JavaScript\" type=\"text/javascript\">
+	function imprimir(){
+		
+		
+	}
+	</script> 	
+
+	<style type=\"text/css\">
+	<!--
+	body,td,th {
+	margin-top: 0px;
+	font-size: 9px;
+	color: #000000;
+	}
+	-->
+	</style>	
+	</head>
+	<body onload=\"imprimir()\">";
+if($banco==1){
+echo "
+<table style=\"width: 10in;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"right\">
+	<tr>	<td style=\"font-size: 1pt;height: 0.03in\"></td></tr>
+	<tr>		
+		<td style=\"height: 0.2in;\" valign=\"top\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 9in;font-size: 9pt;text-align: right;\" valign=\"top\">".montos_print($monto_final)."".$cero."</td>
+			<td style=\"width: 0.3in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.335in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.8in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 9in;font-size: 10pt;text-align: left;\">$nombrepro </td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>
+	<tr>		
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 1in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 9in;font-size: 10pt;text-align: left;\">$monto_escrito</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.2in\"></td></tr>
+	<tr>
+		<td>
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 6in;font-size: 10pt;text-align: center;\">M&eacute;rida $dia de $mes</td>
+			<td style=\"width: 0.1in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: center;\">$ano</td>
+			<td style=\"width: 8.4in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.2in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"50%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 7in;font-size: 10pt;text-align: left;\">NO ENDOSABLE CADUCA A LOS 90 DIAS</td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>	
+	
+</table>
+	";
+}else if($banco==2 || $banco==6 || $banco==5 || $banco==20){
+echo "
+<table style=\"width: 10in;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"right\">
+	<tr>	<td style=\"font-size: 1pt;height: 0.09in\"></td></tr>
+	<tr>		
+		<td style=\"height: 0.2in;\" valign=\"top\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 9in;font-size: 9pt;text-align: right;\" valign=\"top\">".montos_print($monto_final)."".$cero."</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.354in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.8in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 9in;font-size: 10pt;text-align: left;\">$nombrepro </td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>
+	<tr>		
+		<td style=\"height: 0in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 4in;font-size: 10pt;text-align: left;\">$monto_escrito</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.3in\"></td></tr>
+	<tr>
+		<td>
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 6in;font-size: 10pt;text-align: center;\">M&eacute;rida $dia de $mes</td>
+			<td style=\"width: 0.1in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: center;\">$ano</td>
+			<td style=\"width: 8.4in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.1in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"50%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 7in;font-size: 8pt;text-align: left;\">NO ENDOSABLE CADUCA A LOS 90 DIAS</td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>	
+	
+</table>
+	";
+}
+else if($banco==10 || $banco==12 || $banco==11 || $banco==18 || $banco==19){
+echo "
+<table style=\"width: 10in;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"right\">
+	<tr>	<td style=\"font-size: 1pt;height: 0.09in\"></td></tr>
+	<tr>		
+		<td style=\"height: 0.2in;\" valign=\"top\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 10in;font-size: 9pt;text-align: right;\" valign=\"top\">".montos_print($monto_final)."".$cero."</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.254in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.5in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.8in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 10in;font-size: 10pt;text-align: left;\">$nombrepro </td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>
+	<tr>		
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 4in;font-size: 10pt;text-align: left;\">$monto_escrito</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.29in\"></td></tr>
+	<tr>
+		<td>
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 6in;font-size: 10pt;text-align: center;\">M&eacute;rida $dia de $mes</td>
+			<td style=\"width: 0.1in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: center;\">$ano</td>
+			<td style=\"width: 8.4in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.1in\"></td></tr>
+	<tr>	
+		<td style=\"height: 1.3in;\">
+		<table border=0 width=\"50%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 7in;font-size: 8pt;text-align: left;\">NO ENDOSABLE CADUCA A LOS 90 DIAS</td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>	
+	
+</table>
+	";
+}
+
+
+else if(($banco==3) || ($banco==14) || ($banco=22)){
+echo "
+<table style=\"width: 10in;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"right\">
+	<tr>	<td style=\"font-size: 1pt;height: 0.09in\"></td></tr>
+	<tr>		
+		<td style=\"height: 0.1in;\" valign=\"top\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 9in;font-size: 9pt;text-align: right;\" valign=\"top\">".montos_print($monto_final)."".$cero."</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.354in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.5in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.8in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 9in;font-size: 10pt;text-align: left;\">$nombrepro </td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>
+	<tr>		
+		<td style=\"height: 0in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 4in;font-size: 10pt;text-align: left;\">$monto_escrito</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.2in\"></td></tr>
+	<tr>
+		<td>
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 6in;font-size: 10pt;text-align: center;\">M&eacute;rida $dia de $mes</td>
+			<td style=\"width: 0.1in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: center;\">$ano</td>
+			<td style=\"width: 8.4in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.2in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"50%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 7in;font-size: 10pt;text-align: left;\">NO ENDOSABLE CADUCA A LOS 90 DIAS</td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>	
+	
+</table>
+
+   ";
+}else if($banco==7 || $banco==4){
+echo "
+<table style=\"width: 10in;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"right\">
+	<tr>	<td style=\"font-size: 1pt;height: 0.09in\"></td></tr>
+	<tr>		
+		<td style=\"height: 0.3in;\" valign=\"top\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 9in;font-size: 9pt;text-align: right;\" valign=\"top\">".montos_print($monto_final)."".$cero."</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.354in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.8in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 9in;font-size: 10pt;text-align: left;\">$nombrepro </td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>
+	<tr>		
+		<td style=\"height: 0in;\">
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 4in;font-size: 10pt;text-align: left;\">$monto_escrito</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.3in\"></td></tr>
+	<tr>
+		<td>
+		<table border=0 width=\"100%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 0.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 6in;font-size: 10pt;text-align: center;\">M&eacute;rida $dia de $mes</td>
+			<td style=\"width: 0.1in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			<td style=\"width: 1in;font-size: 10pt;text-align: center;\">$ano</td>
+			<td style=\"width: 8.4in;font-size: 10pt;text-align: left;\">&nbsp;</td>
+			</tr>	
+		</table>		
+		</td>
+	</tr>
+	<tr>	<td style=\"font-size: 2pt;height: 0.2in\"></td></tr>
+	<tr>	
+		<td style=\"height: 0.2in;\">
+		<table border=0 width=\"50%\" cellpadding=0 cellspacing=0>
+			<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: right;\">&nbsp;</td>
+			<td style=\"width: 7in;font-size: 10pt;text-align: left;\">NO ENDOSABLE CADUCA A LOS 90 DIAS</td>
+			</tr>	
+		</table>	
+		</td>
+	</tr>	
+	
+</table>
+
+
+	";
+}
+echo "
+<br><br><br><br><br>
+<br><br><br><br><br>
+<br><br><br><br><br>
+<br><br><br><br><br>
+<br><br><br><br><br>
+<br><br><br><br><br>
+<br><br><br><br><br>
+	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">
+	<tr valign=\"bottom\">
+		<td width=\"67\"></td>
+		<td align=\"left\" valign=\"top\" style=\"font-size: 10pt;\">&nbsp;&nbsp;
+		CliniSalud Medicina Prepagda S.A. RIF: J-31180863-9<br>
+		
+		</td>
+	</tr>
+	<tr>
+	<td align=\"right\" colspan=2>
+	<table border=0 cellpadding=0 cellspacing=0>
+	<tr>
+		<td width=\"495\" height=\"20\" class=\"fecha\"  align=\"right\">".strtoupper($f_admin['sucursal']).",".date("d")." DE ".strtoupper($mes)." DE ".date("Y")."</td>
+	</tr>
+	</table>
+	</td>
+	</tr>
+	</table>
+	<br>	
+<table cellpadding=0 cellspacing=0 width=\"100%\">
+	        <tr>
+		        <td style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">COMPROBANTE - $comprobante</td>
+		</tr>
+ <tr>
+		        <td style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">COMPROBANTE RETENCION I.S.L.R- $comprobanteislr</td>
+		</tr>
+ <tr>
+		        <td style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">COMPROBANTE RETENCION IVA- $compro_retiva_seniat</td>
+		</tr>
+	</table>
+	<table cellpadding=2 cellspacing=0 width=\"100%\">
+		<tr>	
+			<td style=\"width: 3.5in;font-size: 10pt;text-align:left ;\">
+			A Nombre de: $nombrepro<br>
+			C.I. o Rif: $rifpro<br>
+			</td>
+			<td width=\"50%\" class=\"datos_cliente\">
+			</td>
+		</tr>
+		<tr>	
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: left;\">
+			Cheque del banco: $f_banco[nombanco]<br>
+			Cuenta N\U: $f_banco[numero_cuenta]<br>
+			</td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\">
+			Cheque N\U: $cheque<br>
+			
+			</td>
+		</tr>
+	</table>
+
+<table cellpadding=2 cellspacing=0 width=\"100%\">
+	        <tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\" >
+	<table border=0 cellpadding=0 cellspacing=0 width=\"100%\">
+		<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\"><b> </b></td>
+			<td align=\"center\" class=\"datos_cliente2\"><b></b></td>
+			<td align=\"center\" class=\"datos_cliente2\"><b></b></td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: center;\"><b></b></td>
+			<td align=\"center\" class=\"datos_cliente2\"><b></b></td>
+		</tr>";
+	
+
+	echo "
+	</table>
+	<table border=0 width=300 cellspacing=0 cellpadding=0>
+	<tr>
+	<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b> Monto </b></td><td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>".montos_print($gastosclinicos + $gastosmedicos)."</b></td>
+	</tr>
+<tr>
+	<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b> Base Imponible </b></td><td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>".montos_print((($gastosclinicos + $gastosmedicos)-$iva)-$montoexentot)."</b></td>
+	</tr>
+<tr>
+	<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b> Iva</b></td><td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>".montos_print($iva)."</b></td>
+	</tr>
+<tr>
+	<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>Iva Retenido Descuento</b></td><td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>".montos_print($ivaret)."</b></td>
+	</tr>
+
+<tr>
+	<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>ISLR </b></td><td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>".montos_print($retencion )."</b></td>
+	</tr>
+<tr>
+	<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>Monto Neto a Pagar </b></td><td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"><b>".montos_print($monto_final)."".$cero."</b></td></tr>
+		
+	</table>
+	<br>
+<table width=\"90%\"  align=\"right\">
+<tr>
+		        <td style=\"width: 8.5in;font-size: 10pt;text-align:left ;\">".$motivo."</td>
+</tr>
+
+
+	</table>
+<br>
+	<table width=\"70%\"  align=\"right\">
+		<tr>
+			<td <td>
+			<td </td>
+		</tr>
+		<tr>
+		<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">________________ <br>FIRMA:</td>
+	    <td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">________________ <br>C:I/RIF:</td>
+		</tr>
+
+<tr>
+		<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">Nota el Cheque Salio a Nombre de $nombrepro </td>
+		</tr>
+
+	</table>
+	<br><br><br><br>
+	<br><br><br><br>
+	<table width=\"100%\">
+		<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\" >________________ <br>Elaborado Por: <br>$f_admin[nombres] $f_admin[apellidos] </td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">________________ <br>Revisado Por:</td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">________________ <br>Aprobado Por:</td>
+		</tr>
+	</table>
+<table width=\"100%\">
+		<tr>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\" >Fecha Entrega________________ <br></td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\">Hora Entrega________________</td>
+			<td style=\"width: 3.5in;font-size: 10pt;text-align: letf;\"></td>
+		</tr>
+	</table>
+		</td>
+	</tr>	
+	</table>	
+";
+if ($prov<>4)
+{
+$r_facturas=pg_query("select * from facturas_procesos where codigo='$codigo'");
+$total_procesos=num_filas($r_facturas); 
+	while($f_proceso=pg_fetch_array($r_facturas, NULL, PGSQL_ASSOC))
+	{
+$procesot .=$f_proceso[id_proceso] .",";
+$r_mproceso = "update procesos set id_estado_proceso=11 where procesos.id_proceso='$f_proceso[id_proceso]' ";
+	$f_mproceso = ejecutar($r_mproceso);
+	}
+}
+}
+else
+{
+	?>
+	<link HREF="../../public/stylesheets/impresiones.css"   rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+
+
+<table   border=0 class="tabla_cabecera5"  cellpadding=0 cellspacing=0>
+<tr>
+<td colspan=1 class="logo">
+<img src="../../public/images/head.png">
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo">
+
+</td>
+</tr>
+<tr>
+<td colspan=1 class="titulo2">
+Rif: J-31180863-9
+</td>
+<td colspan=2 class="titulo">
+
+</td>
+<td colspan=1 class="titulo1">
+<?php echo "$f_admin[sucursal] $fechaimpreso"?>
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="titulo3">
+<?php echo "RECIBO DE PAGO DE PROVEEDOR Num. $recibo POR Bs. "; echo montos_print($monto_final); ?>
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente">
+He recibido de CliniSalud Medicina Prepagada S.A.,  la cantidad de <?php echo $monto_escrito?>
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente">
+Por Concepto de la cancelaci&oacute;n de las Facturas:
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td ></td>
+	<td class="datos_cliente2">No. Facturas</td>
+	<td ></td>
+	<td class="datos_cliente2">Monto</td>
+			
+</tr>
+		<?php
+		$r_facturas=pg_query("select * from facturas_procesos where codigo='$codigo'");
+		echo "paso";
+$total_procesos=num_filas($r_facturas); 
+	while($f_proceso=pg_fetch_array($r_facturas, NULL, PGSQL_ASSOC)){
+$procesot .=$f_proceso[id_proceso] .",";
+$r_mod_fac = "update facturas_procesos set numero_cheque='$cheque', id_banco=$banco where facturas_procesos.id_proceso='$f_proceso[id_proceso]' and facturas_procesos.codigo='$codigo' ";
+	$f_mod_fac = ejecutar($r_mod_fac);
+		if ($prov<>4)
+		{
+		$r_mproceso = "update procesos set id_estado_proceso=11 where procesos.id_proceso='$f_proceso[id_proceso]' ";
+	$f_mproceso = ejecutar($r_mproceso);
+		}	
+?>
+
+		<tr>
+		<td ></td>
+			<td class="datos_cliente2"><?php echo $f_proceso[factura]?></td>
+		<td ></td>	   
+	<td class="datos_cliente2"><?php echo montos_print($f_proceso[monto_sin_retencion])?></td>
+			
+		</tr>	
+	<?php
+	}
+	?>
+
+	<tr>
+	<td class="datos_cliente2">Total Facturas</td>
+	<td class="datos_cliente2"><?php echo $total_procesos ?></td>
+	
+	<td class="datos_cliente2">Total Monto </td>
+	<td class="datos_cliente2"><?php echo montos_print($monto_final)?></td></tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente">
+a Favor de <?php echo "$nombreprov
+			C.I. o Rif: $cedula
+			" ?>
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4 class="datos_cliente">
+Recibi conforme en efectivo.
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+<tr>
+<td colspan=4>
+<br>
+</br>
+</td>
+</tr>
+
+<tr>
+<td ></td>
+	<td class="datos_cliente2">______________</td>
+	<td ></td>
+	<td class="datos_cliente2">______________</td>
+			
+</tr>
+<tr>
+<td ></td>
+	<td class="datos_cliente2">Firma</td>
+	<td ></td>
+	<td class="datos_cliente2">C.I./Rif.</td>
+			
+</tr>
+</table>
+	<?php
+	}
+/* **** Se registra lo que hizo el usuario**** */
+
+
+$log="Imprimo el cheque o recibo   con codigo numero $codigo ($motivo)";
+logs($log,$ip,$admin);
+
+/* **** Fin de lo que hizo el usuario **** */
+?>
+

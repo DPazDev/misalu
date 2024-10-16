@@ -1,0 +1,193 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+/* propiedades para armar el reporte de excel */
+$numealeatorio=rand(2,99);//crea un numero aleatorio para el nombre del archivo
+/** Error reporting */
+error_reporting(E_ALL);
+date_default_timezone_set('Europe/London');
+/** Include PHPExcel */
+require_once '../../lib/phpexcel/Classes/PHPExcel.php';
+// Create new PHPExcel object
+$objPHPExcel = new PHPExcel();
+$sheet = $objPHPExcel->getActiveSheet();
+/* fin propiedades para armar el reporte de excel */
+// recepcion de datos enviados
+
+$fechaini=$_REQUEST['libfeini'];
+$fechafin=$_REQUEST['libfefin'];
+$constante="FACTURA";
+$buscarivaactual=("select variables_globales.iva from variables_globales where nombre_var='iva';");
+$repbuscarivaactual=ejecutar($buscarivaactual);
+$dataivaactual=assoc_a($repbuscarivaactual);
+$elivaactuales="$dataivaactual[iva]%";
+	
+// propiedades para documentar el archivo o reporte de excel
+
+
+$i=3;//variable para dar la posicion de la celda;
+$objPHPExcel->getActiveSheet(0)->setCellValue("A".$i, 'OPER. Nº')
+                    ->setCellValue("B".$i, 'FECHA')
+                    ->setCellValue("C".$i, 'TIPO DOCU-MENTO')
+                    ->setCellValue("D".$i, 'N° DOCUMENTO')
+					->setCellValue("E".$i, 'N° CONTROL')
+                    ->setCellValue("F".$i, 'Nº DE MAQUINA FISCAL')
+                    ->setCellValue("G".$i, 'NOMBRE Y APELLIDO/DENOMINACIÓN O RAZÓN SOCIAL')
+                    ->setCellValue("H".$i, 'RIF Nº/REGISTRO CONTRIBU-YENTE ')						
+                    ->setCellValue("I".$i, 'NRO DE FACTURA AFEC.')	
+                    ->setCellValue("J".$i, 'ALÍCUOTA')	
+					->setCellValue("K".$i, 'TOTAL CON IVA')
+					->setCellValue("L".$i, 'EXENTAS O EXONERADAS')	
+					 ->setCellValue("M".$i, 'BASE')
+                    ->setCellValue("N".$i, 'IVA')
+                    ->setCellValue("O".$i, 'TOTAL CON IVA')
+                    ->setCellValue("P".$i, 'COMPRAS SIN DERECHO A CRÉDITO FISCAL')
+                    ->setCellValue("Q".$i, 'BASE')
+                    ->setCellValue("R".$i, 'IVA')
+                    ->setCellValue("S".$i, 'COMPRAS SIN DERECHO A CRÉDITO FISCAL')
+                    ->setCellValue("T".$i, 'BASE')
+                    ->setCellValue("U".$i, 'IVA')
+                    ->setCellValue("V".$i, 'IVA Pagado (al proveedor)')
+                    ->setCellValue("W".$i, 'IVA Retenido (a terceros)')
+                    ->setCellValue("X".$i, 'Anticipo de IVA de Importación');
+                    
+$buscolasfacturas=("select 
+facturas_procesos.id_proveedor,facturas_procesos.comprobante,
+facturas_procesos.retencion,facturas_procesos.iva,
+facturas_procesos.factura,facturas_procesos.num_recibo,facturas_procesos.iva_retenido,facturas_procesos.no_control_fact,
+facturas_procesos.fecha_emision_fact,facturas_procesos.id_banco,
+facturas_procesos.codigo,facturas_procesos.tipo_proveedor,
+sum(cast(facturas_procesos.monto_con_retencion as double precision)) as monto_con_retencion,
+sum(cast(facturas_procesos.monto_sin_retencion as double precision)) as monto_sin_retencion
+from 
+facturas_procesos where 
+facturas_procesos.fecha_emision_fact between '$fechaini' and '$fechafin' and 
+facturas_procesos.factura<>'S/F' and facturas_procesos.id_banco<>9 
+group by 
+facturas_procesos.id_proveedor,facturas_procesos.comprobante,
+facturas_procesos.retencion,facturas_procesos.iva,
+facturas_procesos.factura,facturas_procesos.num_recibo,facturas_procesos.iva_retenido,facturas_procesos.no_control_fact,
+facturas_procesos.fecha_emision_fact,facturas_procesos.id_banco,
+facturas_procesos.codigo,facturas_procesos.tipo_proveedor
+order by facturas_procesos.fecha_emision_fact;");
+$repdelasfacturas=ejecutar($buscolasfacturas);
+      $fila=4;
+      $apun=1;
+  while($ellibroc=asignar_a($repdelasfacturas,NULL,PGSQL_ASSOC)){ 
+	  $fechafactura=$ellibroc['fecha_emision_fact'];
+	  $numfactura=$ellibroc['factura'];
+	  $controlfactura=$ellibroc['no_control_fact'];
+	  $iddelprovedor=$ellibroc['id_proveedor'];
+	  $tipoproveedor=$ellibroc['tipo_proveedor'];
+	  $montoconretencion=$ellibroc['monto_con_retencion'];
+	  $montosinretencion=$ellibroc['monto_sin_retencion'];
+	  $eliva=$ellibroc['iva'];
+          if($montoconretencion==0){
+            $montotalfactura= $montosinretencion;
+          }else{
+               $montotalfactura = $montosinretencion + $montoconretencion + $eliva;
+              } 	  
+
+          if($montoconretencion==0){
+              $montotalexento = 0;  
+            }else{
+               $montotalexento = $montosinretencion;
+              }
+          if($montoconretencion>0){
+              $montotalbase= $montoconretencion; 
+           }else{
+               $montotalbase= $montosinretencion - $eliva; 
+               }
+	  if($tipoproveedor==1){
+		    $nomproveedor=("select personas_proveedores.nomcheque,personas_proveedores.rifcheque from personas_proveedores where id_persona_proveedor=$iddelprovedor");
+		    $repnomproveedor=ejecutar($nomproveedor);
+		    $datonomproveedor=assoc_a($repnomproveedor);
+		    $nompcomplprovee=$datonomproveedor['nomcheque'];
+		    $rifcomplprovee=$datonomproveedor['rifcheque'];
+		  }else{
+			     $nomproveedor=("select clinicas_proveedores.nombre,clinicas_proveedores.rif 
+			     from clinicas_proveedores,proveedores where
+				 clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor and
+				 proveedores.id_proveedor=$iddelprovedor");
+				$repnomproveedor=ejecutar($nomproveedor);
+				$datonomproveedor=assoc_a($repnomproveedor);
+				$nompcomplprovee=$datonomproveedor['nombre'];
+				$rifcomplprovee=$datonomproveedor['rif'];
+			  }
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("A".$fila, $apun, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("B".$fila, $fechafactura, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("C".$fila, $constante, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("D".$fila, $numfactura, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("E".$fila, $controlfactura, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("G".$fila, $nompcomplprovee, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("H".$fila, $rifcomplprovee, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("J".$fila, $elivaactuales, PHPExcel_Cell_DataType::TYPE_STRING);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("O".$fila, $montotalfactura, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("P".$fila, $montotalexento, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("Q".$fila, $montotalbase, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+			  $objPHPExcel->getActiveSheet(0)->setCellValueExplicit("R".$fila, $eliva, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+	          $fila++;
+              $apun++;
+  $montotalfactura=0;
+  $montotalexento=0;
+  $montotalbase=0;
+  }	  
+//propiedades para darle tamaño automatico a las celdas
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20); 
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15); 
+
+
+ $style = array(
+        'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        )
+    );
+
+    $sheet->getStyle("A4:A$fila")->applyFromArray($style);
+    $sheet->getStyle("B4:B$fila")->applyFromArray($style);
+    $sheet->getStyle("C4:C$fila")->applyFromArray($style);
+    $sheet->getStyle("H4:H$fila")->applyFromArray($style);
+    $sheet->getStyle("J4:J$fila")->applyFromArray($style);
+    $sheet->getStyle("O4:O$fila")->applyFromArray($style);
+    $sheet->getStyle("P4:P$fila")->applyFromArray($style);
+    $sheet->getStyle("Q4:Q$fila")->applyFromArray($style);
+    $sheet->getStyle("R4:R$fila")->applyFromArray($style);
+    
+      
+$objPHPExcel->getActiveSheet()->getStyle("O4:O$fila")->getNumberFormat()
+    ->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
+
+$objPHPExcel->getActiveSheet()->getStyle("P4:P$fila")->getNumberFormat()
+    ->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
+$objPHPExcel->getActiveSheet()->getStyle("Q4:Q$fila")->getNumberFormat()
+    ->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+
+
+$objPHPExcel->getActiveSheet()->getStyle("R4:R$fila")->getNumberFormat()
+    ->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);  
+    
+//propiedades para darle tamaño automatico a las celdas
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(3);
+// se empieza a finalizar las propiedaes  realizacion de la hoja de excel 
+// Rename worksheet
+$objPHPExcel->getActiveSheet()->setTitle('Relacion_Factura');
+
+
+// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+$objPHPExcel->setActiveSheetIndex(0);
+
+
+// Redirect output to a client’s web browser (Excel5)
+header('Content-Type: application/vnd.ms-excel');
+header("Content-Disposition: attachment; filename=librocompra_$numealeatorio.xls");
+header('Cache-Control: max-age=0');
+
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+$objWriter->save('php://output');
+exit;
+// fin de finalizar las propiedaes  realizacion de la hoja de excel 
+
+?>

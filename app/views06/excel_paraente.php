@@ -1,0 +1,537 @@
+<?php
+header("Content-Type: text/html;charset=utf-8");
+/* Nombre del Archivo: reporte_paraente.php
+   Descripción: Realiza la busqueda en la base de datos, para el Reporte de Impresión: por Parámetros (para Entes)
+*/  
+
+
+ include ("../../lib/jfunciones.php");
+   sesion();
+
+header('Content-type: application/vnd.ms-excel');//poner cabezera de excel
+$numealeatorio=rand(2,99);//crea un numero aleatorio para el nombre del archivo
+header("Content-Disposition: attachment; filename=archivo$numealeatorio.xls");//Esta ya es la hoja excel con el numero aleatorio.xls
+header("Pragma: no-cache");//Para que no utili la cahce
+header("Expires: 0");
+
+   $fecre1=$_REQUEST['fecha1'];
+   $fecre2=$_REQUEST['fecha2'];
+   $replogo=$_REQUEST['lgnue'];   
+   $tipocliente=$_REQUEST['tipcliente'];
+
+
+list($id_sucursal,$sucursal)=explode("@",$_REQUEST['sucur']);
+if($id_sucursal==0)	        $condicion_sucursal="and admin.id_sucursal>0";
+else
+$condicion_sucursal="and admin.id_sucursal='$id_sucursal'";
+
+
+
+list($id_servicio,$servicio)=explode("@",$_REQUEST['servic']);
+if($id_servicio==0)	        $condicion_servicio="and gastos_t_b.id_servicio>0";
+else if($id_servicio=="-01"){
+	$condicion_servicio="and (gastos_t_b.id_servicio!=6 and gastos_t_b.id_servicio!=9 ) ";}
+	else if($id_servicio=="-02"){
+	$condicion_servicio="and (gastos_t_b.id_servicio=6 or gastos_t_b.id_servicio=9 ) ";}
+else
+$condicion_servicio="and gastos_t_b.id_servicio='$id_servicio'";
+
+list($tipo_ente,$nom_tipo_ente)=explode("@",$_REQUEST['tipo_ente']);
+
+list($id_ente,$ente)=explode("@",$_REQUEST['ente']);
+
+
+if($id_ente==0)	        $condicion_ente="and entes.id_tipo_ente>0";
+	
+
+	else
+	$condicion_ente="and entes.id_ente='$id_ente'";
+
+if  ($tipo_ente==0){
+	$tipo_entes="and entes.id_tipo_ente>0";
+	}
+	else
+	{
+		$tipo_entes="and entes.id_tipo_ente=$tipo_ente";
+	}
+	
+
+list($id_estado,$estado)=explode("@",$_REQUEST['estapro']);
+if($id_estado==0)	        $condicion_estado="and procesos.id_estado_proceso>0";
+
+else if($id_estado=="-01"){
+	$condicion_estado="and (procesos.id_estado_proceso!=1 and procesos.id_estado_proceso!=6 and procesos.id_estado_proceso!=13 and procesos.id_estado_proceso!=14 ) ";}
+
+else if($id_estado=="-02"){
+	$condicion_estado="and (procesos.id_estado_proceso=7 or procesos.id_estado_proceso=16  ) ";}
+
+else
+$condicion_estado="and procesos.id_estado_proceso='$id_estado'";
+
+
+list($proveedor)=explode("@",$_REQUEST['proveedor']);
+if($proveedor=="/"){
+$condicion_proveedor="and s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and 
+personas_proveedores.id_persona_proveedor=s_p_proveedores.id_persona_proveedor and proveedores.id_proveedor=gastos_t_b.id_proveedor";
+$prov=",s_p_proveedores,proveedores,personas_proveedores";}
+
+else {
+$condicion_proveedor="and proveedores.id_proveedor='$proveedor' and 
+                      proveedores.id_proveedor=gastos_t_b.id_proveedor";
+$prov=",proveedores";}
+
+if($proveedor=='INTRAMURAL'){
+$condicion_proveedor= "and s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and
+s_p_proveedores.nomina='1' and proveedores.id_proveedor=gastos_t_b.id_proveedor";
+$prov=",s_p_proveedores,proveedores";}
+
+if($proveedor=='EXTRAMURAL'){
+$condicion_proveedor= "and s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and
+s_p_proveedores.nomina='0' and proveedores.id_proveedor=gastos_t_b.id_proveedor";
+$prov=",s_p_proveedores,proveedores";}
+
+if($proveedor=='*'){
+$condicion_proveedor="and clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor and proveedores.id_proveedor=gastos_t_b.id_proveedor";
+$prov=",clinicas_proveedores, proveedores";}
+
+if($proveedor=='TODOS' )   { $condicion_proveedor="and gastos_t_b.id_proveedor>=0";
+$prov="";}
+
+if($proveedor=='NINGUNO' )  {  $condicion_proveedor="and gastos_t_b.id_proveedor=0";
+$prov="";}
+
+if($tipocliente=='TODOS'){
+	//se busca titulares y beneficiarios (procesos.id_titular>0 and)
+	$tc="and  
+	     (procesos.id_beneficiario>0 or procesos.id_beneficiario=0) 
+	     ";}
+else if($tipocliente=='TITULAR'){
+	//solo titulares (procesos.id_titular>0 and)
+	$tc="and  
+	      procesos.id_beneficiario=0";}
+else if($tipocliente=='BENEFICIARIO'){
+	//solo beneficiarios (procesos.id_titular>0 and)
+	$tc="and  
+	      procesos.id_beneficiario>0";}
+
+$codigo=time();
+   $qreporte=("create table para_entes_tmp_$codigo AS select
+procesos.id_proceso,
+procesos.id_titular,
+procesos.id_beneficiario,
+procesos.fecha_recibido, 
+procesos.id_admin,
+procesos.id_estado_proceso,
+procesos.hora_creado,
+gastos_t_b.id_proveedor,
+gastos_t_b.id_servicio,
+(gastos_t_b.hora_creado) AS h,
+titulares.id_ente,
+admin.nombres,
+admin.apellidos,
+clientes.id_cliente,
+clientes.sexo,
+gastos_t_b.fecha_cita,
+gastos_t_b.monto_aceptado,
+gastos_t_b.monto_reserva,
+gastos_t_b.id_gasto_t_b,
+(clientes.nombres) AS n,
+(clientes.apellidos) AS a,
+clientes.cedula,
+clientes.fecha_nacimiento,
+entes.nombre,
+estados_procesos.estado_proceso,
+gastos_t_b.nombre AS nom,
+gastos_t_b.descripcion
+from procesos,gastos_t_b,admin,titulares,clientes,entes,estados_procesos $prov
+where 
+procesos.fecha_recibido between '$fecre1' and '$fecre2' and 
+gastos_t_b.id_proceso=procesos.id_proceso $condicion_estado $tc and
+ admin.id_admin=procesos.id_admin $condicion_sucursal $condicion_servicio and
+procesos.id_titular=titulares.id_titular $condicion_ente $tipo_entes and titulares.id_ente=entes.id_ente $condicion_proveedor and
+titulares.id_cliente=clientes.id_cliente and procesos.id_estado_proceso=estados_procesos.id_estado_proceso 
+ORDER BY procesos.id_proceso DESC");
+
+
+
+$rreporte=ejecutar($qreporte);
+
+/* **** Si registra el nombre de la tabla creada en la tabla tbl_eliminar_tabla por si el proceso no se termina de ejucutar desde el sistema en seguridad ejecutar auditar tablas temporada creadas y eliminar las que hayan quedado **** */
+
+$r_tbl_tabla_eli="insert 
+									into 
+							tbl_eliminar_tablas 
+									(nombre_tbl_eli) 
+							values 
+									('para_entes_tmp_$codigo');";
+$f_tbl_tabla_eli=ejecutar($r_tbl_tabla_eli);
+
+
+$qreporte1=("select para_entes_tmp_$codigo.id_proceso,
+para_entes_tmp_$codigo.id_beneficiario,
+para_entes_tmp_$codigo.fecha_recibido,
+para_entes_tmp_$codigo.nombre,
+para_entes_tmp_$codigo.id_proveedor,
+para_entes_tmp_$codigo.n,
+para_entes_tmp_$codigo.a,
+para_entes_tmp_$codigo.cedula,
+para_entes_tmp_$codigo.id_estado_proceso,
+para_entes_tmp_$codigo.fecha_nacimiento,
+para_entes_tmp_$codigo.estado_proceso,
+para_entes_tmp_$codigo.sexo,
+para_entes_tmp_$codigo.hora_creado,
+para_entes_tmp_$codigo.id_servicio,
+para_entes_tmp_$codigo.nombres,
+para_entes_tmp_$codigo.apellidos,
+para_entes_tmp_$codigo.id_cliente,
+count(para_entes_tmp_$codigo.id_proceso) 
+from para_entes_tmp_$codigo group by para_entes_tmp_$codigo.id_proceso,
+para_entes_tmp_$codigo.id_beneficiario,
+para_entes_tmp_$codigo.fecha_recibido,
+para_entes_tmp_$codigo.nombre,
+para_entes_tmp_$codigo.id_proveedor,
+para_entes_tmp_$codigo.n,
+para_entes_tmp_$codigo.a,
+para_entes_tmp_$codigo.cedula,
+para_entes_tmp_$codigo.id_estado_proceso,
+para_entes_tmp_$codigo.fecha_nacimiento,
+para_entes_tmp_$codigo.estado_proceso,
+para_entes_tmp_$codigo.sexo,
+para_entes_tmp_$codigo.hora_creado,
+para_entes_tmp_$codigo.id_servicio,
+para_entes_tmp_$codigo.nombres,
+para_entes_tmp_$codigo.apellidos,
+para_entes_tmp_$codigo.id_cliente
+ORDER BY para_entes_tmp_$codigo.id_proceso DESC");
+$rreporte1=ejecutar($qreporte1);
+?>
+
+<LINK REL="StyleSheet" HREF="../../public/stylesheets/impresiones.css">
+<table class="tabla_citas"  cellpadding=0 cellspacing=0> 
+	<tr>
+
+		<td class="descrip_main">  <img src="../../public/images/head" alt=logo> <br>RIF J-31180863-9  </td>
+
+		<td class="descrip_main" colspan="19">Reporte Relaci&oacute;n <?php if($id_servicio==0) echo "TODOS LOS SERVICIOS";
+else echo "$servicio";?>, <?php if ($tipocliente=="TODOS") echo "TODOS LOS CLIENTES";
+				else if($tipocliente=="TITULAR") echo "TITULARES";
+				else if($tipocliente=="BENEFICIARIO") echo "BENEFICIARIOS";?> en estado <?php if($id_estado==0) echo"TODOS LOS ESTADOS";
+else echo "$estado";?>,   <?php
+if($tipo_ente=="0") echo "TODOS LOS TIPOS DE ENTES";
+ 
+else echo "del Tipo de Ente "."$nom_tipo_ente";  ?>, <?php
+if($id_ente=="0") echo "TODOS LOS ENTES";
+ 
+else echo "del Ente "."$ente ";  ?></td>     
+        </tr>
+
+	<tr> 
+		<td class="fecha" colspan=19>Relaci&oacute;n de <?php echo "$fecre1 al $fecre2";?></td>
+	</tr> 
+	
+	<tr> 
+		<td class="tdcamposc" colspan=19><?php echo $sucursal?></td>
+	</tr>
+</table>
+
+
+<table class="tabla_citas"  cellpadding=0 cellspacing=0 border=0> 
+
+<tr><td colspan=23>&nbsp;</td></tr>
+	<tr> 
+	   	<td class="descrip_main">ORDEN</td>  
+	   	   	   
+ 	   
+<?php 
+	if($tipocliente=='TITULAR' or $tipocliente=='BENEFICIARIO'or $tipocliente=='TODOS'){?>
+	
+		<td class="descrip_main">TITULAR</td>
+	        <td class="descrip_main">CEDULA TITULAR</td>
+	        <td class="descrip_main">ID TITULAR</td>  
+     		<td class="descrip_main">FECHA NAC.</td>
+	        <td class="descrip_main">GENERO</td> 
+	       
+<?php }
+
+	if($tipocliente=='BENEFICIARIO' or $tipocliente=='TODOS') { ?> 
+		<td class="tdcampos">BENEFICIARIO</td>
+	        <td class="tdcampos">CEDULA BENEFICIARIO</td>
+	        <td class="tdcampos">ID BENEFICIARIO</td>
+		<td class="descrip_main">FECHA NAC.</td>
+	        <td class="descrip_main">GENERO</td> 	
+		<td class="tdcampos">PARENTESCO</td> 
+	   
+<?php } 
+	if($tipocliente=='TITULAR' or $tipocliente=='BENEFICIARIO' or $tipocliente=='TODOS') { ?>
+		<td class="tdcampos">CLIENTE</td> 
+		<td class="tdcampos">FECHA RECIBIDO</td> 
+		<td class="descrip_main">HORA 1</td> 
+		<td class="descrip_main">FECHA CONSULTA</td> 
+		<td class="descrip_main">HORA 2</td>
+		<td class="tdcampos">ENTE</td>        
+		<td class="tdcampos">ESTADO PROCESO</td> 
+		<td class="tdcampos">SINIESTRO</td> 
+		<td class="tdcampos">ANALISTA</td> 
+        	<td class="tdcampos">PROVEEDOR</td>    
+        	<td class="tdcampos">TIPO PROVEEDOR</td>                          
+		<td class="tdcampos">DIAGNOSTICO</td>
+		<td class="tdcampos">DESCRIPCION</td>
+		<td class="tdcampos">MONTO ACEPTADO</td> 
+		<td class="tdcampos">MONTO RESERVA</td>   
+
+	</tr>
+<?php }
+
+
+ $i=1;
+		  $bsf=0; 
+		     $fsexot='';
+
+
+	     while($freporte1=asignar_a($rreporte1,NULL,PGSQL_ASSOC))
+		{
+$i++;
+
+
+
+
+
+
+		     $fcedula="";
+		     $fbenf="";  
+	             $fcedulab="";
+		     $fidb="";
+		     $fpropersona="";
+		     $fproclinica="";
+		     $fsexot="";
+		     $fsexob="";
+		     $ffecht="";
+		     $ffechb="";
+		     $fparen="";
+$rem="";			   
+				if ($freporte1[id_beneficiario]>0){
+				  $rbenf=("select clientes.nombres,clientes.apellidos,clientes.cedula,clientes.id_cliente,clientes.fecha_nacimiento,clientes.sexo,beneficiarios.id_parentesco,parentesco.parentesco from clientes,beneficiarios,parentesco where beneficiarios.id_beneficiario='$freporte1[id_beneficiario]' and beneficiarios.id_cliente=clientes.id_cliente and beneficiarios.id_parentesco=parentesco.id_parentesco;");
+			
+				  $qbenf=ejecutar($rbenf);
+				  $databenf=asignar_a($qbenf);
+				  $fbenf="$databenf[nombres] $databenf[apellidos]";  
+				  $fcedulab="$databenf[cedula]";
+				  $fidb="$databenf[id_cliente]";
+				  $fsexob="$databenf[sexo]";
+				  $ffechb="$databenf[fecha_nacimiento]";
+				  $fparen="$databenf[parentesco]";
+			  }else{$fbenf='';}
+
+if($freporte1[sexo]==1){
+	$sexot="MASCULINO";
+	}
+ 	else 
+	{
+	$sexot="FEMENINO";
+	}
+
+	if($fsexob==1){
+	$sexob="MASCULINO";
+	}
+ 	if($fsexob==0) 
+	{
+	$sexob="FEMENINO";
+	}
+
+
+if($freporte1[id_beneficiario]>0){
+	$cli="BENEFICIARIO";
+	}
+ 	else 
+	{
+	$cli="TITULAR";
+	}
+
+/*$qestado_pro=("select estados_procesos.estado_proceso,estados_procesos.tipo_siniestro from estados_procesos where estados_procesos.id_estado_proceso='$freporte1[id_estado_proceso]'");
+$restado_pro=ejecutar($qestado_pro);
+$festado_pro=asignar_a($restado_pro,NULL,PGSQL_ASSOC);*/
+
+if($festado_pro[tipo_siniestro]==0){
+	$siniestro="PENDIENTE";
+	}
+ 	else 
+if($festado_pro[tipo_siniestro]==1){  
+	$siniestro="PAGADO";
+	}
+else
+if($festado_pro[tipo_siniestro]==2){
+	$siniestro="ANULADO";
+	}
+else
+if($festado_pro[tipo_siniestro]==3){
+	$siniestro="RECHAZADO";
+	}
+
+
+$qpropersona=("select personas_proveedores.nombres_prov,personas_proveedores.apellidos_prov, proveedores.tipo_proveedor from personas_proveedores,s_p_proveedores,proveedores where proveedores.id_proveedor='$freporte1[id_proveedor]' and
+s_p_proveedores.id_s_p_proveedor=proveedores.id_s_p_proveedor and 
+personas_proveedores.id_persona_proveedor=s_p_proveedores.id_persona_proveedor");
+$rpropersona=ejecutar($qpropersona);
+$dataproper=asignar_a($rpropersona);
+$fpropersona="$dataproper[nombres_prov] $dataproper[apellidos_prov]";
+$tipo_provper="$dataproper[tipo_proveedor]";
+
+$qproclinica=("select clinicas_proveedores.nombre, proveedores.tipo_proveedor from clinicas_proveedores,proveedores where proveedores.id_proveedor='$freporte1[id_proveedor]' and clinicas_proveedores.id_clinica_proveedor=proveedores.id_clinica_proveedor");
+$rproclinica=ejecutar($qproclinica);
+$dataprocli=asignar_a($rproclinica);
+$fproclinica="$dataprocli[nombre]";
+$tipo_provcli="$dataprocli[tipo_proveedor]";
+
+
+if($tipo_provper=='0'){
+	$tipo_prov="INDIRECTO";
+	}
+ 	else 
+if($tipo_provper=='1'){  
+	$tipo_prov="DIRECTO";
+	}
+
+
+if($tipo_provcli=='0'){
+	$tipo_prov="INDIRECTO";
+	}
+ 	else 
+if($tipo_provcli=='1'){  
+	$tipo_prov="DIRECTO";
+	}
+
+
+
+$qfec=("select para_entes_tmp_$codigo.h,para_entes_tmp_$codigo.fecha_cita from para_entes_tmp_$codigo where para_entes_tmp_$codigo.id_proceso='$freporte1[id_proceso]' " );
+$rfec=ejecutar($qfec);
+$ffec=asignar_a($rfec);
+
+
+if($freporte1[id_servicio]=='1'){
+	$rem="REEMBOLSO";}
+
+
+
+
+ echo"    <tr>
+		<td class=\"tdtituloss\">$freporte1[id_proceso]</td>";
+
+
+
+
+
+
+	if($tipocliente=='TITULAR' or $tipocliente=='BENEFICIARIO' or $tipocliente=='TODOS'){
+ echo"
+		<td class=\"tdtituloss\">$freporte1[n] $freporte1[a]</td>   
+		<td class=\"tdtituloss\">$freporte1[cedula]</td>
+		<td class=\"tdtituloss\">$freporte1[id_cliente]</td>
+		<td class=\"tdtituloss\">$freporte1[fecha_nacimiento]</td>
+		<td class=\"tdtituloss\">$sexot</td>";
+
+}
+
+	if($tipocliente=='BENEFICIARIO' or $tipocliente=='TODOS') { 
+ echo "
+		<td class=\"tdtituloss\">$fbenf</td> 
+		<td class=\"tdtituloss\">$fcedulab</td>
+		<td class=\"tdtituloss\">$fidb</td>
+		<td class=\"tdtituloss\">$ffechb</td>
+		 ";
+
+ if ($ffechb=='')
+$sexob='';
+else{
+if($fsexob==1){
+	$sexob="MASCULINO";
+	}
+ 	else 
+	{
+	$sexob="FEMENINO";
+	}
+}
+echo "
+		<td class=\"tdtituloss\">$sexob</td>
+		<td class=\"tdtituloss\">$fparen</td> ";
+}
+if($tipocliente=='TITULAR' or $tipocliente=='BENEFICIARIO' or $tipocliente=='TODOS') {
+ echo "
+		<td class=\"tdtituloss\">$cli</td>  
+		<td class=\"tdtituloss\">$freporte1[fecha_recibido]</td>  
+		<td class=\"tdtituloss\">$freporte1[hora_creado]</td>
+		<td class=\"tdtituloss\">$ffec[fecha_cita]</td>
+		<td class=\"tdtituloss\">$ffec[h]</td>
+		<td class=\"tdtituloss\">$freporte1[nombre]</td>
+		<td class=\"tdtituloss\">$freporte1[estado_proceso]</td>
+		<td class=\"tdtituloss\">$siniestro</td>
+		<td class=\"tdtituloss\">$freporte1[nombres] $freporte1[apellidos] </td>
+		<td class=\"tdtituloss\">$fpropersona $fproclinica $rem</td>
+		<td class=\"tdtituloss\">$tipo_prov</td>
+";
+
+$qreportegasto=("select para_entes_tmp_$codigo.monto_aceptado,para_entes_tmp_$codigo.monto_reserva,para_entes_tmp_$codigo.nom,para_entes_tmp_$codigo.descripcion from para_entes_tmp_$codigo where para_entes_tmp_$codigo.id_proceso='$freporte1[id_proceso]'");
+$rqreportegasto=ejecutar($qreportegasto);
+
+while($frqreportegasto=asignar_a($rqreportegasto,NULL,PGSQL_ASSOC))
+{		
+$bsf= $bsf+($frqreportegasto[monto_aceptado]);
+$bsfr= $bsf+($frqreportegasto[monto_reserva]); 
+?>
+<tr>
+<?php 
+ if($tipocliente=='BENEFICIARIO' or $tipocliente=='TODOS') {
+
+			
+echo "		<td class=\"tdtituloss\" colspan=23> </td>";}
+else {
+echo"		<td class=\"tdtituloss\" colspan=17> </td>";}
+
+echo "			
+	<td class=\"tdtituloss\">$frqreportegasto[nom]</td>
+	<td class=\"tdtituloss\">$frqreportegasto[descripcion]</td>
+	<td colspan=1 class=\"tdtituloss\">".montos_print($frqreportegasto[monto_aceptado])."</td>   
+	<td colspan=1 class=\"tdtituloss\">".montos_print($frqreportegasto[monto_reserva])."</td> 
+	        </tr>";
+
+$bsf1= $bsf1+($frqreportegasto[monto_aceptado]);	
+$bsf2= $bsf2+($frqreportegasto[monto_reserva]);
+
+}                             
+
+} 
+
+?>
+<tr><td><hr></td></tr>
+<?php
+
+}
+
+?>
+<tr><td >&nbsp;</td></tr>
+
+	   <tr>
+	        <td colspan=7 class="tdtituloss" >&nbsp;&nbsp;&nbsp;&nbsp; Hay un total de <?php echo $i-1; ?> Ordenes </td>
+
+<?php if($tipocliente=='TITULAR'){?>
+	        <td colspan=12 class="tdtitulosd" >Total Bs.S.&nbsp;</td>
+	        <td colspan=1 class="tdtituloss">&nbsp;&nbsp; <?php echo montos_print($bsf1); ?>&nbsp;&nbsp;</td>
+        <td colspan=1 class="tdtituloss">&nbsp;&nbsp; <?php echo montos_print($bsf2); ?>&nbsp;&nbsp;</td>
+<?php }
+else{?>
+		<td colspan=18 class="tdtitulosd" >Total Bs.S.&nbsp;&nbsp;&nbsp;</td>
+	        <td colspan=1 class="tdtituloss"> <?php echo montos_print($bsf1); ?></td>
+	        <td colspan=1 class="tdtituloss"> <?php echo montos_print($bsf2); ?></td>
+<?php }
+
+
+$eli_tab_tem=("drop table para_entes_tmp_$codigo");
+$reli_tab_tem=ejecutar($eli_tab_tem);
+
+?>  
+
+<tr><td Colspan=23>&nbsp; </td></tr>
+
+
+
+
+

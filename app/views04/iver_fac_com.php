@@ -1,0 +1,82 @@
+<?php
+include ("../../lib/jfunciones.php");
+sesion();
+header('Content-Type: text/xml; charset=ISO-8859-1');
+$id_orden_compra=$_REQUEST[id_orden_compra];
+	/* **** Busco las variables globales de iva y retencion**** */
+		$q_variable_iva=("select * from variables_globales where id_variable_global=26
+");
+$r_variable_iva=ejecutar($q_variable_iva);
+$f_variable_iva=asignar_a($r_variable_iva);
+		$q_variable_ret=("select * from variables_globales where id_variable_global=34");
+$r_variable_ret=ejecutar($q_variable_ret);
+$f_variable_ret=asignar_a($r_variable_ret);
+/* **** Fin de buscar las variables globales de iva y retencion**** */
+$q_admin=("select tbl_ordenes_compras.no_factura,admin.* from tbl_ordenes_compras,admin where admin.id_admin=tbl_ordenes_compras.id_admin and tbl_ordenes_compras.id_orden_compra=$id_orden_compra");
+$r_admin=ejecutar($q_admin);
+$f_admin=asignar_a($r_admin);
+?>
+
+<p class="titulo_seccion">Relacion de la Compra Realizada por <?php echo "$f_admin[nombres] $f_admin[apellidos] Factura Num $f_admin[no_factura]"?></p>
+<table class="tabla_citas"  cellpadding=0 cellspacing=0>
+ <tr>		
+<td colspan=1 class="tdtitulos">Insumo</td>	
+<td colspan=1 class="tdtitulos">Cantidad</td>
+<td colspan=1 class="tdtitulos">Monto Unitario</td>
+<td colspan=1 class="tdtitulos">Monto Total</td>
+<td colspan=1 class="tdtitulos">Con Iva</td>
+</tr>
+
+<?php
+$q_compra=("select tbl_insumos.insumo,tbl_insumos_ordenes_compras.* from tbl_insumos,tbl_insumos_ordenes_compras,tbl_ordenes_compras where tbl_ordenes_compras.id_orden_compra=tbl_insumos_ordenes_compras.id_orden_compra and tbl_ordenes_compras.id_orden_compra=$id_orden_compra and tbl_insumos_ordenes_compras.id_insumo=tbl_insumos.id_insumo
+");
+$r_compra=ejecutar($q_compra);
+$monto_factura=0;
+$mon_fac_con_iva=0;
+$mon_fac_sin_iva=0;
+$base_imponible=0;
+$iva_fact=0;
+$iva_ret=0;
+while($f_compra=asignar_a($r_compra,NULL,PGSQL_ASSOC)){ 
+if ($f_compra [iva]==1){
+	$mon_fac_con_iva= $mon_fac_con_iva + (($f_compra [monto_producto] * ($f_variable_iva[comprasconfig] / 100)) + $f_compra [monto_producto]);
+$base_imponible= $base_imponible + $f_compra [monto_producto];
+$iva_fact=$iva_fact + ($f_compra [monto_producto] * ($f_variable_iva[comprasconfig] / 100));
+}
+	else
+	{
+$mon_fac_sin_iva= $monto_factura + $f_compra [monto_producto];
+
+
+}
+$monto_factura=$mon_fac_sin_iva +$mon_fac_con_iva;
+
+?>
+<tr>
+<td colspan=1 class="tdcampos"><?php echo $f_compra [insumo]?></td>	
+<td colspan=1 class="tdcampos"><?php echo $f_compra [cantidad]?></td>
+<td colspan=1 class="tdcampos"><?php echo formato_montos($f_compra [monto_unidad])?></td>
+<td colspan=1 class="tdcampos"><?php echo formato_montos($f_compra [monto_producto])?></td>
+<td colspan=1 class="tdcampos"><?php if ($f_compra [iva]==1) {
+	echo "SI";
+	}
+	else
+	{
+		echo "NO";
+	}?></td>
+	</tr>
+<?php
+}
+?>
+<tr>
+<td colspan=5 class="tdtitulos"><hr></hr></td>
+</tr>
+<tr>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos"></td>
+<td colspan=1 class="tdtitulos">Total</td>
+<td colspan=1 class="tdtitulos"><?php echo formato_montos($monto_factura) ?></td>
+<td colspan=1 class="tdtitulos"></td>
+</tr>
+
+</table>

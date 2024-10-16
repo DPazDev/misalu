@@ -1,0 +1,146 @@
+body {
+	font-family: verdana, arial, sans;
+	font-size: 12px;
+	background-color: white;
+	margin-top: 0px;
+	border:0;
+	overflow:visible;
+	SCROLL="NO";
+}
+
+.tabla_cabecera {
+	border-collapse: collapse;
+	background: url(../../public/images/cabecera.gif) no-repeat;
+	background-color: white;
+	width:768px;
+	margin:auto;
+       	height:70;
+       	border:1;
+}
+
+.tabla_cabecera2 {
+	width:768px;
+	margin:auto;
+	background: url(../../public/images/piesup.gif) no-repeat;
+	border-collapse: collapse;
+	background-color: white;
+
+}
+
+.tabla_cabecera3 {
+	width:768px;
+	text-align: center;
+ 	margin:auto;
+	background: url(../../public/images/menu.gif) no-repeat;
+	border-collapse: collapse;
+	background-color: white;
+
+}
+
+.tabla_cabecera4 {
+text-align: center;
+	width:768px;
+       	height:400px;
+	border:0;
+	background-color: #FDEEEA;
+	margin:auto;
+
+}
+
+.tabla_cabecera5 {
+	width:768px;
+	border-collapse: collapse;
+	background: url(../../public/images/pieinf.gif) no-repeat;
+	background-color: white;
+	margin:auto;
+
+}
+
+
+
+.logo {
+	width: 60%;
+}
+
+.boton_cabecera {
+	width: 10%;
+}
+
+.usuario{
+	width: 240px;
+	height: 25px;
+}
+
+.c_buscar{
+	width: 259px;
+	height: 25px;
+	text-align: center;
+}
+
+.c_buscar2{
+	width: 10px;
+	height: 25px;
+}
+
+.campo_busqueda{
+	width: 150px;
+	height: 12px;
+	font-size: 10px;
+}
+
+.titulo_seccion {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+        border: 1px solid #FE7404;
+        background-color: #FBC1B5;
+}
+.tdtitulos {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: left;
+	font-size: 11px;
+	color: #000000;
+}
+.tdtituloc {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	font-size: 11px;
+	color: #000000;
+}
+.tdtitulosd {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: right;
+	font-size: 11px;
+	color: #000000;
+}
+.tdtituloss {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: left;
+	font-size: 12px;
+	color: #000000;
+}
+.tdcampos {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: left;
+	font-size: 11px;
+	color: #000000;
+}
+.campos {
+	border: 1px solid #8284B1;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #161A68;
+	background-color: #FFDAD7;
+}
+.clientes {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFBA00;
+        font-weight: bold;
+}
+
+
+
