@@ -13,7 +13,7 @@ $MCambio=asignar_a($ModenasCambio,NULL,PGSQL_ASSOC);
       	$NombreMoneda=strtoupper($MCambio[nombre_moneda]);
 				$MonedaSimbolo=$MCambio[moneda].'/'.$MCambio[simbolo];
 $hora=date('h:i:s');
-//TASA del dia1
+//TASA del día1
 $_SESSION['valorcambiario']=$CambioValor;
 $CambioValor=$_SESSION['valorcambiario'];
 echo " Tasa de día: $MonedaSimbolo $CambioValor";
