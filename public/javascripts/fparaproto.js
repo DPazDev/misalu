@@ -6848,6 +6848,7 @@ return true;
 }
 
 function cuadrorecibo(numtitular,numcontrato,numrecibo,numente,numcontizacion){
+  // Función en desuso, actualmente se utiliza reimpcuadrecibo
   a="Original Cliente";
   b="Copia Administrativa";
   c="Copia Intermediario";
@@ -6865,9 +6866,8 @@ function cuadrorecibo(numtitular,numcontrato,numrecibo,numente,numcontizacion){
    if(i==4){
     variable=d;
    }
-    url='views01/impcuadrorecibo.php?titular='+numtitular+'&contrato='+numcontrato+'&recibo='+numrecibo+'&elente='+numente+'&lacotiza='+numcontizacion+'&texo='+variable;
-    imprimir(url);
-
+  url='views01/impcuadrorecibo.php?titular='+numtitular+'&contrato='+numcontrato+'&recibo='+numrecibo+'&elente='+numente+'&lacotiza='+numcontizacion+'&texo='+variable;
+  imprimir(url);
   }
 
 }

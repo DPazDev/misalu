@@ -14,6 +14,7 @@ $fechaincltitu=$_POST[fechinclutitu];
 $titulaestado=$_POST[estadotitu];
 $ciudadtitu=$_POST[ciudadtitu];
 $subdititu=$_POST[sudtitu];
+
 if(empty($subdititu)){
   $subdititu=86;	
 }
@@ -845,10 +846,17 @@ $relog=("insert into logs(log,id_admin,fecha_creado,hora_creado,ip) values (uppe
 $inrelo=ejecutar($relog);
 ?>
 
+
+<!-- Obtenemos las variables necesarias para poder cargar la vista de imprimir el recibo -->
+  <input type="hidden" id="cliencontratos" value="<?php echo $idrecibocontrato?>">
+  <input type="hidden" id="cedulatitu" value="<?php echo $titulcedula?>">
+
+
+
 <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
      <tr> 
          <td colspan=4 class="titulo_seccion">Cliente registrado exitosamente</td>  
-         <td class="titulo_seccion"><label title="Imprimi cuadro recibo" class="boton" style="cursor:pointer" onclick="cuadrorecibo('<?echo $estitu?>','<?echo $contratonumero?>','<?echo $recibonumero?>','<?echo $elidentees?>','<?echo $numerocotizacion?>')" >Imprimir</label></td>
+         <td class="titulo_seccion"><label title="Imprimi cuadro recibo" class="boton" style="cursor:pointer" onclick="reimpcuadrecibo()" >Imprimir</label></td>
          <?echo"<td class=\"titulo_seccion\"><a href=\"views01/anexos.php?titular=$estitu&recibo=$idrecibocontrato\" title=\"Crear hoja de anexos\" class=\"boton\" onclick=\"Modalbox.show(this.href, {title: this.title, width:800, overlayClose: false}); return false;\">Hoja Anexo</a></td>";?>         
      </tr>
 </table>
