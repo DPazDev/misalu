@@ -529,14 +529,8 @@ if($cuanbustitu==0){?>
     			</tr>
     
 			<?php
-			} else {?>
-				<tr>
-					<td>
-						<label title="Procesar cambio" id="titularente" class="boton" style="cursor:pointer" onclick="PorAumento('<?echo $divprin?>','<?echo $recibocontrato?>','<?echo $elaumento?>','<?echo $np?>','<?echo $conaumento?>')" >Procesar </label>
-					</td>
-				</tr>
-			<?php
-			}?>
+			}
+			?>
     		<tr>
 	    		<td class="tdcampos" colspan=7><HR></td>
 	 		</tr>

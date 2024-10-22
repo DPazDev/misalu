@@ -7523,23 +7523,6 @@ function Mostracaract(numpoliza){
              });
 }
 
-function PorAumento(eldiv,idrecibo,caja,numero,aumento){
- porcentaje=contraini=$F(caja);
- tieneaumento=$LF(aumento);
-if(Field.present(caja)==false){
-	 alert("El campo Porcentaje de aumento es necesario!!")
- }else{
- new Ajax.Updater(eldiv,'views02/aumentocontrato.php', {
-                    parameters: {elidrecibo: idrecibo,elporcentaje:porcentaje,elaumento:tieneaumento} ,
-                    onCreate: function(response) {
-                    a= Ajax.activeRequestCount;
-                    if(a>=0)
-                     $('spinnerP1' ).show();
-                    },
-                       onComplete: ContFactura
-                   });
- }
-}
 
 function losRecibosP(recprima){
 	lacelu='';
