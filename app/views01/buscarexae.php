@@ -174,41 +174,38 @@ $ban="";
 
 <?php
 }
-}
-else
-{
-?>
-<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
-<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
-<table class="tabla_cabecera5 colortable" border="0" cellpadding=0 cellspacing=0>
-	<tr> <th colspan=4 style='text-align: center !important;' align='center' class="tdtitulos" ><?php echo "<h2>$tipoExamenesBi<h2>";?></th></tr>
- <?php
-$i=0;
-$ban="";
+} else {
+	?>
+	<link HREF="../../public/stylesheets/estilos.css"   rel="stylesheet" type="text/css">
+	<script language="JavaScript" type="text/javascript" src="../../public/javascripts/scripts.js"></script>
+	<table class="tabla_cabecera5 colortable" border="0" cellpadding=0 cellspacing=0>
+		<tr> <th colspan=4 style='text-align: center !important;' align='center' class="tdtitulos" ><?php echo "<h2>$tipoExamenesBi . $examenes . $id_ente<h2>";?></th></tr>
+	<?php
+	$i=0;
+	$ban="";
+
+	if ($PolizaIdMoneda == 1) { // Poliza en bs
+		$monedaPoliza = $TMonedaBS;
+		$valorTaza = $VarloCambio;
+	} else if ($PolizaIdMoneda == 2) {  // Poliza en dolares
+		$monedaPoliza = $TMonedaUSD;
+		$valorTaza=1;
+	}
 
  while($f_examen=asignar_a($r_examen,NULL,PGSQL_ASSOC)){
 	$i++;
 	$preciobaremo=$f_examen['precio'];
 	$id_moneda=$f_examen['id_moneda'];
-	$valorTaza=1;
-	 if($id_moneda==1){//baremos en bs
-		 $precioBS=$preciobaremo;
-		 $preciobaremo=Formato_Numeros($preciobaremo/$VarloCambio);
-		 $valorTaza=$VarloCambio;//usar Cambio USD * BS
- }
- /////POLIZA
- if($PolizaIdMoneda==2)
- {///si la poliza es en USD
-	 $monto=$preciobaremo;
-	 $TMonedaBS=$TMonedaUSD;
-	 $valorTaza=1;//usar Cambio USD * BS
- }else
- if($PolizaIdMoneda==1)//bs poliza
- {if($id_moneda==1){$monto=$precioBS;}
-	else
-	{$monto=Formato_Numeros($preciobaremo*$VarloCambio);}
-	$valorTaza=$VarloCambio;//usar Cambio USD * BS
- }
+
+	$precioPoliza = $preciobaremo * $valorTaza;
+
+	if ($id_moneda == 1) { // Baremos en bs
+		$monedaBaremo = $TMonedaBS;
+	} else if ($id_moneda == 2) { // Baremos en dolares
+		$monedaBaremo = $TMonedaUSD;
+	}
+
+	
 	?>
 
 	<tr>
@@ -216,10 +213,20 @@ $ban="";
 
 		<td colspan=2  class="tdtitulos"><?php echo $f_examen[imagenologia_bi]?></td>
 		<td colspan=3  class="tdcampos">
-		<input class="campos" type="hidden" id="idexamen_<?php echo $i?>" name="idexamenl" maxlength='128' size='10' value="<?php echo $f_examen[id_imagenologia_bi]?>">
-		<input class="campos" type="hidden" id="examen_<?php echo $i?>" name="examenl" maxlength='128' size='10' value="<?php echo $f_examen[imagenologia_bi]?>">
-		<input class="campos" type="text" id="cambio_<?php echo $i?>" name="cambio" maxlength='128' size="5" value="<?php echo $monto;?>" Oninput="return validarNumero(this);" OnChange="p=$F('cambio_<?php echo $i?>');$('honorarios_<?php echo $i?>').value=p*<?php echo $valorTaza?>;"><?php echo $TMonedaUSD;?>
-		<input class="campos" type="text" id="honorarios_<?php echo $i?>" name="examen" maxlength='128' size='10' value="<?php echo $monto;?>" OnChange="return validarNumero(this);"  ><?php echo $TMonedaBS;?>
+		<input
+			class="campos" type="hidden" id="idexamen_<?php echo $i?>" name="idexamenl" maxlength='128' size='10' value="<?php echo $f_examen[id_imagenologia_bi]?>"
+		>
+		<input
+			class="campos" type="hidden" id="examen_<?php echo $i?>" name="examenl" maxlength='128' size='10' value="<?php echo $f_examen[imagenologia_bi]?>"
+		>
+		<input
+			class="campos" type="text" id="cambio_<?php echo $i?>" name="cambio" maxlength='128' size="5" value="<?php echo $preciobaremo;?>" Oninput="return validarNumero(this);" OnChange="p=$F('cambio_<?php echo $i?>');$('honorarios_<?php echo $i?>').value=p*<?php echo $valorTaza?>;"
+		>
+		<?php echo $monedaBaremo ;?>
+		<input
+			class="campos" type="text" id="honorarios_<?php echo $i?>" name="examen" maxlength='128' size='10' value="<?php echo $precioPoliza;?>" OnChange="return validarNumero(this);"
+		>
+		<?php echo $monedaPoliza;?>
 		<select  id="coment_<?php echo $i?>"  name="coment" class="campos" >
 
 				<option value="iNFORMADA"> INFORMADA</option>
