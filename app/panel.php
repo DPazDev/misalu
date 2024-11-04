@@ -1227,7 +1227,7 @@ function pago_recibo(elem){
 <table  class="tabla_cabecera" >
   <tr>
       <tr>
-		<td class="logo"><div style="position:relative"><img src="../public/images/banner_cancer-mama.png" width="100%" hspace="" height="" vspace="" /></div> </td>
+		<td class="logo"><div style="position:relative"><img src="../public/images/banner_navidad.png" width="100%" hspace="" height="" vspace="" /></div> </td>
     </tr>
    </tr>
 </table>

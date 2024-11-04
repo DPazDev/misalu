@@ -14,7 +14,7 @@ echo cabecera(sistema);
 
       <!-- imagen portada -->
       <section class="contenedor_imagen">
-        <img src="../public/images/login_portada_cancer-mama-basico.png">
+        <img src="../public/images/diseño_navidad_basico.gif">
       </section>
 
 		<p class="texto">

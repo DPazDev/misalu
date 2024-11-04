@@ -53,7 +53,7 @@ echo cabecera(sistema);
 
       <!-- imagen portada -->
       <section class="contenedor_imagen">
-        <img src="../public/images/login_portada_cancer-mama.png">
+        <img src="../public/images/diseño_navidad.gif">
       </section>
 
       <!-- inputs para insertar las credenciales -->

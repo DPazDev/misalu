@@ -1,3 +1,33 @@
+const maxSnowflakes = 50; // Número máximo de copos en pantalla
+let activeSnowflakes = 0;
+
+function createSnowflake() {
+    if (activeSnowflakes >= maxSnowflakes) return; // Limita la creación de copos
+
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.textContent = '❄';
+
+    // Posición y estilo aleatorios
+    snowflake.style.left = `${Math.random() * 100}vw`;
+    snowflake.style.fontSize = `${Math.random() * 0.8 + 0.2}em`;
+    snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+
+    // Añadir copo al body y aumentar el contador de copos activos
+    document.body.appendChild(snowflake);
+    activeSnowflakes++;
+
+    // Eliminar copo tras terminar la animación y reducir el contador
+    snowflake.addEventListener('animationend', () => {
+        snowflake.remove();
+        activeSnowflakes--;
+    });
+}
+
+// Crear copos a intervalos, respetando el máximo de copos activos
+setInterval(createSnowflake, 200);
+
+
 function nuevoAjax(){
   var xmlhttp=false;
   try {
