@@ -5,30 +5,34 @@ $cedula=$_REQUEST['cedula'];
 $numcontr=$_REQUEST['recibo'];
 
 // Buscar datos del plan
-$sqlDatosPlan = "select  clientes.cedula,clientes.id_cliente,clientes.nombres,clientes.apellidos,
-titulares.id_titular,tbl_contratos_entes.numero_contrato,tbl_contratos_entes.id_ente,
-tbl_contratos_entes.inicialcon,
-tbl_contratos_entes.cuotacon,
-tbl_contratos_entes.fecha_creado,
-tbl_recibo_contrato.id_comisionado,
-tbl_recibo_contrato.num_recibo_prima 
-from
-clientes,titulares,tbl_contratos_entes,tbl_recibo_contrato,tbl_caract_recibo_prima
-where 
-clientes.id_cliente=titulares.id_cliente and
-titulares.id_titular=tbl_caract_recibo_prima.id_titular and
-tbl_caract_recibo_prima.id_recibo_contrato=tbl_recibo_contrato.id_recibo_contrato and
-tbl_recibo_contrato.id_contrato_ente=tbl_contratos_entes.id_contrato_ente and
-clientes.cedula='$cedula' and tbl_recibo_contrato.id_recibo_contrato='$numcontr' and
-tbl_recibo_contrato.id_contrato_ente=tbl_contratos_entes.id_contrato_ente 
-group by 
-clientes.cedula,clientes.id_cliente,clientes.nombres,clientes.apellidos,
-titulares.id_titular,tbl_contratos_entes.numero_contrato,tbl_contratos_entes.id_ente,
-tbl_contratos_entes.fecha_creado,
-tbl_contratos_entes.inicialcon,
-tbl_contratos_entes.cuotacon,
-tbl_recibo_contrato.id_comisionado,
-tbl_recibo_contrato.num_recibo_prima;";
+$sqlDatosPlan = "SELECT 
+        clientes.cedula,
+        clientes.id_cliente,
+        clientes.nombres,
+        clientes.apellidos,
+        titulares.id_titular,
+        tbl_contratos_entes.numero_contrato,
+        tbl_contratos_entes.id_ente,
+        tbl_contratos_entes.inicialcon,
+        tbl_contratos_entes.cuotacon,
+        tbl_contratos_entes.fecha_creado,
+        tbl_recibo_contrato.id_comisionado,
+        tbl_recibo_contrato.direccion_cobro,
+        tbl_recibo_contrato.num_recibo_prima
+    FROM 
+        clientes,
+        titulares,
+        tbl_contratos_entes,
+        tbl_recibo_contrato,
+        tbl_caract_recibo_prima
+    WHERE 
+        clientes.id_cliente = titulares.id_cliente AND
+        titulares.id_titular = tbl_caract_recibo_prima.id_titular AND
+        tbl_caract_recibo_prima.id_recibo_contrato = tbl_recibo_contrato.id_recibo_contrato AND
+        tbl_recibo_contrato.id_contrato_ente = tbl_contratos_entes.id_contrato_ente AND
+        clientes.cedula = '$cedula' AND 
+        tbl_recibo_contrato.id_recibo_contrato = '$numcontr' AND
+        tbl_recibo_contrato.id_contrato_ente = tbl_contratos_entes.id_contrato_ente;";
 
 $consultaDatosPlan=ejecutar($sqlDatosPlan);
 $datosPlan=assoc_a($consultaDatosPlan);
@@ -43,6 +47,7 @@ $nomCompleto="$datosPlan[nombres] $datosPlan[apellidos]";
 $porcentajeInicial = $datosPlan[inicialcon];
 $numCuotas = $datosPlan[cuotacon];
 $idComisionado = $datosPlan[id_comisionado];
+$direccionCobro = $datosPlan[direccion_cobro];
 $fechaCreado = $datosPlan[fecha_creado];
 
 
@@ -124,9 +129,14 @@ $precioXCuota = round (($precioPlan - $pagoInicial) / $numCuotas, 2);
 
 
 //Buscar comisionado
-$sqlComisionado=("select comisionados.nombres,comisionados.apellidos,comisionados.codigo
-from comisionados 
-where comisionados.id_comisionado=$idComisionado;");
+$sqlComisionado="select
+        comisionados.nombres,
+        comisionados.apellidos,
+        comisionados.codigo
+    from
+        comisionados 
+    where
+        comisionados.id_comisionado=$idComisionado;";
 
 $consultaComisionado = ejecutar($sqlComisionado);
 $comisionado = assoc_a($consultaComisionado);
@@ -273,9 +283,6 @@ $comisionadoCodigo = $comisionado[codigo];
             <div class="area1">
                 <p class="bordes"><span class="negrita">Titular:</span> <?php echo $nomCompleto;?></p>
                 <p class="bordes"><span class="negrita">Cédula/R.I.F: </span><?php echo $cedula;?></p>
-            </div>
-            <div class="bordes">
-                <p><span class="negrita">Dirección de cobro: </span><?php echo $datosTitular["direccion_hab"] ?></p>
             </div>
             <div class="columna3">
                 <p class="bordes"><span class="negrita">Estado: </span><?php echo $datosTitular["estado"] ?></p>
@@ -427,7 +434,7 @@ $comisionadoCodigo = $comisionado[codigo];
             <div class="columna3">
                 <p class="bordes negrita">Intermediario.</p>
                 <p class="bordes negrita centro">Código.</p>
-                <p class="bordes negrita derecha">Referencia.</p>
+                <p class="bordes negrita derecha">Dirección de Cobro</p>
             </div>
             <?php
             
@@ -435,7 +442,9 @@ $comisionadoCodigo = $comisionado[codigo];
                 echo '<div class="columna3">';
                     echo '<p class="bordes">'. $comisionadoNombre .'</p>';
                     echo '<p class="bordes centro">'. $comisionadoCodigo .'</p>';
-                    echo '<p class="bordes derecha">'. '000000.00' .'</p>';
+
+                    // Para contratos antiguos que no tenían dirección de cobro se muestra hola, mientras que para los demas si se muestra la dirección de cobro
+                    echo '<p class="bordes derecha">'. ($direccionCobro==null ? "hola" : $direccionCobro) .'</p>';
                 echo '</div>';
             }
 

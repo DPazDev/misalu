@@ -6540,6 +6540,7 @@ function guardcontrato() {
   variniciocontrato = $F("fechainicontrato");
   varfindocontrato = $F("fechfincontrato");
   varcomision = $F("comisionado");
+  direccionCobro = $F("direccioncobro");
   varcotifin = $F("cotifin");
   varsubdivi = $F("cliensubd");
   var vararrayben = new Array();
@@ -6560,6 +6561,9 @@ function guardcontrato() {
       // VALIDA QUE SE HAYA SELECCIONADO UN COMISIONADO
       if (varcomision == "") {
         alert(`Debe seleccionar un comisionado.`);
+        problema = 1;
+      } else if (direccionCobro == "") {
+        alert(`Debe Introducir la Dirección de Cobro`);
         problema = 1;
       } else {
         // VALIDA QUE LOS CAMPOS FECHA INICIO Y FIN DE CONTRATO NO ESTÉN VACÍOS
@@ -6779,57 +6783,36 @@ function guardcontrato() {
       method: "post",
       asynchronous: true,
       postBody:
-        "arreglo=" +
-        arreglo +
-        "&frenofami=" +
-        apunta +
-        "&cedulatitu=" +
-        varcedclien +
-        "&nombtitu=" +
-        varnomtitular +
-        "&apelltitu=" +
-        varapelltitular +
-        "&fechinclutitu=" +
-        varfinclu +
-        "&ciudadtitu=" +
-        varciudatitu +
-        "&directitu=" +
-        vardiretitu +
-        "&comenttitu=" +
-        varcomenttitu +
-        "&cotipoli=" +
-        varcotizacititu +
-        "&matertitusi=" +
-        varmatersititu +
-        "&matertituno=" +
-        varmaternotitu +
-        "&maternoben=" +
-        varotramatbeno +
-        "&matersiben=" +
-        varotramatbesi +
-        "&inicontrato=" +
-        variniciocontrato +
-        "&fincontrato=" +
-        varfindocontrato +
-        "&estadotitu=" +
-        varestadotitu +
-        "&fechanactitu=" +
-        varfechnacititu +
-        "&generotitu=" +
-        vartitugenero +
-        "&cotizacion=" +
-        varcomision +
-        "&elidcoti=" +
-        varcotifin +
-        "&sudtitu=" +
-        varsubdivi,
+        "arreglo=" + arreglo +
+        "&frenofami=" + apunta +
+        "&cedulatitu=" + varcedclien +
+        "&fechinclutitu=" + varfinclu +
+        "&ciudadtitu=" + varciudatitu +
+        "&directitu=" + vardiretitu +
+        "&comenttitu=" + varcomenttitu +
+        "&cotipoli=" + varcotizacititu +
+        "&matertitusi=" + varmatersititu +
+        "&matertituno=" + varmaternotitu +
+        "&maternoben=" + varotramatbeno +
+        "&matersiben=" + varotramatbesi +
+        "&inicontrato=" + variniciocontrato +
+        "&fincontrato=" + varfindocontrato +
+        "&estadotitu=" + varestadotitu +
+        "&generotitu=" + vartitugenero +
+        "&cotizacion=" + varcomision +
+        "&direccioncobro=" + direccionCobro +
+        "&elidcoti=" + varcotifin +
+        "&sudtitu=" + varsubdivi,
       onCreate: function (response) {
         a = Ajax.activeRequestCount;
-        if (a >= 0) $("spinnerP1").show();
+        if (a >= 0) {
+          $("spinnerP1").show();
+        }
       },
       onComplete: mostraCarga,
     });
   }
+  
 }
 
 function mostraCarga(req){

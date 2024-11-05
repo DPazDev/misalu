@@ -156,8 +156,9 @@ if($siexiclien>=1){
 			 </select>  </td>	 
 	</tr> 
     <tr>
-         <td class="tdtitulos" colspan="1">Cotizaci&oacute;n:</td>
-               <td class="tdcampos"  colspan="1"><select id="cliencotizac" class="campos" style="width: 190px;" onchange="verplanes(this.value,'<?echo $generclien?>','<?echo $ceduclien?>');comisionados();maternidad('<?echo $generclien?>','<?echo $ceduclien?>')">
+         <td class="tdtitulos" colspan="1">Cotización:</td>
+               <td class="tdcampos"  colspan="1">
+                <select id="cliencotizac" class="campos" style="width: 190px;" onchange="verplanes(this.value,'<?echo $generclien?>','<?echo $ceduclien?>');comisionados();maternidad('<?echo $generclien?>','<?echo $ceduclien?>')">
                               <option value=""></option>
 			   <?php  while($vercotiza=asignar_a($repcuancotiza,NULL,PGSQL_ASSOC)){?>
                               <option value="<?php echo "$vercotiza[id_cliente_cotizacion]-$vercotiza[id_poliza]"?>"> <?php echo "$vercotiza[nombre_poliza] -|- $vercotiza[no_cotizacion]"?></option>
@@ -167,12 +168,21 @@ if($siexiclien>=1){
 			 </select>  
              </td> 
      </tr>
-     <tr>
+<tr>
 	<td class="tdtitulos" colspan="1">Comisionado:</td>
-	 <td class="tdcampos" colspan="1"><div id="comisionados"><select disabled="disabled" class="campos" style="width: 130px;" >
-	                               <option value="0">
-				       </select>
-	 </tr>
+  <td class="tdcampos" colspan="1">
+    <div id="comisionados">
+      <select disabled="disabled" class="campos" style="width: 130px;" >
+        <option value="0">
+      </select>
+</tr>
+
+<tr>
+  <td class="tdtitulos" colspan="1">Dirección de Cobro</td>
+  <td class="tdcampos" colspan="3">
+    <textarea cols=60 rows=2 id="direccioncobro" class="campos"></textarea>
+  </td>
+</tr>
      
 </table>
 <div id='sihaymater'></div>
