@@ -443,8 +443,8 @@ $comisionadoCodigo = $comisionado[codigo];
                     echo '<p class="bordes">'. $comisionadoNombre .'</p>';
                     echo '<p class="bordes centro">'. $comisionadoCodigo .'</p>';
 
-                    // Para contratos antiguos que no tenían dirección de cobro se muestra hola, mientras que para los demas si se muestra la dirección de cobro
-                    echo '<p class="bordes derecha">'. ($direccionCobro==null ? "hola" : $direccionCobro) .'</p>';
+                    // Para contratos antiguos que no tenían dirección de cobro se muestra Mérida, mientras que para los demas si se muestra la dirección de cobro
+                    echo '<p class="bordes derecha">'. ($direccionCobro==null ? "Mérida" : $direccionCobro) .'</p>';
                 echo '</div>';
             }
 
@@ -463,7 +463,7 @@ $comisionadoCodigo = $comisionado[codigo];
                     <p class="letra-pequenia mb-5">Firma:</p>
                 </div>
                 <div class="bordes">
-                    <p class="letra-pequenia mb-5">Por la empresa de Medicina Prepagada Representante Nombre y Apellido:</p>
+                    <p class="letra-pequenia mb-5">Por la Empresa de Medicina Prepagada Representante Nombre y Apellido:</p>
                     <p class="letra-pequenia mb-5">Cargo:</p>
                     <p class="letra-pequenia mb-5">Firma:</p>
                 </div>

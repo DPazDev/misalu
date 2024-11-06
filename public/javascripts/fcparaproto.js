@@ -2629,29 +2629,46 @@ function mos_mod_fec_pago(req){
 	
   $('bus_regrec_pago').innerHTML= req.responseText;
 }
-
-
 /* **** fin de anu un recibo de  pago  de poliza **** */
 
 
-function imprimir_recibo_pago(nombres,rifs,numeros_contrato,numeros_rec_prima,conceptos,montos,saldos_favor,saldos_deudor,fechas_pago,fechas_proxima_pago,series,numeros_recibo,total_prima,cuota,id_recibo_contrato){
-nombre=nombres;
-rif=rifs;
-numero_contrato=numeros_contrato;
-numero_rec_prima=numeros_rec_prima;
-concepto=conceptos;
-monto=montos;
-saldo_favor=saldos_favor;
-saldo_deudor=saldos_deudor;
-fecha_pago=fechas_pago;
-fecha_proxima_pago=fechas_proxima_pago;
-serie=series;
-numero_recibo=numeros_recibo;
-total_prima=total_prima;
-cuota=cuota;
-id_recibo_contrato=id_recibo_contrato;
-	
-url='views04/irecibo_pago.php?concepto='+conceptos+'&monto='+monto+'&saldo_favor='+saldo_favor+'&saldo_deudor='+saldo_deudor+'&fecha_pago='+fecha_pago+'&fecha_proxima_pago='+fecha_proxima_pago+'&serie='+serie+'&numero_recibo='+numero_recibo+'&nombre='+nombre+'&rif='+rif+'&numero_contrato='+numero_contrato+'&numero_rec_prima='+numero_rec_prima+'&total_prima='+total_prima+'&cuota='+cuota+'&id_recibo_contrato='+id_recibo_contrato;
+function imprimir_recibo_pago(nombres,rifs,numeros_contrato,numeros_rec_prima,conceptos,montos,saldos_favor,saldos_deudor,fechas_pago,fechas_proxima_pago,series,numeros_recibo,total_prima,cuota,id_recibo_contrato, direccionCobro, idComisionado){
+
+	nombre=nombres;
+	rif=rifs;
+	numero_contrato=numeros_contrato;
+	numero_rec_prima=numeros_rec_prima;
+	concepto=conceptos;
+	monto=montos;
+	saldo_favor=saldos_favor;
+	saldo_deudor=saldos_deudor;
+	fecha_pago=fechas_pago;
+	fecha_proxima_pago=fechas_proxima_pago;
+	serie=series;
+	numero_recibo=numeros_recibo;
+	total_prima=total_prima;
+	cuota=cuota;
+	id_recibo_contrato=id_recibo_contrato;
+		
+	url = 'views04/irecibo_pago.php?' +
+	'concepto=' + conceptos +
+	'&monto=' + monto +
+	'&saldo_favor=' + saldo_favor +
+	'&saldo_deudor=' + saldo_deudor +
+	'&fecha_pago=' + fecha_pago +
+	'&fecha_proxima_pago=' + fecha_proxima_pago +
+	'&serie=' + serie +
+	'&numero_recibo=' + numero_recibo +
+	'&nombre=' + nombre +
+	'&rif=' + rif +
+	'&direccion_cobro=' + direccionCobro +
+	'&id_comisionado=' + idComisionado +
+	'&numero_contrato=' + numero_contrato +
+	'&numero_rec_prima=' + numero_rec_prima +
+	'&total_prima=' + total_prima +
+	'&cuota=' + cuota +
+	'&id_recibo_contrato=' + id_recibo_contrato;
+
   	imprimir(url);
 }
 
