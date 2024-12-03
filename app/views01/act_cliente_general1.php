@@ -7,12 +7,23 @@ $loparentesco=("select parentesco.id_parentesco,parentesco.parentesco
        from parentesco 
        where (id_parentesco<>17 and id_parentesco<>18) order by parentesco;");
 $ceduclien=$_REQUEST['lacedula'];
-$datbasicos=("select clientes.id_cliente,clientes.nombres,clientes.apellidos,clientes.fecha_nacimiento,
-              clientes.sexo,clientes.direccion_hab,clientes.telefono_hab,clientes.telefono_otro,
-              clientes.celular,clientes.cedula,clientes.comentarios 
-             from 
-               clientes 
-             where clientes.cedula='$ceduclien';");
+$datbasicos="select
+    clientes.id_cliente,
+    clientes.nombres,
+    clientes.apellidos,
+    clientes.fecha_nacimiento,    
+    clientes.sexo,
+    clientes.direccion_hab,
+    clientes.telefono_hab,
+    clientes.telefono_otro,
+    clientes.celular,
+    clientes.cedula,
+    clientes.comentarios,
+    clientes.email
+  from 
+    clientes 
+  where
+    clientes.cedula='$ceduclien';";
 $repdatbasico=ejecutar($datbasicos);
 $cuanbasico=num_filas($repdatbasico);
 $lobasicos=assoc_a($repdatbasico);
@@ -49,7 +60,7 @@ if($cuanbasico>=1){
 if($cuanbasico==0){?>
   <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
      <tr> 
-         <td colspan=4 class="titulo_seccion"><?echo "No existe informaci&oacute;n con la c&eacute;dula No.$ceduclien";?></td>  
+         <td colspan=4 class="titulo_seccion"><?echo "No existe informaci&oacute;n con la cédula No.$ceduclien";?></td>  
      </tr>
 </table>	 
 
@@ -61,46 +72,62 @@ if($cuanbasico==0){?>
      </tr>
 </table>
 <table class="tabla_citas"  cellpadding=0 cellspacing=0>
-     <tr>
-       <td class="tdtitulos" colspan="1">C&eacute;dula:</td>
-       <td class="tdcampos"  colspan="1"><input type="text" class="campos" id="cedclien" value="<?echo $lobasicos['cedula'];?>"> </td>  
-     </tr>
-      <tr>
-       <input type="hidden" id="idclien" value="<?echo $lobasicos['id_cliente'];?>">   
-     </tr>
-	 <tr>
-	   <td class="tdtitulos" colspan="1">Nombre:</td>
-        <td class="tdcampos"  colspan="1"><input type="text" id="cliennombre" class="campos" size="30" value="<? echo $lobasicos[nombres];?>"></td>
-       <td class="tdtitulos" colspan="1">Apellido:</td>
-       <td class="tdcampos" colspan="1"><input type="text" id="clienapellido"  class="campos" size="30" value="<? echo $lobasicos[apellidos];?>"></td>
-	 </tr>   
-	 <tr>
-	   <td class="tdtitulos" colspan="1">Genero:</td>
-        <td class="tdcampos"  colspan="1"><select name="cliengenero1" id="cliengenero1" class="campos" style="width: 100px;">
-                          <?if($lobasicos[sexo]==0){
-							   $mesgenero="Femenino";
-							  }else{
-								$mesgenero="Masculino";   
-								  }?>
-							<option value="<?echo $lobasicos[sexo]?>"><?echo $mesgenero?></option>
-                            <option value="0">Femenino</option>
-							<option value="1">Masculino</option>
-						</select>	                    
-		
-        </td>
-       <td class="tdtitulos" colspan="1">Fecha Nacimiento:</td>
-       <td class="tdcampos" colspan="1"><input  type="text" size="10" id="fnaci1" class="campos" maxlength="10" value="<?echo $lobasicos[fecha_nacimiento];?>">
-	                  <a href="javascript:void(0);" onclick="g_Calendar.show(event, 'fnaci1', 'yyyy-mm-dd')" title="Ver calendario">
-	                 <img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a></td>
+  <tr>
+    <td class="tdtitulos" colspan="1">Cédula:</td>
+    <td class="tdcampos"  colspan="1"><input type="text" class="campos" id="cedclien" value="<?echo $lobasicos['cedula'];?>"> </td>  
+    
+    <td class="tdtitulos" colspan="1">Genero:</td>
+    <td class="tdcampos"  colspan="1">
+      <select name="cliengenero1" id="cliengenero1" class="campos" style="width: 100px;">
+        <option value="0" <?php echo $lobasicos[sexo] == 0 ? "selected" : "" ?> >Femenino</option>
+        <option value="1" <?php echo $lobasicos[sexo] == 1 ? "selected" : "" ?> >Masculino</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <input type="hidden" id="idclien" value="<?echo $lobasicos['id_cliente'];?>">   
+  </tr>
+  <tr>
+    <td><br></td>
+  </tr>
+  <tr>
+    <td class="tdtitulos" colspan="1">Nombre:</td>
+    <td class="tdcampos"  colspan="1">
+      <input type="text" id="cliennombre" class="campos" size="30" value="<? echo $lobasicos[nombres];?>">
+    </td>
+    <td class="tdtitulos" colspan="1">Apellido:</td>
+    <td class="tdcampos" colspan="1">
+      <input type="text" id="clienapellido"  class="campos" size="30" value="<? echo $lobasicos[apellidos];?>">
+    </td>
+  </tr>   
+  <tr>
+    <td class="tdtitulos" colspan="1">Email:</td>
+    <td class="tdcampos"  colspan="1">
+      <input type="text" id="cliencorreo"  class="campos" size="30" value="<? echo $lobasicos[email];?>">
+    </td>
+
+    <td class="tdtitulos" colspan="1">Fecha Nacimiento:</td>
+    <td class="tdcampos" colspan="1">
+      <input  type="text" size="10" id="fnaci1" class="campos" maxlength="10" value="<?echo $lobasicos[fecha_nacimiento];?>">
+      <a href="javascript:void(0);" onclick="g_Calendar.show(event, 'fnaci1', 'yyyy-mm-dd')" title="Ver calendario">
+      <img src="../public/images/calendar.gif" class="cp_img" alt="Seleccione la Fecha"></a>
+    </td>
 	 </tr> 
-	 <tr>
-	   <td class="tdtitulos" colspan="1">Tel&eacute;fono:</td>
-        <td class="tdcampos"  colspan="1"><input type="text" id="telefonohab" class="campos" size="30" value="<? echo $lobasicos[telefono_hab];?>"></td>
-       <td class="tdtitulos" colspan="1">Celular:</td>
-       <td class="tdcampos" colspan="1"><input type="text" id="telecelular"  class="campos" size="30" value="<? echo $lobasicos[celular];?>"></td>
-	 </tr> 
+  <tr>
+    <td class="tdtitulos" colspan="1">Teléfono:</td>
+    <td class="tdcampos"  colspan="1">
+      <input type="text" id="telefonohab" class="campos" size="30" value="<? echo $lobasicos[telefono_hab];?>">
+    </td>
+    <td class="tdtitulos" colspan="1">Celular:</td>
+    <td class="tdcampos" colspan="1">
+      <input type="text" id="telecelular"  class="campos" size="30" value="<? echo $lobasicos[celular];?>">
+    </td>
+  </tr>
+  <tr>
+    <td><br></td>
+  </tr>
 	  <tr> 
-	   <td class="tdtitulos" colspan="1">Direcci&oacute;n:</td>
+	   <td class="tdtitulos" colspan="1">Dirección:</td>
        <td class="tdcampos" colspan="3"><TEXTAREA COLS=60 ROWS=2 id="cliendirr1" class="campos"><?echo $lobasicos[direccion_hab]?></TEXTAREA></td>
 	</tr>  
       <tr> 

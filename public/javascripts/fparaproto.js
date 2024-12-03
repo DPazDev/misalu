@@ -5331,8 +5331,18 @@ function validclientetitular(){
                               else{
                     $('titularboton').hide();
                     new Ajax.Updater('clientes', 'views01/finclientitu.php', {
-	            parameters: {lacedula: varcedula, lanombre: varnombre, lacorreo:varcorreo, laapelli: varapellido, lagenero: vargenero, latelefono: varteleha,
-                                 lafenaci: varfenaci, laciudad: varciud, ladirecc: vardire, lacoment: varcoment},
+	            parameters: {
+                lacedula: varcedula,
+                lanombre: varnombre,
+                lacorreo:varcorreo,
+                laapelli: varapellido,
+                lagenero: vargenero,
+                latelefono: varteleha,
+                lafenaci: varfenaci,
+                laciudad: varciud,
+                ladirecc: vardire,
+                lacoment: varcoment
+              },
 	            onCreate: function(response) {
                     a= Ajax.activeRequestCount;
                     if(a>=0)
@@ -6993,7 +7003,8 @@ function CambiosGeneral(){
 	vardirecci=$F('cliendirr1');
 	varhaytitu=$F('sevetitu');
 	varhaybeni=$F('sevebene');
-        varcomenta=$F('cliencoment');
+  varcomenta=$F('cliencoment');
+  varcorreo=$F('cliencorreo');
 	datodeltitu=0;
 	datodelbenefi=0;
    if(varhaytitu>=1){
@@ -7021,16 +7032,25 @@ function CambiosGeneral(){
 	  }
    }
 	new Ajax.Updater('datosactualizados', 'views01/act_cliente_general2.php', {
-	            parameters: {clienteid: varelcliente,lacedula: varcedula,nombre: varnombre, apellido: varapellido, genero: vargenero,
-	                         nacimiento: varfenaci, habtelef: vartelefhab, celulartelef: varcelular,
-	                         direccion: vardirecci, sihaytitu: datodeltitu, sihaybenfi: datodelbenefi,cliencoment: varcomenta },
-	            onCreate: function(response) {
-                    a= Ajax.activeRequestCount;
-                    if(a>=0)
-	             $('spinnerP1' ).show();
-                    },
-	               onComplete: ContFactura
-                   });
+    parameters: {
+      clienteid: varelcliente,
+      lacedula: varcedula,
+      nombre: varnombre,
+      apellido: varapellido,
+      genero: vargenero,
+      nacimiento: varfenaci,
+      habtelef: vartelefhab,
+      celulartelef: varcelular,
+      direccion: vardirecci,
+      sihaytitu: datodeltitu,
+      sihaybenfi: datodelbenefi,
+      cliencoment: varcomenta,
+      cliencorreo: varcorreo
+    }, onCreate: function(response) {
+        a= Ajax.activeRequestCount;
+        if(a>=0) $('spinnerP1' ).show();
+    }, onComplete: ContFactura
+  });
 
 }
 function CargarArchi(){

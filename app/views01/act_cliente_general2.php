@@ -11,6 +11,7 @@ $telehab=$_REQUEST['habtelef'];
 $telecelu=$_REQUEST['celulartelef'];
 $ladireccion=$_REQUEST['direccion'];
 $elcomentario=strtoupper($_REQUEST['cliencoment']);
+$correo=$_REQUEST['cliencorreo'];
 $titulares=$_REQUEST['sihaytitu'];
 $beneficiaros=$_REQUEST['sihaybenfi'];
 $arreglotitus=explode(",",$titulares);
@@ -25,10 +26,22 @@ $elid=$_SESSION['id_usuario_'.empresa];
 $elus=$_SESSION['nombre_usuario_'.empresa];
 
 //primero actualizamos todos los datos del cliente
-$updacliente=("update clientes set cedula='$ceduclien',nombres='$elnombre',apellidos='$elapellido',sexo='$elgenero',
-               fecha_nacimiento='$elnacimiento',telefono_hab='$telehab',celular='$telecelu',direccion_hab='$ladireccion',
-               edad=$edadcliente,comentarios='$elcomentario' 	  
-              where id_cliente=$clienteid;");
+$updacliente="UPDATE
+		clientes 
+	SET 
+		cedula = '$ceduclien',
+		nombres = '$elnombre',
+		apellidos = '$elapellido',
+		sexo = '$elgenero',
+		fecha_nacimiento = '$elnacimiento',
+		telefono_hab = '$telehab',
+		celular = '$telecelu',
+		direccion_hab = '$ladireccion',
+		edad = $edadcliente,
+		comentarios = '$elcomentario',
+		email = '$correo'
+	WHERE 
+		id_cliente = $clienteid;";
 $repupdcliente=ejecutar($updacliente);        
 //Guardar los datos en la tabla logs;
 $mensaje="$elus, ha modificado al Cliente con el id_cliente $clienteid";
