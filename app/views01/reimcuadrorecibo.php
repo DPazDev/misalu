@@ -117,9 +117,13 @@ $moneda = assoc_a($consultaMoneda);
 
 
 // Selecciona el precio del plan buscando el titular de ese plan.
-$sqlPrecioPlan = "SELECT SUM(monto_prima) AS suma_total
-FROM tbl_caract_recibo_prima
-WHERE id_titular = '$idTitular' AND id_recibo_contrato = '$numcontr' AND id_beneficiario = 0";
+$sqlPrecioPlan = "SELECT
+        SUM(monto_prima) AS suma_total
+    FROM
+        tbl_caract_recibo_prima
+    WHERE
+        id_titular = '$idTitular' AND
+        id_recibo_contrato = '$numcontr'";
 
 $consultaPrecioPlan = ejecutar($sqlPrecioPlan);
 $precioPlan = assoc_a($consultaPrecioPlan)[suma_total];
@@ -129,13 +133,13 @@ $precioXCuota = round (($precioPlan - $pagoInicial) / $numCuotas, 2);
 
 
 //Buscar comisionado
-$sqlComisionado="select
+$sqlComisionado="SELECT
         comisionados.nombres,
         comisionados.apellidos,
         comisionados.codigo
-    from
+    FROM
         comisionados 
-    where
+    WHERE
         comisionados.id_comisionado=$idComisionado;";
 
 $consultaComisionado = ejecutar($sqlComisionado);
