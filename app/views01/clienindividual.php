@@ -120,8 +120,8 @@ clientes.email,clientes.fecha_nacimiento from clientes where clientes.cedula='$c
       <tr>
          <td class="tdtitulos">Tipo de cliente:</td>
          <td class="tdcampos" >
-           <input type="radio" name="group1" id="clititula" value="1"> Titular<br>
-           <input type="radio" name="group1" id="clittoma"  value="0">Tomador</td>
+           <input type="radio" name="group1" id="clititula" value="1" checked> Titular<br>
+           <!-- <input type="radio" name="group1" id="clittoma"  value="0">Tomador</td> -->
      </tr>
      </table>
       <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>

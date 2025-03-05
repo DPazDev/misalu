@@ -6551,8 +6551,11 @@ function guardcontrato() {
   varfindocontrato = $F("fechfincontrato");
   varcomision = $F("comisionado");
   direccionCobro = $F("direccioncobro");
+  tipoContratante = $F("contratanteSelect");
   varcotifin = $F("cotifin");
   varsubdivi = $F("cliensubd");
+
+
   var vararrayben = new Array();
   var ceulasbenefi = new Array();
   arreglo = 0;
@@ -6575,9 +6578,18 @@ function guardcontrato() {
       } else if (direccionCobro == "") {
         alert(`Debe Introducir la Dirección de Cobro`);
         problema = 1;
+      } else if (tipoContratante == "") {
+        alert(`Seleccione el tipo de contratante`);
+        problema = 1;
       } else {
-        // VALIDA QUE LOS CAMPOS FECHA INICIO Y FIN DE CONTRATO NO ESTÉN VACÍOS
-        if (variniciocontrato == "" || varfindocontrato == "") {
+        // Validar que se haya ingresado la cédula del contratante
+        cedulaContratante = $F("cedula_contratante");
+        if (cedulaContratante == "") {
+          alert(`Debe Introducir la Cédula/Rif del Contratante`);
+          problema = 1;
+
+          // VALIDA QUE LOS CAMPOS FECHA INICIO Y FIN DE CONTRATO NO ESTÉN VACÍOS
+        } else if (variniciocontrato == "" || varfindocontrato == "") {
           alert(`Debe ingresar ambas fechas de inicio y fin del contrato.`);
           problema = 1;
         } else {
@@ -6811,6 +6823,8 @@ function guardcontrato() {
         "&generotitu=" + vartitugenero +
         "&cotizacion=" + varcomision +
         "&direccioncobro=" + direccionCobro +
+        "&tipocontratante=" + tipoContratante +
+        "&cedulacontratante=" + cedulaContratante +
         "&elidcoti=" + varcotifin +
         "&sudtitu=" + varsubdivi,
       onCreate: function (response) {

@@ -18,6 +18,8 @@ $sqlDatosPlan = "SELECT
         tbl_contratos_entes.fecha_creado,
         tbl_recibo_contrato.id_comisionado,
         tbl_recibo_contrato.direccion_cobro,
+        tbl_recibo_contrato.tipo_contratante,
+        tbl_recibo_contrato.cedula_contratante,
         tbl_recibo_contrato.num_recibo_prima
     FROM 
         clientes,
@@ -48,7 +50,29 @@ $porcentajeInicial = $datosPlan[inicialcon];
 $numCuotas = $datosPlan[cuotacon];
 $idComisionado = $datosPlan[id_comisionado];
 $direccionCobro = $datosPlan[direccion_cobro];
+$tipoContratante = $datosPlan[tipo_contratante];
+$cedula_contratante = $datosPlan[cedula_contratante];
 $fechaCreado = $datosPlan[fecha_creado];
+
+// Datos del contratante
+// tipoContratante: 1 = Titular, 2 = Ente, 3 = Persona
+if ($tipoContratante == 1) {
+    $nombreContratante = $nomCompleto;
+    $cedula_contratante = $cedula;
+} else {
+    if ($tipoContratante == 2) {
+        $sqlDatosContratante = "SELECT nombre AS nombrecompleto FROM entes WHERE rif = '$cedula_contratante'";
+        $completarSQL = "nombre";
+    } elseif ($tipoContratante == 3) {
+        $sqlDatosContratante = "SELECT (nombres || ' ' || apellidos) AS nombrecompleto FROM clientes WHERE cedula = '$cedula_contratante'";
+        $completarSQL = "nombres || ' ' || apellidos";
+    }
+
+    $consultaDatosContratante = ejecutar($sqlDatosContratante);
+    $datosContratante = assoc_a($consultaDatosContratante);
+
+    $nombreContratante = $datosContratante["nombrecompleto"];
+}
 
 
 // Datos del ente
@@ -281,8 +305,8 @@ $comisionadoCodigo = $comisionado[codigo];
                 <p class="centro letra-grande negrita">DATOS DEL CONTRATANTE Y AFILIADO TITULAR</p>
             </div>
             <div class="area1">
-                <p class="bordes"><span class="negrita">Contratante: </span><?php echo $nomCompleto;?></p>
-                <p class="bordes"><span class="negrita">Cédula/R.I.F: </span><?php echo $cedula;?></p>
+                <p class="bordes"><span class="negrita">Contratante: </span><?php echo $nombreContratante;?></p>
+                <p class="bordes"><span class="negrita">Cédula/R.I.F: </span><?php echo $cedula_contratante;?></p>
             </div>
             <div class="area1">
                 <p class="bordes"><span class="negrita">Titular:</span> <?php echo $nomCompleto;?></p>

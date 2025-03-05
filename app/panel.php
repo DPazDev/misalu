@@ -47,6 +47,7 @@ echo cabecera(sistema);
 <script type="text/javascript" src="../public/javascripts/fcparaproto.js"></script>
 <script type="text/javascript" src="../public/javascripts/fhparaproto.js"></script>
 <script type="text/javascript" src="../public/javascripts/ffparaproto.js"></script>
+<script type="text/javascript" src="../public/javascripts/fdaniel.js"></script>
 <script type="text/javascript" src="../public/javascripts/events.js"></script>
 <script type="text/javascript" src="../public/javascripts/calpopup.js"></script>
 <script type="text/javascript" src="../public/javascripts/dateparse.js"></script>

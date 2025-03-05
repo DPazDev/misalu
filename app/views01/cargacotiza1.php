@@ -51,6 +51,8 @@ $lasucursal=$datasuc[id_sucursal];
 $elus=$_SESSION['nombre_usuario_'.empresa];
 $idcomisionado=$_POST['cotizacion'];
 $direccionCobro = $_POST['direccioncobro'];
+$tipoContratante = $_POST['tipocontratante'];
+$cedulaContratante = $_POST['cedulacontratante'];
 $fedad=calcular_edad($fnaciclien);
 
 // Verificamos si el titular ya tiene un contrato activo con la misma poliza
@@ -437,6 +439,8 @@ if($cuantosTiene>=1){
           fecha_creado,
           hora_emision,
           direccion_cobro,
+          tipo_contratante,
+          cedula_contratante,
           id_comisionado
         ) 
         values(
@@ -447,6 +451,8 @@ if($cuantosTiene>=1){
           '$fecha',
           '$hora',
           '$direccionCobro',
+          '$tipoContratante',
+          '$cedulaContratante',
           $idcomisionado
         );";
     $reprecibocontrato=ejecutar($guardorecibocontrato);  
