@@ -472,91 +472,97 @@ if($cuantosTiene>=1){
      //ahora tenemos que guardar las caracteristicas del contrato en la tabla tbl_caract_recibo_prima
      //buscamos todo lo que se registro en coberturas_t_b
      $todocoberturastb=("select coberturas_t_b.id_titular,coberturas_t_b.id_beneficiario,propiedades_poliza.id_poliza
-  from
-    coberturas_t_b,propiedades_poliza
-  where
-    coberturas_t_b.id_titular=$eliddeltitu and
-    coberturas_t_b.id_propiedad_poliza=propiedades_poliza.id_propiedad_poliza group by 
-coberturas_t_b.id_titular,coberturas_t_b.id_beneficiario,propiedades_poliza.id_poliza order by id_beneficiario;");
+      from
+        coberturas_t_b,propiedades_poliza
+      where
+        coberturas_t_b.id_titular=$eliddeltitu and
+        coberturas_t_b.id_propiedad_poliza=propiedades_poliza.id_propiedad_poliza group by 
+        coberturas_t_b.id_titular,coberturas_t_b.id_beneficiario,propiedades_poliza.id_poliza order by id_beneficiario;");
     $reptodocobert=ejecutar($todocoberturastb);
     while($loscobtura=asignar_a($reptodocobert,NULL,PGSQL_ASSOC)){
-           $estitu=$loscobtura[id_titular];
-           $esbeni=$loscobtura[id_beneficiario];
-           $polizaes=$loscobtura[id_poliza];
-           if($esbeni==0){//es un titular
-                  $datacliente=("select clientes.edad,clientes.sexo from clientes,titulares 
-                                         where
-                                             clientes.id_cliente=titulares.id_cliente and
-                                             titulares.id_titular=$estitu;");
-                   $repdatcliente=ejecutar($datacliente);      
-                   $infodatcliente=assoc_a($repdatcliente);
-                   if($infodatcliente[sexo]==0){
-                       $parentesco="17";
-                       }else{
-                             $parentesco="18";
-                           }
-                       $busprima=("select primas.anual,primas.id_prima,primas.edad_inicio,primas.edad_fin from primas
-                                            where
-                                       primas.id_poliza=$polizaes and
-                                       primas.id_parentesco=$parentesco and
-                                       $infodatcliente[edad]>=primas.edad_inicio  and
-                                       $infodatcliente[edad]<=primas.edad_fin;");        
-                     $repbusprima=ejecutar($busprima);        
-                     $cuantosprima=num_filas( $repbusprima);
-                     if($cuantosprima>=1){
-                         $infobusprima=assoc_a($repbusprima);     
-                    }else{
-                           if(($parentesco==17) && ($loscobtura[id_poliza]==87) || ($loscobtura[id_poliza]==88)){
-                                  $busprima1=("select primas.anual,primas.id_prima from primas
-                                            where
-                                       primas.id_poliza=$polizaes and
-                                       primas.id_parentesco=9 and 
-                                       $infodatcliente[edad]>=primas.edad_inicio  and
-                                       $infodatcliente[edad]<=primas.edad_fin;");
-                                   $repbusprima=ejecutar($busprima1);        
-                                    $infobusprima=assoc_a($repbusprima);
-                               } 
-                        }      
-                    $guarrecicarac=("insert into tbl_caract_recibo_prima
-                          (id_recibo_contrato,id_titular,id_beneficiario,id_prima,fecha_creado,monto_prima,genera_comision) 
-                          values($idrecibocontrato,$estitu,0,$infobusprima[id_prima],'$fecha',$infobusprima[anual],1)");
-                    $repguarrecicarac=ejecutar($guarrecicarac);           
-               }else{
-                     $datacliente=("select clientes.edad,clientes.sexo,beneficiarios.id_parentesco 
-                                                 from clientes,beneficiarios where
-                                             clientes.id_cliente=beneficiarios.id_cliente and
-                                             beneficiarios.id_beneficiario=$esbeni;");
-                     $repdatcliente=ejecutar($datacliente);   
-                     $infodatcliente=assoc_a($repdatcliente);
-                     $busprima=("select primas.anual,primas.id_prima from primas
-                                            where
-                                       primas.id_poliza=$polizaes and
-                                       primas.id_parentesco=$infodatcliente[id_parentesco] and 
-                                       $infodatcliente[edad]>=primas.edad_inicio  and
-                                       $infodatcliente[edad]<=primas.edad_fin;");
+      $estitu=$loscobtura[id_titular];
+      $esbeni=$loscobtura[id_beneficiario];
+      $polizaes=$loscobtura[id_poliza];
+
+      if($esbeni==0){//es un titular
+        $datacliente=("select clientes.edad,clientes.sexo from clientes,titulares 
+                                where
+                                    clientes.id_cliente=titulares.id_cliente and
+                                    titulares.id_titular=$estitu;");
+        $repdatcliente=ejecutar($datacliente);      
+        $infodatcliente=assoc_a($repdatcliente);
+
+        if($infodatcliente[sexo]==0){
+          $parentesco="17";
+        } else{
+          $parentesco="18";
+        }
+        $busprima=("select primas.anual,primas.id_prima,primas.edad_inicio,primas.edad_fin from primas
+        where
+        primas.id_poliza=$polizaes and
+        primas.id_parentesco=$parentesco and
+        $infodatcliente[edad]>=primas.edad_inicio  and
+        $infodatcliente[edad]<=primas.edad_fin;");        
+        $repbusprima=ejecutar($busprima);        
+        $cuantosprima=num_filas( $repbusprima);
+
+        if($cuantosprima>=1){
+          $infobusprima=assoc_a($repbusprima);     
+        }else{
+          if(($parentesco==17) && ($loscobtura[id_poliza]==87) || ($loscobtura[id_poliza]==88)){
+            $busprima1=("select primas.anual,primas.id_prima from primas
+            where
+              primas.id_poliza=$polizaes and
+              primas.id_parentesco=9 and 
+              $infodatcliente[edad]>=primas.edad_inicio  and
+              $infodatcliente[edad]<=primas.edad_fin;");
+            $repbusprima=ejecutar($busprima1);        
+            $infobusprima=assoc_a($repbusprima);
+          }
+        }
+        $guarrecicarac=("insert into tbl_caract_recibo_prima
+          (id_recibo_contrato,id_titular,id_beneficiario,id_prima,fecha_creado,monto_prima,genera_comision) 
+          values($idrecibocontrato,$estitu,0,$infobusprima[id_prima],'$fecha',$infobusprima[anual],1)");
+        $repguarrecicarac=ejecutar($guarrecicarac);
+
+      }else{
+        $datacliente=("select clientes.edad,clientes.sexo,beneficiarios.id_parentesco 
+          from clientes,beneficiarios where
+          clientes.id_cliente=beneficiarios.id_cliente and
+          beneficiarios.id_beneficiario=$esbeni;");
+        $repdatcliente=ejecutar($datacliente);   
+        $infodatcliente=assoc_a($repdatcliente);
+
+        $busprima=("select primas.anual,primas.id_prima from primas
+          where
+          primas.id_poliza=$polizaes and
+          primas.id_parentesco=$infodatcliente[id_parentesco] and 
+          $infodatcliente[edad]>=primas.edad_inicio  and
+          $infodatcliente[edad]<=primas.edad_fin;");
                     $repbusprima=ejecutar($busprima);  
                     $cuanhay=num_filas( $repbusprima);
-                    if($cuanhay>=1){
-                       $infobusprima=assoc_a($repbusprima);
-                    }else{
-                        if(($infodatcliente[id_parentesco]==9)||($infodatcliente[id_parentesco]==12)){ 
-                        $busprima1=("select primas.anual,primas.id_prima from primas
-                                            where
-                                       primas.id_poliza=$polizaes and
-                                       primas.id_parentesco=17 and 
-                                       $infodatcliente[edad]>=primas.edad_inicio  and
-                                       $infodatcliente[edad]<=primas.edad_fin;");
-                        $repbusprima=ejecutar($busprima1);        
-                         $infobusprima=assoc_a($repbusprima);
-                      }
-                     } 
-                    $guarrecicarac=("insert into tbl_caract_recibo_prima
-                          (id_recibo_contrato,id_titular,id_beneficiario,id_prima,fecha_creado,monto_prima,genera_comision) 
-                          values($idrecibocontrato,$estitu,$esbeni,$infobusprima[id_prima],'$fecha',$infobusprima[anual],1)");
-                    $repguarrecicarac=ejecutar($guarrecicarac);  
-                   }
+
+        if($cuanhay>=1){
+          $infobusprima=assoc_a($repbusprima);
+        }else{
+          if(($infodatcliente[id_parentesco]==9)||($infodatcliente[id_parentesco]==12)){
+            $busprima1=("select primas.anual,primas.id_prima from primas
+              where
+              primas.id_poliza=$polizaes and
+              primas.id_parentesco=17 and 
+              $infodatcliente[edad]>=primas.edad_inicio  and
+              $infodatcliente[edad]<=primas.edad_fin;");
+            $repbusprima=ejecutar($busprima1);        
+            $infobusprima=assoc_a($repbusprima);
+          }
+        }
+        $guarrecicarac=("insert into tbl_caract_recibo_prima
+          (id_recibo_contrato,id_titular,id_beneficiario,id_prima,fecha_creado,monto_prima,genera_comision) 
+          values($idrecibocontrato,$estitu,$esbeni,$infobusprima[id_prima],'$fecha',$infobusprima[anual],1)");
+        $repguarrecicarac=ejecutar($guarrecicarac);  
+      }
                    
-     }   
+    }
 //Luego de terminar con todos los registros guardamos en la tabla logs!!
 //**********************************//
 //Guardar los datos en la tabla logs;
