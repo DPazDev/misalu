@@ -1,5 +1,10 @@
 <?php
 
+/* Nombre del Archivo: contenidocontratante.php
+  Descripción: Generar input para ingresar la cédula dependiendo el tipo de contratante seleccionado.
+  Utilizado en Entes -> Registro Individual
+*/
+
 $opcion = $_REQUEST['opcion'];
 $cedulaTitular = $_REQUEST['cedulaTitular'];
 
