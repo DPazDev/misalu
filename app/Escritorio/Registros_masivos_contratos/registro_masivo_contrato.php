@@ -34,11 +34,11 @@ use Shuchkin\SimpleXLSX;
 
 /////////////// Variables a modificar ///////////////
 $archivo = 'Policia_carga.xlsx';
-$idPoliza = 231;
+$idPoliza = 232;
 $fechaInicioContratos = '2025-03-01';
 $fechFinContratos = '2026-03-01';
 $id_comisionado = 49; // Armando
-$rifEnteContratante = "J302019524"; // Tovarsat
+$rifEnteContratante = "J090126937"; // CAJA DE AHORRO DEL PERSONAL DE LA POLICIA DEL ESTADO MERIDA
 
 
 if ( !$xlsx = SimpleXLSX::parse($archivo) ) {
@@ -843,7 +843,7 @@ try {
     echo "Se ha producido un error: " . $e->getMessage();
 }
 
-
+echo "terminado";
 
 
 
