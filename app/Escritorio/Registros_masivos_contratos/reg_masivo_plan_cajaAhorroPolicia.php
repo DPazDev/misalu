@@ -34,11 +34,12 @@ use Shuchkin\SimpleXLSX;
 
 /////////////// Variables a modificar ///////////////
 $archivo = 'Policia_carga.xlsx';
-$idPoliza = 232;
+$idPoliza = 232; // PLAN DE SALUD COLECTIVO EMPRESARIAL
 $fechaInicioContratos = '2025-03-01';
 $fechFinContratos = '2026-03-01';
 $id_comisionado = 49; // Armando
 $rifEnteContratante = "J090126937"; // CAJA DE AHORRO DEL PERSONAL DE LA POLICIA DEL ESTADO MERIDA
+$idSubdivision = 269; // CAJA DE AHORRO DE LA POLICIA DEL ESTADO MERIDA
 
 
 if ( !$xlsx = SimpleXLSX::parse($archivo) ) {
@@ -51,10 +52,9 @@ $fechaActual = date('Y-m-d');
 $anioActual = date('Y', strtotime($fechaActual));
 $horaCreado = '00:00:00';
 $idCiudad = 1; // ID Merida
-$idAdmin = '425'; //ID DE USUARIO SISTEMAS
+$idAdmin = '935'; //ID Daniel Paz
 $idTipoEnte = 7; // CLIENTES INDIVIDUALES MEDICINA PREPAGADA
 $idSucursal = 22; // SERIE J VENTAS
-$idSubdivision = 3; // Administrativo
 $idEstadoCliente = 4; // Activo
 
 $contadorTitulares = 0;
