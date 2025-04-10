@@ -33,13 +33,13 @@ use Shuchkin\SimpleXLSX;
 
 
 /////////////// Variables a modificar ///////////////
-$archivo = 'caprouptm_corregido.xlsx';
+$archivo = 'caja_ahorro_alcaldia_municipio_libertador.xlsx';
 $idPoliza = 232; // PLAN DE SALUD COLECTIVO EMPRESARIAL
-$fechaInicioContratos = '2025-04-01';
-$fechFinContratos = '2026-04-01';
+$fechaInicioContratos = '2025-04-03';
+$fechFinContratos = '2026-04-03';
 $id_comisionado = 49; // Armando
-$rifEnteContratante = "J303513727"; // CAJA DE AHORRO DE LOS PROFESORES DE LA UPTM
-$idSubdivision = 270; // CAPROUPTM
+$rifEnteContratante = "J305038570"; // CAJA DE AHORRO Y PRESTAMOS DE LOS TRABAJADORES DE LA ALCALDIA LIBERTADOR
+$idSubdivision = 271; // CAJA DE AHORRO Y PRESTAMOS DE LOS TRABAJADORES DE...
 
 
 if ( !$xlsx = SimpleXLSX::parse($archivo) ) {
