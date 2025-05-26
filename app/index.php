@@ -53,7 +53,7 @@ echo cabecera(sistema);
 
       <!-- imagen portada -->
       <section class="contenedor_imagen">
-        <img src="../public/images/diseño_navidad.gif">
+        <img src="../public/images/logo2025.png">
       </section>
 
       <!-- inputs para insertar las credenciales -->

@@ -14,7 +14,7 @@ echo cabecera(sistema);
 
       <!-- imagen portada -->
       <section class="contenedor_imagen">
-        <img src="../public/images/diseño_navidad_basico.gif">
+        <img src="../public/images/logo2025.png">
       </section>
 
 		<p class="texto">
