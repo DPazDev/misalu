@@ -7671,8 +7671,11 @@ function Findcontrato(idcontrato,encabezado){
 	if(Field.present('numarti')==false){
 		alert('El n\u00famero del art\u00edculo es necesario!!')
 	}else{
+		var opac=confirm("Realmente desea eliminar el contrato No."+encabezado+"?");
+		   if(opac==true){
 			url='views02/cartaanulacion.php?contrid='+idcontrato+'&artinumb='+$F('numarti')+'&cabezado='+encabezado;
-      imprimir(url);
+	        imprimir(url);
+		  }
    }
 }
 

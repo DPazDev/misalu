@@ -13,7 +13,7 @@ $cabezcontrato=$_REQUEST['elencavebe'];
 <table class="tabla_citas"  cellpadding=0 cellspacing=0>
    <tr>
              <td class="tdtitulos">N&uacute;mero del art&iacute;culo :</td>
-             <td class="tdcampos"><input type="text" id="numarti" class="campos" size="10" onkeypress="return elnumero(event);" value="1146"></td>
+             <td class="tdcampos"><input type="text" id="numarti" class="campos" size="10" onkeypress="return elnumero(event);"></td>
     </tr>
     <tr><td>&nbsp;</td></tr>
     <tr><td class="tdcampos" title="Anular Contrato"><label class="boton" style="cursor:pointer" onclick="Findcontrato('<?echo $contratoid?>','<?echo $cabezcontrato?>')" >Anular Contrato</label></td></tr>
