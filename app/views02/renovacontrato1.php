@@ -24,6 +24,8 @@ $bustitu=("SELECT
 			tbl_recibo_contrato.num_recibo_prima,
 			tbl_recibo_contrato.id_recibo_contrato,
 			tbl_recibo_contrato.fecha_creado,
+			tbl_recibo_contrato.id_comisionado,
+			tbl_recibo_contrato.direccion_cobro,
 			tbl_recibo_contrato.conaumento
 		FROM
 			clientes,
@@ -48,6 +50,8 @@ $bustitu=("SELECT
 			tbl_recibo_contrato.num_recibo_prima,
 			tbl_recibo_contrato.id_recibo_contrato,
 			tbl_recibo_contrato.fecha_creado,
+			tbl_recibo_contrato.id_comisionado,
+			tbl_recibo_contrato.direccion_cobro,
 			tbl_recibo_contrato.conaumento
 		ORDER BY
 			tbl_contratos_entes.id_ente,
@@ -143,7 +147,8 @@ if($cuanbustitu==0){?>
 								entes.nombre,
 								entes.fecha_inicio_contrato,
 								entes.fecha_renovacion_contrato,
-								tbl_recibo_contrato.poraumento
+								tbl_recibo_contrato.poraumento,
+								tbl_recibo_contrato.id_comisionado
 							FROM
 								tbl_caract_recibo_prima,
 								polizas,
@@ -224,6 +229,8 @@ if($cuanbustitu==0){?>
 			$conaumento="conaumento$pd";
 			$feinicon="inicioc$pd";
 			$ferecon="culmico$pd";
+			$comisiocon="comisionado$pd";
+			$direccioncobro="direccioncobro$pd";
 			$quies="datacont$pd";
 			$selecpoli="lapoliza$elselecpoli";
 			$estitu=$infocontrato[id_titular];
@@ -430,6 +437,14 @@ if($cuanbustitu==0){?>
 
 			$repPolizas = ejecutar($polizas);
 
+			$comisionados = "SELECT
+								comisionados.id_comisionado,
+								comisionados.nombres,
+								comisionados.apellidos
+							FROM
+								comisionados";
+			$repBusComisionados = ejecutar($comisionados);
+
 			?>
 
 			<tr>
@@ -484,6 +499,53 @@ if($cuanbustitu==0){?>
 
 			</tr>
 
+			<tr>
+				<td><br></td>
+			</tr>
+
+
+			<tr>
+				<td colspan=1 class="tdtitulos negrita">Cambio de Asesor</td>
+
+				<td colspan=2 class="tdtitulos">
+					<select name="<?php echo $comisiocon; ?>" id="<?php echo $comisiocon; ?>">
+						
+						<?php while ($comisionado = asignar_a($repBusComisionados, NULL, PGSQL_ASSOC)) : 
+							$selected = ($comisionado['id_comisionado'] == $contrato['id_comisionado']) ? 'selected' : '';
+							$nombreCompleto = $comisionado['nombres'] . ' ' . $comisionado['apellidos'];
+						?>
+							<option value="<?php echo $comisionado['id_comisionado']; ?>" <?php echo $selected; ?>>
+								<?php echo $nombreCompleto; ?>
+							</option>
+						<?php endwhile; ?>
+					</select>
+				</td>
+
+			</tr>
+
+			<tr>
+				<td><br></td>
+			</tr>
+
+
+			<tr>
+
+				<td colspan=1 class="tdtitulos negrita">Dirección de Cobro</td>
+				<td class="tdcampos" colspan="2">
+					<textarea name="<?php echo $direccioncobro; ?>" id="<?php echo $direccioncobro; ?>" cols="54" class="campos"><?php
+						if ($contrato[direccion_cobro] != '') {
+							echo $contrato[direccion_cobro];
+						} else {
+							echo "Mérida";
+						}
+						?></textarea>
+
+				</td>
+				
+
+			</tr>
+
+
 	 		<?php
 		} else {?>
 			<tr>
@@ -523,6 +585,8 @@ if($cuanbustitu==0){?>
 						'<?echo $ilumina?>',
 						'<?echo $selecpoli?>',
 						'<?echo $idpolizaqtiene?>',
+						'<?echo $comisiocon?>',
+						'<?echo $direccioncobro?>',
 						'<?echo $contratoidnum?>',
 						'<?echo $ndata?>')" >Procesar Cambio</label>
 					</td>

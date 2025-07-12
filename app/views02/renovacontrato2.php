@@ -11,6 +11,8 @@ $cuantocon=count($ncontra);
 $fechainic=$_REQUEST[fe1];
 $fechafin=$_REQUEST[fe2];
 $escojepoli=$_REQUEST[polizaescoge];
+$idComisionado = $_REQUEST[elcomisionado];
+$direccionCobro = $_REQUEST[direccionCobro];
 $titularpoliactual=$_REQUEST[lapoltiene];
 $elidcontrato=$_REQUEST['laidcontrato'];
 $valocoiciden=0;
@@ -120,7 +122,6 @@ if($valocoiciden==1){
                     tbl_contratos_entes.id_ente,
                     tbl_contratos_entes.cuotacon,
                     tbl_contratos_entes.numero_contrato,
-                    tbl_recibo_contrato.id_comisionado,
                     tbl_recibo_contrato.conaumento
                   FROM
                     tbl_contratos_entes,tbl_recibo_contrato 
@@ -140,7 +141,6 @@ if($valocoiciden==1){
         $elentefinal=$idente;
       }
 
-      $idcomisionado=$datcon[id_comisionado];
       $elcontratoid=$datcon[id_contrato_ente];
       $numerodcuotas=$datcon[cuotacon];
       $nuevaf= date("Y/m/d", strtotime("$fecha +$numerodcuotas month"));
@@ -175,8 +175,8 @@ if($valocoiciden==1){
 
       //guardamos en la tabla tbl_recibo_contrato
       $guardorecibocontrato=("insert into
-                                tbl_recibo_contrato(id_contrato_ente,num_recibo_prima,fecha_ini_vigencia,fecha_fin_vigencia,fecha_creado,hora_emision,id_comisionado)
-                                values($elcontratoid,'$numcontraprima','$fechainic','$fechafin','$fecha','$hora',$idcomisionado);");
+                                tbl_recibo_contrato(id_contrato_ente,num_recibo_prima,fecha_ini_vigencia,fecha_fin_vigencia,fecha_creado,hora_emision,id_comisionado,direccion_cobro)
+                                values($elcontratoid,'$numcontraprima','$fechainic','$fechafin','$fecha','$hora','$idComisionado','$direccionCobro');");
       //echo "Guardamos todo lo referente al contrato $guardorecibocontrato<br>";                                                                   
       $reprecibocontrato=ejecutar($guardorecibocontrato);  
 

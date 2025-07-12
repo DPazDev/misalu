@@ -247,7 +247,7 @@ and titulares_subdivisiones.id_titular=$elttl1");
 
                             <td class="tdtitulos">
                             <?while ($loscontratos=asignar_a($repnumcontr,NULL,PGSQL_ASSOC)){?>
-                              <a href="#" style="background-color:transaparent;text-decoration: none;color:#000000;" OnClick="losRecibosP('<?echo $loscontratos[num_recibo_prima]?>')"><?echo "$loscontratos[numero_contrato] | No. Recibo: $loscontratos[num_recibo_prima]"?></a>  
+                              <a href="#" style="background-color:transparent;text-decoration: none;color:#000000;" OnClick="losRecibosP('<?echo $loscontratos[num_recibo_prima]?>')"><?echo "$loscontratos[numero_contrato] | No. Recibo: $loscontratos[num_recibo_prima]"?></a>  
                               <br>
                             
                           
@@ -255,22 +255,29 @@ and titulares_subdivisiones.id_titular=$elttl1");
                            </td>
                            <td class="tdtitulos">Fecha Inicio-Fin: </td>   
                            <td  class="tdtitulos" >
-                               <?php
-                                 while ($loscontratos=asignar_a($repnumcontr1,NULL,PGSQL_ASSOC)){
-				 if(($loscontratos[fecha_ini_vigencia]<$fecha) and ($loscontratos[fecha_fin_vigencia]<$fecha)){
-				  $anuncio="---- Inactivo ----";
-				  $elanuncio=1;
-				}else{
-				   $anuncio="$loscontratos[fecha_ini_vigencia] - $loscontratos[fecha_fin_vigencia]";
-				   $elanuncio=0;
-				}
-				?>
-				<?php if($elanuncio==1){ ?>
-                                  <label style="color: #ff0000"><?echo $anuncio?><br></label>
-                                <?php }else{ ?> 
-                                   <?echo $anuncio?>
-                                  <?php } ?> 
-                             <?php }?>
+
+<?php
+$elanuncio = null;
+while ($loscontratos = asignar_a($repnumcontr1, NULL, PGSQL_ASSOC)) {
+    if (($loscontratos['fecha_ini_vigencia'] < $fecha) && ($loscontratos['fecha_fin_vigencia'] < $fecha)) {
+        $anuncio = "---- Inactivo ----";
+        $elanuncio = 1;
+    } else {
+        $anuncio = "$loscontratos[fecha_ini_vigencia] - $loscontratos[fecha_fin_vigencia]";
+        $elanuncio = 0;
+    }
+}
+if ($elanuncio == 1) {
+    ?>
+    <label style="color: #ff0000">
+        <?php echo $anuncio ?><br>
+    </label>
+    <?php
+} else {
+    echo $anuncio;
+}
+?>
+
                            </td> 
                        </tr>     
                     <?          

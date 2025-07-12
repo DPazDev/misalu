@@ -7399,7 +7399,7 @@ function TitularRenova(){
 
 
 // Actualización Daniel 06-08-2024
-function RenovaContrato(fecha1, fecha2, cuantos, ntitular, nbenefi, poliza, lapoliqtiene, numcontrato, elem) {
+function RenovaContrato(fecha1, fecha2, cuantos, ntitular, nbenefi, poliza, lapoliqtiene, comisionado, direccionCobro, numcontrato, elem) {
   // VARIABLES
   // fecha1: id fecha inicio contrato
   // fecha2: id fecha fin contrato
@@ -7408,6 +7408,7 @@ function RenovaContrato(fecha1, fecha2, cuantos, ntitular, nbenefi, poliza, lapo
   // nbenefi: número beneficiario
   // poliza: ID póliza seleccionada
   // lapoliqtiene: ID póliza actual
+  // $comisionado: comisionado seleccionado
   // numcontrato: ID de contrato
   // elem: número de elemento o póliza que hizo referencia
 
@@ -7420,6 +7421,8 @@ function RenovaContrato(fecha1, fecha2, cuantos, ntitular, nbenefi, poliza, lapo
   var nudtitu = ntitular;
   var cuanbeni = nbenefi;
   var polizasele = document.getElementById(poliza).value;
+  var comisionadoSeleccionado = document.getElementById(comisionado).value;
+  var direccionCobro = document.getElementById(direccionCobro).value;
   var titupoliza = lapoliqtiene;
   var nbenefi = nbenefi - 1;
 
@@ -7453,6 +7456,8 @@ function RenovaContrato(fecha1, fecha2, cuantos, ntitular, nbenefi, poliza, lapo
     fe1 : contraini,
     fe2 : contrafin,
     polizaescoge : polizasele,
+    elcomisionado : comisionadoSeleccionado,
+    direccionCobro : direccionCobro,
     lapoltiene : titupoliza,
     laidcontrato : numcontrato
   });
