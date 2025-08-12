@@ -34,12 +34,12 @@ use Shuchkin\SimpleXLSX;
 
 /////////////// Variables a modificar ///////////////
 $archivo = 'salesiana_chatgpt.xlsx';
-$idPoliza = 233; // PLAN DE SALUD MINI COLECTIVO
+$idPoliza = 237; // PLAN DE SALUD MINI COLECTIVO
 $fechaInicioContratos = '2025-08-04';
 $fechFinContratos = '2026-08-04';
 $id_comisionado = 49; // Armando
 $rifEnteContratante = "J309755188"; // ASOCIACION CIVIL EDUCACION SALESIANA (A C E S)
-$idSubdivision = 272; // ASOCIACION CIVIL SALESIANA
+$idSubdivision = 274; // ASOCIACION CIVIL SALESIANA
 
 
 
