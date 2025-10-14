@@ -325,7 +325,8 @@ $NumeroControl=$f_numfacturas[no_control_fact];
 <td colspan=9 class="tdtitulos"><hr></hr></td>
 </tr>
 <tr>
-<td colspan=9 class="tdtitulos">Ley IVA - Art. 11: "La administraci&oacute;n Tributaria podr&aacute; designar com&oacute; responsables del pago del impuesto, en calidad de agentes de retenci&oacute;n a quienes por sus funciones p&uacute;blicas o por raz&oacute;n de sus avtividades privadas intervengan en operaciones gravadas con el impuesto establecido en esta Ley"</td>
+<td colspan=9 class="tdtitulos">Artículo 11. - Serán responsables del pago del impuesto en calidad de agente de retención, los compradores o adquirentes de determinados bienes muebles y los receptores de ciertos servicios, a quienes la Administración Tributaria designe como tales, de acuerdo con lo previsto en el Código Orgánico Tributario.
+</td>
 </tr>
 
 <tr>
@@ -358,7 +359,7 @@ $NumeroControl=$f_numfacturas[no_control_fact];
 </tr>
 
 <tr>
-<td colspan=9 class="tdtitulos">Este comprobante se emite segun lo establecido en la Providencia Administrativa SNAT/2015/0049. Publicada en Gaceta Oficial N&uacute;mero 40.720 de fecha 10 de Agosto de 2015</td>
+<td colspan=9 class="tdtitulos">Este comprobante se emite según lo establecido en la Providencia Administrativa SNAT/2025/0054. Publicada en Gaceta Oficial Número 43.171  de fecha 01 de Agosto de 2025</td>
 </tr>
 <tr>
 <td colspan=9 class="tdtitulos"><hr></hr></td>
