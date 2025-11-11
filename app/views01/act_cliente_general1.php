@@ -130,12 +130,38 @@ if($cuanbasico==0){?>
 	   <td class="tdtitulos" colspan="1">Dirección:</td>
        <td class="tdcampos" colspan="3"><TEXTAREA COLS=60 ROWS=2 id="cliendirr1" class="campos"><?echo $lobasicos[direccion_hab]?></TEXTAREA></td>
 	</tr>  
-      <tr> 
-	 <td class="tdtitulos" colspan="1">Comentario:</td>
-       <td class="tdcampos" colspan="3"><TEXTAREA COLS=60 ROWS=2 id="cliencoment" class="campos"><?echo $lobasicos[comentarios]?></TEXTAREA></td>
-	</tr> 
- 
+      <tr>
+         <td class="tdtitulos" colspan="1">Comentario:</td>
+       <td class="tdcampos" colspan="3">
+         <TEXTAREA COLS=60 ROWS=2 id="cliencoment" class="campos"><?echo $lobasicos[comentarios]?></TEXTAREA>
+         <a href="#" class="boton" style="margin-left: 10px;" onclick="mostrarDatosLaborales(); return false;">Datos laborales</a>
+       </td>
+        </tr>
+
  </table>
+      <div id="datosLaboralesModal" class="modal" style="display:none;" onclick="if(event.target === this){cerrarDatosLaborales();}">
+        <div class="ventana" style="width: 30%; height: auto; padding-bottom: 20px;">
+          <h2>Datos laborales</h2>
+          <table class="tabla_citas" cellpadding=0 cellspacing=0 style="width: 90%; margin: 0 auto;">
+            <tr>
+              <td class="tdtitulos" style="width: 40%;">Profesión:</td>
+              <td class="tdcampos"><input type="text" id="datosLaboralesProfesion" class="campos" style="width: 100%;"></td>
+            </tr>
+            <tr>
+              <td class="tdtitulos">Ocupación:</td>
+              <td class="tdcampos"><input type="text" id="datosLaboralesOcupacion" class="campos" style="width: 100%;"></td>
+            </tr>
+            <tr>
+              <td class="tdtitulos">Ingreso anual:</td>
+              <td class="tdcampos"><input type="text" id="datosLaboralesIngreso" class="campos" style="width: 100%;"></td>
+            </tr>
+          </table>
+          <div style="text-align: center; padding: 10px 0 20px;">
+            <a href="#" class="boton_modal" onclick="cerrarDatosLaborales(); return false;">Cerrar</a>
+          </div>
+        </div>
+      </div>
+
        <?if($cuantostitular>=1){?>
            <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
            <tr> 
@@ -295,8 +321,23 @@ if($cuanbasico==0){?>
    <input type="hidden" id="elcliente" value="<?echo $idcliente?>" >  
    
    <br>
-    <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
-     <tr>
+   <table class="tabla_cabecera3"  cellpadding=0 cellspacing=0>
+    <tr>
          <td class="tdcampos" title="Guardar Cambios"><label class="boton" style="cursor:pointer" onclick="CambiosGeneral()" >Guardar</label>
-     </tr>     
-   </table>  
+     </tr>
+   </table>
+<script type="text/javascript">
+function mostrarDatosLaborales(){
+  var modal = document.getElementById('datosLaboralesModal');
+  if(modal){
+    modal.style.display='block';
+  }
+}
+
+function cerrarDatosLaborales(){
+  var modal = document.getElementById('datosLaboralesModal');
+  if(modal){
+    modal.style.display='none';
+  }
+}
+</script>
