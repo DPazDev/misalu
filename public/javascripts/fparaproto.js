@@ -7005,6 +7005,19 @@ function modifdacliengeneral(){
                    });
 			}
 }
+
+
+function datosLaborales(recprima){
+	lacelu='';
+	Modalbox.show("views01/mostrar_data_laboral.php", {title: 'Data laboral', width: 800, method: 'post',
+    params:{
+      cedula:lacelu,
+      numero_contrato:recprima
+    }
+  });
+}
+
+
 function CambiosGeneral(){
 	varelcliente=$F('elcliente');
 	varcedula=$F('cedclien');
