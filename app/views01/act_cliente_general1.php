@@ -134,9 +134,9 @@ if($cuanbasico==0){?>
 	  <td class="tdtitulos" colspan="1">Comentario:</td>
        <td class="tdcampos" colspan="3"><TEXTAREA COLS=60 ROWS=2 id="cliencoment" class="campos"><?echo $lobasicos[comentarios]?></TEXTAREA></td>
 
-       <td class="tdcampos" colspan="1">
+       <!-- <td class="tdcampos" colspan="1">
          <a href="#" class="boton" onclick="datosLaborales('2025-5893')">Datos laborales</a>
-       </td>
+       </td> -->
   </tr>
  
  </table>

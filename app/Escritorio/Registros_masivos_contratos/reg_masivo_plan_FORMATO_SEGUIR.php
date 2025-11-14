@@ -710,6 +710,8 @@ try {
             }  else {
                 // Si el cliente ya existe, actualizar la edad y fecha de nacimiento
                 $sqlActualizarClienteBeneficiario = "UPDATE clientes SET 
+                    nombres = '{$beneficiario['nombre']}',
+                    apellidos = '{$beneficiario['apellido']}',
                     edad = '{$beneficiario['edad']}', 
                     fecha_nacimiento = '{$beneficiario['fechaNacimiento']}'
                 WHERE cedula = '{$cedulaBeneficiario}'";

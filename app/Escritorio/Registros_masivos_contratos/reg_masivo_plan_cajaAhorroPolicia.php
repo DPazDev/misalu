@@ -31,13 +31,12 @@ use Shuchkin\SimpleXLSX;
 
 
 
-
 /////////////// Variables a modificar ///////////////
-$archivo = 'Policia_carga.xlsx';
+$archivo = 'policia_carga2.xlsx';
 $idPoliza = 232; // PLAN DE SALUD COLECTIVO EMPRESARIAL
-$fechaInicioContratos = '2025-03-01';
+$fechaInicioContratos = '2025-08-01';
 $fechFinContratos = '2026-03-01';
-$id_comisionado = 49; // Armando
+$id_comisionado = 1; // Antonio Guerrero
 $rifEnteContratante = "J090126937"; // CAJA DE AHORRO DEL PERSONAL DE LA POLICIA DEL ESTADO MERIDA
 $idSubdivision = 269; // CAJA DE AHORRO DE LA POLICIA DEL ESTADO MERIDA
 
@@ -248,7 +247,7 @@ ejecutar("BEGIN");
 try {
     foreach ($titulares as &$titular) {
 
-        echo "<br> Fecha nacimiento: " . $titular['fechaNacimiento'];
+        echo "<br> Titular: {$titular['cedula']} - Fecha de nacimiento {$titular['fechaNacimiento']} | Edad {$titular['edad']}";
 
         $contadorTitulares++;
 
@@ -303,6 +302,18 @@ try {
             }
             $filaClienteTitular = assoc_a($resultInsertarClienteTitular);
                 
+        } else {
+            // Si el cliente ya existe, actualizar la edad y fecha de nacimiento
+            $sqlActualizarClienteTitular = "UPDATE clientes SET 
+                edad = '{$titular['edad']}', 
+                fecha_nacimiento = '{$titular['fechaNacimiento']}'
+            WHERE cedula = '{$cedulaTitular}'";
+
+            $resultActualizarCliente = ejecutar($sqlActualizarClienteTitular);
+
+            if (!$resultActualizarCliente) {
+                throw new Exception("Error al actualizar el cliente titular -$cedulaTitular-. SQL: </br> $sqlActualizarClienteTitular </br>");
+            }
         }
         $id_cliente_titular = $filaClienteTitular['id_cliente'];
 
@@ -642,6 +653,8 @@ try {
         // Buscar Beneficiarios
         foreach ($titular["beneficiarios"] as &$beneficiario) {
 
+            echo "<br> Beneficiario: {$beneficiario['cedula']} - Fecha de nacimiento {$beneficiario['fechaNacimiento']} | Edad {$beneficiario['edad']}";
+
             $contadorBeneficiarios++;
             $cedulaBeneficiario = $beneficiario['cedula'];
 
@@ -691,6 +704,22 @@ try {
                     throw new Exception("Error al insertar cliente beneficiario -$cedulaBeneficiario-. SQL: </br> $sqlInsertClienteBeneficiario </br>");
                 }
                 $filaClienteBeneficiario = assoc_a($resultInsertClienteBeneficiario);
+                
+
+            }  else {
+                // Si el cliente ya existe, actualizar la edad y fecha de nacimiento
+                $sqlActualizarClienteBeneficiario = "UPDATE clientes SET 
+                    nombres = '{$beneficiario['nombre']}',
+                    apellidos = '{$beneficiario['apellido']}',
+                    edad = '{$beneficiario['edad']}', 
+                    fecha_nacimiento = '{$beneficiario['fechaNacimiento']}'
+                WHERE cedula = '{$cedulaBeneficiario}'";
+
+                $resultActualizarClienteBeneficiario = ejecutar($sqlActualizarClienteBeneficiario);
+
+                if (!$resultActualizarClienteBeneficiario) {
+                    throw new Exception("Error al actualizar el cliente beneficiario -$cedulaBeneficiario-. SQL: </br> $sqlActualizarClienteBeneficiario </br>");
+                }
             }
 
             $idClienteBeneficiario = $filaClienteBeneficiario['id_cliente'];
@@ -842,6 +871,9 @@ try {
     ejecutar("ROLLBACK");
     echo "Se ha producido un error: " . $e->getMessage();
 }
+
+
+
 
 echo "terminado";
 

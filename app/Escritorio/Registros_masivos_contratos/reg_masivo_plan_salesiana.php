@@ -33,14 +33,13 @@ use Shuchkin\SimpleXLSX;
 
 
 /////////////// Variables a modificar ///////////////
-$archivo = 'salesiana_chatgpt.xlsx';
+$archivo = 'salesiana_2.xlsx';
 $idPoliza = 237; // PLAN DE SALUD MINI COLECTIVO
-$fechaInicioContratos = '2025-08-04';
+$fechaInicioContratos = '2025-10-04';
 $fechFinContratos = '2026-08-04';
-$id_comisionado = 49; // Armando
+$id_comisionado = 1; // Antonio Guerrero
 $rifEnteContratante = "J309755188"; // ASOCIACION CIVIL EDUCACION SALESIANA (A C E S)
 $idSubdivision = 274; // ASOCIACION CIVIL SALESIANA
-
 
 
 if ( !$xlsx = SimpleXLSX::parse($archivo) ) {
@@ -711,6 +710,8 @@ try {
             }  else {
                 // Si el cliente ya existe, actualizar la edad y fecha de nacimiento
                 $sqlActualizarClienteBeneficiario = "UPDATE clientes SET 
+                    nombres = '{$beneficiario['nombre']}',
+                    apellidos = '{$beneficiario['apellido']}',
                     edad = '{$beneficiario['edad']}', 
                     fecha_nacimiento = '{$beneficiario['fechaNacimiento']}'
                 WHERE cedula = '{$cedulaBeneficiario}'";
